@@ -1,0 +1,71 @@
+name: my_hostel
+description: A new Flutter project.
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  dio:
+  file_picker:
+  intl:
+  clipboard:
+  path_provider:
+  equatable:
+  flutter_boxicons:
+  flutter_screenutil:
+  flutter_spinkit:
+  connectivity_plus:
+  cached_network_image:
+  flutter_launcher_icons:
+  flutter_native_splash:
+  chatview:
+  timeago:
+  shared_preferences:
+  flutter_svg:
+  media_gallery2:
+  transparent_image:
+  helpers:
+  glassmorphism:
+  anim_search_bar:
+  pagination_flutter:
+  socket_io_client:
+  chat_bubbles:
+  permission_handler:
+  go_router:
+  flutter_riverpod:
+  animated_switcher_plus:
+  flutter_staggered_animations:
+  skeletonizer:
+  flutter_lazy_listview:
+  fluttertoast:
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+     - assets/images/
+
+  fonts:
+    - family: WorkSans
+      fonts:
+        - asset: assets/fonts/WorkSans-Black.ttf
+        - asset: assets/fonts/WorkSans-Bold.ttf
+        - asset: assets/fonts/WorkSans-Italic.ttf
+        - asset: assets/fonts/WorkSans-Light.ttf
+        - asset: assets/fonts/WorkSans-Medium.ttf
+        - asset: assets/fonts/WorkSans-Regular.ttf
+        - asset: assets/fonts/WorkSans-Thin.ttf
