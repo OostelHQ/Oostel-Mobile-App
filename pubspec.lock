@@ -297,6 +297,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
+  flex_color_scheme:
+    dependency: "direct main"
+    description:
+      name: flex_color_scheme
+      sha256: "32914024a4f404d90ff449f58d279191675b28e7c08824046baf06826e99d984"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.3.1"
+  flex_seed_scheme:
+    dependency: transitive
+    description:
+      name: flex_seed_scheme
+      sha256: "29c12aba221eb8a368a119685371381f8035011d18de5ba277ad11d7dfb8657f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -624,14 +640,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
-  media_gallery2:
-    dependency: "direct main"
-    description:
-      name: media_gallery2
-      sha256: "44bd4eb66b49f7f1e3aa4d8d0bbeb359bda9c1fb57a367e45c4e84f7f41f20ab"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.12"
   meta:
     dependency: transitive
     description:
@@ -664,6 +672,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  onboarding:
+    dependency: "direct main"
+    description:
+      name: onboarding
+      sha256: "97092ff5852a717549fd5585491b6d5e324ac921722aa010d5a9b0b1a892675d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   pagination_flutter:
     dependency: "direct main"
     description:

@@ -28,7 +28,6 @@ dependencies:
   timeago:
   shared_preferences:
   flutter_svg:
-  media_gallery2:
   transparent_image:
   helpers:
   glassmorphism:
@@ -40,11 +39,12 @@ dependencies:
   go_router:
   flutter_riverpod:
   animated_switcher_plus:
+  flex_color_scheme:
   flutter_staggered_animations:
   skeletonizer:
   flutter_lazy_listview:
   fluttertoast:
-
+  onboarding:
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +52,17 @@ dev_dependencies:
 
 
   flutter_lints: ^2.0.0
+
+
+flutter_icons:
+  image_path_android: "assets/images/logo.svg"
+  image_path_ios: "assets/images/logo.svg"
+  android: true
+  ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logo.svg"
+  min_sdk_android: 29
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true
@@ -69,3 +80,14 @@ flutter:
         - asset: assets/fonts/WorkSans-Medium.ttf
         - asset: assets/fonts/WorkSans-Regular.ttf
         - asset: assets/fonts/WorkSans-Thin.ttf
+    - family: Inter
+      fonts:
+        - asset: fonts/Inter-Black.ttf
+        - asset: fonts/Inter-Bold.ttf
+        - asset: fonts/Inter-ExtraBold.ttf
+        - asset: fonts/Inter-Light.ttf
+        - asset: fonts/Inter-ExtraLight.ttf
+        - asset: fonts/Inter-Medium.ttf
+        - asset: fonts/Inter-Regular.ttf
+        - asset: fonts/Inter-SemiBold.ttf
+        - asset: fonts/Inter-Thin.ttf
