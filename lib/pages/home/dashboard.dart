@@ -115,7 +115,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
             child: Row(
               children: [
                 Container(
-
+                  color: appBlue,
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
@@ -137,7 +137,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
                       ],
                     )
                   ],
-                )
+                ),
 
               ],
             ),
