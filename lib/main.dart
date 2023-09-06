@@ -28,12 +28,7 @@ class MyHostelApp extends StatelessWidget {
           useMaterial3: true,
           scheme: FlexScheme.tealM3,
         ),
-        darkTheme: FlexThemeData.dark(
-          fontFamily: "WorkSans",
-          useMaterial3: true,
-          scheme: FlexScheme.tealM3,
-        ),
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
         routerConfig: GoRouter(
           initialLocation: Pages.dashboard.path,
           routes: [

@@ -52,6 +52,10 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
 
+flutter_native_splash:
+  color: "#064997"
+  android: true
+  ios: true
 
 flutter_icons:
   image_path_android: "assets/images/oostel.png"
