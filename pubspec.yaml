@@ -44,7 +44,6 @@ dependencies:
   skeletonizer:
   flutter_lazy_listview:
   fluttertoast:
-  onboarding:
 
 dev_dependencies:
   flutter_test:
@@ -55,12 +54,12 @@ dev_dependencies:
 
 
 flutter_icons:
-  image_path_android: "assets/images/logo.svg"
-  image_path_ios: "assets/images/logo.svg"
+  image_path_android: "assets/images/oostel.png"
+  image_path_ios: "assets/images/oostel.png"
   android: true
   ios: true
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/logo.svg"
+  adaptive_icon_background: "#064997"
+  adaptive_icon_foreground: "assets/images/oostel.png"
   min_sdk_android: 29
   remove_alpha_ios: true
 
