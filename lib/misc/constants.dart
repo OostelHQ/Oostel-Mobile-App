@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 const Color appBlue = Color.fromRGBO(6, 73, 151, 1.0);
 const Color fadedBorder = Color.fromRGBO(1, 15, 30, 0.16);
 const Color weirdBlack = Color.fromRGBO(1, 15, 30, 1.0);
-
+const Color infoRoomsLeftBackground = Color.fromRGBO(227, 245, 236, 1.0);
+const Color infoRoomsLeft = Color.fromRGBO(22, 152, 82, 1.0);
+const Color paleBlue = Color.fromRGBO(230, 237, 244, 1.0);
 
 extension PathExtension on String {
   String get path => "/$this";
@@ -26,8 +28,10 @@ class Pages
   static const String forgotPassword = 'forgot-password';
   static const String resetPassword = 'reset-password';
 
+  static const String profile = 'profile';
+  static const String otherStudent = 'other-student';
 
-  static const String dashboard = "dashboard";
-
+  static const String dashboard = 'dashboard';
+  static const String hostelInfo = 'hostel-info';
 
 }

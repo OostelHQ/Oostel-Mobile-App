@@ -215,7 +215,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             minimumSize: Size(414.w, 50.h),
                             maximumSize: Size(414.w, 50.h),
                           ),
-                          onPressed: () {},
+                          onPressed: () => context.router.pushNamed(Pages.dashboard),
                           child: Text(
                             "Create Account",
                             style: context.textTheme.bodyLarge!.copyWith(

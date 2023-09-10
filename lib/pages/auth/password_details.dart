@@ -352,7 +352,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
             SizedBox(height: 196.h),
             Text(
               "Didn't get an email?",
-              style: context.textTheme.bodySmall,
+              style: context.textTheme.bodySmall!.copyWith(color: weirdBlack),
             ),
             SizedBox(height: 48.h),
             Padding(
@@ -363,14 +363,22 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
                   minimumSize: Size(414.w, 50.h),
                   maximumSize: Size(414.w, 50.h),
                 ),
-                onPressed: () {},
+                onPressed: () => context.router.pushNamed(Pages.resetPassword),
                 child: Text(
-                  "Resend",
+                  "Proceed",
                   style: context.textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
+              ),
+            ),
+            SizedBox(height: 48.h),
+            GestureDetector(
+              onTap: () {},
+              child: Text(
+                "Didn't get an email?",
+                style: context.textTheme.bodySmall!.copyWith(color: appBlue),
               ),
             ),
             SizedBox(height: 48.h),

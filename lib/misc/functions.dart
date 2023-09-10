@@ -20,6 +20,8 @@ void showError(String message) {
 
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
 
+String formatAmountInDouble(double price, {int digits = 0}) => formatAmount(price.toStringAsFixed(digits));
+
 String formatAmount(String price) {
   String priceInText = "";
   int counter = 0;
@@ -52,43 +54,43 @@ String formatLocation(String location,
 
 String currency() => NumberFormat.simpleCurrency(name: "NGN").currencySymbol;
 
-String formatDate(String dateTime) {
+String formatDate(String dateTime, {bool shorten = false}) {
   int firIndex = dateTime.indexOf("/");
   String d = dateTime.substring(0, firIndex);
   int secIndex = dateTime.indexOf("/", firIndex + 1);
   String m = dateTime.substring(firIndex + 1, secIndex);
   String y = dateTime.substring(secIndex + 1);
 
-  return "${month(m)} ${day(d)}, $y";
+  return "${month(m, shorten)} ${day(d)}, $y";
 }
 
-String month(String val) {
+String month(String val, bool shorten) {
   int month = int.parse(val);
   switch (month) {
     case 1:
-      return "January";
+      return shorten ? "Jan" : "January";
     case 2:
-      return "February";
+      return shorten ? "Feb" : "February";
     case 3:
-      return "March";
+      return shorten ? "Mar" : "March";
     case 4:
-      return "April";
+      return shorten ? "Apr" : "April";
     case 5:
       return "May";
     case 6:
-      return "June";
+      return shorten ? "Jun" : "June";
     case 7:
-      return "July";
+      return shorten ? "Jul" : "July";
     case 8:
-      return "August";
+      return shorten ? "Aug" : "August";
     case 9:
-      return "September";
+      return shorten ? "Sep" : "September";
     case 10:
-      return "October";
+      return shorten ? "Oct" : "October";
     case 11:
-      return "November";
+      return shorten ? "Nov" : "November";
     default:
-      return "December";
+      return shorten ? "Dec" : "December";
   }
 }
 

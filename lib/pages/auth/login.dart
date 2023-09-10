@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                           minimumSize: Size(414.w, 50.h),
                           maximumSize: Size(414.w, 50.h),
                         ),
-                        onPressed: () {},
+                        onPressed: () => context.router.pushNamed(Pages.dashboard),
                         child: Text(
                           "Login",
                           style: context.textTheme.bodyLarge!.copyWith(

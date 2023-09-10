@@ -46,22 +46,22 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
-                onTap: () => context.router.pushReplacement(Pages.register),
+                onTap: () => context.router.pushReplacementNamed(Pages.register),
                 child: Card(
                   elevation: 1.0,
                   color: Colors.white,
                   child: SizedBox(
-                    height: 80.h,
+                    height: 100.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SvgPicture.asset(
-                          "assets/images/landlord.svg",
+                          "assets/images/student.svg",
                           width: 60.r,
                           height: 60.r,
                         ),
                         Text(
-                          "I am a Landlord/Landlady",
+                          "I am a Student",
                           style: context.textTheme.bodyLarge!
                               .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
                         ),
@@ -79,22 +79,22 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
-                onTap: () => context.router.pushReplacement(Pages.register),
+                onTap: () => context.router.pushReplacementNamed(Pages.register),
                 child: Card(
                   elevation: 1.0,
                   color: Colors.white,
                   child: SizedBox(
-                    height: 80.h,
+                    height: 100.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SvgPicture.asset(
-                          "assets/images/student.svg",
+                          "assets/images/landlord.svg",
                           width: 60.r,
                           height: 60.r,
                         ),
                         Text(
-                          "I am a Student",
+                          "I am a Landlord/Landlady",
                           style: context.textTheme.bodyLarge!
                               .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
                         ),

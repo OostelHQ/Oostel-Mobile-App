@@ -31,10 +31,10 @@ class _SplashPageState extends ConsumerState<SplashPage>
         parent: controller,
         curve: const Interval(
           0.0,
-          0.5,
+          0.3,
           curve: Curves.bounceOut,
         ),
-        reverseCurve: Curves.elasticOut
+        reverseCurve: Curves.easeOut,
       ),
     );
 
