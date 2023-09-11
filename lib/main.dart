@@ -106,6 +106,7 @@ class MyHostelApp extends StatelessWidget {
                     //     available: true,
                     //     student: student,
                     //   origin: "Ebonyi",
+                    //   denomination: "Christ Apostolic Church",
                     //   hobby: "Singing and dancing",
                     //   ageRange: "23 - 30",
                     //   religion: "Christianity",

@@ -10,6 +10,7 @@ class RoommateInfo extends Equatable {
   final String origin;
   final String ageRange;
   final String religion;
+  final String denomination;
   final bool available;
 
   const RoommateInfo({
@@ -22,6 +23,7 @@ class RoommateInfo extends Equatable {
     this.ageRange = "",
     this.hobby = "",
     this.origin = "",
+    this.denomination = "",
   });
 
   @override
@@ -35,10 +37,12 @@ class RoommateInfo extends Equatable {
         origin = map["origin"],
         ageRange = map["ageRange"],
         religion = map["religion"],
+        denomination = map["denomination"],
         student = Student.fromJson(map["student"]),
         available = map["available"];
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "student": student.toJson(),
         "level": level,
         "location": location,
@@ -47,6 +51,7 @@ class RoommateInfo extends Equatable {
         "ageRange": ageRange,
         "hobby": hobby,
         "religion": religion,
+        "denomination": denomination,
         "available": available,
       };
 }

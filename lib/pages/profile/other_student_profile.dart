@@ -286,6 +286,47 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                                 shape: BoxShape.circle,
                               ),
                               child: SvgPicture.asset(
+                                  "assets/images/Profile Church.svg"),
+                            ),
+                            SizedBox(width: 15.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${widget.info.denomination}",
+                                  style: context.textTheme.bodyLarge!
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  "Denomination",
+                                  style: context.textTheme.bodyMedium!
+                                      .copyWith(color: weirdBlack),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15.h),
+                    Card(
+                      elevation: 1.0,
+                      child: SizedBox(
+                        height: 70.h,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 10.w),
+                            Container(
+                              width: 50.r,
+                              height: 50.r,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                color: paleBlue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: SvgPicture.asset(
                                   "assets/images/Profile Age.svg"),),
                             SizedBox(width: 15.w),
                             Column(
