@@ -50,14 +50,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(height: 25.h),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 17.w),
-                    child: IconButton(
-                      iconSize: 26.r,
-                      splashRadius: 20.r,
-                      icon: const Icon(Icons.chevron_left_rounded),
-                      onPressed: () => context.router.pop(),
-                    ),
+                  child: IconButton(
+                    iconSize: 26.r,
+                    splashRadius: 20.r,
+                    icon: const Icon(Icons.chevron_left_rounded),
+                    onPressed: () => context.router.pop(),
                   ),
                 ),
                 SvgPicture.asset(
@@ -190,15 +187,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             Wrap(
                               children: [
                                 Text(
-                                  "I agree to the",
-                                  style: context.textTheme.bodyLarge!
+                                  "I agree to Oostel's",
+                                  style: context.textTheme.bodyMedium!
                                       .copyWith(color: weirdBlack),
                                 ),
                                 GestureDetector(
                                   onTap: () {},
                                   child: Text(
-                                    " Privacy Policy",
-                                    style: context.textTheme.bodyLarge!
+                                    " Privacy Policies",
+                                    style: context.textTheme.bodyMedium!
                                         .copyWith(
                                             color: appBlue,
                                             fontWeight: FontWeight.w500),
@@ -231,7 +228,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             children: [
                               Text(
                                 "Already have an account?",
-                                style: context.textTheme.bodyLarge!
+                                style: context.textTheme.bodyMedium!
                                     .copyWith(color: weirdBlack),
                               ),
                               GestureDetector(
@@ -239,7 +236,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     .pushReplacementNamed(Pages.login),
                                 child: Text(
                                   " Login",
-                                  style: context.textTheme.bodyLarge!.copyWith(
+                                  style: context.textTheme.bodyMedium!.copyWith(
                                       color: appBlue,
                                       fontWeight: FontWeight.w500),
                                 ),

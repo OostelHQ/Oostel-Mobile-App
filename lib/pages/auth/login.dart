@@ -43,14 +43,11 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 25.h),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 17.w),
-                  child: IconButton(
-                    iconSize: 26.r,
-                    splashRadius: 20.r,
-                    icon: const Icon(Icons.chevron_left_rounded),
-                    onPressed: () => context.router.pop(),
-                  ),
+                child: IconButton(
+                  iconSize: 26.r,
+                  splashRadius: 20.r,
+                  icon: const Icon(Icons.chevron_left_rounded),
+                  onPressed: () => context.router.pop(),
                 ),
               ),
               SvgPicture.asset(
@@ -162,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Text(
                                   "Remember Me",
-                                  style: context.textTheme.bodyLarge!
+                                  style: context.textTheme.bodyMedium!
                                       .copyWith(color: weirdBlack),
                                 ),
                               ],
@@ -173,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                                 .pushNamed(Pages.forgotPassword),
                             child: Text(
                               "Forgot Password",
-                              style: context.textTheme.bodyLarge!.copyWith(
+                              style: context.textTheme.bodyMedium!.copyWith(
                                   color: appBlue,
                                   fontWeight: FontWeight.w500),
                             ),
@@ -203,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Text(
                               "Don't have an account yet?",
-                              style: context.textTheme.bodyLarge!
+                              style: context.textTheme.bodyMedium!
                                   .copyWith(color: weirdBlack),
                             ),
                             GestureDetector(
@@ -211,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                                   .pushReplacementNamed(Pages.register),
                               child: Text(
                                 " Create Account",
-                                style: context.textTheme.bodyLarge!.copyWith(
+                                style: context.textTheme.bodyMedium!.copyWith(
                                     color: appBlue,
                                     fontWeight: FontWeight.w500),
                               ),

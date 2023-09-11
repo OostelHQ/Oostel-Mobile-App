@@ -23,7 +23,34 @@ class Holder {
   });
 }
 
-class SpecialForm extends StatelessWidget {
+
+class MySliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
+  MySliverPersistentHeaderDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.white,
+      child: _tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(MySliverPersistentHeaderDelegate oldDelegate) {
+    return false;
+  }
+}
+
+
+class SpecialForm extends StatefulWidget {
   final Widget? prefix;
   final Widget? suffix;
   final String? hint;
@@ -78,64 +105,69 @@ class SpecialForm extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<SpecialForm> createState() => _SpecialFormState();
+}
+
+class _SpecialFormState extends State<SpecialForm> {
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
-      height: height,
+      width: widget.width,
+      height: widget.height,
       child: TextFormField(
-        style: style ?? context.textTheme.bodyMedium,
+        style: widget.style ?? context.textTheme.bodyMedium,
         autovalidateMode:
-            autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
-        maxLines: maxLines,
-        focusNode: focus,
-        autofocus: autoFocus,
-        controller: controller,
-        obscureText: obscure,
-        keyboardType: type,
-        textInputAction: action,
-        readOnly: readOnly,
-        onEditingComplete: () => onActionPressed!(controller.text),
+            widget.autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+        maxLines: widget.maxLines,
+        focusNode: widget.focus,
+        autofocus: widget.autoFocus,
+        controller: widget.controller,
+        obscureText: widget.obscure,
+        keyboardType: widget.type,
+        textInputAction: widget.action,
+        readOnly: widget.readOnly,
+        onEditingComplete: () => widget.onActionPressed!(widget.controller.text),
         cursorColor: appBlue,
         decoration: InputDecoration(
           errorMaxLines: 1,
           errorStyle: const TextStyle(height: 0, fontSize: 0),
-          fillColor: fillColor ?? Colors.transparent,
+          fillColor: widget.fillColor ?? Colors.transparent,
           filled: true,
           contentPadding:
-              padding ?? EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-          prefixIcon: prefix,
-          suffixIcon: suffix,
+              widget.padding ?? EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+          prefixIcon: widget.prefix,
+          suffixIcon: widget.suffix,
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: borderColor ?? fadedBorder,
+              color: widget.borderColor ?? fadedBorder,
             ),
           ),
           border: OutlineInputBorder(
             borderSide: BorderSide(
-              color: borderColor ?? fadedBorder,
+              color: widget.borderColor ?? fadedBorder,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: borderColor ?? fadedBorder,
+              color: widget.borderColor ?? fadedBorder,
             ),
           ),
-          hintText: hint,
-          hintStyle: hintStyle ??
+          hintText: widget.hint,
+          hintStyle: widget.hintStyle ??
               context.textTheme.labelMedium!
                   .copyWith(fontWeight: FontWeight.w200),
         ),
         onChanged: (value) {
-          if (onChange == null) return;
-          onChange!(value);
+          if (widget.onChange == null) return;
+          widget.onChange!(value);
         },
         validator: (value) {
-          if (onValidate == null) return null;
-          return onValidate!(value);
+          if (widget.onValidate == null) return null;
+          return widget.onValidate!(value);
         },
         onSaved: (value) {
-          if (onSave == null) return;
-          onSave!(value);
+          if (widget.onSave == null) return;
+          widget.onSave!(value);
         },
       ),
     );
@@ -156,7 +188,7 @@ class Copyright extends StatelessWidget {
         Text(
           "${DateTime.now().year}. Oostel. All rights reserved",
           style: context.textTheme.bodySmall!
-              .copyWith(color: Colors.grey, fontSize: 12.sp),
+              .copyWith(color: Colors.grey),
         ),
       ],
     );
@@ -195,11 +227,14 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
-                  child: Image.asset(
-                    widget.info.image,
-                    height: 100.h,
-                    width: 125.w,
-                    fit: BoxFit.cover,
+                  child: Hero(
+                    tag: "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                    child: Image.asset(
+                      widget.info.image,
+                      height: 100.h,
+                      width: 125.w,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 SizedBox(width: 15.w),
@@ -212,20 +247,26 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            widget.info.name,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600, color: weirdBlack),
+                          Hero(
+                            tag: "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                            child: Text(
+                              widget.info.name,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600, color: weirdBlack),
+                            ),
                           ),
-                          GestureDetector(
-                            onTap: () => setState(() => liked = !liked),
-                            child: AnimatedSwitcherTranslation.right(
-                              duration: const Duration(milliseconds: 500),
-                              child: Icon(
-                                Icons.favorite_rounded,
-                                color: liked ? Colors.red : Colors.black26,
-                                size: 18,
-                                key: ValueKey<bool>(liked),
+                          Hero(
+                            tag: "Hostel ID: ${widget.info.id} Liked",
+                            child: GestureDetector(
+                              onTap: () => setState(() => liked = !liked),
+                              child: AnimatedSwitcherTranslation.right(
+                                duration: const Duration(milliseconds: 500),
+                                child: Icon(
+                                  Icons.favorite_rounded,
+                                  color: liked ? Colors.red : Colors.black26,
+                                  size: 18,
+                                  key: ValueKey<bool>(liked),
+                                ),
                               ),
                             ),
                           )
@@ -563,11 +604,14 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
-                  child: Image.asset(
-                    "assets/images/street.jpg",
-                    width: 180.w,
-                    height: 125.h,
-                    fit: BoxFit.cover,
+                  child: Hero(
+                    tag: "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                    child: Image.asset(
+                      widget.info.image,
+                      width: 180.w,
+                      height: 125.h,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -577,22 +621,28 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                   children: [
                     SizedBox(
                       width: 130.w,
-                      child: Text(
-                        widget.info.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      child: Hero(
+                        tag: "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                        child: Text(
+                          widget.info.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => setState(() => liked = !liked),
-                      child: AnimatedSwitcherTranslation.right(
-                        duration: const Duration(milliseconds: 500),
-                        child: Icon(
-                          Icons.favorite_rounded,
-                          color: liked ? Colors.red : Colors.black26,
-                          size: 18,
-                          key: ValueKey<bool>(liked),
+                    Hero(
+                      tag: "Hostel ID: ${widget.info.id} Liked",
+                      child: GestureDetector(
+                        onTap: () => setState(() => liked = !liked),
+                        child: AnimatedSwitcherTranslation.right(
+                          duration: const Duration(milliseconds: 500),
+                          child: Icon(
+                            Icons.favorite_rounded,
+                            color: liked ? Colors.red : Colors.black26,
+                            size: 18,
+                            key: ValueKey<bool>(liked),
+                          ),
                         ),
                       ),
                     )
@@ -774,5 +824,30 @@ class CommentCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+
+Widget flightShuttleBuilder(BuildContext context, Animation<double> animation, HeroFlightDirection direction,
+    BuildContext fromContext, BuildContext toContext) {
+  switch (direction) {
+    case HeroFlightDirection.push:
+      return ScaleTransition(
+        scale: animation.drive(
+          Tween<double>(
+            begin: 0.0,
+            end: 1.0,
+          ).chain(
+            CurveTween(
+                curve: Curves.fastOutSlowIn),
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: toContext.widget,
+        ),
+      );
+    case HeroFlightDirection.pop:
+      return fromContext.widget;
   }
 }

@@ -274,27 +274,27 @@ class _HomePageState extends ConsumerState<_HomePage>
         amount: 50000,
         available: true,
       ),
-      RoommateInfo(
-        student: student,
-        level: 300,
-        location: "Isolu",
-        amount: 75000,
-        available: true,
-      ),
-      RoommateInfo(
-        student: student,
-        level: 200,
-        location: "Accord",
-        amount: 50000,
-        available: false,
-      ),
-      RoommateInfo(
-        student: student,
-        level: 500,
-        location: "Kofesu",
-        amount: 40000,
-        available: false,
-      )
+      // RoommateInfo(
+      //   student: student,
+      //   level: 300,
+      //   location: "Isolu",
+      //   amount: 75000,
+      //   available: true,
+      // ),
+      // RoommateInfo(
+      //   student: student,
+      //   level: 200,
+      //   location: "Accord",
+      //   amount: 50000,
+      //   available: false,
+      // ),
+      // RoommateInfo(
+      //   student: student,
+      //   level: 500,
+      //   location: "Kofesu",
+      //   amount: 40000,
+      //   available: false,
+      // )
     ];
 
     animationController = AnimationController(
@@ -358,10 +358,15 @@ class _HomePageState extends ConsumerState<_HomePage>
                             ),
                             SizedBox(width: 10.w),
                             Text(
-                              "Hello, ${student.lastName}",
+                              "Hello, ${student.lastName} ",
                               style: context.textTheme.bodyMedium!.copyWith(
                                 color: weirdBlack,
                                 fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(student.gender == "Female" ? "🧑" : "🧒",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontSize: 24.sp
                               ),
                             ),
                           ],
@@ -588,110 +593,6 @@ class _HomePageState extends ConsumerState<_HomePage>
           Expanded(
             child: ListView.separated(
               itemBuilder: (_, index) {
-                // if (index == 0 && viewAcquires) {
-                //   return FadeTransition(
-                //     opacity: reverseAnimation,
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           crossAxisAlignment: CrossAxisAlignment.center,
-                //           mainAxisAlignment: MainAxisAlignment.start,
-                //           children: [
-                //             GestureDetector(
-                //                 onTap: toggleAcquires,
-                //                 child: const Icon(Icons.chevron_left_rounded, size: 24),
-                //             ),
-                //             SizedBox(width: 110.w),
-                //             Text(
-                //               "My Acquires",
-                //               style: context.textTheme.bodyLarge!.copyWith(
-                //                   fontWeight: FontWeight.w600,
-                //                   color: weirdBlack),
-                //             )
-                //           ],
-                //         ),
-                //         SizedBox(height: 25.h),
-                //         Row(
-                //           children: [
-                //             GestureDetector(
-                //               onTap: () {
-                //                 if (type != _AcquireType.hostel) {
-                //                   setState(() => type = _AcquireType.hostel);
-                //                 }
-                //               },
-                //               child: AnimatedSwitcherFlip.flipX(
-                //                 duration: const Duration(milliseconds: 500),
-                //                 child: Container(
-                //                   width: 185.w,
-                //                   height: 50.h,
-                //                   alignment: Alignment.center,
-                //                   key:
-                //                       ValueKey<bool>(type == _AcquireType.hostel),
-                //                   decoration: BoxDecoration(
-                //                     color: type == _AcquireType.hostel
-                //                         ? appBlue
-                //                         : Colors.transparent,
-                //                     borderRadius: BorderRadius.only(
-                //                       topLeft: Radius.circular(5.r),
-                //                       bottomLeft: Radius.circular(5.r),
-                //                     ),
-                //                     border: type == _AcquireType.hostel
-                //                         ? null
-                //                         : Border.all(color: appBlue),
-                //                   ),
-                //                   child: Text(
-                //                     "Hostel",
-                //                     style: context.textTheme.bodyMedium!.copyWith(
-                //                         color: type == _AcquireType.hostel
-                //                             ? Colors.white
-                //                             : appBlue),
-                //                   ),
-                //                 ),
-                //               ),
-                //             ),
-                //             GestureDetector(
-                //               onTap: () {
-                //                 if (type != _AcquireType.roommate) {
-                //                   setState(() => type = _AcquireType.roommate);
-                //                 }
-                //               },
-                //               child: AnimatedSwitcherFlip.flipX(
-                //                 duration: const Duration(milliseconds: 500),
-                //                 child: Container(
-                //                   width: 185.w,
-                //                   height: 50.h,
-                //                   alignment: Alignment.center,
-                //                   key: ValueKey<bool>(
-                //                       type == _AcquireType.roommate),
-                //                   decoration: BoxDecoration(
-                //                     color: type == _AcquireType.roommate
-                //                         ? appBlue
-                //                         : Colors.transparent,
-                //                     borderRadius: BorderRadius.only(
-                //                       topRight: Radius.circular(5.r),
-                //                       bottomRight: Radius.circular(5.r),
-                //                     ),
-                //                     border: type == _AcquireType.roommate
-                //                         ? null
-                //                         : Border.all(color: appBlue),
-                //                   ),
-                //                   child: Text(
-                //                     "Roommate",
-                //                     style: context.textTheme.bodyMedium!.copyWith(
-                //                         color: type == _AcquireType.roommate
-                //                             ? Colors.white
-                //                             : appBlue),
-                //                   ),
-                //                 ),
-                //               ),
-                //             )
-                //           ],
-                //         ),
-                //       ],
-                //     ),
-                //   );
-                // }
-
                 if (type == _AcquireType.hostel) {
                   return HostelInfoCard(
                       info: hostels[index - (viewAcquires ? 1 : 0)]);
@@ -740,66 +641,66 @@ class _ExplorePageState extends State<_ExplorePage> {
     );
 
     hostels = [
-      HostelInfo(
-        id: "1",
-        name: "Manchester Hostel Askj",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
-        area: 2500,
-        price: 100000,
-        roomsLeft: 5,
-        address: "Harmony Estate",
-        owner: owner,
-      ),
-      HostelInfo(
-        id: "2",
-        name: "Liverpool Hostel",
-        image: "assets/images/street.jpg",
-        bedrooms: 2,
-        bathrooms: 1,
-        area: 2500,
-        price: 100000,
-        roomsLeft: 1,
-        address: "Harmony Estate",
-        owner: owner,
-      ),
-      HostelInfo(
-        id: "3",
-        name: "Aubrey Hostel",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
-        area: 2000,
-        price: 90000,
-        roomsLeft: 15,
-        address: "Harmony Estate, Federal University of Agriculture",
-        owner: owner,
-      ),
-      HostelInfo(
-        id: "4",
-        name: "Test Hostel",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
-        area: 2000,
-        price: 120000,
-        roomsLeft: 5,
-        address: "Harmony Estate",
-        owner: owner,
-      ),
-      HostelInfo(
-        id: "5",
-        name: "Hostel Five",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
-        area: 2500,
-        price: 10000,
-        roomsLeft: 5,
-        address: "Harmony Estate",
-        owner: owner,
-      ),
+      // HostelInfo(
+      //   id: "1",
+      //   name: "Manchester Hostel Askj",
+      //   image: "assets/images/street.jpg",
+      //   bedrooms: 1,
+      //   bathrooms: 1,
+      //   area: 2500,
+      //   price: 100000,
+      //   roomsLeft: 5,
+      //   address: "Harmony Estate",
+      //   owner: owner,
+      // ),
+      // HostelInfo(
+      //   id: "2",
+      //   name: "Liverpool Hostel",
+      //   image: "assets/images/street.jpg",
+      //   bedrooms: 2,
+      //   bathrooms: 1,
+      //   area: 2500,
+      //   price: 100000,
+      //   roomsLeft: 1,
+      //   address: "Harmony Estate",
+      //   owner: owner,
+      // ),
+      // HostelInfo(
+      //   id: "3",
+      //   name: "Aubrey Hostel",
+      //   image: "assets/images/street.jpg",
+      //   bedrooms: 1,
+      //   bathrooms: 1,
+      //   area: 2000,
+      //   price: 90000,
+      //   roomsLeft: 15,
+      //   address: "Harmony Estate, Federal University of Agriculture",
+      //   owner: owner,
+      // ),
+      // HostelInfo(
+      //   id: "4",
+      //   name: "Test Hostel",
+      //   image: "assets/images/street.jpg",
+      //   bedrooms: 1,
+      //   bathrooms: 1,
+      //   area: 2000,
+      //   price: 120000,
+      //   roomsLeft: 5,
+      //   address: "Harmony Estate",
+      //   owner: owner,
+      // ),
+      // HostelInfo(
+      //   id: "5",
+      //   name: "Hostel Five",
+      //   image: "assets/images/street.jpg",
+      //   bedrooms: 1,
+      //   bathrooms: 1,
+      //   area: 2500,
+      //   price: 10000,
+      //   roomsLeft: 5,
+      //   address: "Harmony Estate",
+      //   owner: owner,
+      // ),
     ];
 
     Student student = const Student(
@@ -951,17 +852,17 @@ class _ExplorePageState extends State<_ExplorePage> {
             SizedBox(
               height: 260.h,
               width: 414.w,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, index) => GestureDetector(
-                  onTap: () {},
-                  child: HostelExploreCard(
-                    info: hostels[index],
-                  ),
-                ),
-                separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                itemCount: 3,
-              ),
+              // child: ListView.separated(
+              //   scrollDirection: Axis.horizontal,
+              //   itemBuilder: (_, index) => GestureDetector(
+              //     onTap: () {},
+              //     child: HostelExploreCard(
+              //       info: hostels[index],
+              //     ),
+              //   ),
+              //   separatorBuilder: (_, __) => SizedBox(width: 20.w),
+              //   itemCount: 3,
+              // ),
             ),
             SizedBox(height: 20.h),
             Row(
@@ -1016,27 +917,6 @@ class _ChatsPageState extends State<_ChatsPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [],
-    );
-  }
-}
-
-class ViewAcquiresPage extends StatefulWidget {
-  const ViewAcquiresPage({super.key});
-
-  @override
-  State<ViewAcquiresPage> createState() => _ViewAcquiresPageState();
-}
-
-class _ViewAcquiresPageState extends State<ViewAcquiresPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-            child: Column(
-          children: [],
-        )),
-      ),
     );
   }
 }

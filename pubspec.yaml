@@ -46,6 +46,9 @@ dependencies:
   fluttertoast:
   flutter_rating_stars:
   flutter_neumorphic:
+  elegant_notification:
+  bottom_sheet:
+  flutter_otp_text_field:
 
 dev_dependencies:
   flutter_test:

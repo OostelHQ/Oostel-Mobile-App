@@ -8,6 +8,13 @@ const Color infoRoomsLeftBackground = Color.fromRGBO(227, 245, 236, 1.0);
 const Color infoRoomsLeft = Color.fromRGBO(22, 152, 82, 1.0);
 const Color paleBlue = Color.fromRGBO(230, 237, 244, 1.0);
 
+const Color accentPurpleColor = Color(0xFF6A53A1);
+const Color primaryColor = Color(0xFF121212);
+const Color accentPinkColor = Color(0xFFF99BBD);
+const Color accentDarkGreenColor = Color(0xFF115C49);
+const Color accentYellowColor = Color(0xFFFFB612);
+const Color accentOrangeColor = Color(0xFFEA7A3B);
+
 extension PathExtension on String {
   String get path => "/$this";
 }

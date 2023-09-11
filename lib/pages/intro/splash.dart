@@ -49,13 +49,15 @@ class _SplashPageState extends ConsumerState<SplashPage>
       ),
     );
 
-    controller.forward()
-        .then(
-          (value) => controller.reverse().then(
-                (value) =>
-                    context.router.pushReplacementNamed(Pages.registrationType),
-              ),
-        );
+    Future.delayed(
+      const Duration(seconds: 1),
+      () => controller.forward().then(
+            (value) => controller.reverse().then(
+                  (value) => context.router
+                      .pushReplacementNamed(Pages.registrationType),
+                ),
+          ),
+    );
   }
 
   @override
@@ -83,7 +85,9 @@ class _SplashPageState extends ConsumerState<SplashPage>
               SizedBox(height: 25.h),
               FadeTransition(
                 opacity: textAnimation,
-                child: Text("Oostel", style: context.textTheme.headlineLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.w500)),
+                child: Text("Oostel",
+                    style: context.textTheme.headlineLarge!.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.w500)),
               ),
               SizedBox(height: 335.h),
               FadeTransition(
