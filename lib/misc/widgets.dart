@@ -23,32 +23,48 @@ class Holder {
   });
 }
 
+class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
+  TabHeaderDelegate({required this.tabBar});
 
-class MySliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
-  MySliverPersistentHeaderDelegate(this._tabBar);
-
-  final TabBar _tabBar;
+  final TabBar tabBar;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => tabBar.preferredSize.height;
+
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => tabBar.preferredSize.height;
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: _tabBar,
-    );
-  }
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+      Container(
+        color: Colors.white,
+        child: tabBar,
+      );
 
   @override
-  bool shouldRebuild(MySliverPersistentHeaderDelegate oldDelegate) {
-    return false;
-  }
+  bool shouldRebuild(TabHeaderDelegate oldDelegate) => false;
 }
 
+class SizedBoxHeaderDelegate extends SliverPersistentHeaderDelegate {
+  SizedBoxHeaderDelegate({required this.box});
+
+  final SizedBox box;
+
+  @override
+  double get minExtent => box.height!;
+
+  @override
+  double get maxExtent => box.height!;
+
+  @override
+  Widget build(
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+      box;
+
+  @override
+  bool shouldRebuild(SizedBoxHeaderDelegate oldDelegate) => false;
+}
 
 class SpecialForm extends StatefulWidget {
   final Widget? prefix;
@@ -116,8 +132,9 @@ class _SpecialFormState extends State<SpecialForm> {
       height: widget.height,
       child: TextFormField(
         style: widget.style ?? context.textTheme.bodyMedium,
-        autovalidateMode:
-            widget.autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+        autovalidateMode: widget.autoValidate
+            ? AutovalidateMode.always
+            : AutovalidateMode.disabled,
         maxLines: widget.maxLines,
         focusNode: widget.focus,
         autofocus: widget.autoFocus,
@@ -126,15 +143,16 @@ class _SpecialFormState extends State<SpecialForm> {
         keyboardType: widget.type,
         textInputAction: widget.action,
         readOnly: widget.readOnly,
-        onEditingComplete: () => widget.onActionPressed!(widget.controller.text),
+        onEditingComplete: () =>
+            widget.onActionPressed!(widget.controller.text),
         cursorColor: appBlue,
         decoration: InputDecoration(
           errorMaxLines: 1,
           errorStyle: const TextStyle(height: 0, fontSize: 0),
           fillColor: widget.fillColor ?? Colors.transparent,
           filled: true,
-          contentPadding:
-              widget.padding ?? EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+          contentPadding: widget.padding ??
+              EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
           prefixIcon: widget.prefix,
           suffixIcon: widget.suffix,
           focusedBorder: OutlineInputBorder(
@@ -187,8 +205,7 @@ class Copyright extends StatelessWidget {
         SizedBox(width: 3.w),
         Text(
           "${DateTime.now().year}. Oostel. All rights reserved",
-          style: context.textTheme.bodySmall!
-              .copyWith(color: Colors.grey),
+          style: context.textTheme.bodySmall!.copyWith(color: Colors.grey),
         ),
       ],
     );
@@ -228,7 +245,8 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
                   child: Hero(
-                    tag: "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                    tag:
+                        "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
                     child: Image.asset(
                       widget.info.image,
                       height: 100.h,
@@ -248,11 +266,13 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Hero(
-                            tag: "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                            tag:
+                                "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
                             child: Text(
                               widget.info.name,
                               style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600, color: weirdBlack),
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack),
                             ),
                           ),
                           Hero(
@@ -366,7 +386,7 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                               borderRadius: BorderRadius.circular(5.r),
                             ),
                             child: Text(
-                              "${widget.info.roomsLeft} room${widget.info.roomsLeft == 1 ? "" : "s"} left",
+                              "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
                               style: context.textTheme.bodyMedium!.copyWith(
                                 color: infoRoomsLeft,
                                 fontSize: 13.sp,
@@ -605,7 +625,8 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
                   child: Hero(
-                    tag: "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                    tag:
+                        "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
                     child: Image.asset(
                       widget.info.image,
                       width: 180.w,
@@ -622,7 +643,8 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                     SizedBox(
                       width: 130.w,
                       child: Hero(
-                        tag: "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                        tag:
+                            "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
                         child: Text(
                           widget.info.name,
                           overflow: TextOverflow.ellipsis,
@@ -653,8 +675,8 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                   child: Text(
                     widget.info.address,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium!
-                        .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
+                    style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack, fontWeight: FontWeight.w500),
                   ),
                 ),
                 SizedBox(height: 5.h),
@@ -749,7 +771,7 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                         borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(
-                        "${widget.info.roomsLeft} room${widget.info.roomsLeft == 1 ? "" : "s"} left",
+                        "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: infoRoomsLeft,
                           fontSize: 13.sp,
@@ -827,9 +849,12 @@ class CommentCard extends StatelessWidget {
   }
 }
 
-
-Widget flightShuttleBuilder(BuildContext context, Animation<double> animation, HeroFlightDirection direction,
-    BuildContext fromContext, BuildContext toContext) {
+Widget flightShuttleBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    HeroFlightDirection direction,
+    BuildContext fromContext,
+    BuildContext toContext) {
   switch (direction) {
     case HeroFlightDirection.push:
       return ScaleTransition(
@@ -838,8 +863,7 @@ Widget flightShuttleBuilder(BuildContext context, Animation<double> animation, H
             begin: 0.0,
             end: 1.0,
           ).chain(
-            CurveTween(
-                curve: Curves.fastOutSlowIn),
+            CurveTween(curve: Curves.fastOutSlowIn),
           ),
         ),
         child: Material(
@@ -851,3 +875,196 @@ Widget flightShuttleBuilder(BuildContext context, Animation<double> animation, H
       return fromContext.widget;
   }
 }
+
+class RatingsOverview extends StatefulWidget {
+  const RatingsOverview({super.key});
+
+  @override
+  State<RatingsOverview> createState() => _RatingsOverviewState();
+}
+
+class _RatingsOverviewState extends State<RatingsOverview> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 414.w,
+      height: 150.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        color: paleBlue,
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: 140.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.h),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.end,
+                    children: [
+                      Text("0",
+                          style: context.textTheme.headlineLarge!
+                              .copyWith(fontWeight: FontWeight.bold)),
+                      Text(
+                        "/5",
+                        style: context.textTheme.bodyLarge!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 15.h),
+                  RatingStars(
+                    value: 3.2,
+                    starBuilder: (_, color) => Icon(
+                      Boxicons.bxs_star,
+                      color: color,
+                      size: 14.r,
+                    ),
+                    valueLabelVisibility: false,
+                    starCount: 5,
+                    starSize: 14.r,
+                    starSpacing: 5.w,
+                    starColor: Colors.orange,
+                    starOffColor: Colors.grey,
+                  ),
+                  SizedBox(height: 10.h),
+                  Text("0 verified ratings",
+                      style: context.textTheme.bodyMedium)
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 170.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(
+                  5,
+                  (index) => Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("${5 - index}",
+                          style: context.textTheme.bodySmall!
+                              .copyWith(fontWeight: FontWeight.w500)),
+                      SizedBox(width: 5.w),
+                      Icon(
+                        Boxicons.bxs_star,
+                        color: Colors.grey,
+                        size: 14.r,
+                      ),
+                      SizedBox(width: 5.w),
+                      Text(
+                        "(0)",
+                        style: context.textTheme.bodySmall!
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(width: 15.w),
+                      SizedBox(
+                        width: 90.w,
+                        child: LinearProgressIndicator(
+                          value: 0.3,
+                          minHeight: 10.h,
+                          borderRadius: BorderRadius.circular(5.h),
+                          color: appBlue,
+                          backgroundColor: Colors.grey.withOpacity(0.5),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+// class HomeSwitcher extends StatelessWidget {
+//   const HomeSwitcher({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         GestureDetector(
+//           onTap: () {
+//             if (type != _AcquireType.hostel) {
+//               setState(() => type = _AcquireType.hostel);
+//             }
+//           },
+//           child: AnimatedSwitcherFlip.flipX(
+//             duration: const Duration(milliseconds: 500),
+//             child: Container(
+//               width: 185.w,
+//               height: 50.h,
+//               alignment: Alignment.center,
+//               key: ValueKey<bool>(type == _AcquireType.hostel),
+//               decoration: BoxDecoration(
+//                 color: type == _AcquireType.hostel
+//                     ? appBlue
+//                     : Colors.transparent,
+//                 borderRadius: BorderRadius.only(
+//                   topLeft: Radius.circular(5.r),
+//                   bottomLeft: Radius.circular(5.r),
+//                 ),
+//                 border: type == _AcquireType.hostel
+//                     ? null
+//                     : Border.all(color: appBlue),
+//               ),
+//               child: Text(
+//                 "Hostel",
+//                 style: context.textTheme.bodyMedium!.copyWith(
+//                     color: type == _AcquireType.hostel
+//                         ? Colors.white
+//                         : appBlue),
+//               ),
+//             ),
+//           ),
+//         ),
+//         GestureDetector(
+//           onTap: () {
+//             if (type != _AcquireType.roommate) {
+//               setState(() => type = _AcquireType.roommate);
+//             }
+//           },
+//           child: AnimatedSwitcherFlip.flipX(
+//             duration: const Duration(milliseconds: 500),
+//             child: Container(
+//               width: 185.w,
+//               height: 50.h,
+//               alignment: Alignment.center,
+//               key: ValueKey<bool>(type == _AcquireType.roommate),
+//               decoration: BoxDecoration(
+//                 color: type == _AcquireType.roommate
+//                     ? appBlue
+//                     : Colors.transparent,
+//                 borderRadius: BorderRadius.only(
+//                   topRight: Radius.circular(5.r),
+//                   bottomRight: Radius.circular(5.r),
+//                 ),
+//                 border: type == _AcquireType.roommate
+//                     ? null
+//                     : Border.all(color: appBlue),
+//               ),
+//               child: Text(
+//                 "Roommate",
+//                 style: context.textTheme.bodyMedium!.copyWith(
+//                     color: type == _AcquireType.roommate
+//                         ? Colors.white
+//                         : appBlue),
+//               ),
+//             ),
+//           ),
+//         )
+//       ],
+//     );
+//   }
+// }

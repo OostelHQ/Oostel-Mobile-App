@@ -13,7 +13,7 @@ import 'package:my_hostel/pages/auth/password_details.dart';
 import 'package:my_hostel/pages/auth/register.dart';
 import 'package:my_hostel/pages/auth/register_type.dart';
 import 'package:my_hostel/pages/home/dashboard.dart';
-import 'package:my_hostel/pages/home/hostels.dart';
+import 'package:my_hostel/pages/home/hostel_information.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
 import 'package:my_hostel/pages/profile/profile.dart';
 import 'package:my_hostel/pages/profile/other_student_profile.dart';
@@ -29,9 +29,7 @@ class MyHostelApp extends StatefulWidget {
   State<MyHostelApp> createState() => _MyHostelAppState();
 }
 
-
 class _MyHostelAppState extends State<MyHostelApp> {
-
   late GoRouter _router;
 
   @override
@@ -90,100 +88,21 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.otherStudent.path,
           name: Pages.otherStudent,
           builder: (_, state) {
-            Map<String, dynamic> data = state.extra as Map<
-                String,
-                dynamic>;
-            RoommateInfo info = RoommateInfo.fromJson(data);
-
-            Student student = const Student(
-              firstName: "John",
-              lastName: "Doe",
-              gender: "Male",
-              image: "assets/images/watch man.jpg",
-            );
-            RoommateInfo info2 = RoommateInfo(level: 100,
-                location: "Harmony",
-                amount: 50000,
-                available: true,
-                student: student,
-              origin: "Ebonyi",
-              denomination: "Christ Apostolic Church",
-              hobby: "Singing and dancing",
-              ageRange: "23 - 30",
-              religion: "Christianity",
-            );
-            return OtherStudentProfilePage(info: info);
+            Map<String, dynamic> data = state.extra as Map<String, dynamic>;
+            return OtherStudentProfilePage(info: RoommateInfo.fromJson(data));
           },
         ),
         GoRoute(
           path: Pages.hostelInfo.path,
           name: Pages.hostelInfo,
           builder: (_, state) {
-            Map<String, dynamic> map = state.extra as Map<
-                String,
-                dynamic>;
-            HostelInfo info = HostelInfo.fromJson(map);
-            HostelInfo info2 = HostelInfo(
-              id: "1",
-              name: "Manchester Hostel Askj",
-              image: "assets/images/street.jpg",
-              bedrooms: 1,
-              bathrooms: 1,
-              area: 2500,
-              price: 100000,
-              roomsLeft: 5,
-              address: "Harmony Estate",
-              description:
-              "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
-                  "Lorem ipsum dolor sit amet, consectetur.",
-              rules: const [
-                "Lorem ipsum dolor sit amet, consectetur.",
-                "Nam utcurs usipsum dolor sit amet.",
-                "Lorem ipsum dolor sit amet, consectetur.",
-                "Nam utcurs usipsum dolor sit amet.",
-                "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
-              ],
-              facilities: const [
-                "Light",
-                "Water",
-                "Security",
-                "None",
-                "Light",
-                "Water",
-                "Security",
-              ],
-              media: const [
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-                "assets/images/street.jpg",
-              ],
-              owner: Landowner(
-                id: "12",
-                image: "assets/images/watch man.jpg",
-                lastName: "Julius",
-                firstName: "Adeyemi",
-                verified: true,
-                ratings: 3.5,
-                contact: "+2348012345678",
-                totalRated: 234,
-                dateJoined: DateTime.now(),
-                address: "Ibadan, Nigeria",
-              ),
-            );
-            return HostelInformationPage(info: info);
+            Map<String, dynamic> map = state.extra as Map<String, dynamic>;
+            return HostelInformationPage(info: HostelInfo.fromJson(map));
           },
         ),
       ],
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {

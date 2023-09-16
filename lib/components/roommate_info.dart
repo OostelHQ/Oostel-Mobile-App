@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:my_hostel/components/student.dart';
 
 class RoommateInfo extends Equatable {
+  final String id;
   final int level;
   final String location;
   final double amount;
@@ -14,6 +15,7 @@ class RoommateInfo extends Equatable {
   final bool available;
 
   const RoommateInfo({
+    this.id = "",
     this.level = 100,
     this.location = "",
     this.amount = 0,
@@ -31,6 +33,7 @@ class RoommateInfo extends Equatable {
 
   RoommateInfo.fromJson(Map<String, dynamic> map)
       : level = map["level"],
+  id = map["_id"],
         location = map["location"],
         amount = map["amount"],
         hobby = map["hobby"],
@@ -44,6 +47,7 @@ class RoommateInfo extends Equatable {
   Map<String, dynamic> toJson() =>
       {
         "student": student.toJson(),
+        "_id" : id,
         "level": level,
         "location": location,
         "amount": amount,
