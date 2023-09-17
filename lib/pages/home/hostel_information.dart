@@ -209,6 +209,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                               "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
                               style: context.textTheme.bodyMedium!.copyWith(
                                 color: infoRoomsLeft,
+                                fontWeight: FontWeight.w500,
                                 fontSize: 13.sp,
                               ),
                             ),
@@ -237,7 +238,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           Text(
                             "${widget.info.bedrooms}",
                             style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack50),
+                                .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
                           ),
                           SizedBox(width: 10.w),
                           SvgPicture.asset(
@@ -250,7 +251,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           Text(
                             "${widget.info.bathrooms}",
                             style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack50),
+                                .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
                           ),
                           SizedBox(width: 10.w),
                           SvgPicture.asset(
@@ -263,7 +264,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           Text(
                             "${widget.info.area.toStringAsFixed(0)} sqft",
                             style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack50),
+                                .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -275,15 +276,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: currency(),
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: formatAmountInDouble(widget.info.price),
+                                  text: "${currency()} ${formatAmountInDouble(widget.info.price)}",
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     color: appBlue,
                                     fontFamily: "Inter",
@@ -326,7 +319,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         .copyWith(color: appBlue, fontWeight: FontWeight.w500),
                     unselectedLabelStyle: context.textTheme.bodyMedium!
                         .copyWith(
-                            color: Colors.black45, fontWeight: FontWeight.w500),
+                            color: weirdBlack50, fontWeight: FontWeight.w500),
                     tabs: const [
                       Tab(text: "Landlord"),
                       Tab(text: "Details"),
@@ -558,7 +551,8 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             SizedBox(height: 48.h),
                             const Copyright(),
                             SizedBox(height: 24.h)
-                          ]),
+                          ],
+                      ),
                     )
                   ],
                 ),
@@ -581,7 +575,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             Text(
                               widget.info.description,
                               style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack50,
+                                color: weirdBlack75,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -601,7 +595,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                 (index) => Text(
                                   "${index + 1}. ${widget.info.rules[index]}",
                                   style: context.textTheme.bodyMedium!.copyWith(
-                                    color: weirdBlack50,
+                                    color: weirdBlack75,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

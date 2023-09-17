@@ -34,9 +34,11 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
         ),
         elevation: 0.0,
         centerTitle: true,
-        title: Text("Roommate",
-            style: context.textTheme.bodyLarge!
-                .copyWith(fontWeight: FontWeight.w600, fontSize: 22.sp)),
+        title: Text(
+          "Roommate",
+          style: context.textTheme.bodyLarge!
+              .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 15.w),
@@ -59,7 +61,8 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                         backgroundColor: appBlue,
                         radius: 72.r,
                         child: CircleAvatar(
-                          backgroundImage: AssetImage(widget.info.student.image),
+                          backgroundImage:
+                              AssetImage(widget.info.student.image),
                           radius: 68.r,
                         ),
                       ),
@@ -67,8 +70,10 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                     SizedBox(height: 10.h),
                     Text(
                       widget.info.student.mergedNames,
-                      style: context.textTheme.bodyLarge!
-                          .copyWith(fontWeight: FontWeight.w600, fontSize: 22.sp),
+                      style: context.textTheme.bodyLarge!.copyWith(
+                          color: weirdBlack,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 22.sp),
                     ),
                     SizedBox(height: 5.h),
                     Row(
@@ -79,13 +84,13 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                           "assets/images/Roomate Info Location.svg",
                           width: 15.r,
                           height: 15.r,
-                          color: Colors.black45,
+                          color: weirdBlack50,
                         ),
                         SizedBox(width: 5.w),
                         Text(
                           widget.info.location,
-                          style: context.textTheme.bodyMedium!
-                              .copyWith(color: weirdBlack),
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -94,16 +99,9 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: currency(),
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: appBlue,
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          TextSpan(
-                            text: formatAmountInDouble(widget.info.amount),
-                            style: context.textTheme.bodyMedium!.copyWith(
+                            text:
+                                "${currency()} ${formatAmountInDouble(widget.info.amount)}",
+                            style: context.textTheme.bodyLarge!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w700,
@@ -111,7 +109,7 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                           ),
                           TextSpan(
                             text: "/year",
-                            style: context.textTheme.bodySmall!.copyWith(
+                            style: context.textTheme.bodyMedium!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w500,
@@ -121,10 +119,14 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                       ),
                     ),
                     SizedBox(height: 32.h),
-                    Container(
-                      width: 414.w,
-                      color: Colors.black12,
-                      height: 2.h,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 414.w,
+                        minHeight: 1.h,
+                        maxWidth: 414.w,
+                        maxHeight: 1.h,
+                      ),
+                      child: const ColoredBox(color: Colors.black12),
                     ),
                     SizedBox(height: 20.h),
                     Row(
@@ -132,15 +134,17 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                       children: [
                         Text(
                           "Personal Details",
-                          style: context.textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.w600),
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
                         GestureDetector(
                           onTap: () {},
                           child: Text(
                             "Public to fellow students",
-                            style: context.textTheme.bodyMedium!
-                                .copyWith(color: weirdBlack),
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         )
                       ],
@@ -172,13 +176,15 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               children: [
                                 Text(
                                   "${widget.info.level}",
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
                                 ),
                                 Text(
                                   "School level",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             )
@@ -213,13 +219,15 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               children: [
                                 Text(
                                   widget.info.student.gender,
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
                                 ),
                                 Text(
                                   "Gender",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             )
@@ -253,14 +261,16 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${widget.info.religion}",
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  widget.info.religion,
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
                                 ),
                                 Text(
                                   "Religion",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             )
@@ -268,6 +278,53 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                         ),
                       ),
                     ),
+                    if (widget.info.denomination == "Christianity")
+                      SizedBox(height: 15.h),
+                    if (widget.info.denomination == "Christianity")
+                      Card(
+                        elevation: 1.0,
+                        child: SizedBox(
+                          height: 70.h,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 10.w),
+                              Container(
+                                width: 50.r,
+                                height: 50.r,
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                  color: paleBlue,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset(
+                                    "assets/images/Profile Church.svg"),
+                              ),
+                              SizedBox(width: 15.w),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    widget.info.denomination,
+                                    style: context.textTheme.bodyLarge!
+                                        .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: weirdBlack),
+                                  ),
+                                  Text(
+                                    "Denomination",
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     SizedBox(height: 15.h),
                     Card(
                       elevation: 1.0,
@@ -286,7 +343,7 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                                 shape: BoxShape.circle,
                               ),
                               child: SvgPicture.asset(
-                                  "assets/images/Profile Church.svg"),
+                                  "assets/images/Profile Age.svg"),
                             ),
                             SizedBox(width: 15.w),
                             Column(
@@ -294,54 +351,16 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${widget.info.denomination}",
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  "Denomination",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15.h),
-                    Card(
-                      elevation: 1.0,
-                      child: SizedBox(
-                        height: 70.h,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 10.w),
-                            Container(
-                              width: 50.r,
-                              height: 50.r,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                color: paleBlue,
-                                shape: BoxShape.circle,
-                              ),
-                              child: SvgPicture.asset(
-                                  "assets/images/Profile Age.svg"),),
-                            SizedBox(width: 15.w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
                                   widget.info.ageRange,
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
                                 ),
                                 Text(
                                   "Age",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             )
@@ -367,7 +386,8 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                                 shape: BoxShape.circle,
                               ),
                               child: SvgPicture.asset(
-                                  "assets/images/Profile Origin.svg"),),
+                                  "assets/images/Profile Origin.svg"),
+                            ),
                             SizedBox(width: 15.w),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,13 +395,15 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               children: [
                                 Text(
                                   widget.info.origin,
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
                                 ),
                                 Text(
                                   "State of origin",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             )
@@ -407,7 +429,8 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                                 shape: BoxShape.circle,
                               ),
                               child: SvgPicture.asset(
-                                  "assets/images/Profile Hobby.svg"),),
+                                  "assets/images/Profile Hobby.svg"),
+                            ),
                             SizedBox(width: 15.w),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,13 +438,15 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               children: [
                                 Text(
                                   widget.info.hobby,
-                                  style: context.textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
                                 ),
                                 Text(
                                   "Hobbies",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             )
@@ -433,7 +458,6 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                   ],
                 ),
               ),
-
               Container(
                 width: 414.w,
                 height: 90.h,
@@ -472,8 +496,7 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                         child: Text(
                           "Collaborate",
                           style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
+                              fontWeight: FontWeight.w500, color: Colors.white),
                         ),
                       ),
                     )

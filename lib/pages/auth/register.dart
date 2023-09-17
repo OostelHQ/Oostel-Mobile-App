@@ -137,31 +137,20 @@ class _RegisterPageState extends State<RegisterPage> {
                         obscure: !showPassword,
                         onSave: (val) =>
                             setState(() => authDetails["password"] = val!),
-                        suffix: AnimatedSwitcherTranslation.right(
-                          duration: const Duration(milliseconds: 500),
-                          child: !showPassword
-                              ? GestureDetector(
-                                  key: const ValueKey<bool>(false),
-                                  child: Icon(
-                                    Icons.visibility_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showPassword = true);
-                                  },
-                                )
-                              : GestureDetector(
-                                  key: const ValueKey<bool>(true),
-                                  child: Icon(
-                                    Icons.visibility_off_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showPassword = false);
-                                  },
-                                ),
+                        suffix: GestureDetector(
+                          onTap: () =>
+                              setState(() => showPassword = !showPassword),
+                          child: AnimatedSwitcherTranslation.right(
+                            duration: const Duration(milliseconds: 500),
+                            child: Icon(
+                              showPassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              key: ValueKey<bool>(showPassword),
+                              size: 18.r,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 16.h),
@@ -181,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () => context.router.pushNamed(Pages.privacyPolicy),
                                 child: Text(
                                   " Privacy Policies",
                                   style: context.textTheme.bodyMedium!

@@ -60,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(
                   "Get started with any of your preferable account to be stress-free",
                   textAlign: TextAlign.center,
-                  style: context.textTheme.bodyMedium!
-                      .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+                  style: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack75, fontWeight: FontWeight.w500),
                 ),
               ),
               SizedBox(height: 32.h),
@@ -74,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Text(
                         "Email Address",
-                        style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: emailController,
@@ -97,8 +97,8 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 16.h),
                       Text(
                         "Password",
-                        style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: passwordController,
@@ -107,34 +107,22 @@ class _LoginPageState extends State<LoginPage> {
                         obscure: !showPassword,
                         onSave: (val) =>
                             setState(() => authDetails["password"] = val!),
-                        suffix: AnimatedSwitcherTranslation.right(
-                          duration: const Duration(milliseconds: 500),
-                          child: !showPassword
-                              ? GestureDetector(
-                                  key: const ValueKey<bool>(false),
-                                  child: Icon(
-                                    Icons.visibility_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showPassword = true);
-                                  },
-                                )
-                              : GestureDetector(
-                                  key: const ValueKey<bool>(true),
-                                  child: Icon(
-                                    Icons.visibility_off_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showPassword = false);
-                                  },
-                                ),
+                        suffix: GestureDetector(
+                          onTap: () =>
+                              setState(() => showPassword = !showPassword),
+                          child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: Icon(
+                                showPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                key: ValueKey<bool>(showPassword),
+                                size: 18.r,
+                                color: Colors.grey,
+                              ),
+                          ),
                         ),
                       ),
-                      //SizedBox(height: 16.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -151,20 +139,20 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Text(
                                   "Remember Me",
-                                  style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => context.router
-                                .pushNamed(Pages.forgotPassword),
+                            onTap: () =>
+                                context.router.pushNamed(Pages.forgotPassword),
                             child: Text(
                               "Forgot Password",
                               style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue,
-                                  fontWeight: FontWeight.w500),
+                                  color: appBlue, fontWeight: FontWeight.w500),
                             ),
                           ),
                         ],
@@ -176,7 +164,8 @@ class _LoginPageState extends State<LoginPage> {
                           minimumSize: Size(414.w, 50.h),
                           maximumSize: Size(414.w, 50.h),
                         ),
-                        onPressed: () => context.router.pushNamed(Pages.dashboard),
+                        onPressed: () =>
+                            context.router.pushNamed(Pages.dashboard),
                         child: Text(
                           "Login",
                           style: context.textTheme.bodyMedium!.copyWith(
@@ -192,8 +181,9 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Text(
                               "Don't have an account yet?",
-                              style: context.textTheme.bodyMedium!
-                                  .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack75,
+                                  fontWeight: FontWeight.w500),
                             ),
                             GestureDetector(
                               onTap: () => context.router

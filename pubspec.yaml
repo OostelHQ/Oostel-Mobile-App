@@ -30,9 +30,6 @@ dependencies:
   flutter_svg:
   transparent_image:
   helpers:
-  glassmorphism:
-  anim_search_bar:
-  pagination_flutter:
   socket_io_client:
   chat_bubbles:
   permission_handler:
@@ -47,8 +44,8 @@ dependencies:
   flutter_rating_stars:
   flutter_neumorphic:
   elegant_notification:
-  bottom_sheet:
   flutter_otp_text_field:
+  dropdown_button2:
 
 dev_dependencies:
   flutter_test:

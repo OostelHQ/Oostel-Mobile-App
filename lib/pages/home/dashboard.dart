@@ -9,6 +9,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/profile/settings.dart';
 
 import 'chats.dart';
 import 'explore.dart';
@@ -30,6 +31,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       _HomePage(),
       ExplorePage(),
       ChatsPage(),
+      SettingsPage(),
     ];
   }
 
@@ -61,13 +63,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
-        onTap: (newIndex) {
-          if (newIndex != 3) {
-            ref.watch(dashboardTabIndexProvider.notifier).state = newIndex;
-          } else {
-            context.router.pushNamed(Pages.profile);
-          }
-        },
+        onTap: (newIndex) => ref.watch(dashboardTabIndexProvider.notifier).state = newIndex,
         selectedItemColor: appBlue,
         selectedLabelStyle: context.textTheme.bodySmall!
             .copyWith(color: appBlue, fontWeight: FontWeight.w500),
@@ -113,10 +109,14 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             label: "Chats",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/images/Profile.svg",
-              color: weirdBlack50,
-              height: 25.h,
+            icon: AnimatedSwitcherZoom.zoomIn(
+              duration: const Duration(milliseconds: 500),
+              child: SvgPicture.asset(
+                "assets/images/Profile ${index == 3 ? "Active" : "Inactive"}.svg",
+                color: index != 3 ? weirdBlack50 : null,
+                key: ValueKey<int>(key),
+                height: 25.h,
+              ),
             ),
             label: "Profile",
           ),
@@ -180,6 +180,12 @@ class _HomePageState extends ConsumerState<_HomePage> {
     super.dispose();
   }
 
+  void showBottom({bool? status}) => showModalBottomSheet(
+        context: context,
+        elevation: 1.0,
+        builder: (_) => HostelInfoModal(status: status),
+      );
+
   @override
   Widget build(BuildContext context) {
     Student student = ref.watch(studentProvider);
@@ -221,7 +227,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
             Padding(
               padding: EdgeInsets.only(right: 22.w),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () => showBottom(status: true),
                 child: AnimatedSwitcherTranslation.right(
                   duration: const Duration(milliseconds: 500),
                   child: SvgPicture.asset(
@@ -385,7 +391,9 @@ class _HomePageState extends ConsumerState<_HomePage> {
                         ),
                         SizedBox(height: 12.h),
                         GestureDetector(
-                          onTap: () => ref.watch(dashboardTabIndexProvider.notifier).state = 1,
+                          onTap: () => ref
+                              .watch(dashboardTabIndexProvider.notifier)
+                              .state = 1,
                           child: Text(
                             "Explore ${hostelSelect ? "Hostels" : "Roommates"}",
                             style: context.textTheme.bodySmall!.copyWith(
