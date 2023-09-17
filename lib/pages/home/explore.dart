@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_hostel/components/hostel_info.dart';
-import 'package:my_hostel/components/roommate_info.dart';
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
@@ -27,7 +27,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     List<HostelInfo> hostels = ref.watch(availableHostelsProvider);
-    List<RoommateInfo> roommates = ref.watch(availableRoommatesProvider);
+    List<Student> roommates = ref.watch(availableRoommatesProvider);
     List<String> roomTypes = ref.watch(roomTypesProvider);
 
     return CustomScrollView(
@@ -153,7 +153,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
             delegate: SliverChildBuilderDelegate(
               (_, index) => Column(
                 children: [
-                  RoommateInfoCard(info: roommates[index]),
+                  StudentCard(info: roommates[index]),
                   SizedBox(height: 10.h)
                 ],
               ),

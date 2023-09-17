@@ -180,11 +180,11 @@ class _HomePageState extends ConsumerState<_HomePage> {
     super.dispose();
   }
 
-  void showBottom({bool? status}) => showModalBottomSheet(
-        context: context,
-        elevation: 1.0,
-        builder: (_) => HostelInfoModal(status: status),
-      );
+  // void showBottom({bool? status}) => showModalBottomSheet(
+  //       context: context,
+  //       elevation: 1.0,
+  //       builder: (_) => HostelInfoModal(status: status),
+  //     );
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +227,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
             Padding(
               padding: EdgeInsets.only(right: 22.w),
               child: GestureDetector(
-                onTap: () => showBottom(status: true),
+                onTap: () => context.router.pushNamed(Pages.notification),
                 child: AnimatedSwitcherTranslation.right(
                   duration: const Duration(milliseconds: 500),
                   child: SvgPicture.asset(
@@ -417,7 +417,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
                       if (element is HostelInfo) {
                         return HostelInfoCard(info: element);
                       } else {
-                        return RoommateInfoCard(info: element);
+                        return StudentCard(info: element);
                       }
                     },
                     childCount: 4,

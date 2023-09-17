@@ -82,7 +82,7 @@ class _ViewAcquiresPageState extends ConsumerState<ViewAcquiresPage> {
                     if (element is HostelInfo) {
                       return HostelInfoCard(info: element);
                     } else {
-                      return RoommateInfoCard(info: element);
+                      return StudentCard(info: element);
                     }
                   },
                   separatorBuilder: (_, __) => SizedBox(height: 20.h),

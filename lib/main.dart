@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/room_details.dart';
-import 'package:my_hostel/components/roommate_info.dart';
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/pages/auth/login.dart';
@@ -18,6 +18,7 @@ import 'package:my_hostel/pages/home/dashboard.dart';
 import 'package:my_hostel/pages/home/explore.dart';
 import 'package:my_hostel/pages/home/filter.dart';
 import 'package:my_hostel/pages/home/hostel_information.dart';
+import 'package:my_hostel/pages/home/notification.dart';
 import 'package:my_hostel/pages/home/view_acquires.dart';
 import 'package:my_hostel/pages/home/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
@@ -97,6 +98,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, __) => const AboutPage(),
         ),
         GoRoute(
+          path: Pages.notification.path,
+          name: Pages.notification,
+          builder: (_, __) => const NotificationPage(),
+        ),
+        GoRoute(
           path: Pages.help.path,
           name: Pages.help,
           builder: (_, __) => const HelpPage(),
@@ -168,7 +174,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.otherStudent,
           builder: (_, state) {
             Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-            return OtherStudentProfilePage(info: RoommateInfo.fromJson(data));
+            return OtherStudentProfilePage(info: Student.fromJson(data));
           },
         ),
         GoRoute(

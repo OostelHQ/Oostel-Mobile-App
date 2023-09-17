@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/roommate_info.dart';
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/student.dart';
 

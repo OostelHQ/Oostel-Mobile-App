@@ -7,20 +7,23 @@ import 'constants.dart' show appBlue;
 
 void showError(String message) {
   HapticFeedback.heavyImpact();
-  Fluttertoast.showToast(
-    msg: message,
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.SNACKBAR,
-    timeInSecForIosWeb: 2,
-    backgroundColor: appBlue,
-    textColor: Colors.white,
-    fontSize: 14.sp,
-  );
+  showToast(message);
 }
+
+void showToast(String message) => Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.SNACKBAR,
+      timeInSecForIosWeb: 2,
+      backgroundColor: appBlue,
+      textColor: Colors.white,
+      fontSize: 14.sp,
+    );
 
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
 
-String formatAmountInDouble(double price, {int digits = 0}) => formatAmount(price.toStringAsFixed(digits));
+String formatAmountInDouble(double price, {int digits = 0}) =>
+    formatAmount(price.toStringAsFixed(digits));
 
 String formatAmount(String price) {
   String priceInText = "";
@@ -53,6 +56,9 @@ String formatLocation(String location,
 }
 
 String currency() => NumberFormat.simpleCurrency(name: "NGN").currencySymbol;
+
+String formatDateRaw(DateTime date, {bool shorten = false}) =>
+    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
 String formatDate(String dateTime, {bool shorten = false}) {
   int firIndex = dateTime.indexOf("/");

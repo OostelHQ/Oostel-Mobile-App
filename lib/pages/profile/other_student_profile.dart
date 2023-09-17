@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:my_hostel/components/roommate_info.dart';
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 
 class OtherStudentProfilePage extends StatefulWidget {
-  final RoommateInfo info;
+  final Student info;
 
   const OtherStudentProfilePage({
     super.key,
@@ -62,14 +62,14 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                         radius: 72.r,
                         child: CircleAvatar(
                           backgroundImage:
-                              AssetImage(widget.info.student.image),
+                              AssetImage(widget.info.image),
                           radius: 68.r,
                         ),
                       ),
                     ),
                     SizedBox(height: 10.h),
                     Text(
-                      widget.info.student.mergedNames,
+                      widget.info.mergedNames,
                       style: context.textTheme.bodyLarge!.copyWith(
                           color: weirdBlack,
                           fontWeight: FontWeight.w600,
@@ -218,7 +218,7 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  widget.info.student.gender,
+                                  widget.info.gender,
                                   style: context.textTheme.bodyLarge!.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: weirdBlack),

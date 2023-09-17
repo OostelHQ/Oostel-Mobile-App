@@ -8,6 +8,20 @@ class Student extends Equatable {
   final String email;
   final String gender;
 
+  final int level;
+  final String location;
+  final double amount;
+  final String hobby;
+  final String origin;
+  final String ageRange;
+  final String religion;
+  final String denomination;
+  final bool available;
+
+  final DateTime joined;
+  final int rentedHostels;
+  final int collaboratedRoommates;
+
   const Student({
     this.id = "",
     this.image = "",
@@ -15,6 +29,18 @@ class Student extends Equatable {
     this.lastName = "",
     this.email = "",
     this.gender = "",
+    this.level = 100,
+    this.location = "",
+    this.amount = 0,
+    this.available = false,
+    this.religion = "",
+    this.ageRange = "",
+    this.hobby = "",
+    this.origin = "",
+    this.denomination = "",
+    this.rentedHostels = 0,
+    this.collaboratedRoommates = 0,
+    required this.joined,
   });
 
   @override
@@ -29,6 +55,18 @@ class Student extends Equatable {
         "lastName": lastName,
         "email": email,
         "gender": gender,
+        "level": level,
+        "location": location,
+        "amount": amount,
+        "origin": origin,
+        "ageRange": ageRange,
+        "hobby": hobby,
+        "religion": religion,
+        "denomination": denomination,
+        "available": available,
+        "rentedHostels": rentedHostels,
+        "collaboratedRoommates": collaboratedRoommates,
+        "createdAt": joined.toString(),
       };
 
   Student.fromJson(Map<String, dynamic> map)
@@ -37,5 +75,17 @@ class Student extends Equatable {
         firstName = map["firstName"],
         lastName = map["lastName"],
         email = map["email"],
-        gender = map["gender"];
+        gender = map["gender"],
+        location = map["location"],
+        amount = map["amount"],
+        hobby = map["hobby"],
+        origin = map["origin"],
+        ageRange = map["ageRange"],
+        religion = map["religion"],
+        denomination = map["denomination"],
+        collaboratedRoommates = map["collaboratedRoommates"],
+        rentedHostels = map["rentedHostels"],
+        available = map["available"],
+        joined = DateTime.parse(map["createdAt"]),
+        level = map["level"];
 }

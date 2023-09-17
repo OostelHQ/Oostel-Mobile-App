@@ -31,10 +31,11 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
   void initState() {
     super.initState();
 
-    Student student = const Student(
+    Student student = Student(
       firstName: "Elizabeth",
       lastName: "Enitan",
       image: "assets/images/watch man.jpg",
+      joined: DateTime.now(),
     );
 
     DateTime now = DateTime.now();

@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
+import 'package:my_hostel/components/notification.dart';
 import 'package:my_hostel/components/room_details.dart';
-import 'package:my_hostel/components/roommate_info.dart';
-
 import 'package:my_hostel/components/student.dart';
+import 'package:my_hostel/components/user.dart';
 
 final StateProvider<bool> hasInitializedProvider =
     StateProvider((ref) => false);
@@ -15,13 +15,23 @@ final StateProvider<bool> hasNotificationProvider =
     StateProvider((ref) => false);
 
 final StateProvider<Student> studentProvider = StateProvider(
-  (ref) => const Student(
-    id: "",
-    image: "assets/images/watch man.jpg",
-    firstName: "Doe",
-    lastName: "John",
-    email: "johndoe@mail.com",
+  (ref) => Student(
+    firstName: "John",
+    lastName: "Doe",
     gender: "Male",
+    image: "assets/images/watch man.jpg",
+    id: "Info 4",
+    level: 500,
+    email: "johndoe@mail.com",
+    location: "Kofesu",
+    amount: 40000,
+    available: false,
+    origin: "Ebonyi",
+    denomination: "Christ Apostolic Church",
+    hobby: "Singing and dancing",
+    ageRange: "23 - 30",
+    religion: "Christianity",
+    joined: DateTime.now(),
   ),
 );
 
@@ -606,19 +616,15 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           )
         ]);
-final StateProvider<List<RoommateInfo>> acquiredRoommatesProvider =
+final StateProvider<List<Student>> acquiredRoommatesProvider =
     StateProvider((ref) {
-  Student student = const Student(
-    firstName: "John",
-    lastName: "Doe",
-    gender: "Male",
-    image: "assets/images/watch man.jpg",
-  );
-
   return [
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 1",
-      student: student,
       level: 100,
       location: "Harmony",
       amount: 50000,
@@ -628,10 +634,14 @@ final StateProvider<List<RoommateInfo>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     ),
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 2",
-      student: student,
       level: 300,
       location: "Isolu",
       amount: 75000,
@@ -641,10 +651,14 @@ final StateProvider<List<RoommateInfo>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     ),
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 3",
-      student: student,
       level: 200,
       location: "Accord",
       amount: 50000,
@@ -654,10 +668,14 @@ final StateProvider<List<RoommateInfo>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     ),
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 4",
-      student: student,
       level: 500,
       location: "Kofesu",
       amount: 40000,
@@ -667,6 +685,7 @@ final StateProvider<List<RoommateInfo>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     )
   ];
 });
@@ -1250,19 +1269,15 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           )
         ]);
-final StateProvider<List<RoommateInfo>> availableRoommatesProvider =
+final StateProvider<List<Student>> availableRoommatesProvider =
     StateProvider((ref) {
-  Student student = const Student(
-    firstName: "John",
-    lastName: "Doe",
-    gender: "Male",
-    image: "assets/images/watch man.jpg",
-  );
-
   return [
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 11",
-      student: student,
       level: 100,
       location: "Harmony",
       amount: 50000,
@@ -1272,10 +1287,14 @@ final StateProvider<List<RoommateInfo>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     ),
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 12",
-      student: student,
       level: 300,
       location: "Isolu",
       amount: 75000,
@@ -1285,10 +1304,14 @@ final StateProvider<List<RoommateInfo>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     ),
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 13",
-      student: student,
       level: 200,
       location: "Accord",
       amount: 50000,
@@ -1298,10 +1321,14 @@ final StateProvider<List<RoommateInfo>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
     ),
-    RoommateInfo(
+    Student(
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      image: "assets/images/watch man.jpg",
       id: "Info 14",
-      student: student,
       level: 500,
       location: "Kofesu",
       amount: 40000,
@@ -1311,6 +1338,9 @@ final StateProvider<List<RoommateInfo>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
+      joined: DateTime.now(),
+      collaboratedRoommates: 9,
+      rentedHostels: 3,
     )
   ];
 });
@@ -1333,3 +1363,65 @@ final StateProvider<List<String>> locationProvider = StateProvider((ref) => [
       "Isolu",
       "Funis"
     ]);
+
+final StateProvider<List<NotificationData>> notificationsProvider =
+    StateProvider((ref) {
+  User sender = const User(
+    id: "id",
+    image: "assets/images/watch man.jpg",
+    firstName: "John",
+    lastName: "Doe",
+    email: "johndoe@mail.com",
+  );
+
+  return [
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+    NotificationData(
+      sender: sender,
+      timestamp: DateTime.now(),
+      message:
+          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+    ),
+  ];
+});

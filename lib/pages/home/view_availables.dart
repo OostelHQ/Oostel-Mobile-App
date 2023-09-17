@@ -118,7 +118,7 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
                       )
                     : ListView.separated(
                         itemBuilder: (_, index) =>
-                            RoommateInfoCard(info: acquireList[index]),
+                            StudentCard(info: acquireList[index]),
                         separatorBuilder: (_, __) => SizedBox(height: 20.h),
                         itemCount: acquireList.length,
                       ),

@@ -70,7 +70,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 child: profileImage != null
                     ? CircleAvatar(
                         backgroundImage: FileImage(File(profileImage!)),
-                        radius: 72.r,
+                        radius: 75.r,
                       )
                     : SvgPicture.asset(
                         "assets/images/Choose Image.svg",

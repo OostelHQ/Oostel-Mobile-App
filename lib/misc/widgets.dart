@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:my_hostel/components/comment.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/room_details.dart';
-import 'package:my_hostel/components/roommate_info.dart';
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -557,19 +557,19 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
   }
 }
 
-class RoommateInfoCard extends StatefulWidget {
-  final RoommateInfo info;
+class StudentCard extends StatefulWidget {
+  final Student info;
 
-  const RoommateInfoCard({
+  const StudentCard({
     super.key,
     required this.info,
   });
 
   @override
-  State<RoommateInfoCard> createState() => _RoommateInfoCardState();
+  State<StudentCard> createState() => _StudentCardState();
 }
 
-class _RoommateInfoCardState extends State<RoommateInfoCard> {
+class _StudentCardState extends State<StudentCard> {
   bool liked = false;
 
   @override
@@ -588,7 +588,7 @@ class _RoommateInfoCardState extends State<RoommateInfoCard> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage(widget.info.student.image),
+                  backgroundImage: AssetImage(widget.info.image),
                   radius: 48.r,
                 ),
                 SizedBox(width: 15.w),
@@ -602,7 +602,7 @@ class _RoommateInfoCardState extends State<RoommateInfoCard> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            widget.info.student.mergedNames,
+                            widget.info.mergedNames,
                             style: context.textTheme.bodyMedium!.copyWith(
                                 fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
@@ -634,7 +634,7 @@ class _RoommateInfoCardState extends State<RoommateInfoCard> {
                         ),
                         SizedBox(width: 5.w),
                         Text(
-                          widget.info.student.gender,
+                          widget.info.gender,
                           style: context.textTheme.bodySmall!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),

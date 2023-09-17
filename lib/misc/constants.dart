@@ -60,6 +60,7 @@ class Pages
   static const String privacyPolicy = 'privacy-policy';
 
   static const String wallet = 'wallet';
+  static const String notification = 'notification';
 
 }
 
