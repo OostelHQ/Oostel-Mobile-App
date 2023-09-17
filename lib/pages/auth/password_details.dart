@@ -49,7 +49,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               Text(
                 "Forgot Password",
                 style: context.textTheme.bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w700, color: weirdBlack),
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
               ),
               SizedBox(
                 height: 12.h,
@@ -57,10 +57,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 32.w),
                 child: Text(
-                  "Get started with any of your preferable account to be stress-free",
+                  "To reset your password, please enter your email address associated with your account.",
                   textAlign: TextAlign.center,
                   style:
-                      context.textTheme.bodyMedium!.copyWith(color: weirdBlack),
+                      context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                 ),
               ),
               SizedBox(height: 32.h),
@@ -74,7 +74,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       Text(
                         "Email Address",
                         style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack),
+                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: emailController,
@@ -170,7 +170,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Text(
                 "Reset Password",
                 style: context.textTheme.bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w700, color: weirdBlack),
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
               ),
               SizedBox(
                 height: 12.h,
@@ -178,10 +178,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 32.w),
                 child: Text(
-                  "Get started with any of your preferable account to be stress-free",
+                  "Enter your new password and regain access to your account.",
                   textAlign: TextAlign.center,
                   style:
-                      context.textTheme.bodyMedium!.copyWith(color: weirdBlack),
+                      context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                 ),
               ),
               SizedBox(height: 32.h),
@@ -195,7 +195,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       Text(
                         "New Password",
                         style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack),
+                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: passwordController,
@@ -233,7 +233,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       Text(
                         "Password",
                         style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack),
+                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: confirmController,
@@ -267,7 +267,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                 ),
                         ),
                       ),
-                      SizedBox(height: 164.h),
+                      SizedBox(height: 144.h),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appBlue,
@@ -278,7 +278,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             context.router.goNamed(Pages.login),
                         child: Text(
                           "Confirm",
-                          style: context.textTheme.bodyLarge!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
@@ -298,7 +298,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 }
-
 
 
 
@@ -362,7 +361,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
               Text(
                 "Email Verification",
                 style: context.textTheme.bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w700, color: weirdBlack),
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
               ),
               SizedBox(
                 height: 12.h,
@@ -375,15 +374,15 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
                     children: [
                       TextSpan(
                         text: "We've just sent you an email with a link to activate your email account ",
-                        style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack),
+                        style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       TextSpan(
                         text: widget.email,
-                        style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack, fontWeight: FontWeight.w600),
+                        style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w600),
                       ),
                       TextSpan(
                         text: " provided.",
-                        style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack),
+                        style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       )
                     ]
                   ),
@@ -396,7 +395,8 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
                 focusedBorderColor: accentPurpleColor,
                 styles: otpTextStyles,
                 showFieldAsBox: true,
-                fieldWidth: 65.w,
+                fieldWidth: 65.r,
+                keyboardType: TextInputType.number,
                 onCodeChanged: (code) {
                   //handle validation or checks here
                 },
@@ -407,7 +407,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
               SizedBox(height: 80.h),
               Text(
                 "Didn't get an email?",
-                style: context.textTheme.bodySmall!.copyWith(color: weirdBlack),
+                style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 48.h),
               Padding(
@@ -421,7 +421,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
                   onPressed: () => context.router.pushNamed(Pages.resetPassword),
                   child: Text(
                     "Proceed",
-                    style: context.textTheme.bodyLarge!.copyWith(
+                    style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),

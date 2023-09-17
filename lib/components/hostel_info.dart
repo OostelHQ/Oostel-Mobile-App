@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:my_hostel/components/landowner.dart';
+import 'package:my_hostel/components/room_details.dart';
 
 class HostelInfo extends Equatable {
   final String id;
@@ -10,11 +11,10 @@ class HostelInfo extends Equatable {
   final int bathrooms;
   final double area;
   final double price;
-  final List<String> roomsLeft;
   final String description;
   final List<String> rules;
   final List<String> hostelFacilities;
-  final List<String> roomFacilities;
+  final List<RoomInfo> roomsLeft;
   final List<String> media;
 
   final Landowner owner;
@@ -33,7 +33,6 @@ class HostelInfo extends Equatable {
     this.description = "",
     this.rules = const [],
     this.hostelFacilities = const [],
-    this.roomFacilities = const [],
     this.media = const [],
   });
 
@@ -53,25 +52,30 @@ class HostelInfo extends Equatable {
         description = map["description"],
         rules = map["rules"],
         hostelFacilities = map["hostelFacilities"],
-        roomFacilities = map["roomFacilities"],
         media = map["media"],
         owner = Landowner.fromJson(map["owner"]);
 
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "name": name,
-        "image": image,
-        "bedrooms": bedrooms,
-        "bathrooms": bathrooms,
-        "area": area,
-        "address": address,
-        "price": price,
-        "rules": rules,
-        "description": description,
-        "roomsLeft": roomsLeft,
-        "hostelFacilities": hostelFacilities,
-        "roomFacilities" : roomFacilities,
-        "media" : media,
-        "owner": owner.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> jsonRooms = [];
+    for(RoomInfo info in roomsLeft) {
+      jsonRooms.add(info.toJson());
+    }
+
+    return {
+      "_id": id,
+      "name": name,
+      "image": image,
+      "bedrooms": bedrooms,
+      "bathrooms": bathrooms,
+      "area": area,
+      "address": address,
+      "price": price,
+      "rules": rules,
+      "description": description,
+      "roomsLeft": jsonRooms,
+      "hostelFacilities": hostelFacilities,
+      "media" : media,
+      "owner": owner.toJson(),
+    };
+  }
 }

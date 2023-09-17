@@ -41,15 +41,6 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 25.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  iconSize: 26.r,
-                  splashRadius: 20.r,
-                  icon: const Icon(Icons.chevron_left_rounded),
-                  onPressed: () => context.router.pop(),
-                ),
-              ),
               SvgPicture.asset(
                 "assets/images/single woman.svg",
                 width: 220.r,
@@ -59,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               Text(
                 "Welcome Back!",
                 style: context.textTheme.bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w700, color: weirdBlack),
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
               ),
               SizedBox(
                 height: 12.h,
@@ -70,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                   "Get started with any of your preferable account to be stress-free",
                   textAlign: TextAlign.center,
                   style: context.textTheme.bodyMedium!
-                      .copyWith(color: weirdBlack),
+                      .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                 ),
               ),
               SizedBox(height: 32.h),
@@ -84,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Email Address",
                         style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack),
+                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: emailController,
@@ -107,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Password",
                         style: context.textTheme.bodyMedium!
-                            .copyWith(color: weirdBlack),
+                            .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SpecialForm(
                         controller: passwordController,
@@ -154,13 +145,14 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Checkbox(
                                   value: remember,
+                                  activeColor: appBlue,
                                   onChanged: (val) =>
                                       setState(() => remember = !remember),
                                 ),
                                 Text(
                                   "Remember Me",
                                   style: context.textTheme.bodyMedium!
-                                      .copyWith(color: weirdBlack),
+                                      .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
@@ -187,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => context.router.pushNamed(Pages.dashboard),
                         child: Text(
                           "Login",
-                          style: context.textTheme.bodyLarge!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
@@ -201,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                             Text(
                               "Don't have an account yet?",
                               style: context.textTheme.bodyMedium!
-                                  .copyWith(color: weirdBlack),
+                                  .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
                             ),
                             GestureDetector(
                               onTap: () => context.router

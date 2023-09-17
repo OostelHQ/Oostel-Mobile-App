@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 const Color appBlue = Color.fromRGBO(6, 73, 151, 1.0);
 const Color fadedBorder = Color.fromRGBO(1, 15, 30, 0.16);
 const Color weirdBlack = Color.fromRGBO(1, 15, 30, 1.0);
+const Color weirdBlack75 = Color.fromRGBO(1, 15, 30, 0.75);
+const Color weirdBlack50 = Color.fromRGBO(1, 15, 30, 0.5);
+const Color weirdBlack25 = Color.fromRGBO(1, 15, 30, 0.25);
+const Color weirdBlack20 = Color.fromRGBO(1, 15, 30, 0.20);
 const Color infoRoomsLeftBackground = Color.fromRGBO(227, 245, 236, 1.0);
 const Color infoRoomsLeft = Color.fromRGBO(22, 152, 82, 1.0);
 const Color paleBlue = Color.fromRGBO(230, 237, 244, 1.0);
@@ -40,5 +44,10 @@ class Pages
 
   static const String dashboard = 'dashboard';
   static const String hostelInfo = 'hostel-info';
+
+  static const String viewAcquires = 'view-acquires';
+  static const String viewAvailable = 'view-available';
+  static const String viewRoomTypes = 'view-room-types';
+  static const String filter = 'filter';
 
 }

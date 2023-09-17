@@ -2,14 +2,17 @@ import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:my_hostel/components/comment.dart';
 import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/roommate_info.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/providers.dart';
 
 export 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -22,6 +25,8 @@ class Holder {
     this.selected = false,
   });
 }
+
+enum AcquireType { hostel, roommate }
 
 class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
   TabHeaderDelegate({required this.tabBar});
@@ -131,7 +136,9 @@ class _SpecialFormState extends State<SpecialForm> {
       width: widget.width,
       height: widget.height,
       child: TextFormField(
-        style: widget.style ?? context.textTheme.bodyMedium,
+        style: widget.style ??
+            context.textTheme.bodyMedium!
+                .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
         autovalidateMode: widget.autoValidate
             ? AutovalidateMode.always
             : AutovalidateMode.disabled,
@@ -172,8 +179,7 @@ class _SpecialFormState extends State<SpecialForm> {
           ),
           hintText: widget.hint,
           hintStyle: widget.hintStyle ??
-              context.textTheme.labelMedium!
-                  .copyWith(fontWeight: FontWeight.w200),
+              context.textTheme.bodyMedium!.copyWith(color: weirdBlack25),
         ),
         onChanged: (value) {
           if (widget.onChange == null) return;
@@ -205,10 +211,25 @@ class Copyright extends StatelessWidget {
         SizedBox(width: 3.w),
         Text(
           "${DateTime.now().year}. Oostel. All rights reserved",
-          style: context.textTheme.bodySmall!.copyWith(color: Colors.grey),
+          style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack50),
         ),
       ],
     );
+  }
+}
+
+class ProfileNotification extends ConsumerStatefulWidget {
+  const ProfileNotification({super.key});
+
+  @override
+  ConsumerState<ProfileNotification> createState() =>
+      _ProfileNotificationState();
+}
+
+class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -283,7 +304,7 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                                 duration: const Duration(milliseconds: 500),
                                 child: Icon(
                                   Icons.favorite_rounded,
-                                  color: liked ? Colors.red : Colors.black26,
+                                  color: liked ? Colors.red : weirdBlack20,
                                   size: 18,
                                   key: ValueKey<bool>(liked),
                                 ),
@@ -302,39 +323,31 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                           "assets/images/Hostel Info Bed.svg",
                           width: 15.r,
                           height: 15.r,
-                          color: weirdBlack,
+                          color: weirdBlack50,
                         ),
                         SizedBox(width: 5.w),
                         Text(
                           "${widget.info.bedrooms}",
                           style: context.textTheme.bodySmall!
-                              .copyWith(color: weirdBlack),
+                              .copyWith(color: weirdBlack50),
                         ),
                         SizedBox(width: 12.w),
-                        SvgPicture.asset(
-                          "assets/images/Hostel Info Bath.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack,
-                        ),
+                        SvgPicture.asset("assets/images/Hostel Info Bath.svg",
+                            width: 15.r, height: 15.r, color: weirdBlack50),
                         SizedBox(width: 5.w),
                         Text(
                           "${widget.info.bathrooms}",
                           style: context.textTheme.bodySmall!
-                              .copyWith(color: weirdBlack),
+                              .copyWith(color: weirdBlack50),
                         ),
                         SizedBox(width: 12.w),
-                        SvgPicture.asset(
-                          "assets/images/Hostel Info Area.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: Colors.black45,
-                        ),
+                        SvgPicture.asset("assets/images/Hostel Info Area.svg",
+                            width: 15.r, height: 15.r, color: weirdBlack25),
                         SizedBox(width: 5.w),
                         Text(
                           "${widget.info.area.toStringAsFixed(0)} sqft",
                           style: context.textTheme.bodySmall!
-                              .copyWith(color: weirdBlack),
+                              .copyWith(color: weirdBlack50),
                         ),
                       ],
                     ),
@@ -624,15 +637,11 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
-                  child: Hero(
-                    tag:
-                        "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
-                    child: Image.asset(
-                      widget.info.image,
-                      width: 180.w,
-                      height: 125.h,
-                      fit: BoxFit.cover,
-                    ),
+                  child: Image.asset(
+                    widget.info.image,
+                    width: 180.w,
+                    height: 125.h,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -642,29 +651,22 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                   children: [
                     SizedBox(
                       width: 130.w,
-                      child: Hero(
-                        tag:
-                            "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
-                        child: Text(
-                          widget.info.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
+                      child: Text(
+                        widget.info.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
                       ),
                     ),
-                    Hero(
-                      tag: "Hostel ID: ${widget.info.id} Liked",
-                      child: GestureDetector(
-                        onTap: () => setState(() => liked = !liked),
-                        child: AnimatedSwitcherTranslation.right(
-                          duration: const Duration(milliseconds: 500),
-                          child: Icon(
-                            Icons.favorite_rounded,
-                            color: liked ? Colors.red : Colors.black26,
-                            size: 18,
-                            key: ValueKey<bool>(liked),
-                          ),
+                    GestureDetector(
+                      onTap: () => setState(() => liked = !liked),
+                      child: AnimatedSwitcherTranslation.right(
+                        duration: const Duration(milliseconds: 500),
+                        child: Icon(
+                          Icons.favorite_rounded,
+                          color: liked ? Colors.red : Colors.black26,
+                          size: 18,
+                          key: ValueKey<bool>(liked),
                         ),
                       ),
                     )
@@ -986,85 +988,408 @@ class _RatingsOverviewState extends State<RatingsOverview> {
   }
 }
 
+class HomeSwitcher extends StatefulWidget {
+  final Function onHostelDisplayed;
+  final Function onRoommateDisplayed;
+  final bool initialHostel;
+  final bool useDefault;
 
-// class HomeSwitcher extends StatelessWidget {
-//   const HomeSwitcher({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         GestureDetector(
-//           onTap: () {
-//             if (type != _AcquireType.hostel) {
-//               setState(() => type = _AcquireType.hostel);
-//             }
-//           },
-//           child: AnimatedSwitcherFlip.flipX(
-//             duration: const Duration(milliseconds: 500),
-//             child: Container(
-//               width: 185.w,
-//               height: 50.h,
-//               alignment: Alignment.center,
-//               key: ValueKey<bool>(type == _AcquireType.hostel),
-//               decoration: BoxDecoration(
-//                 color: type == _AcquireType.hostel
-//                     ? appBlue
-//                     : Colors.transparent,
-//                 borderRadius: BorderRadius.only(
-//                   topLeft: Radius.circular(5.r),
-//                   bottomLeft: Radius.circular(5.r),
-//                 ),
-//                 border: type == _AcquireType.hostel
-//                     ? null
-//                     : Border.all(color: appBlue),
-//               ),
-//               child: Text(
-//                 "Hostel",
-//                 style: context.textTheme.bodyMedium!.copyWith(
-//                     color: type == _AcquireType.hostel
-//                         ? Colors.white
-//                         : appBlue),
-//               ),
-//             ),
-//           ),
-//         ),
-//         GestureDetector(
-//           onTap: () {
-//             if (type != _AcquireType.roommate) {
-//               setState(() => type = _AcquireType.roommate);
-//             }
-//           },
-//           child: AnimatedSwitcherFlip.flipX(
-//             duration: const Duration(milliseconds: 500),
-//             child: Container(
-//               width: 185.w,
-//               height: 50.h,
-//               alignment: Alignment.center,
-//               key: ValueKey<bool>(type == _AcquireType.roommate),
-//               decoration: BoxDecoration(
-//                 color: type == _AcquireType.roommate
-//                     ? appBlue
-//                     : Colors.transparent,
-//                 borderRadius: BorderRadius.only(
-//                   topRight: Radius.circular(5.r),
-//                   bottomRight: Radius.circular(5.r),
-//                 ),
-//                 border: type == _AcquireType.roommate
-//                     ? null
-//                     : Border.all(color: appBlue),
-//               ),
-//               child: Text(
-//                 "Roommate",
-//                 style: context.textTheme.bodyMedium!.copyWith(
-//                     color: type == _AcquireType.roommate
-//                         ? Colors.white
-//                         : appBlue),
-//               ),
-//             ),
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
+  const HomeSwitcher({
+    super.key,
+    this.initialHostel = true,
+    this.useDefault = true,
+    required this.onHostelDisplayed,
+    required this.onRoommateDisplayed,
+  });
+
+  @override
+  State<HomeSwitcher> createState() => _HomeSwitcherState();
+}
+
+class _HomeSwitcherState extends State<HomeSwitcher> {
+  late AcquireType type;
+
+  @override
+  void initState() {
+    super.initState();
+    type = widget.initialHostel ? AcquireType.hostel : AcquireType.roommate;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            if (type != AcquireType.hostel) {
+              setState(() => type = AcquireType.hostel);
+              widget.onHostelDisplayed();
+            }
+          },
+          child: AnimatedSwitcherFlip.flipX(
+            duration: const Duration(milliseconds: 500),
+            child: Container(
+              width: 185.w,
+              height: 50.h,
+              alignment: Alignment.center,
+              key: ValueKey<bool>(type == AcquireType.hostel),
+              decoration: BoxDecoration(
+                color:
+                    type == AcquireType.hostel ? appBlue : Colors.transparent,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5.r),
+                  bottomLeft: Radius.circular(5.r),
+                ),
+                border: type == AcquireType.hostel
+                    ? null
+                    : (widget.useDefault ? Border.all(color: appBlue) : null),
+              ),
+              child: Text(
+                "Hostel",
+                style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: type == AcquireType.hostel
+                        ? Colors.white
+                        : (widget.useDefault ? appBlue : weirdBlack75)),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (type != AcquireType.roommate) {
+              setState(() => type = AcquireType.roommate);
+              widget.onRoommateDisplayed();
+            }
+          },
+          child: AnimatedSwitcherFlip.flipX(
+            duration: const Duration(milliseconds: 500),
+            child: Container(
+              width: 185.w,
+              height: 50.h,
+              alignment: Alignment.center,
+              key: ValueKey<bool>(type == AcquireType.roommate),
+              decoration: BoxDecoration(
+                color:
+                    type == AcquireType.roommate ? appBlue : Colors.transparent,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5.r),
+                  bottomRight: Radius.circular(5.r),
+                ),
+                border: type == AcquireType.roommate
+                    ? null
+                    : (widget.useDefault ? Border.all(color: appBlue) : null),
+              ),
+              child: Text(
+                "Roommate",
+                style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: type == AcquireType.roommate
+                        ? Colors.white
+                        : (widget.useDefault ? appBlue : weirdBlack75)),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class RoomTypeCard extends ConsumerWidget {
+  final int index;
+
+  const RoomTypeCard({
+    super.key,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      height: 110.r,
+      width: 110.r,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: paleBlue,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 55.r,
+            width: 90.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+          ),
+          Text(
+            ref.read(roomTypesProvider)[index],
+            style: context.textTheme.bodySmall!
+                .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AvailableRoomCard extends StatelessWidget {
+  final RoomInfo info;
+
+  const AvailableRoomCard({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          elevation: 1.0,
+          builder: (_) => SizedBox(
+            height: 450.h,
+            width: 414.w,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 25.h),
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.r),
+                              topRight: Radius.circular(15.r),
+                            ),
+                            child: Image.asset(
+                              info.media[0],
+                              width: 414.w,
+                              height: 175.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          info.name,
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22.sp,
+                            color: weirdBlack,
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: currency(),
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextSpan(
+                                text: formatAmountInDouble(info.price),
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "/year",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Rooms Facilities",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
+                        ),
+                        SizedBox(height: 8.h),
+                      ],
+                    ),
+                  ),
+                  SliverGrid.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                    ),
+                    itemBuilder: (_, index) =>
+                        FacilityContainer(text: info.facilities[index]),
+                    itemCount: info.facilities.length,
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Gallery",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
+                        ),
+                        SizedBox(height: 8.h),
+                      ],
+                    ),
+                  ),
+
+                  SliverGrid.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10.r,
+                        mainAxisSpacing: 10.r,
+                        mainAxisExtent: 110.r),
+                    itemCount: info.media.length,
+                    itemBuilder: (_, index) => ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.asset(
+                        info.media[index],
+                        width: 110.r,
+                        height: 110.r,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 48.h),
+                        const Copyright(),
+                        SizedBox(height: 24.h)
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 185.w,
+        height: 205.h,
+        decoration: BoxDecoration(
+          border: Border.all(color: fadedBorder),
+          borderRadius: BorderRadius.circular(10.r),
+          color: null,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.r),
+                topRight: Radius.circular(10.r),
+              ),
+              child: Image.asset(
+                info.media[0],
+                fit: BoxFit.cover,
+                width: 185.w,
+                height: 140.h,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Padding(
+              padding: EdgeInsets.only(left: 10.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    info.name,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600, color: weirdBlack),
+                  ),
+                  SizedBox(height: 8.h),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: currency(),
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: appBlue,
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: formatAmountInDouble(info.price),
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: appBlue,
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "/year",
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: appBlue,
+                            fontSize: 10.sp,
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FacilityContainer extends StatelessWidget {
+  final String text;
+
+  const FacilityContainer({
+    super.key,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: 60.r,
+          width: 60.r,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.r),
+            color: paleBlue,
+          ),
+          child: SvgPicture.asset(
+            "assets/images/$text.svg",
+            width: 35.r,
+            height: 35.r,
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Text(text, style: context.textTheme.bodyMedium)
+      ],
+    );
+  }
+}

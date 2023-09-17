@@ -29,7 +29,7 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
             Text(
               "Get Started",
               style: context.textTheme.bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w700, color: weirdBlack),
+                  .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
             SizedBox(
               height: 12.h,
@@ -37,9 +37,9 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 32.w),
               child: Text(
-                "Get started with any of your preferable account to be stress-free",
+                "Select your preferred category",
                 textAlign: TextAlign.center,
-                style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack),
+                style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(height: 32.h),
@@ -94,7 +94,7 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
                           height: 60.r,
                         ),
                         Text(
-                          "I am a Landlord/Landlady",
+                          "I am a Landowner",
                           style: context.textTheme.bodyLarge!
                               .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
                         ),

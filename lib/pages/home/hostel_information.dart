@@ -220,7 +220,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         widget.info.address,
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack, fontWeight: FontWeight.w500),
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SizedBox(height: 8.h),
                       Row(
@@ -231,39 +231,39 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             "assets/images/Hostel Info Bed.svg",
                             width: 15.r,
                             height: 15.r,
-                            color: weirdBlack,
+                            color: weirdBlack50,
                           ),
                           SizedBox(width: 5.w),
                           Text(
                             "${widget.info.bedrooms}",
                             style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack),
+                                .copyWith(color: weirdBlack50),
                           ),
                           SizedBox(width: 10.w),
                           SvgPicture.asset(
                             "assets/images/Hostel Info Bath.svg",
                             width: 15.r,
                             height: 15.r,
-                            color: weirdBlack,
+                            color: weirdBlack50,
                           ),
                           SizedBox(width: 5.w),
                           Text(
                             "${widget.info.bathrooms}",
                             style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack),
+                                .copyWith(color: weirdBlack50),
                           ),
                           SizedBox(width: 10.w),
                           SvgPicture.asset(
                             "assets/images/Hostel Info Area.svg",
                             width: 15.r,
                             height: 15.r,
-                            color: Colors.black45,
+                            color: weirdBlack20,
                           ),
                           SizedBox(width: 5.w),
                           Text(
                             "${widget.info.area.toStringAsFixed(0)} sqft",
                             style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack),
+                                .copyWith(color: weirdBlack50),
                           ),
                         ],
                       ),
@@ -279,7 +279,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     color: appBlue,
                                     fontFamily: "Inter",
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 TextSpan(
@@ -287,7 +287,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     color: appBlue,
                                     fontFamily: "Inter",
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 TextSpan(
@@ -295,6 +295,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                   style: context.textTheme.bodySmall!.copyWith(
                                     color: appBlue,
                                     fontFamily: "Inter",
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 )
                               ],
@@ -318,8 +319,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
               ),
               SliverPersistentHeader(
                 delegate: TabHeaderDelegate(
-                  tabBar:
-                  TabBar(
+                  tabBar: TabBar(
                     indicatorColor: appBlue,
                     labelColor: appBlue,
                     labelStyle: context.textTheme.bodyMedium!
@@ -417,7 +417,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                               style: context
                                                   .textTheme.bodyMedium!
                                                   .copyWith(
-                                                      color: weirdBlack,
+                                                      color: weirdBlack75,
                                                       fontWeight:
                                                           FontWeight.w500),
                                             ),
@@ -448,7 +448,8 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                                     style: context
                                                         .textTheme.bodySmall!
                                                         .copyWith(
-                                                            color: weirdBlack),
+                                                            color:
+                                                                weirdBlack50),
                                                   ),
                                                 ],
                                               ),
@@ -466,7 +467,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                                   "assets/images/Roomate Info Location.svg",
                                                   width: 15.r,
                                                   height: 15.r,
-                                                  color: Colors.black45,
+                                                  color: weirdBlack20,
                                                 ),
                                                 SizedBox(width: 5.w),
                                                 Text(
@@ -474,7 +475,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                                   style: context
                                                       .textTheme.bodySmall!
                                                       .copyWith(
-                                                          color: weirdBlack,
+                                                          color: weirdBlack50,
                                                           fontWeight:
                                                               FontWeight.w500),
                                                 ),
@@ -485,7 +486,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                               style: context
                                                   .textTheme.bodySmall!
                                                   .copyWith(
-                                                      color: weirdBlack,
+                                                      color: weirdBlack50,
                                                       fontWeight:
                                                           FontWeight.w500),
                                             ),
@@ -579,15 +580,18 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             SizedBox(height: 8.h),
                             Text(
                               widget.info.description,
-                              style: context.textTheme.bodyMedium!
-                                  .copyWith(color: weirdBlack),
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             SizedBox(height: 16.h),
                             Text(
                               "Rules & Regulations",
                               style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
+                                fontWeight: FontWeight.w600,
+                                color: weirdBlack,
+                              ),
                             ),
                             SizedBox(height: 8.h),
                             Column(
@@ -595,35 +599,14 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                               children: List.generate(
                                 widget.info.rules.length,
                                 (index) => Text(
-                                    "${index + 1}. ${widget.info.rules[index]}"),
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Available Rooms",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                            Wrap(
-                              spacing: 20.w,
-                              children: List.generate(
-                                widget.info.roomsLeft.length,
-                                (index) => Container(
-                                  width: 90.w,
-                                  height: 50.h,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: fadedBorder),
-                                      borderRadius: BorderRadius.circular(5.r),
-                                      color: Colors.transparent),
-                                  child: Text(widget.info.roomsLeft[index],
-                                      style: context.textTheme.bodyMedium),
+                                  "${index + 1}. ${widget.info.rules[index]}",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 16.h),
                           ],
                         ),
                       ),
@@ -634,12 +617,46 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(height: 16.h),
+                            Text(
+                              "Available Rooms",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack),
+                            ),
+                            SizedBox(height: 8.h),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverGrid.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 15.r,
+                          mainAxisSpacing: 15.r,
+                          mainAxisExtent: 205.h,
+                        ),
+                        itemCount: widget.info.roomsLeft.length,
+                        itemBuilder: (_, index) => AvailableRoomCard(
+                            info: widget.info.roomsLeft[index]),
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 16.h),
                             Text(
                               "Hostel Facilities",
                               style: context.textTheme.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: weirdBlack),
                             ),
+                            SizedBox(height: 8.h),
                           ],
                         ),
                       ),
@@ -651,27 +668,8 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         mainAxisSpacing: 5.r,
                       ),
                       itemCount: widget.info.hostelFacilities.length,
-                      itemBuilder: (_, index) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 60.r,
-                            width: 60.r,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.r),
-                              color: paleBlue,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/images/${widget.info.hostelFacilities[index]}.svg",
-                              width: 35.r,
-                              height: 35.r,
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(widget.info.hostelFacilities[index],
-                              style: context.textTheme.bodyMedium)
-                        ],
+                      itemBuilder: (_, index) => FacilityContainer(
+                        text: widget.info.hostelFacilities[index],
                       ),
                     ),
                     SliverPadding(
@@ -681,59 +679,13 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 16.h),
-                            Text(
-                              "Room Facilities",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverGrid.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 5.r,
-                        mainAxisSpacing: 5.r,
-                      ),
-                      itemCount: widget.info.roomFacilities.length,
-                      itemBuilder: (_, index) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 60.r,
-                            width: 60.r,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.r),
-                              color: paleBlue,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/images/${widget.info.roomFacilities[index]}.svg",
-                              width: 35.r,
-                              height: 35.r,
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(widget.info.roomFacilities[index],
-                              style: context.textTheme.bodyMedium)
-                        ],
-                      ),
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      sliver: SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             Text(
                               "Gallery",
                               style: context.textTheme.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: weirdBlack),
                             ),
-                            SizedBox(height: 16.h),
+                            SizedBox(height: 8.h),
                           ],
                         ),
                       ),
@@ -742,10 +694,10 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       sliver: SliverGrid.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 5.r,
-                          mainAxisSpacing: 5.r,
-                        ),
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10.r,
+                            mainAxisSpacing: 10.r,
+                            mainAxisExtent: 110.r),
                         itemCount: widget.info.media.length,
                         itemBuilder: (_, index) => ClipRRect(
                           borderRadius: BorderRadius.circular(5.r),
@@ -760,12 +712,12 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                     ),
                     SliverToBoxAdapter(
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 48.h),
-                            const Copyright(),
-                            SizedBox(height: 24.h)
-                          ],
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 48.h),
+                          const Copyright(),
+                          SizedBox(height: 24.h)
+                        ],
                       ),
                     )
                   ],
