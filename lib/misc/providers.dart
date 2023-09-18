@@ -2,8 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/notification.dart';
+import 'package:my_hostel/components/receipt_info.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
+import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/components/user.dart';
 
 final StateProvider<bool> hasInitializedProvider =
@@ -21,17 +23,22 @@ final StateProvider<Student> studentProvider = StateProvider(
     gender: "Male",
     image: "assets/images/watch man.jpg",
     id: "Info 4",
-    level: 500,
+    level: 300,
     email: "johndoe@mail.com",
     location: "Kofesu",
-    amount: 40000,
-    available: false,
+    amount: 50000,
+    available: true,
     origin: "Ebonyi",
     denomination: "Christ Apostolic Church",
     hobby: "Singing and dancing",
-    ageRange: "23 - 30",
+    ageRange: "21 - 25",
     religion: "Christianity",
     joined: DateTime.now(),
+    searchAppearances: 19,
+    profileViews: 48,
+    collaboratedRoommates: 9,
+    rentedHostels: 3,
+    contact: "09012345678"
   ),
 );
 
@@ -1336,11 +1343,13 @@ final StateProvider<List<Student>> availableRoommatesProvider =
       origin: "Ebonyi",
       denomination: "Christ Apostolic Church",
       hobby: "Singing and dancing",
-      ageRange: "23 - 30",
+      ageRange: "15 - 20",
       religion: "Christianity",
       joined: DateTime.now(),
       collaboratedRoommates: 9,
       rentedHostels: 3,
+      profileViews: 48,
+      searchAppearances: 19,
     )
   ];
 });
@@ -1425,3 +1434,137 @@ final StateProvider<List<NotificationData>> notificationsProvider =
     ),
   ];
 });
+
+final StateProvider<List<Receipt>> receiptsProvider = StateProvider(
+  (ref) => [
+    Receipt(
+      timestamp: DateTime.now(),
+      studentName: "Adedigba Rejoice",
+      hostel: "Manchester Hostel",
+      id: "12345",
+      amountInWords: "One Hundred Thousand Naira (NGN 100,000)",
+      landOwnerName: "Adeyemi Julius",
+      reference: "202384024BG",
+    ),
+    Receipt(
+      timestamp: DateTime.now(),
+      studentName: "Adedigba Rejoice",
+      hostel: "Manchester Hostel",
+      id: "12345",
+      amountInWords: "One Hundred Thousand Naira (NGN 100,000)",
+      landOwnerName: "Adeyemi Julius",
+      reference: "202384024BG",
+    ),
+    Receipt(
+      timestamp: DateTime.now(),
+      studentName: "Adedigba Rejoice",
+      hostel: "Manchester Hostel",
+      id: "12345",
+      amountInWords: "One Hundred Thousand Naira (NGN 100,000)",
+      landOwnerName: "Adeyemi Julius",
+      reference: "202384024BG",
+    )
+  ],
+);
+
+final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
+  (ref) => [
+    Transaction(
+      timestamp: DateTime.now(),
+      type: TransactionType.credit,
+      purpose: "Top-up Wallet",
+      amount: 150000,
+      status: TransactionStatus.success,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Top-up Wallet",
+      type: TransactionType.credit,
+      amount: 100000,
+      status: TransactionStatus.failed,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Hostel Payment",
+      type: TransactionType.debit,
+      amount: 90000,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      status: TransactionStatus.pending,
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Top-up Wallet",
+      type: TransactionType.credit,
+      amount: 150000,
+      status: TransactionStatus.success,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Top-up Wallet",
+      type: TransactionType.credit,
+      amount: 100000,
+      status: TransactionStatus.failed,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Hostel Payment",
+      type: TransactionType.debit,
+      amount: 90000,
+      status: TransactionStatus.pending,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Top-up Wallet",
+      type: TransactionType.credit,
+      amount: 150000,
+      status: TransactionStatus.success,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Top-up Wallet",
+      type: TransactionType.credit,
+      amount: 100000,
+      status: TransactionStatus.failed,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Hostel Payment",
+      type: TransactionType.debit,
+      amount: 90000,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      status: TransactionStatus.pending,
+      paymentID: "791798480928989DE",
+    ),
+  ],
+);
+
+final StateProvider<double> expensesProvider = StateProvider((ref) => 65000);
+
+final StateProvider<double> walletProvider = StateProvider((ref) => 65000);

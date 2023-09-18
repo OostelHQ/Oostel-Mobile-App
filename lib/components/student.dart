@@ -7,6 +7,7 @@ class Student extends Equatable {
   final String lastName;
   final String email;
   final String gender;
+  final String contact;
 
   final int level;
   final String location;
@@ -22,6 +23,9 @@ class Student extends Equatable {
   final int rentedHostels;
   final int collaboratedRoommates;
 
+  final int profileViews;
+  final int searchAppearances;
+
   const Student({
     this.id = "",
     this.image = "",
@@ -29,6 +33,7 @@ class Student extends Equatable {
     this.lastName = "",
     this.email = "",
     this.gender = "",
+    this.contact = "",
     this.level = 100,
     this.location = "",
     this.amount = 0,
@@ -40,6 +45,8 @@ class Student extends Equatable {
     this.denomination = "",
     this.rentedHostels = 0,
     this.collaboratedRoommates = 0,
+    this.profileViews = 0,
+    this.searchAppearances = 0,
     required this.joined,
   });
 
@@ -59,6 +66,7 @@ class Student extends Equatable {
         "location": location,
         "amount": amount,
         "origin": origin,
+        "contact": contact,
         "ageRange": ageRange,
         "hobby": hobby,
         "religion": religion,
@@ -67,11 +75,15 @@ class Student extends Equatable {
         "rentedHostels": rentedHostels,
         "collaboratedRoommates": collaboratedRoommates,
         "createdAt": joined.toString(),
+        "profileViews": profileViews,
+        "searchAppearances": searchAppearances,
       };
 
   Student.fromJson(Map<String, dynamic> map)
       : id = map["_id"],
         image = map["image"],
+        profileViews = map["profileViews"],
+        searchAppearances = map["searchAppearances"],
         firstName = map["firstName"],
         lastName = map["lastName"],
         email = map["email"],
@@ -79,6 +91,7 @@ class Student extends Equatable {
         location = map["location"],
         amount = map["amount"],
         hobby = map["hobby"],
+        contact = map["contact"],
         origin = map["origin"],
         ageRange = map["ageRange"],
         religion = map["religion"],

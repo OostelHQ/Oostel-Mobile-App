@@ -8,6 +8,7 @@ import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/student.dart';
+import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/pages/auth/login.dart';
 import 'package:my_hostel/pages/auth/password_details.dart';
@@ -29,6 +30,7 @@ import 'package:my_hostel/pages/profile/pasword_notification.dart';
 import 'package:my_hostel/pages/profile/profile.dart';
 import 'package:my_hostel/pages/profile/settings.dart';
 import 'package:my_hostel/pages/profile/other_student_profile.dart';
+import 'package:my_hostel/pages/profile/transaction.dart';
 import 'package:my_hostel/pages/profile/wallet.dart';
 
 void main() {
@@ -102,6 +104,25 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.notification,
           builder: (_, __) => const NotificationPage(),
         ),
+
+        GoRoute(
+          path: Pages.transactionDetails.path,
+          name: Pages.transactionDetails,
+          builder: (_, state) => TransactionDetailsPage(transaction: state.extra as Transaction),
+        ),
+
+        GoRoute(
+          path: Pages.transactionHistory.path,
+          name: Pages.transactionHistory,
+          builder: (_, __) => const TransactionHistoryPage(),
+        ),
+
+        GoRoute(
+          path: Pages.topUp.path,
+          name: Pages.topUp,
+          builder: (_, state) => const WalletTopUpPage(),
+        ),
+
         GoRoute(
           path: Pages.help.path,
           name: Pages.help,
@@ -172,24 +193,12 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.otherStudent.path,
           name: Pages.otherStudent,
-          builder: (_, state) {
-            Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-            return OtherStudentProfilePage(info: Student.fromJson(data));
-          },
+          builder: (_, state) => OtherStudentProfilePage(info: state.extra as Student),
         ),
         GoRoute(
           path: Pages.hostelInfo.path,
           name: Pages.hostelInfo,
-          builder: (_, state) {
-            Map<String, dynamic> map = state.extra as Map<String, dynamic>;
-            List<RoomInfo> roomInfo = [];
-            List<dynamic> values = map["roomsLeft"] as List<dynamic>;
-            for (var element in values) {
-              roomInfo.add(RoomInfo.fromJson(element));
-            }
-            map["roomsLeft"] = roomInfo;
-            return HostelInformationPage(info: HostelInfo.fromJson(map));
-          },
+          builder: (_, state) => HostelInformationPage(info: state.extra as HostelInfo),
         ),
       ],
     );

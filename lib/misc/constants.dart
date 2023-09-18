@@ -19,6 +19,10 @@ const Color accentDarkGreenColor = Color(0xFF115C49);
 const Color accentYellowColor = Color(0xFFFFB612);
 const Color accentOrangeColor = Color(0xFFEA7A3B);
 
+const Color successColor = Color.fromRGBO(22, 152, 82, 1.0);
+const Color pendingColor = Color.fromRGBO(255, 201, 44, 1.0);
+const Color failColor = Color.fromRGBO(235, 11, 11, 1.0);
+
 extension PathExtension on String {
   String get path => "/$this";
 }
@@ -61,6 +65,10 @@ class Pages
 
   static const String wallet = 'wallet';
   static const String notification = 'notification';
+
+  static const String transactionHistory = 'transaction-history';
+  static const String transactionDetails = 'transaction-details';
+  static const String topUp = 'top-up';
 
 }
 

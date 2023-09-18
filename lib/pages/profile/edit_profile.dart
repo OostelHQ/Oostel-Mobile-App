@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/api/file_manager.dart';
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
@@ -26,11 +28,31 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   String? age;
 
 
-  final TextEditingController email = TextEditingController();
-  final TextEditingController fullName = TextEditingController();
-  final TextEditingController number = TextEditingController();
-  final TextEditingController denomination = TextEditingController();
-  final TextEditingController hobby = TextEditingController();
+  late TextEditingController email;
+  late TextEditingController fullName;
+  late TextEditingController number;
+  late TextEditingController denomination;
+  late TextEditingController hobby;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Student student = ref.read(studentProvider);
+
+    email = TextEditingController(text: student.email);
+    fullName = TextEditingController(text: student.mergedNames);
+    number = TextEditingController(text: student.contact);
+    denomination = TextEditingController(text: student.denomination);
+    hobby = TextEditingController(text: student.hobby);
+
+    profileImage = student.image;
+    level = "${student.level}";
+    origin = student.origin;
+    religion = student.religion;
+    age = student.ageRange;
+    gender = student.gender;
+  }
 
   @override
   void dispose() {

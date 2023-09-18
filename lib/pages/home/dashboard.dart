@@ -126,19 +126,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
   }
 }
 
-class PageContent {
-  final String header;
-  final String subtitle;
-  bool visible;
-  double amount;
 
-  PageContent({
-    required this.header,
-    required this.subtitle,
-    this.visible = true,
-    this.amount = 0.0,
-  });
-}
 
 class _HomePage extends ConsumerStatefulWidget {
   const _HomePage({super.key});
@@ -149,28 +137,14 @@ class _HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<_HomePage> {
   final ScrollController controller = ScrollController();
-  late List<PageContent> contents;
 
   List<dynamic> acquireList = [];
 
-  bool showBalance = true, showExpenses = true, hostelSelect = true;
+  bool hostelSelect = true;
 
   @override
   void initState() {
     super.initState();
-    contents = [
-      PageContent(
-        header: "Total Balance",
-        subtitle: "Available funds in wallet",
-        amount: 65000,
-      ),
-      PageContent(
-        header: "Total Expenses",
-        subtitle: "Amount spent on the acquires",
-        amount: 65000,
-      ),
-    ];
-
     acquireList = ref.read(acquiredHostelsProvider);
   }
 
@@ -179,12 +153,6 @@ class _HomePageState extends ConsumerState<_HomePage> {
     controller.dispose();
     super.dispose();
   }
-
-  // void showBottom({bool? status}) => showModalBottomSheet(
-  //       context: context,
-  //       elevation: 1.0,
-  //       builder: (_) => HostelInfoModal(status: status),
-  //     );
 
   @override
   Widget build(BuildContext context) {
@@ -245,90 +213,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
           sliver: SliverToBoxAdapter(
             child: Column(
               children: [
-                SizedBox(
-                  width: 414.w,
-                  height: 145.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) => Container(
-                      width: 270.w,
-                      height: 145.h,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.r),
-                        color: appBlue,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 15.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                contents[index].header,
-                                style: context.textTheme.bodyLarge!.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => setState(
-                                  () {
-                                    if (index == 0) {
-                                      showBalance = !showBalance;
-                                    } else {
-                                      showExpenses = !showExpenses;
-                                    }
-                                  },
-                                ),
-                                child: AnimatedSwitcherZoom.zoomIn(
-                                  duration: const Duration(milliseconds: 500),
-                                  child: SvgPicture.asset(
-                                    "assets/images/Eye ${((index == 0) ? showBalance : showExpenses) ? "Hidden" : "Visible"}.svg",
-                                    key: ValueKey<bool>(
-                                      ((index == 0)
-                                          ? showBalance
-                                          : showExpenses),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 25.h),
-                          AnimatedSwitcherZoom.zoomIn(
-                            duration: const Duration(milliseconds: 500),
-                            child: Text(
-                              ((index == 0) ? showBalance : showExpenses)
-                                  ? "${currency()}${formatAmount(contents[index].amount.toStringAsFixed(0))}"
-                                  : "********",
-                              key: ValueKey<bool>(
-                                  ((index == 0) ? showBalance : showExpenses)),
-                              style: context.textTheme.headlineMedium!.copyWith(
-                                fontWeight: FontWeight.w700,
-                                fontFamily: "Inter",
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10.h),
-                          Text(
-                            contents[index].subtitle,
-                            style: context.textTheme.bodySmall!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                    itemCount: contents.length,
-                  ),
-                ),
+                const WalletSlider(),
                 SizedBox(height: 35.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
