@@ -11,6 +11,8 @@ import 'package:my_hostel/components/user.dart';
 final StateProvider<bool> hasInitializedProvider =
     StateProvider((ref) => false);
 
+final StateProvider<bool> isAStudent = StateProvider((ref) => true);
+
 final StateProvider<bool> hasMessagesProvider = StateProvider((ref) => false);
 
 final StateProvider<bool> hasNotificationProvider =
@@ -38,7 +40,20 @@ final StateProvider<Student> studentProvider = StateProvider(
     profileViews: 48,
     collaboratedRoommates: 9,
     rentedHostels: 3,
-    contact: "09012345678"
+    contact: "09012345678",
+  ),
+);
+
+final StateProvider<Landowner> ownerProvider = StateProvider(
+  (ref) => Landowner(
+    dateJoined: DateTime.now(),
+    firstName: "Smith",
+    lastName: "Woods",
+    gender: "Male",
+    image: "assets/images/watch man.jpg",
+    id: "Landowner",
+    email: "landlord@mail.com",
+    contact: "09012345678",
   ),
 );
 
@@ -623,6 +638,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           )
         ]);
+
 final StateProvider<List<Student>> acquiredRoommatesProvider =
     StateProvider((ref) {
   return [
@@ -1276,6 +1292,544 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           )
         ]);
+
+final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
+  (ref) => [
+    HostelInfo(
+      id: "11",
+      name: "Manchester Hostel Askj",
+      image: "assets/images/street.jpg",
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 2500,
+      price: 100000,
+      address: "Harmony Estate",
+      description:
+          "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
+          "Lorem ipsum dolor sit amet, consectetur.",
+      rules: const [
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
+      ],
+      hostelFacilities: const [
+        "Light",
+        "Water",
+        "Security",
+        "None",
+        "Light",
+        "Water",
+        "Security",
+      ],
+      roomsLeft: const [
+        RoomInfo(
+          name: "Room 1",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 1 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 2",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 2 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 3",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 3 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 4",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 4 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 5",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 5 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        )
+      ],
+      media: const [
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+      ],
+      owner: ref.watch(ownerProvider),
+    ),
+    HostelInfo(
+      id: "12",
+      name: "Liverpool Hostel",
+      image: "assets/images/street.jpg",
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 2500,
+      price: 100000,
+      address: "Harmony Estate",
+      description:
+          "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
+          "Lorem ipsum dolor sit amet, consectetur.",
+      rules: const [
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
+      ],
+      roomsLeft: const [
+        RoomInfo(
+          name: "Room 1",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 1 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 2",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 2 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 3",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 3 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 4",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 4 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 5",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 5 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        )
+      ],
+      hostelFacilities: const [
+        "Light",
+        "Water",
+        "Security",
+        "None",
+        "Light",
+        "Water",
+        "Security",
+      ],
+      media: const [
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+      ],
+      owner: ref.watch(ownerProvider),
+    ),
+    HostelInfo(
+      id: "13",
+      name: "Scotland",
+      image: "assets/images/street.jpg",
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 2500,
+      price: 100000,
+      address: "Harmony Estate",
+      description:
+          "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
+          "Lorem ipsum dolor sit amet, consectetur.",
+      rules: const [
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
+      ],
+      roomsLeft: const [
+        RoomInfo(
+          name: "Room 1",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 1 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 2",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 2 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 3",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 3 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 4",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 4 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 5",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 5 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        )
+      ],
+      hostelFacilities: const [
+        "Light",
+        "Water",
+        "Security",
+        "None",
+        "Light",
+        "Water",
+        "Security",
+      ],
+      media: const [
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+      ],
+      owner: ref.watch(ownerProvider),
+    ),
+    HostelInfo(
+      id: "14",
+      name: "Grace Ville",
+      image: "assets/images/street.jpg",
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 2500,
+      price: 100000,
+      address: "Harmony Estate",
+      description:
+          "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
+          "Lorem ipsum dolor sit amet, consectetur.",
+      rules: const [
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur.",
+        "Nam utcurs usipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
+      ],
+      roomsLeft: const [
+        RoomInfo(
+          name: "Room 1",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 1 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 2",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 2 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 3",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 3 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 4",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 4 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        ),
+        RoomInfo(
+          name: "Room 5",
+          facilities: [
+            "Light",
+            "Water",
+            "Security",
+            "None",
+          ],
+          id: "Room 5 ID",
+          media: [
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+            "assets/images/street.jpg",
+          ],
+          price: 100000,
+        )
+      ],
+      hostelFacilities: const [
+        "Light",
+        "Water",
+        "Security",
+        "None",
+        "Light",
+        "Water",
+        "Security",
+      ],
+      media: const [
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+        "assets/images/street.jpg",
+      ],
+      owner: ref.watch(ownerProvider),
+    )
+  ],
+);
+
 final StateProvider<List<Student>> availableRoommatesProvider =
     StateProvider((ref) {
   return [
@@ -1363,6 +1917,17 @@ final StateProvider<List<String>> roomTypesProvider = StateProvider((ref) => [
     ]);
 
 final StateProvider<List<String>> locationProvider = StateProvider((ref) => [
+      "Kofesu",
+      "Camp",
+      "Accord",
+      "Harmony",
+      "Agbede",
+      "Oluwo",
+      "Isolu",
+      "Funis"
+    ]);
+
+final StateProvider<List<String>> banksProvider = StateProvider((ref) => [
       "Kofesu",
       "Camp",
       "Accord",
@@ -1467,7 +2032,8 @@ final StateProvider<List<Receipt>> receiptsProvider = StateProvider(
   ],
 );
 
-final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
+final StateProvider<List<Transaction>> studentTransactionsProvider =
+    StateProvider(
   (ref) => [
     Transaction(
       timestamp: DateTime.now(),
@@ -1560,6 +2126,105 @@ final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
       amount: 90000,
       receiver: "AKINWOYE OLUWAPELUMI",
       status: TransactionStatus.pending,
+      paymentID: "791798480928989DE",
+    ),
+  ],
+);
+
+final StateProvider<List<Transaction>> ownerTransactionsProvider =
+    StateProvider(
+  (ref) => [
+    Transaction(
+      timestamp: DateTime.now(),
+      type: TransactionType.credit,
+      purpose: "Money Received",
+      amount: 150000,
+      status: TransactionStatus.success,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      hostel: "Manchester Hostel",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Money Received",
+      type: TransactionType.credit,
+      amount: 100000,
+      status: TransactionStatus.failed,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      hostel: "Manchester Hostel",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Withdrawal",
+      type: TransactionType.debit,
+      amount: 90000,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      status: TransactionStatus.pending,
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Money Received",
+      type: TransactionType.credit,
+      amount: 150000,
+      status: TransactionStatus.success,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      hostel: "Manchester Hostel",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Money Received",
+      type: TransactionType.credit,
+      amount: 100000,
+      status: TransactionStatus.failed,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      hostel: "Manchester Hostel",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Withdrawal",
+      type: TransactionType.debit,
+      amount: 90000,
+      status: TransactionStatus.pending,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Money Received",
+      type: TransactionType.credit,
+      amount: 150000,
+      status: TransactionStatus.success,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      hostel: "Manchester Hostel",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Money Received",
+      type: TransactionType.credit,
+      amount: 100000,
+      status: TransactionStatus.failed,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      hostel: "Manchester Hostel",
+      paymentID: "791798480928989DE",
+    ),
+    Transaction(
+      timestamp: DateTime.now(),
+      purpose: "Withdrawal",
+      type: TransactionType.debit,
+      amount: 90000,
+      receiver: "AKINWOYE OLUWAPELUMI",
+      status: TransactionStatus.pending,
+      bankName: "First Bank of Nigeria",
+      accountNumber: "3130201234",
       paymentID: "791798480928989DE",
     ),
   ],

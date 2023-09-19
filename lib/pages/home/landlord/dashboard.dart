@@ -4,24 +4,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/landlord_widgets.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
-import 'package:my_hostel/pages/profile/settings.dart';
+import 'package:my_hostel/pages/profile/owner/settings.dart';
+import 'package:my_hostel/pages/profile/owner/wallet.dart';
 
-import 'chats.dart';
-import 'explore.dart';
+import '../chats.dart';
+import '../student/explore.dart';
 
-class DashboardPage extends ConsumerStatefulWidget {
-  const DashboardPage({super.key});
+class LandownerDashboardPage extends ConsumerStatefulWidget {
+  const LandownerDashboardPage({super.key});
 
   @override
-  ConsumerState<DashboardPage> createState() => _DashboardPageState();
+  ConsumerState<LandownerDashboardPage> createState() => _LandownerDashboardPageState();
 }
 
-class _DashboardPageState extends ConsumerState<DashboardPage> {
+class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage> {
   late List<Widget> stack;
 
   @override
@@ -29,9 +32,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     super.initState();
     stack = const [
       _HomePage(),
-      ExplorePage(),
       ChatsPage(),
-      SettingsPage(),
+      SizedBox(),
+      OwnerWalletPage(),
+      OwnerSettingsPage(),
     ];
   }
 
@@ -41,13 +45,13 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     bool messages = ref.watch(hasMessagesProvider);
 
     String messagePath = "assets/images/Message";
-    if (messages && index == 2) {
+    if (messages && index == 1) {
       messagePath = "$messagePath Active Chat.svg";
       key = 1;
-    } else if (messages && index != 2) {
+    } else if (messages && index != 1) {
       messagePath = "$messagePath Inactive Chat.svg";
       key = 2;
-    } else if (!messages && index == 2) {
+    } else if (!messages && index == 1) {
       messagePath = "$messagePath Active No Chat.svg";
       key = 3;
     } else {
@@ -88,32 +92,43 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             icon: AnimatedSwitcherZoom.zoomIn(
               duration: const Duration(milliseconds: 500),
               child: SvgPicture.asset(
-                "assets/images/Explore ${index == 1 ? "Active" : "Inactive"}.svg",
-                key: ValueKey<bool>(index == 1),
-                color: index != 1 ? weirdBlack50 : null,
-                height: 25.h,
-              ),
-            ),
-            label: "Explore",
-          ),
-          BottomNavigationBarItem(
-            icon: AnimatedSwitcherZoom.zoomIn(
-              duration: const Duration(milliseconds: 500),
-              child: SvgPicture.asset(
                 messagePath,
-                color: index != 2 ? weirdBlack50 : null,
+                color: index != 1 ? weirdBlack50 : null,
                 key: ValueKey<int>(key),
                 height: 25.h,
               ),
             ),
             label: "Chats",
           ),
+
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/images/Create Hostel.svg",
+              color: weirdBlack50,
+              height: 25.h,
+            ),
+            label: "Create",
+          ),
+
           BottomNavigationBarItem(
             icon: AnimatedSwitcherZoom.zoomIn(
               duration: const Duration(milliseconds: 500),
               child: SvgPicture.asset(
-                "assets/images/Profile ${index == 3 ? "Active" : "Inactive"}.svg",
+                "assets/images/Wallet ${index == 3 ? "Active" : "Inactive"}.svg",
+                key: ValueKey<bool>(index == 3),
                 color: index != 3 ? weirdBlack50 : null,
+                height: 25.h,
+              ),
+            ),
+            label: "Wallet",
+          ),
+
+          BottomNavigationBarItem(
+            icon: AnimatedSwitcherZoom.zoomIn(
+              duration: const Duration(milliseconds: 500),
+              child: SvgPicture.asset(
+                "assets/images/Profile ${index == 4 ? "Active" : "Inactive"}.svg",
+                color: index != 4 ? weirdBlack50 : null,
                 key: ValueKey<int>(key),
                 height: 25.h,
               ),
@@ -138,14 +153,14 @@ class _HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<_HomePage> {
   final ScrollController controller = ScrollController();
 
-  List<dynamic> acquireList = [];
+  List<HostelInfo> hostels = [];
 
   bool hostelSelect = true;
 
   @override
   void initState() {
     super.initState();
-    acquireList = ref.read(acquiredHostelsProvider);
+    hostels = ref.read(acquiredHostelsProvider);
   }
 
   @override
@@ -156,7 +171,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Student student = ref.watch(studentProvider);
+    Landowner owner = ref.watch(ownerProvider);
     bool notifications = ref.watch(hasNotificationProvider);
 
     return CustomScrollView(
@@ -168,24 +183,24 @@ class _HomePageState extends ConsumerState<_HomePage> {
           pinned: true,
           centerTitle: true,
           title: GestureDetector(
-            onTap: () => context.router.pushNamed(Pages.profile),
+            onTap: () => context.router.pushNamed(Pages.ownerProfile),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
                   radius: 15.r,
-                  backgroundImage: AssetImage(student.image),
+                  backgroundImage: AssetImage(owner.image),
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  "Hello, ${student.lastName} ",
+                  "Hello, ${owner.lastName} ",
                   style: context.textTheme.bodyMedium!.copyWith(
                     color: weirdBlack75,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  student.gender == "Female" ? "🧑" : "🧒",
+                  owner.gender == "Female" ? "🧑" : "🧒",
                   style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
                 ),
               ],
@@ -220,17 +235,16 @@ class _HomePageState extends ConsumerState<_HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Hero(
-                      tag: "My Acquires Header",
+                      tag: "My Hostels Header",
                       child: Text(
-                        "My Acquires",
+                        "My Hostels",
                         style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600, color: weirdBlack),
                       ),
                     ),
-                    if (acquireList.length >= 3)
+                    if (hostels.length > 3)
                       GestureDetector(
-                        onTap: () => context.router
-                            .pushNamed(Pages.viewAcquires, extra: hostelSelect),
+                        onTap: () => context.router.pushNamed(Pages.viewHostels),
                         child: Text(
                           "See All",
                           style: context.textTheme.bodyMedium!.copyWith(
@@ -239,20 +253,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
                       ),
                   ],
                 ),
-                SizedBox(height: 10.h),
-                Hero(
-                  tag: "Home Switcher",
-                  child: HomeSwitcher(
-                    onHostelDisplayed: () => setState(() {
-                      acquireList = ref.watch(acquiredHostelsProvider);
-                      hostelSelect = true;
-                    }),
-                    onRoommateDisplayed: () => setState(() {
-                      acquireList = ref.watch(acquiredRoommatesProvider);
-                      hostelSelect = false;
-                    }),
-                  ),
-                ),
+
                 SizedBox(height: 20.h),
               ],
             ),
@@ -260,52 +261,29 @@ class _HomePageState extends ConsumerState<_HomePage> {
         ),
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 22.w),
-          sliver: acquireList.isEmpty
+          sliver: hostels.isEmpty
               ? SliverFillRemaining(
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "You have no ${hostelSelect ? "hostel" : "roommate"} acquires yet!",
-                          style: context.textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: weirdBlack,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        GestureDetector(
-                          onTap: () => ref
-                              .watch(dashboardTabIndexProvider.notifier)
-                              .state = 1,
-                          child: Text(
-                            "Explore ${hostelSelect ? "Hostels" : "Roommates"}",
-                            style: context.textTheme.bodySmall!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: appBlue,
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "You have no hostels yet! Advertise your hostel without stress!",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: weirdBlack50,
+                      ),
                     ),
                   ),
                 )
               : SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (_, index) {
-                      if (index >= acquireList.length) {
+                      if (index >= hostels.length) {
                         return const SizedBox();
                       }
 
-                      dynamic element = acquireList[index];
-                      if (element is HostelInfo) {
-                        return HostelInfoCard(info: element);
-                      } else {
-                        return StudentCard(info: element);
-                      }
+                      return LandlordHostelCard(info: hostels[index]);
                     },
-                    childCount: 4,
+                    childCount: 3,
                   ),
                 ),
         ),

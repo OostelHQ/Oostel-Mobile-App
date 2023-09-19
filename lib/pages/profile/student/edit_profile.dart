@@ -46,7 +46,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     denomination = TextEditingController(text: student.denomination);
     hobby = TextEditingController(text: student.hobby);
 
-    profileImage = student.image;
+    //profileImage = student.image;
     level = "${student.level}";
     origin = student.origin;
     religion = student.religion;
@@ -94,8 +94,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         backgroundImage: FileImage(File(profileImage!)),
                         radius: 75.r,
                       )
-                    : SvgPicture.asset(
-                        "assets/images/Choose Image.svg",
+                    : Image.asset(
+                        "assets/images/Choose Image.png",
                         width: 160.r,
                         height: 160.r,
                       ),
@@ -198,7 +198,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       dropdownItems: states,
                       onChanged: (val) => setState(() => origin = val),
                       buttonWidth: 414.w,
-                      icon: const Icon(Boxicons.bxs_down_arrow_alt),
+                      icon: const Icon(Boxicons.bxs_down_arrow),
                     ),
                     SizedBox(height: 16.h),
                     Text(
@@ -211,7 +211,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       value: gender,
                       dropdownItems: const ["Male", "Female"],
                       onChanged: (val) => setState(() => gender = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow_alt),
+                      icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
                     ),
                     SizedBox(height: 16.h),
@@ -225,7 +225,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       value: level,
                       dropdownItems: const ["100", "200", "300", "400", "500", "600", "700", "Post Graduate"],
                       onChanged: (val) => setState(() => level = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow_alt),
+                      icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
                     ),
                     SizedBox(height: 16.h),
@@ -239,7 +239,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       value: religion,
                       dropdownItems: const ["Christianity", "Islam", "Other"],
                       onChanged: (val) => setState(() => religion = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow_alt),
+                      icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
                     ),
                     SizedBox(height: 16.h),
@@ -253,7 +253,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       value: age,
                       dropdownItems: const ["15 - 20", "21 - 25", "25 - 30", "30+"],
                       onChanged: (val) => setState(() => age = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow_alt),
+                      icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
                     ),
                     SizedBox(height: 16.h),

@@ -11,6 +11,7 @@ class HostelInfo extends Equatable {
   final int bathrooms;
   final double area;
   final double price;
+  final int totalRooms;
   final String description;
   final List<String> rules;
   final List<String> hostelFacilities;
@@ -28,6 +29,7 @@ class HostelInfo extends Equatable {
     this.bathrooms = 0,
     this.area = 0.0,
     this.price = 0.0,
+    this.totalRooms = 0,
     this.roomsLeft = const [],
     required this.owner,
     this.description = "",
@@ -51,6 +53,7 @@ class HostelInfo extends Equatable {
         roomsLeft = map["roomsLeft"],
         description = map["description"],
         rules = map["rules"],
+  totalRooms = map["totalRooms"],
         hostelFacilities = map["hostelFacilities"],
         media = map["media"],
         owner = Landowner.fromJson(map["owner"]);
@@ -71,6 +74,7 @@ class HostelInfo extends Equatable {
       "address": address,
       "price": price,
       "rules": rules,
+      "totalRooms" : totalRooms,
       "description": description,
       "roomsLeft": jsonRooms,
       "hostelFacilities": hostelFacilities,

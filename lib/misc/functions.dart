@@ -60,6 +60,9 @@ String currency() => NumberFormat.simpleCurrency(name: "NGN").currencySymbol;
 String formatDateRaw(DateTime date, {bool shorten = false}) =>
     formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
+String formatDateWithTime(DateTime date, {bool shorten = false}) =>
+    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
+
 String formatDate(String dateTime, {bool shorten = false}) {
   int firIndex = dateTime.indexOf("/");
   String d = dateTime.substring(0, firIndex);

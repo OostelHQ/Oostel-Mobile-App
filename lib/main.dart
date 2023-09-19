@@ -15,23 +15,27 @@ import 'package:my_hostel/pages/auth/password_details.dart';
 import 'package:my_hostel/pages/auth/privacy.dart';
 import 'package:my_hostel/pages/auth/register.dart';
 import 'package:my_hostel/pages/auth/register_type.dart';
-import 'package:my_hostel/pages/home/dashboard.dart';
-import 'package:my_hostel/pages/home/explore.dart';
-import 'package:my_hostel/pages/home/filter.dart';
-import 'package:my_hostel/pages/home/hostel_information.dart';
+import 'package:my_hostel/pages/home/landlord/dashboard.dart';
+import 'package:my_hostel/pages/home/landlord/view_hostels.dart';
+import 'package:my_hostel/pages/home/student/dashboard.dart';
+import 'package:my_hostel/pages/home/student/explore.dart';
+import 'package:my_hostel/pages/home/student/filter.dart';
+import 'package:my_hostel/pages/home/student/student_hostel_details_page.dart';
 import 'package:my_hostel/pages/home/notification.dart';
-import 'package:my_hostel/pages/home/view_acquires.dart';
-import 'package:my_hostel/pages/home/view_availables.dart';
+import 'package:my_hostel/pages/home/student/view_acquires.dart';
+import 'package:my_hostel/pages/home/student/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
 import 'package:my_hostel/pages/profile/about.dart';
-import 'package:my_hostel/pages/profile/edit_profile.dart';
+import 'package:my_hostel/pages/profile/owner/wallet.dart';
+import 'package:my_hostel/pages/profile/student/edit_profile.dart';
 import 'package:my_hostel/pages/profile/help.dart';
-import 'package:my_hostel/pages/profile/pasword_notification.dart';
-import 'package:my_hostel/pages/profile/profile.dart';
-import 'package:my_hostel/pages/profile/settings.dart';
-import 'package:my_hostel/pages/profile/other_student_profile.dart';
+import 'package:my_hostel/pages/profile/student/pasword_notification.dart';
+import 'package:my_hostel/pages/profile/student/profile.dart';
+import 'package:my_hostel/pages/profile/student/settings.dart';
+import 'package:my_hostel/pages/profile/owner/settings.dart';
+import 'package:my_hostel/pages/profile/student/other_student_profile.dart';
 import 'package:my_hostel/pages/profile/transaction.dart';
-import 'package:my_hostel/pages/profile/wallet.dart';
+import 'package:my_hostel/pages/profile/student/wallet.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyHostelApp()));
@@ -85,9 +89,14 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, __) => const PrivacyPolicyPage(),
         ),
         GoRoute(
-          path: Pages.profileSettings.path,
-          name: Pages.profileSettings,
-          builder: (_, __) => const ProfileSettingsPage(),
+          path: Pages.studentProfileSettings.path,
+          name: Pages.studentProfileSettings,
+          builder: (_, __) => const StudentProfileSettingsPage(),
+        ),
+        GoRoute(
+          path: Pages.ownerProfileSettings.path,
+          name: Pages.ownerProfileSettings,
+          builder: (_, __) => const OwnerProfileSettingsPage(),
         ),
         GoRoute(
           path: Pages.editProfile.path,
@@ -104,34 +113,41 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.notification,
           builder: (_, __) => const NotificationPage(),
         ),
-
         GoRoute(
           path: Pages.transactionDetails.path,
           name: Pages.transactionDetails,
-          builder: (_, state) => TransactionDetailsPage(transaction: state.extra as Transaction),
+          builder: (_, state) =>
+              TransactionDetailsPage(transaction: state.extra as Transaction),
         ),
-
         GoRoute(
           path: Pages.transactionHistory.path,
           name: Pages.transactionHistory,
           builder: (_, __) => const TransactionHistoryPage(),
         ),
-
         GoRoute(
           path: Pages.topUp.path,
           name: Pages.topUp,
           builder: (_, state) => const WalletTopUpPage(),
         ),
-
+        GoRoute(
+          path: Pages.withdraw.path,
+          name: Pages.withdraw,
+          builder: (_, state) => const WithdrawPage(),
+        ),
         GoRoute(
           path: Pages.help.path,
           name: Pages.help,
           builder: (_, __) => const HelpPage(),
         ),
         GoRoute(
-          path: Pages.wallet.path,
-          name: Pages.wallet,
-          builder: (_, __) => const WalletPage(),
+          path: Pages.studentWallet.path,
+          name: Pages.studentWallet,
+          builder: (_, __) => const StudentWalletPage(),
+        ),
+        GoRoute(
+          path: Pages.ownerWallet.path,
+          name: Pages.ownerWallet,
+          builder: (_, __) => const OwnerWalletPage(),
         ),
         GoRoute(
           path: Pages.changePassword.path,
@@ -154,9 +170,14 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, __) => const ResetPasswordPage(),
         ),
         GoRoute(
-          path: Pages.dashboard.path,
-          name: Pages.dashboard,
-          builder: (_, __) => const DashboardPage(),
+          path: Pages.studentDashboard.path,
+          name: Pages.studentDashboard,
+          builder: (_, __) => const StudentDashboardPage(),
+        ),
+        GoRoute(
+          path: Pages.ownerDashboard.path,
+          name: Pages.ownerDashboard,
+          builder: (_, __) => const LandownerDashboardPage(),
         ),
         GoRoute(
           path: Pages.viewAcquires.path,
@@ -171,6 +192,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
               ViewAvailablePage(hostel: (state.extra as bool)),
         ),
         GoRoute(
+          path: Pages.viewHostels.path,
+          name: Pages.viewHostels,
+          builder: (_, __) => const ViewHostelsPage(),
+        ),
+        GoRoute(
           path: Pages.filter.path,
           name: Pages.filter,
           builder: (_, state) => FilterPage(hostel: (state.extra as bool)),
@@ -183,22 +209,24 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.settings.path,
           name: Pages.settings,
-          builder: (_, __) => const SettingsPage(),
+          builder: (_, __) => const StudentSettingsPage(),
         ),
         GoRoute(
-          path: Pages.profile.path,
-          name: Pages.profile,
+          path: Pages.studentProfile.path,
+          name: Pages.studentProfile,
           builder: (_, __) => const ProfilePage(),
         ),
         GoRoute(
           path: Pages.otherStudent.path,
           name: Pages.otherStudent,
-          builder: (_, state) => OtherStudentProfilePage(info: state.extra as Student),
+          builder: (_, state) =>
+              OtherStudentProfilePage(info: state.extra as Student),
         ),
         GoRoute(
           path: Pages.hostelInfo.path,
           name: Pages.hostelInfo,
-          builder: (_, state) => HostelInformationPage(info: state.extra as HostelInfo),
+          builder: (_, state) =>
+              HostelInformationPage(info: state.extra as HostelInfo),
         ),
       ],
     );

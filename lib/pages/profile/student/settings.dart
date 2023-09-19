@@ -15,14 +15,14 @@ class _Link {
   const _Link({required this.route, required this.name, required this.image});
 }
 
-class SettingsPage extends ConsumerStatefulWidget {
-  const SettingsPage({super.key});
+class StudentSettingsPage extends ConsumerStatefulWidget {
+  const StudentSettingsPage({super.key});
 
   @override
-  ConsumerState<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<StudentSettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends ConsumerState<SettingsPage> {
+class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
   late List<_Link> links;
 
   @override
@@ -32,17 +32,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     links = const [
       _Link(
         name: "View profile",
-        route: Pages.profile,
+        route: Pages.studentProfile,
         image: "assets/images/Danger.svg",
       ),
       _Link(
         name: "Wallet",
-        route: Pages.wallet,
+        route: Pages.studentWallet,
         image: "assets/images/Settings.svg",
       ),
       _Link(
         name: "Settings",
-        route: Pages.profileSettings,
+        route: Pages.studentProfileSettings,
         image: "assets/images/Settings.svg",
       ),
       _Link(
@@ -70,6 +70,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   void logout() => showModalBottomSheet(
         context: context,
+    isDismissible: false,
         builder: (_) => SizedBox(
           height: 450.h,
           child: Padding(
@@ -89,8 +90,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             topLeft: Radius.circular(15.r),
                             topRight: Radius.circular(15.r),
                           ),
-                          child: SvgPicture.asset(
-                            "assets/images/Logout Profile.svg",
+                          child: Image.asset(
+                            "assets/images/Profile Logout.png",
                             width: 135.r,
                             height: 135.h,
                             fit: BoxFit.cover,
@@ -267,8 +268,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 }
 
-class ProfileSettingsPage extends StatelessWidget {
-  const ProfileSettingsPage({super.key});
+class StudentProfileSettingsPage extends StatelessWidget {
+  const StudentProfileSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

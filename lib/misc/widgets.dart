@@ -1526,40 +1526,44 @@ class FacilityContainer extends StatelessWidget {
   }
 }
 
-class HostelInfoModal extends StatefulWidget {
-  final bool? status;
+class HostelInfoModal extends ConsumerStatefulWidget {
+  final HostelInfo info;
 
   const HostelInfoModal({
     super.key,
-    this.status,
+    required this.info,
   });
 
   @override
-  State<HostelInfoModal> createState() => _HostelInfoModalState();
+  ConsumerState<HostelInfoModal> createState() => _HostelInfoModalState();
 }
 
-class _HostelInfoModalState extends State<HostelInfoModal> {
+class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
   late String title, message, image;
-  bool? status;
+  late bool hasEnough, status, selected;
+
+  int? selectedRoom;
 
   @override
   void initState() {
     super.initState();
-    status = widget.status;
+    hasEnough = ref.read(walletProvider) >= widget.info.price;
+    status = true;
+    selected = false;
 
-    if (status == null) {
+    if (!hasEnough) {
       title = "Insufficient Balance";
       message = "Please fund your wallet to continue.";
-      image = "assets/images/Hostel No Funds.svg";
-    } else if (status != null && !status!) {
-      title = "Hostel Pay Failed";
-      message = "Your payment was unsuccessful. Please try again.";
-      image = "assets/images/Hostel Pay Fail.svg";
-    } else {
+      image = "assets/images/Hostel Pay No Funds.png";
+    } else if (status) {
       title = "Hostel Pay Successful";
       message =
           "Congratulations, you have successfully purchased a hostel for yourself.";
-      image = "assets/images/Hostel Pay Success.svg";
+      image = "assets/images/Hostel Pay Success.png";
+    } else {
+      title = "Hostel Pay Failed";
+      message = "Your payment was unsuccessful. Please try again.";
+      image = "assets/images/Hostel Pay Fail.png";
     }
   }
 
@@ -1572,83 +1576,196 @@ class _HostelInfoModalState extends State<HostelInfoModal> {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 25.h),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15.r),
-                        topRight: Radius.circular(15.r),
-                      ),
-                      child: SvgPicture.asset(
-                        image,
-                        width: 135.r,
-                        height: 135.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    title,
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    message,
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 42.h),
-                  if (status != null && status!)
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appBlue,
-                      ),
-                      child: Text(
-                        "Ok, thanks",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  if (status != null && !status!)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+            selected
+                ? SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appBlue,
-                          ),
-                          child: Text(
-                            "Cancel",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                        SizedBox(height: 10.h),
+                        SvgPicture.asset("assets/images/Modal Line.svg"),
+                        SizedBox(height: 25.h),
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.r),
+                              topRight: Radius.circular(15.r),
+                            ),
+                            child: Image.asset(
+                              image,
+                              width: 135.r,
+                              height: 135.h,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          title,
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: weirdBlack,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          message,
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack50,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 42.h),
+                        if (hasEnough && status)
+                          ElevatedButton(
+                            onPressed: () => context.router.pop(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: appBlue,
+                            ),
+                            child: Text(
+                              "Ok, thanks",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        if (hasEnough && !status)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appBlue,
+                                ),
+                                child: Text(
+                                  "Cancel",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appBlue,
+                                ),
+                                child: Text(
+                                  "Try again",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (!hasEnough)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appBlue,
+                                ),
+                                child: Text(
+                                  "Cancel",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () =>
+                                    context.router.pushNamed(Pages.topUp),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appBlue,
+                                ),
+                                child: Text(
+                                  "Top-up",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                      ],
+                    ),
+                  )
+                : SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10.h),
+                        SvgPicture.asset("assets/images/Modal Line.svg"),
+                        SizedBox(height: 25.h),
+                        Text(
+                          "Choose your room",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: weirdBlack,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          "Select the room of your choice from the available rooms below",
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack50,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Wrap(
+                          spacing: 10.w,
+                          runSpacing: 10.w,
+                          children: List.generate(
+                            widget.info.roomsLeft.length,
+                            (index) => GestureDetector(
+                              onTap: () => setState(() => selectedRoom = index),
+                              child: Container(
+                                width: 85.w,
+                                height: 40.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: selectedRoom != null &&
+                                              selectedRoom == index
+                                          ? appBlue
+                                          : fadedBorder,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    color: selectedRoom != null &&
+                                            selectedRoom == index
+                                        ? paleBlue
+                                        : null),
+                                child: Text(
+                                  widget.info.roomsLeft[index].name,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: selectedRoom != null &&
+                                              selectedRoom == index
+                                          ? appBlue
+                                          : weirdBlack50,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 42.h),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => setState(() => selected = true),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: appBlue,
                           ),
                           child: Text(
-                            "Try again",
+                            "Pay ${currency()}${formatAmountInDouble(widget.info.price)}",
                             style: context.textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -1657,41 +1774,7 @@ class _HostelInfoModalState extends State<HostelInfoModal> {
                         ),
                       ],
                     ),
-                  if (status == null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appBlue,
-                          ),
-                          child: Text(
-                            "Cancel",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appBlue,
-                          ),
-                          child: Text(
-                            "Top-up",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                ],
-              ),
-            ),
+                  ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -2135,7 +2218,8 @@ class TransactionContainer extends StatelessWidget {
                             fontWeight: FontWeight.w600, color: weirdBlack),
                       ),
                       Text(
-                        formatDateRaw(transaction.timestamp, shorten: true),
+                        formatDateWithTime(transaction.timestamp,
+                            shorten: true),
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack50, fontWeight: FontWeight.w500),
                       ),
@@ -2176,10 +2260,10 @@ class TransactionContainer extends StatelessWidget {
   }
 }
 
-class TransactionDetailsContainer extends StatelessWidget {
+class StudentTransactionDetailsContainer extends StatelessWidget {
   final Transaction transaction;
 
-  const TransactionDetailsContainer({
+  const StudentTransactionDetailsContainer({
     super.key,
     required this.transaction,
   });
@@ -2405,7 +2489,8 @@ class TransactionDetailsContainer extends StatelessWidget {
                             fontWeight: FontWeight.w600, color: weirdBlack),
                       ),
                       Text(
-                        formatDateRaw(transaction.timestamp, shorten: true),
+                        formatDateWithTime(transaction.timestamp,
+                            shorten: true),
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack50, fontWeight: FontWeight.w500),
                       ),
@@ -2457,6 +2542,492 @@ class TransactionDetailsContainer extends StatelessWidget {
             child: transaction.purpose == "Hostel Payment"
                 ? rent(context)
                 : (transaction.purpose == "Top-up Wallet")
+                    ? topUp(context)
+                    : const SizedBox(),
+          ),
+          SizedBox(height: 24.h),
+        ],
+      ),
+    );
+  }
+}
+
+class OwnerTransactionDetailsContainer extends StatelessWidget {
+  final Transaction transaction;
+
+  const OwnerTransactionDetailsContainer({
+    super.key,
+    required this.transaction,
+  });
+
+  Widget rent(BuildContext context) => Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Sender's name",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.receiver,
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Paid for",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.hostel!,
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Paid through",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                "Oostel App",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Payment ID",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.paymentID,
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "VAT",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                "${currency()}${formatAmountInDouble(transaction.vat)}",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+        ],
+      );
+
+  Widget topUp(BuildContext context) => Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Bank Name",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.bankName!,
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Account Number",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.accountNumber!,
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Account Name",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.receiver,
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Sent from",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                "Oostel App Wallet",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Payment ID",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                transaction.paymentID,
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "VAT",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack50),
+              ),
+              Text(
+                "${currency()}${formatAmountInDouble(transaction.vat)}",
+                style: context.textTheme.bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+              )
+            ],
+          ),
+          SizedBox(height: 12.h),
+        ],
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 24.h),
+          if (transaction.purpose == "Withdrawal")
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15.r),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 30.r,
+                            minHeight: 30.r,
+                            maxWidth: 30.r,
+                            maxHeight: 30.r,
+                          ),
+                          child: ColoredBox(
+                            color: successColor,
+                            child: Icon(
+                              Icons.done_rounded,
+                              color: Colors.white,
+                              size: 18.r,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 80.w,
+                          minHeight: 1.5.h,
+                          maxWidth: 80.w,
+                          maxHeight: 1.5.h,
+                        ),
+                        child: const ColoredBox(color: successColor),
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15.r),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 30.r,
+                            minHeight: 30.r,
+                            maxWidth: 30.r,
+                            maxHeight: 30.r,
+                          ),
+                          child: ColoredBox(
+                            color: successColor,
+                            child: Icon(
+                              Icons.done_rounded,
+                              color: Colors.white,
+                              size: 18.r,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 80.w,
+                          minHeight: 1.5.h,
+                          maxWidth: 80.w,
+                          maxHeight: 1.5.h,
+                        ),
+                        child: const ColoredBox(color: successColor),
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15.r),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 30.r,
+                            minHeight: 30.r,
+                            maxWidth: 30.r,
+                            maxHeight: 30.r,
+                          ),
+                          child: ColoredBox(
+                            color: successColor,
+                            child: Icon(
+                              Icons.done_rounded,
+                              color: Colors.white,
+                              size: 18.r,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 80.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Payment",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                            Text(
+                              "Successful",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 80.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Processing",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                            Text(
+                              "by bank",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 80.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Received",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                            Text(
+                              "by bank",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 320.w,
+                    minHeight: 1.h,
+                    maxWidth: 320.w,
+                    maxHeight: 1.h,
+                  ),
+                  child: const ColoredBox(color: Colors.black12),
+                ),
+                SizedBox(height: 24.h),
+              ],
+            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(width: 10.w),
+              Container(
+                width: 50.r,
+                height: 50.r,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: paleBlue,
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset("assets/images/Top Up.svg"),
+              ),
+              SizedBox(width: 15.w),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        transaction.purpose,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      Text(
+                        formatDateWithTime(transaction.timestamp,
+                            shorten: true),
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack50, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                      width: transaction.purpose == "Money Received"
+                          ? 55.w
+                          : 85.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${transaction.type == TransactionType.credit ? "+" : "-"}"
+                        "${currency()}"
+                        "${formatAmountInDouble(transaction.amount)}",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      Text(
+                        fromStatus(transaction.status),
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color:
+                                transaction.status == TransactionStatus.success
+                                    ? successColor
+                                    : (transaction.status ==
+                                            TransactionStatus.failed
+                                        ? failColor
+                                        : pendingColor),
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+          SizedBox(height: 24.h),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: 320.w,
+              minHeight: 1.h,
+              maxWidth: 320.w,
+              maxHeight: 1.h,
+            ),
+            child: const ColoredBox(color: Colors.black12),
+          ),
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: transaction.purpose == "Money Received"
+                ? rent(context)
+                : (transaction.purpose == "Withdrawal")
                     ? topUp(context)
                     : const SizedBox(),
           ),

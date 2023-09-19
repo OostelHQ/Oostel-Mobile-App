@@ -1,19 +1,21 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -111,15 +113,15 @@ class _LoginPageState extends State<LoginPage> {
                           onTap: () =>
                               setState(() => showPassword = !showPassword),
                           child: AnimatedSwitcherTranslation.right(
-                              duration: const Duration(milliseconds: 500),
-                              child: Icon(
-                                showPassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                key: ValueKey<bool>(showPassword),
-                                size: 18.r,
-                                color: Colors.grey,
-                              ),
+                            duration: const Duration(milliseconds: 500),
+                            child: Icon(
+                              showPassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              key: ValueKey<bool>(showPassword),
+                              size: 18.r,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -164,8 +166,11 @@ class _LoginPageState extends State<LoginPage> {
                           minimumSize: Size(414.w, 50.h),
                           maximumSize: Size(414.w, 50.h),
                         ),
-                        onPressed: () =>
-                            context.router.pushNamed(Pages.dashboard),
+                        onPressed: () => context.router.pushNamed(
+                            ref.read(isAStudent)
+                                ? Pages.studentDashboard
+                                : Pages.ownerDashboard,
+                        ),
                         child: Text(
                           "Login",
                           style: context.textTheme.bodyMedium!.copyWith(

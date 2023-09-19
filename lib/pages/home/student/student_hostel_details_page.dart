@@ -193,8 +193,9 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                               child: Text(
                                 widget.info.name,
                                 style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack),
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
                               ),
                             ),
                           ),
@@ -238,8 +239,9 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           SizedBox(width: 5.w),
                           Text(
                             "${widget.info.bedrooms}",
-                            style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
+                            style: context.textTheme.bodySmall!.copyWith(
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(width: 10.w),
                           SvgPicture.asset(
@@ -251,8 +253,9 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           SizedBox(width: 5.w),
                           Text(
                             "${widget.info.bathrooms}",
-                            style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
+                            style: context.textTheme.bodySmall!.copyWith(
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(width: 10.w),
                           SvgPicture.asset(
@@ -264,8 +267,9 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                           SizedBox(width: 5.w),
                           Text(
                             "${widget.info.area.toStringAsFixed(0)} sqft",
-                            style: context.textTheme.bodySmall!
-                                .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
+                            style: context.textTheme.bodySmall!.copyWith(
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -277,7 +281,8 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "${currency()} ${formatAmountInDouble(widget.info.price)}",
+                                  text:
+                                      "${currency()} ${formatAmountInDouble(widget.info.price)}",
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     color: appBlue,
                                     fontFamily: "Inter",
@@ -337,164 +342,162 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                 CustomScrollView(
                   slivers: [
                     SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        sliver: SliverToBoxAdapter(
-                          child: Column(
-                            children: [
-                              SizedBox(height: 30.h),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage:
-                                        AssetImage(widget.info.owner.image),
-                                    radius: 32.r,
-                                  ),
-                                  SizedBox(width: 10.w),
-                                  SizedBox(
-                                    height: 85.h,
-                                    width: 280.w,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 200.w,
-                                              child: Text(
-                                                "${widget.info.owner.firstName} ${widget.info.owner.lastName}",
-                                                style: context
-                                                    .textTheme.bodyMedium!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color: weirdBlack),
-                                              ),
-                                            ),
-                                            if (widget.info.owner.verified)
-                                              Container(
-                                                width: 70.w,
-                                                height: 25.h,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: paleBlue,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.5.h),
-                                                ),
-                                                child: Text(
-                                                  "Verified",
-                                                  style: context
-                                                      .textTheme.bodyMedium!
-                                                      .copyWith(
-                                                    color: appBlue,
-                                                    fontSize: 13.sp,
-                                                  ),
-                                                ),
-                                              )
-                                          ],
-                                        ),
-                                        SizedBox(height: 5.h),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              widget.info.owner.contact,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 30.h),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage(widget.info.owner.image),
+                                  radius: 32.r,
+                                ),
+                                SizedBox(width: 10.w),
+                                SizedBox(
+                                  height: 85.h,
+                                  width: 280.w,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 200.w,
+                                            child: Text(
+                                              "${widget.info.owner.firstName} ${widget.info.owner.lastName}",
                                               style: context
                                                   .textTheme.bodyMedium!
                                                   .copyWith(
-                                                      color: weirdBlack75,
                                                       fontWeight:
-                                                          FontWeight.w500),
+                                                          FontWeight.w600,
+                                                      color: weirdBlack),
                                             ),
-                                            SizedBox(
-                                              width: 110.w,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RatingStars(
-                                                    value: widget
-                                                        .info.owner.ratings,
-                                                    starBuilder: (_, color) =>
-                                                        Icon(
-                                                      Boxicons.bxs_star,
-                                                      color: color,
-                                                      size: 14.r,
-                                                    ),
-                                                    valueLabelVisibility: false,
-                                                    starCount: 4,
-                                                    starSize: 14.r,
-                                                    starSpacing: 5.w,
-                                                    starColor: Colors.orange,
-                                                  ),
-                                                  Text(
-                                                    "(${widget.info.owner.totalRated})",
-                                                    style: context
-                                                        .textTheme.bodySmall!
-                                                        .copyWith(
-                                                            color:
-                                                                weirdBlack50),
-                                                  ),
-                                                ],
+                                          ),
+                                          if (widget.info.owner.verified)
+                                            Container(
+                                              width: 70.w,
+                                              height: 25.h,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: paleBlue,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        12.5.h),
+                                              ),
+                                              child: Text(
+                                                "Verified",
+                                                style: context
+                                                    .textTheme.bodyMedium!
+                                                    .copyWith(
+                                                  color: appBlue,
+                                                  fontSize: 13.sp,
+                                                ),
                                               ),
                                             )
-                                          ],
-                                        ),
-                                        SizedBox(height: 5.h),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
+                                        ],
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            widget.info.owner.contact,
+                                            style: context.textTheme.bodyMedium!
+                                                .copyWith(
+                                                    color: weirdBlack75,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            width: 110.w,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                SvgPicture.asset(
-                                                  "assets/images/Roomate Info Location.svg",
-                                                  width: 15.r,
-                                                  height: 15.r,
-                                                  color: weirdBlack20,
+                                                RatingStars(
+                                                  value:
+                                                      widget.info.owner.ratings,
+                                                  starBuilder: (_, color) =>
+                                                      Icon(
+                                                    Boxicons.bxs_star,
+                                                    color: color,
+                                                    size: 14.r,
+                                                  ),
+                                                  valueLabelVisibility: false,
+                                                  starCount: 4,
+                                                  starSize: 14.r,
+                                                  starSpacing: 5.w,
+                                                  starColor: Colors.orange,
                                                 ),
-                                                SizedBox(width: 5.w),
                                                 Text(
-                                                  widget.info.owner.address,
+                                                  "(${widget.info.owner.totalRated})",
                                                   style: context
                                                       .textTheme.bodySmall!
                                                       .copyWith(
-                                                          color: weirdBlack50,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          color: weirdBlack50),
                                                 ),
                                               ],
                                             ),
-                                            Text(
-                                              "Registered since ${widget.info.owner.dateJoined.year}",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                      color: weirdBlack50,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 50.h),
-                            ],
-                          ),
-                        )),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/images/Roomate Info Location.svg",
+                                                width: 15.r,
+                                                height: 15.r,
+                                                color: weirdBlack20,
+                                              ),
+                                              SizedBox(width: 5.w),
+                                              Text(
+                                                widget.info.owner.address,
+                                                style: context
+                                                    .textTheme.bodySmall!
+                                                    .copyWith(
+                                                        color: weirdBlack50,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "Registered since ${widget.info.owner.dateJoined.year}",
+                                            style: context.textTheme.bodySmall!
+                                                .copyWith(
+                                                    color: weirdBlack50,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 50.h),
+                          ],
+                        ),
+                      ),
+                    ),
                     SliverToBoxAdapter(
                       child: Container(
                         width: 414.w,
@@ -524,7 +527,12 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () => showModalBottomSheet(
+                                context: context,
+                                isDismissible: false,
+                                builder: (_) =>
+                                    HostelInfoModal(info: widget.info),
+                              ),
                               child: Container(
                                 width: 180.w,
                                 height: 50.h,
@@ -547,12 +555,12 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                     ),
                     SliverToBoxAdapter(
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 48.h),
-                            const Copyright(),
-                            SizedBox(height: 24.h)
-                          ],
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 48.h),
+                          const Copyright(),
+                          SizedBox(height: 24.h)
+                        ],
                       ),
                     )
                   ],

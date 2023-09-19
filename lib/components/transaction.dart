@@ -14,6 +14,7 @@ class Transaction extends Equatable {
   final TransactionType type;
 
   final String receiver;
+  final String? hostel;
   final String? bankName;
   final String? accountNumber;
   final double vat;
@@ -30,6 +31,7 @@ class Transaction extends Equatable {
     this.accountNumber,
     this.bankName,
     this.paymentID = "",
+    this.hostel = "",
     this.status = TransactionStatus.none,
     this.type = TransactionType.none,
   });
@@ -54,10 +56,11 @@ class Transaction extends Equatable {
                 ? TransactionType.debit
                 : TransactionType.none,
         bankName = map["bankName"],
+        hostel = map["hostel"],
         accountNumber = map["accountName"],
         purpose = map["purpose"],
         vat = map["VAT"],
-  paymentID = map["paymentID"],
+        paymentID = map["paymentID"],
         receiver = map["receiver"];
 
   Map<String, dynamic> toJson() => {
@@ -68,9 +71,10 @@ class Transaction extends Equatable {
         "amount": amount,
         "purpose": purpose,
         "bankName": bankName,
+        "hostel": hostel,
         "accountNumber": accountNumber,
         "VAT": vat,
-    "paymentID" : paymentID,
+        "paymentID": paymentID,
         "receiver": receiver,
       };
 }

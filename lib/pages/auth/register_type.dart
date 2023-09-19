@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class RegistrationTypePage extends StatefulWidget {
+class RegistrationTypePage extends ConsumerStatefulWidget {
   const RegistrationTypePage({super.key});
 
   @override
-  State<RegistrationTypePage> createState() => _RegistrationTypePageState();
+  ConsumerState<RegistrationTypePage> createState() => _RegistrationTypePageState();
 }
 
-class _RegistrationTypePageState extends State<RegistrationTypePage> {
+class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +48,10 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
-                onTap: () => context.router.pushReplacementNamed(Pages.register),
+                onTap: () {
+                  ref.watch(isAStudent.notifier).state = true;
+                  context.router.pushReplacementNamed(Pages.register);
+                },
                 child: Card(
                   elevation: 1.0,
                   color: Colors.white,
@@ -79,7 +84,10 @@ class _RegistrationTypePageState extends State<RegistrationTypePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
-                onTap: () => context.router.pushReplacementNamed(Pages.register),
+                onTap: () {
+                  ref.watch(isAStudent.notifier).state = false;
+                  context.router.pushReplacementNamed(Pages.register);
+                },
                 child: Card(
                   elevation: 1.0,
                   color: Colors.white,

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -190,7 +192,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           minimumSize: Size(414.w, 50.h),
                           maximumSize: Size(414.w, 50.h),
                         ),
-                        onPressed: () => context.router.pushNamed(Pages.dashboard),
+                        onPressed: () => context.router.pushNamed(ref.read(isAStudent)
+                            ? Pages.studentDashboard
+                            : Pages.ownerDashboard,
+                        ),
                         child: Text(
                           "Create Account",
                           style: context.textTheme.bodyMedium!.copyWith(

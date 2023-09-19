@@ -11,14 +11,14 @@ import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class WalletPage extends ConsumerStatefulWidget {
-  const WalletPage({super.key});
+class StudentWalletPage extends ConsumerStatefulWidget {
+  const StudentWalletPage({super.key});
 
   @override
-  ConsumerState<WalletPage> createState() => _WalletPageState();
+  ConsumerState<StudentWalletPage> createState() => _WalletPageState();
 }
 
-class _WalletPageState extends ConsumerState<WalletPage> {
+class _WalletPageState extends ConsumerState<StudentWalletPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +76,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                           fontWeight: FontWeight.w600, color: weirdBlack),
                     ),
                   ),
-                  if (ref.read(transactionsProvider).length >= 5)
+                  if (ref.read(studentTransactionsProvider).length >= 5)
                     GestureDetector(
                       onTap: () =>
                           context.router.pushNamed(Pages.transactionHistory),
@@ -90,7 +90,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
               ),
               SizedBox(height: 10.h),
               Expanded(
-                child: ref.read(transactionsProvider).isEmpty
+                child: ref.read(studentTransactionsProvider).isEmpty
                     ? Center(
                         child: Text(
                           "You have not made any transactions yet!",
@@ -102,13 +102,13 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                       )
                     : ListView.separated(
                         itemBuilder: (_, index) {
-                          if (index >= ref.read(transactionsProvider).length) {
+                          if (index >= ref.read(studentTransactionsProvider).length) {
                             return const SizedBox();
                           }
 
                           return TransactionContainer(
                               transaction:
-                                  ref.read(transactionsProvider)[index]);
+                                  ref.read(studentTransactionsProvider)[index]);
                         },
                         separatorBuilder: (_, __) => SizedBox(height: 16.h),
                         itemCount: 5,
@@ -360,8 +360,8 @@ class _PaymentModal extends StatelessWidget {
                         topLeft: Radius.circular(15.r),
                         topRight: Radius.circular(15.r),
                       ),
-                      child: SvgPicture.asset(
-                        "assets/images/Hostel Pay ${status ? "Success" : "Fail"}.svg",
+                      child: Image.asset(
+                        "assets/images/Hostel Pay ${status ? "Success" : "Fail"}.png",
                         width: 135.r,
                         height: 135.h,
                         fit: BoxFit.cover,

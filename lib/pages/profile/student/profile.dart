@@ -77,18 +77,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         Positioned(
                           right: 20.w,
                           bottom: 30.r,
-                          child: Container(
-                            width: 40.r,
-                            height: 40.r,
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/images/Edit.svg",
-                              width: 20.r,
-                              height: 20.r,
+                          child: GestureDetector(
+                            onTap: () => context.router.pushNamed(Pages.editProfile),
+                            child: Container(
+                              width: 40.r,
+                              height: 40.r,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: SvgPicture.asset(
+                                "assets/images/Edit.svg",
+                                width: 20.r,
+                                height: 20.r,
+                              ),
                             ),
                           ),
                         ),
@@ -203,6 +206,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         GestureDetector(
                           onTap: () => showModalBottomSheet(
                             context: context,
+                            isDismissible: false,
+                            isScrollControlled: true,
                             builder: (_) => const _RoommateActivation(),
                           ),
                           child: Container(
@@ -456,7 +461,7 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                     value: gottenHostel,
                     dropdownItems: const ["Yes", "No"],
                     onChanged: (val) => setState(() => gottenHostel = val),
-                    icon: const Icon(Boxicons.bxs_down_arrow_alt),
+                    icon: const Icon(Boxicons.bxs_down_arrow),
                     buttonWidth: 240.w,
                   ),
                   SizedBox(height: 16.h),
@@ -523,7 +528,7 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () => context.router.pop(),
                         child: Container(
                           width: 180.w,
                           height: 50.h,
@@ -577,8 +582,8 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                         topLeft: Radius.circular(15.r),
                         topRight: Radius.circular(15.r),
                       ),
-                      child: SvgPicture.asset(
-                        "assets/images/Some Image.svg",
+                      child: Image.asset(
+                        "assets/images/Open To.png",
                         width: 135.r,
                         height: 135.h,
                         fit: BoxFit.cover,

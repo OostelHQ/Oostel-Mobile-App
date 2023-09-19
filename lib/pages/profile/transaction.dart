@@ -9,7 +9,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class TransactionDetailsPage extends StatelessWidget {
+class TransactionDetailsPage extends ConsumerWidget {
   final Transaction transaction;
 
   const TransactionDetailsPage({
@@ -18,7 +18,8 @@ class TransactionDetailsPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isStudent = ref.watch(isAStudent);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -38,20 +39,39 @@ class TransactionDetailsPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            children: [
-              TransactionDetailsContainer(transaction: transaction),
-              SizedBox(height: 48.h),
-              const Center(child: Copyright()),
-              SizedBox(height: 24.h),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                isStudent
+                    ? StudentTransactionDetailsContainer(transaction: transaction)
+                    : OwnerTransactionDetailsContainer(transaction: transaction),
+                SizedBox(height: 270.h),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: appBlue,
+                    minimumSize: Size(414.w, 50.h),
+                    maximumSize: Size(414.w, 50.h),
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    "Download Receipt",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 48.h),
+                const Center(child: Copyright()),
+                SizedBox(height: 24.h),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
 
 class TransactionHistoryPage extends ConsumerStatefulWidget {
   const TransactionHistoryPage({super.key});
@@ -67,7 +87,10 @@ class _TransactionHistoryPageState
 
   @override
   Widget build(BuildContext context) {
-    List<Transaction> transactions = ref.watch(transactionsProvider);
+    bool isStudent = ref.watch(isAStudent);
+    List<Transaction> transactions = isStudent
+        ? ref.watch(studentTransactionsProvider)
+        : ref.watch(ownerTransactionsProvider);
 
     return Scaffold(
       appBar: AppBar(

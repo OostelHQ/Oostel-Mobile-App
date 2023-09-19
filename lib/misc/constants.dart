@@ -43,19 +43,23 @@ class Pages
   static const String forgotPassword = 'forgot-password';
   static const String resetPassword = 'reset-password';
 
-  static const String profile = 'profile';
+  static const String studentProfile = 'student-profile';
+  static const String ownerProfile = 'owner-profile';
   static const String otherStudent = 'other-student';
 
-  static const String dashboard = 'dashboard';
+  static const String studentDashboard = 'student-dashboard';
+  static const String ownerDashboard = 'owner-dashboard';
   static const String hostelInfo = 'hostel-info';
 
   static const String viewAcquires = 'view-acquires';
   static const String viewAvailable = 'view-available';
   static const String viewRoomTypes = 'view-room-types';
+  static const String viewHostels = 'view-hostels';
   static const String filter = 'filter';
   static const String settings = 'settings';
 
-  static const String profileSettings = 'profile-settings';
+  static const String studentProfileSettings = 'student-profile-settings';
+  static const String ownerProfileSettings = 'owner-profile-settings';
   static const String editProfile = 'edit-profile';
   static const String changePassword = 'change-password';
   static const String notificationSettings = 'notification-settings';
@@ -63,12 +67,14 @@ class Pages
   static const String help = 'help';
   static const String privacyPolicy = 'privacy-policy';
 
-  static const String wallet = 'wallet';
+  static const String studentWallet = 'student-wallet';
+  static const String ownerWallet = 'owner-wallet';
   static const String notification = 'notification';
 
   static const String transactionHistory = 'transaction-history';
   static const String transactionDetails = 'transaction-details';
   static const String topUp = 'top-up';
+  static const String withdraw = 'withdraw';
 
 }
 

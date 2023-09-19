@@ -41,7 +41,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
               ),
               SvgPicture.asset(
-                "assets/images/single woman.svg",
+                "assets/images/Forgot Password.svg",
                 width: 220.r,
                 height: 220.r,
               ),
@@ -162,7 +162,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ),
               SvgPicture.asset(
-                "assets/images/single woman.svg",
+                "assets/images/Reset Password.svg",
                 width: 220.r,
                 height: 220.r,
               ),
@@ -299,9 +299,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 }
 
-
-
-
 class AccountVerificationPage extends StatefulWidget {
   final String email;
 
@@ -353,7 +350,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
                 ),
               ),
               SvgPicture.asset(
-                "assets/images/single woman.svg",
+                "assets/images/Confirm Email.svg",
                 width: 220.r,
                 height: 220.r,
               ),

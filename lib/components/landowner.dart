@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class Landowner extends Equatable {
   final String id;
   final String image;
+  final String gender;
   final String firstName;
   final String lastName;
   final bool verified;
@@ -18,6 +19,7 @@ class Landowner extends Equatable {
     this.image = "",
     this.firstName = "",
     this.lastName = "",
+    this.gender = "",
     this.verified = false,
     this.ratings = 0.0,
     this.totalRated = 0,
@@ -38,6 +40,7 @@ class Landowner extends Equatable {
         verified = map["verified"],
         ratings = map["ratings"],
         email = map["email"],
+        gender = map["gender"],
         totalRated = map["totalRated"],
         contact = map["contact"],
         address = map["address"],
@@ -50,6 +53,7 @@ class Landowner extends Equatable {
         "lastName": lastName,
         "verified": verified,
         "ratings": ratings,
+        "gender": gender,
         "contact": contact,
         "email": email,
         "address": address,
