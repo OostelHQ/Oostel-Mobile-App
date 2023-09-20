@@ -36,7 +36,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
     links = const [
       _Link(
         name: "View profile",
-        route: Pages.studentProfile,
+        route: Pages.ownerProfile,
         image: "assets/images/Danger.svg",
       ),
       _Link(
@@ -133,6 +133,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
+                              resetProviders(ref);
                               context.router.goNamed(Pages.splash);
                             },
                             style: ElevatedButton.styleFrom(
@@ -306,10 +307,12 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                   itemBuilder: (_, index) => GestureDetector(
                     onTap: () => context.router.pushNamed(
                       index == 0
-                          ? Pages.editProfile
+                          ? Pages.editOwnerProfile
                           : (index == 1)
-                              ? Pages.changePassword
-                              : Pages.notificationSettings,
+                              ? Pages.hostelSettings
+                              : (index == 2)
+                                  ? Pages.changePassword
+                                  : Pages.notificationSettings,
                     ),
                     child: Card(
                       child: SizedBox(
@@ -324,7 +327,7 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
-                                    "assets/images/Profile ${index == 0 ? "Profile" : (index == 1) ? "Password" : "Notification"}.svg",
+                                    "assets/images/Profile ${index == 0 ? "Profile" : (index == 1) ? "Hostel" : (index == 2) ? "Password" : "Notification"}.svg",
                                     color: weirdBlack75,
                                   ),
                                   SizedBox(width: 16.w),
@@ -332,8 +335,10 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                                     index == 0
                                         ? "Profile"
                                         : (index == 1
-                                            ? "Password"
-                                            : "Notification"),
+                                            ? "Hostel"
+                                            : (index == 2)
+                                                ? "Password"
+                                                : "Notification"),
                                     style:
                                         context.textTheme.bodyMedium!.copyWith(
                                       color: weirdBlack75,
@@ -351,7 +356,7 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                     ),
                   ),
                   separatorBuilder: (_, __) => SizedBox(height: 16.h),
-                  itemCount: 3,
+                  itemCount: 4,
                 ),
               )
             ],

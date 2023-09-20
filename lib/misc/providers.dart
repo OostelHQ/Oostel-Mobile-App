@@ -38,8 +38,6 @@ final StateProvider<Student> studentProvider = StateProvider(
     joined: DateTime.now(),
     searchAppearances: 19,
     profileViews: 48,
-    collaboratedRoommates: 9,
-    rentedHostels: 3,
     contact: "09012345678",
   ),
 );
@@ -47,6 +45,7 @@ final StateProvider<Student> studentProvider = StateProvider(
 final StateProvider<Landowner> ownerProvider = StateProvider(
   (ref) => Landowner(
     dateJoined: DateTime.now(),
+    dob: DateTime(1985),
     firstName: "Smith",
     lastName: "Woods",
     gender: "Male",
@@ -54,10 +53,155 @@ final StateProvider<Landowner> ownerProvider = StateProvider(
     id: "Landowner",
     email: "landlord@mail.com",
     contact: "09012345678",
+    religion: "Islam",
+    profileViews: 48,
+    searchAppearances: 19,
+    address: "Abeokuta, Ogun State",
+    verified: true,
+  ),
+);
+
+final StateProvider<HostelInfo> ownerHostelProvider = StateProvider(
+  (ref) => HostelInfo(
+    id: "1",
+    name: "Manchester Hostel Askj",
+    image: "assets/images/street.jpg",
+    bedrooms: 1,
+    bathrooms: 1,
+    area: 2500,
+    price: 100000,
+    address: "Harmony Estate",
+    description:
+        "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
+        "Lorem ipsum dolor sit amet, consectetur.",
+    rules: const [
+      "Lorem ipsum dolor sit amet, consectetur.",
+      "Nam utcurs usipsum dolor sit amet.",
+      "Lorem ipsum dolor sit amet, consectetur.",
+      "Nam utcurs usipsum dolor sit amet.",
+      "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
+    ],
+    hostelFacilities: const [
+      "Light",
+      "Water",
+      "Security",
+      "None",
+      "Light",
+      "Water",
+      "Security",
+    ],
+    roomsLeft: const [
+      RoomInfo(
+        name: "Room 1",
+        facilities: [
+          "Light",
+          "Water",
+          "Security",
+          "None",
+        ],
+        id: "Room 1 ID",
+        media: [
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+        ],
+        price: 100000,
+      ),
+      RoomInfo(
+        name: "Room 2",
+        facilities: [
+          "Light",
+          "Water",
+          "Security",
+          "None",
+        ],
+        id: "Room 2 ID",
+        media: [
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+        ],
+        price: 100000,
+      ),
+      RoomInfo(
+        name: "Room 3",
+        facilities: [
+          "Light",
+          "Water",
+          "Security",
+          "None",
+        ],
+        id: "Room 3 ID",
+        media: [
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+        ],
+        price: 100000,
+      ),
+      RoomInfo(
+        name: "Room 4",
+        facilities: [
+          "Light",
+          "Water",
+          "Security",
+          "None",
+        ],
+        id: "Room 4 ID",
+        media: [
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+        ],
+        price: 100000,
+      ),
+      RoomInfo(
+        name: "Room 5",
+        facilities: [
+          "Light",
+          "Water",
+          "Security",
+          "None",
+        ],
+        id: "Room 5 ID",
+        media: [
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+          "assets/images/street.jpg",
+        ],
+        price: 100000,
+      )
+    ],
+    media: const [
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+      "assets/images/street.jpg",
+    ],
+    owner: ref.watch(ownerProvider),
   ),
 );
 
 final StateProvider<int> dashboardTabIndexProvider = StateProvider((ref) => 0);
+
+void resetProviders(WidgetRef ref) {
+  ref.watch(dashboardTabIndexProvider.notifier).state = 0;
+}
 
 final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
     StateProvider((ref) => [
@@ -202,6 +346,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           ),
@@ -346,6 +491,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           ),
@@ -490,6 +636,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           ),
@@ -634,6 +781,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           )
@@ -856,6 +1004,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           ),
@@ -1000,6 +1149,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           ),
@@ -1143,6 +1293,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               ratings: 3.5,
               contact: "+2348012345678",
               totalRated: 234,
+              dob: DateTime.now(),
               dateJoined: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
@@ -1288,6 +1439,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               contact: "+2348012345678",
               totalRated: 234,
               dateJoined: DateTime.now(),
+              dob: DateTime.now(),
               address: "Ibadan, Nigeria",
             ),
           )
@@ -1323,6 +1475,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         "Water",
         "Security",
       ],
+      totalRooms: 12,
       roomsLeft: const [
         RoomInfo(
           name: "Room 1",
@@ -1436,6 +1589,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       bathrooms: 1,
       area: 2500,
       price: 100000,
+      totalRooms: 12,
       address: "Harmony Estate",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -1569,6 +1723,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       bathrooms: 1,
       area: 2500,
       price: 100000,
+      totalRooms: 12,
       address: "Harmony Estate",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -1701,6 +1856,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       bedrooms: 1,
       bathrooms: 1,
       area: 2500,
+      totalRooms: 12,
       price: 100000,
       address: "Harmony Estate",
       description:
@@ -1900,8 +2056,6 @@ final StateProvider<List<Student>> availableRoommatesProvider =
       ageRange: "15 - 20",
       religion: "Christianity",
       joined: DateTime.now(),
-      collaboratedRoommates: 9,
-      rentedHostels: 3,
       profileViews: 48,
       searchAppearances: 19,
     )

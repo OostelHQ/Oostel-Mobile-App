@@ -61,6 +61,7 @@ class Pages
   static const String studentProfileSettings = 'student-profile-settings';
   static const String ownerProfileSettings = 'owner-profile-settings';
   static const String editProfile = 'edit-profile';
+  static const String editOwnerProfile = 'edit-owner-profile';
   static const String changePassword = 'change-password';
   static const String notificationSettings = 'notification-settings';
   static const String about = 'about';
@@ -76,6 +77,7 @@ class Pages
   static const String topUp = 'top-up';
   static const String withdraw = 'withdraw';
 
+  static const String hostelSettings = 'hostel-settings';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

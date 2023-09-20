@@ -20,8 +20,6 @@ class Student extends Equatable {
   final bool available;
 
   final DateTime joined;
-  final int rentedHostels;
-  final int collaboratedRoommates;
 
   final int profileViews;
   final int searchAppearances;
@@ -43,8 +41,6 @@ class Student extends Equatable {
     this.hobby = "",
     this.origin = "",
     this.denomination = "",
-    this.rentedHostels = 0,
-    this.collaboratedRoommates = 0,
     this.profileViews = 0,
     this.searchAppearances = 0,
     required this.joined,
@@ -72,8 +68,6 @@ class Student extends Equatable {
         "religion": religion,
         "denomination": denomination,
         "available": available,
-        "rentedHostels": rentedHostels,
-        "collaboratedRoommates": collaboratedRoommates,
         "createdAt": joined.toString(),
         "profileViews": profileViews,
         "searchAppearances": searchAppearances,
@@ -96,8 +90,6 @@ class Student extends Equatable {
         ageRange = map["ageRange"],
         religion = map["religion"],
         denomination = map["denomination"],
-        collaboratedRoommates = map["collaboratedRoommates"],
-        rentedHostels = map["rentedHostels"],
         available = map["available"],
         joined = DateTime.parse(map["createdAt"]),
         level = map["level"];

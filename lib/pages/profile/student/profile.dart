@@ -10,18 +10,21 @@ import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 
-class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
+class StudentProfilePage extends ConsumerStatefulWidget {
+  const StudentProfilePage({super.key});
 
   @override
-  ConsumerState<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<StudentProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> {
+class _ProfilePageState extends ConsumerState<StudentProfilePage> {
   @override
   Widget build(BuildContext context) {
     Student student = ref.watch(studentProvider);
     List<Receipt> receipts = ref.watch(receiptsProvider);
+
+    int acquiredHostels = ref.watch(acquiredHostelsProvider).length;
+    int acquiredRoommates = ref.watch(acquiredRoommatesProvider).length;
 
     return Scaffold(
       body: SafeArea(
@@ -162,7 +165,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             children: [
                               TextSpan(
                                   text:
-                                      "${student.rentedHostels < 10 ? "0" : ""}${student.rentedHostels}",
+                                      "${acquiredHostels < 10 ? "0" : ""}$acquiredHostels",
                                   style: context.textTheme.bodySmall!.copyWith(
                                       color: weirdBlack75,
                                       fontWeight: FontWeight.w500)),
@@ -182,7 +185,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             children: [
                               TextSpan(
                                 text:
-                                    "${student.collaboratedRoommates < 10 ? "0" : ""}${student.collaboratedRoommates}",
+                                    "${acquiredRoommates < 10 ? "0" : ""}$acquiredRoommates",
                                 style: context.textTheme.bodySmall!.copyWith(
                                   color: weirdBlack75,
                                   fontWeight: FontWeight.w500,

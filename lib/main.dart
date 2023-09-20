@@ -26,6 +26,9 @@ import 'package:my_hostel/pages/home/student/view_acquires.dart';
 import 'package:my_hostel/pages/home/student/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
 import 'package:my_hostel/pages/profile/about.dart';
+import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
+import 'package:my_hostel/pages/profile/owner/hostel_settings.dart';
+import 'package:my_hostel/pages/profile/owner/profile.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
 import 'package:my_hostel/pages/profile/student/edit_profile.dart';
 import 'package:my_hostel/pages/profile/help.dart';
@@ -89,6 +92,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, __) => const PrivacyPolicyPage(),
         ),
         GoRoute(
+          path: Pages.hostelSettings.path,
+          name: Pages.hostelSettings,
+          builder: (_, __) => const HostelSettingsPage(),
+        ),
+        GoRoute(
           path: Pages.studentProfileSettings.path,
           name: Pages.studentProfileSettings,
           builder: (_, __) => const StudentProfileSettingsPage(),
@@ -102,6 +110,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.editProfile.path,
           name: Pages.editProfile,
           builder: (_, __) => const EditProfilePage(),
+        ),
+        GoRoute(
+          path: Pages.editOwnerProfile.path,
+          name: Pages.editOwnerProfile,
+          builder: (_, __) => const EditOwnerProfilePage(),
         ),
         GoRoute(
           path: Pages.about.path,
@@ -214,8 +227,14 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.studentProfile.path,
           name: Pages.studentProfile,
-          builder: (_, __) => const ProfilePage(),
+          builder: (_, __) => const StudentProfilePage(),
         ),
+        GoRoute(
+          path: Pages.ownerProfile.path,
+          name: Pages.ownerProfile,
+          builder: (_, __) => const OwnerProfilePage(),
+        ),
+
         GoRoute(
           path: Pages.otherStudent.path,
           name: Pages.otherStudent,

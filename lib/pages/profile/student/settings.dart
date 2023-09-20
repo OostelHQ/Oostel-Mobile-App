@@ -134,6 +134,7 @@ class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
+                              resetProviders(ref);
                               context.router.goNamed(Pages.splash);
                             },
                             style: ElevatedButton.styleFrom(

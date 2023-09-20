@@ -13,6 +13,13 @@ class Landowner extends Equatable {
   final String contact;
   final String email;
   final DateTime dateJoined;
+  final DateTime dob;
+
+  final String religion;
+  final String denomination;
+
+  final int profileViews;
+  final int searchAppearances;
 
   const Landowner({
     this.id = "",
@@ -26,11 +33,18 @@ class Landowner extends Equatable {
     this.email = "",
     this.contact = "",
     this.address = "",
+    this.religion = "",
+    this.denomination = "",
+    required this.dob,
     required this.dateJoined,
+    this.profileViews = 0,
+    this.searchAppearances = 0,
   });
 
   @override
   List<Object?> get props => [id];
+
+  String get mergedNames => "$firstName $lastName";
 
   Landowner.fromJson(Map<String, dynamic> map)
       : id = map["_id"],
@@ -44,7 +58,12 @@ class Landowner extends Equatable {
         totalRated = map["totalRated"],
         contact = map["contact"],
         address = map["address"],
-        dateJoined = DateTime.parse(map["createdAt"]);
+        religion = map["religion"],
+        denomination = map["denomination"],
+        profileViews = map["profileViews"],
+        searchAppearances = map["searchAppearances"],
+        dateJoined = DateTime.parse(map["createdAt"]),
+        dob = DateTime.parse(map["dob"]);
 
   Map<String, dynamic> toJson() => {
         "_id": id,
@@ -56,6 +75,11 @@ class Landowner extends Equatable {
         "gender": gender,
         "contact": contact,
         "email": email,
+        "dob": dob.toString(),
+        "religion": religion,
+        "denomination": denomination,
+        "profileViews": profileViews,
+        "searchAppearances": searchAppearances,
         "address": address,
         "createdAt": dateJoined.toString(),
         "totalRated": totalRated,
