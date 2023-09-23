@@ -15,6 +15,7 @@ import 'package:my_hostel/pages/auth/password_details.dart';
 import 'package:my_hostel/pages/auth/privacy.dart';
 import 'package:my_hostel/pages/auth/register.dart';
 import 'package:my_hostel/pages/auth/register_type.dart';
+import 'package:my_hostel/pages/home/landlord/create-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/dashboard.dart';
 import 'package:my_hostel/pages/home/landlord/view_hostels.dart';
 import 'package:my_hostel/pages/home/student/dashboard.dart';
@@ -95,6 +96,12 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.hostelSettings.path,
           name: Pages.hostelSettings,
           builder: (_, __) => const HostelSettingsPage(),
+        ),
+
+        GoRoute(
+          path: Pages.createHostel.path,
+          name: Pages.createHostel,
+          builder: (_, __) => const CreateHostelPage(),
         ),
         GoRoute(
           path: Pages.studentProfileSettings.path,

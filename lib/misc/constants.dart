@@ -78,6 +78,7 @@ class Pages
   static const String withdraw = 'withdraw';
 
   static const String hostelSettings = 'hostel-settings';
+  static const String createHostel = 'create-hostel';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

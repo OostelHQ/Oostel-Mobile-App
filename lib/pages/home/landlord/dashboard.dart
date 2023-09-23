@@ -67,7 +67,13 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
-        onTap: (newIndex) => ref.watch(dashboardTabIndexProvider.notifier).state = newIndex,
+        onTap: (newIndex) {
+          if(newIndex == 2) {
+            context.router.pushNamed(Pages.createHostel);
+          } else {
+            ref.watch(dashboardTabIndexProvider.notifier).state = newIndex;
+          }
+        },
         selectedItemColor: appBlue,
         selectedLabelStyle: context.textTheme.bodySmall!
             .copyWith(color: appBlue, fontWeight: FontWeight.w500),
