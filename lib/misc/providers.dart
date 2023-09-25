@@ -70,7 +70,7 @@ final StateProvider<HostelInfo> ownerHostelProvider = StateProvider(
     bathrooms: 1,
     area: 2500,
     price: 100000,
-    address: "Harmony Estate",
+    address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
     description:
         "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
         "Lorem ipsum dolor sit amet, consectetur.",
@@ -213,7 +213,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -358,7 +358,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -503,7 +503,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -648,7 +648,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -871,7 +871,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -1016,7 +1016,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -1161,7 +1161,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -1306,7 +1306,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            address: "Harmony Estate",
+            address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
                 "Lorem ipsum dolor sit amet, consectetur.",
@@ -1455,7 +1455,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       bathrooms: 1,
       area: 2500,
       price: 100000,
-      address: "Harmony Estate",
+      address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
           "Lorem ipsum dolor sit amet, consectetur.",
@@ -1590,7 +1590,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       area: 2500,
       price: 100000,
       totalRooms: 12,
-      address: "Harmony Estate",
+      address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
           "Lorem ipsum dolor sit amet, consectetur.",
@@ -1724,7 +1724,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       area: 2500,
       price: 100000,
       totalRooms: 12,
-      address: "Harmony Estate",
+      address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
           "Lorem ipsum dolor sit amet, consectetur.",
@@ -1858,7 +1858,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       area: 2500,
       totalRooms: 12,
       price: 100000,
-      address: "Harmony Estate",
+      address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
           "Lorem ipsum dolor sit amet, consectetur.",

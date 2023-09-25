@@ -19,13 +19,11 @@ import 'package:my_hostel/misc/providers.dart';
 
 export 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class Holder {
-  final String content;
-  bool selected;
+class Holder<T> {
+  T content;
 
   Holder({
     required this.content,
-    this.selected = false,
   });
 }
 
@@ -54,24 +52,29 @@ class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(TabHeaderDelegate oldDelegate) => false;
 }
 
-class SizedBoxHeaderDelegate extends SliverPersistentHeaderDelegate {
-  SizedBoxHeaderDelegate({required this.box});
+class WidgetHeaderDelegate extends SliverPersistentHeaderDelegate {
+  WidgetHeaderDelegate({required this.widget, this.height = 1.0});
 
-  final SizedBox box;
-
-  @override
-  double get minExtent => box.height!;
+  final Widget widget;
+  final double height;
 
   @override
-  double get maxExtent => box.height!;
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
 
   @override
   Widget build(
           BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      box;
+      Container(
+        height: height,
+        color: Colors.white,
+        child: widget,
+      );
 
   @override
-  bool shouldRebuild(SizedBoxHeaderDelegate oldDelegate) => false;
+  bool shouldRebuild(WidgetHeaderDelegate oldDelegate) => false;
 }
 
 class SpecialForm extends StatefulWidget {
@@ -809,7 +812,7 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                 SizedBox(
                   width: 180.w,
                   child: Text(
-                    widget.info.address,
+                    joinToAddress(widget.info.address),
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75, fontWeight: FontWeight.w500),

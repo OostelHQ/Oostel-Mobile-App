@@ -117,3 +117,9 @@ String day(String val) {
       return "${day}th";
   }
 }
+
+
+String joinToAddress(String address) {
+  List<String> subs = address.split("#");
+  return "${subs[0]}, ${subs[1]}, ${subs[2]}, ${subs[3]}";
+}

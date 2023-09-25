@@ -220,7 +220,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                       ),
                       SizedBox(height: 15.h),
                       Text(
-                        widget.info.address,
+                        joinToAddress(widget.info.address),
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack75, fontWeight: FontWeight.w500),

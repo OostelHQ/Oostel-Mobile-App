@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/functions.dart';
 
 import 'widgets.dart';
 
@@ -69,7 +70,7 @@ class LandlordHostelCard extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              info.address,
+              joinToAddress(info.address),
               style: context.textTheme.bodyMedium!
                   .copyWith(fontWeight: FontWeight.w500, color: weirdBlack75,
               ),

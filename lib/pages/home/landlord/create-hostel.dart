@@ -1,90 +1,86 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:my_hostel/api/file_manager.dart';
+import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class CreateHostelPage extends StatefulWidget {
+class CreateHostelPage extends ConsumerStatefulWidget {
   const CreateHostelPage({super.key});
 
   @override
-  State<CreateHostelPage> createState() => _CreateHostelPageState();
+  ConsumerState<CreateHostelPage> createState() => _CreateHostelPageState();
 }
 
-class _CreateHostelPageState extends State<CreateHostelPage> {
-  int index = 1, hostelCategory = -1;
-  final int total = 11;
+class _CreateHostelPageState extends ConsumerState<CreateHostelPage> {
+  int index = 1;
+  final int total = 10;
 
-  final TextEditingController hostelName = TextEditingController();
-  final TextEditingController hostelDescription = TextEditingController();
-  final TextEditingController hostelRooms = TextEditingController();
-  final TextEditingController hostelArea = TextEditingController();
+  late Map<String, dynamic> info;
 
-  final TextEditingController hostelStreet = TextEditingController();
-  final TextEditingController hostelJunction = TextEditingController();
-  final TextEditingController hostelRegion = TextEditingController();
-  final TextEditingController hostelNation = TextEditingController();
-
-  final TextEditingController hostelRules = TextEditingController();
-
-  final List<String> rules = [];
-  final List<String> hostelFacilities = [];
+  int? roomPropertyIndex;
 
   @override
-  void dispose() {
-    hostelRules.dispose();
-    hostelStreet.dispose();
-    hostelJunction.dispose();
-    hostelRegion.dispose();
-    hostelNation.dispose();
-    hostelArea.dispose();
-    hostelRooms.dispose();
-    hostelDescription.dispose();
-    hostelName.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+
+    info = {
+      "name": "",
+      "image": Uint8List(0),
+      "bedrooms": 0,
+      "bathrooms": 0,
+      "area": 0,
+      "address": "###",
+      "price": 0,
+      "rules": [],
+      "category": "",
+      "totalRooms": 0,
+      "description": "",
+      "roomsLeft": [],
+      "hostelFacilities": [],
+      "media": [],
+      "owner": ref.read(ownerProvider).toJson(),
+    };
   }
 
   Widget get child {
     switch (index) {
       case 1:
-        return _StepOne(
-          initial: hostelCategory,
-          onChooseCategory: (category) => setState(() {
-            hostelCategory = category;
-            index = 2;
+        return _StepOne(info: info);
+      case 2:
+        return _StepTwo(info: info);
+      case 3:
+        return _StepThree(info: info);
+      case 4:
+        return _StepFour(info: info);
+      case 5:
+        return _StepFive(info: info);
+      case 6:
+        return _StepSix(info: info);
+      case 7:
+        return _StepSeven(info: info);
+      case 8:
+        return _StepEight(
+          info: info,
+          onCreate: ({int? roomIndex}) => setState(() {
+            index = 9;
+            roomPropertyIndex = roomIndex;
           }),
         );
-      case 2:
-        return _StepTwo(
-          name: hostelName,
-          description: hostelDescription,
-          rooms: hostelRooms,
-          area: hostelArea,
-          previous: () => setState(() => index = 1),
-          next: () => setState(() => index = 3),
-        );
-      case 3:
-        return _StepThree(
-          street: hostelStreet,
-          junction: hostelJunction,
-          state: hostelRegion,
-          country: hostelNation,
-          previous: () => setState(() => index = 2),
-          next: () => setState(() => index = 4),
-        );
-      case 4:
-        return _StepFour(
-          rule: hostelRules,
-          rules: rules,
-          previous: () => setState(() => index = 3),
-          next: () => setState(() => index = 5),
-        );
-      case 5:
-        return _StepFive(
-          facilities: hostelFacilities,
-          previous: () => setState(() => index = 4),
-          next: () => setState(() => index = 6),
-        );
+      case 9:
+        return _StepNine(info: info, index: roomPropertyIndex);
+      case 10:
+        return _StepTen(info: info);
       default:
         return const SizedBox();
     }
@@ -94,31 +90,119 @@ class _CreateHostelPageState extends State<CreateHostelPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                width: 414.w,
-                child: LinearProgressIndicator(
-                  value: index / total,
-                  color: appBlue,
-                  minHeight: 1.5.h,
-                ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 414.w,
+                    child: LinearProgressIndicator(
+                      value: index / total,
+                      color: appBlue,
+                      minHeight: 1.5.h,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      iconSize: 26.r,
+                      splashRadius: 20.r,
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {},
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                ],
               ),
-              SizedBox(height: 20.h),
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  iconSize: 26.r,
-                  splashRadius: 20.r,
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                ),
+            ),
+            child,
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(height: 48.h),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 414.w,
+                      minWidth: 414.w,
+                      minHeight: 90.h,
+                      maxHeight: 90.h,
+                    ),
+                    child: ColoredBox(
+                      color: paleBlue,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: index == 1
+                            ? Center(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: appBlue,
+                                    minimumSize: Size(414.w, 50.h),
+                                  ),
+                                  onPressed: () => setState(() => ++index),
+                                  child: Text(
+                                    "Next",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: appBlue,
+                                      minimumSize: Size(180.w, 50.h),
+                                    ),
+                                    onPressed: () => setState(() => --index),
+                                    child: Text(
+                                      "Go Back",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: appBlue,
+                                      minimumSize: Size(180.w, 50.h),
+                                    ),
+                                    onPressed: () => setState(() {
+                                      if (index == 9) {
+                                        index = 8;
+                                      } else if (index == 8) {
+                                        index = 10;
+                                      } else {
+                                        ++index;
+                                      }
+                                    }),
+                                    child: Text(
+                                      "Next",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 18.h),
-              child,
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
@@ -126,13 +210,11 @@ class _CreateHostelPageState extends State<CreateHostelPage> {
 }
 
 class _StepOne extends StatefulWidget {
-  final int initial;
-  final Function onChooseCategory;
+  final Map<String, dynamic> info;
 
   const _StepOne({
     super.key,
-    required this.initial,
-    required this.onChooseCategory,
+    required this.info,
   });
 
   @override
@@ -140,40 +222,331 @@ class _StepOne extends StatefulWidget {
 }
 
 class _StepOneState extends State<_StepOne> {
-  late int category;
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "STEP 1",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: appBlue,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Hostel Category",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Get started with any of your preferable account to be stress-free",
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 44.h),
+            Card(
+              elevation: 1.0,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.asset(
+                        "assets/images/Self Con.png",
+                        width: 114.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Self Contained",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                              Radio(
+                                value: widget.info["category"],
+                                groupValue: "Self Contained",
+                                onChanged: (value) => setState(() =>
+                                    widget.info["category"] = "Self Contained"),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "Hostel where each room has its own private amenities, such as a toilet, bathroom and kitchen.",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Card(
+              elevation: 1.0,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.asset(
+                        "assets/images/One Room.png",
+                        width: 114.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "One-Room",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                              Radio(
+                                value: widget.info["category"],
+                                groupValue: "One-Room",
+                                onChanged: (value) => setState(
+                                    () => widget.info["category"] = "One-Room"),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "Hostel that share common facilities like bathroom, toilet & kitchen with other residents.",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Card(
+              elevation: 1.0,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.asset(
+                        "assets/images/Face2Face.png",
+                        width: 114.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Face-to-Face",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                              Radio(
+                                value: widget.info["category"],
+                                groupValue: "Face-to-Face",
+                                onChanged: (value) => setState(() =>
+                                    widget.info["category"] = "Face-to-Face"),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "Hostel is a form of dormitory rooms with multiple beds and residents share a common space and facilities.",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Card(
+              elevation: 1.0,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.asset(
+                        "assets/images/Flat.png",
+                        width: 114.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Flat",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                              Radio(
+                                value: widget.info["category"],
+                                groupValue: "Flat",
+                                onChanged: (value) => setState(
+                                    () => widget.info["category"] = "Flat"),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "Hostel is a form of dormitory rooms with multiple beds and residents share a common space and facilities.",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StepTwo extends StatefulWidget {
+  final Map<String, dynamic> info;
+
+  const _StepTwo({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  State<_StepTwo> createState() => _StepTwoState();
+}
+
+class _StepTwoState extends State<_StepTwo> {
+  late TextEditingController name;
+  late TextEditingController description;
+  late TextEditingController rooms;
+  late TextEditingController area;
 
   @override
   void initState() {
     super.initState();
-    category = widget.initial;
+    name = TextEditingController(text: widget.info["name"]);
+    description = TextEditingController(text: widget.info["description"]);
+    rooms = TextEditingController(text: widget.info["totalRooms"].toString());
+    area = TextEditingController(text: widget.info["area"].toStringAsFixed(0));
+  }
+
+  @override
+  void dispose() {
+    name.dispose();
+    description.dispose();
+    rooms.dispose();
+    area.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "STEP 1",
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                "STEP 2",
                 style: context.textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w500,
                   color: appBlue,
                 ),
               ),
-              SizedBox(height: 12.h),
-              Text(
-                "Hostel Category",
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Hostel Details",
                 style: context.textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: weirdBlack,
                 ),
               ),
-              SizedBox(height: 12.h),
-              Text(
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
                 "Get started with any of your preferable account to be stress-free",
                 textAlign: TextAlign.center,
                 style: context.textTheme.bodyMedium!.copyWith(
@@ -181,457 +554,80 @@ class _StepOneState extends State<_StepOne> {
                   color: weirdBlack75,
                 ),
               ),
-              SizedBox(height: 44.h),
-              Card(
-                elevation: 1.0,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5.r),
-                        child: Image.asset(
-                          "assets/images/Self Con.png",
-                          width: 114.w,
-                          height: 100.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 220.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Self Contained",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack,
-                                  ),
-                                ),
-                                Radio(
-                                  value: category,
-                                  groupValue: 0,
-                                  onChanged: (value) =>
-                                      setState(() => category = 0),
-                                )
-                              ],
-                            ),
-                            Text(
-                              "Hostel where each room has its own private amenities, such as a toilet, bathroom and kitchen.",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Card(
-                elevation: 1.0,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5.r),
-                        child: Image.asset(
-                          "assets/images/One Room.png",
-                          width: 114.w,
-                          height: 100.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 220.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "One-Room",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack,
-                                  ),
-                                ),
-                                Radio(
-                                  value: category,
-                                  groupValue: 1,
-                                  onChanged: (value) =>
-                                      setState(() => category = 1),
-                                )
-                              ],
-                            ),
-                            Text(
-                              "Hostel that share common facilities like bathroom, toilet & kitchen with other residents.",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Card(
-                elevation: 1.0,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5.r),
-                        child: Image.asset(
-                          "assets/images/Face2Face.png",
-                          width: 114.w,
-                          height: 100.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 220.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Face-to-Face",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack,
-                                  ),
-                                ),
-                                Radio(
-                                  value: category,
-                                  groupValue: 2,
-                                  onChanged: (value) =>
-                                      setState(() => category = 2),
-                                )
-                              ],
-                            ),
-                            Text(
-                              "Hostel is a form of dormitory rooms with multiple beds and residents share a common space and facilities.",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Card(
-                elevation: 1.0,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5.r),
-                        child: Image.asset(
-                          "assets/images/Flat.png",
-                          width: 114.w,
-                          height: 100.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 220.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Flat",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack,
-                                  ),
-                                ),
-                                Radio(
-                                  value: category,
-                                  groupValue: 3,
-                                  onChanged: (value) =>
-                                      setState(() => category = 3),
-                                )
-                              ],
-                            ),
-                            Text(
-                              "Hostel is a form of dormitory rooms with multiple beds and residents share a common space and facilities.",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 120.h),
-            ],
-          ),
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 414.w,
-            minWidth: 414.w,
-            minHeight: 90.h,
-            maxHeight: 90.h,
-          ),
-          child: ColoredBox(
-            color: paleBlue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: Size(414.w, 50.h),
-                  ),
-                  onPressed: () => widget.onChooseCategory(category),
-                  child: Text(
-                    "Next",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+            ),
+            SizedBox(height: 44.h),
+            Text(
+              "Hostel Name",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
               ),
             ),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class _StepTwo extends StatelessWidget {
-  final TextEditingController name;
-  final TextEditingController description;
-  final TextEditingController rooms;
-  final TextEditingController area;
-
-  final VoidCallback next, previous;
-
-  const _StepTwo({
-    super.key,
-    required this.name,
-    required this.description,
-    required this.rooms,
-    required this.area,
-    required this.next,
-    required this.previous,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  "STEP 2",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: appBlue,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Center(
-                child: Text(
-                  "Hostel Details",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Center(
-                child: Text(
-                  "Get started with any of your preferable account to be stress-free",
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack75,
-                  ),
-                ),
-              ),
-              SizedBox(height: 44.h),
-              Text(
-                "Hostel Name",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: name,
-                width: 414.w,
-                height: 50.h,
-                hint: "Name of your hostel",
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Hostel Description",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: description,
-                width: 414.w,
-                height: 100.h,
-                maxLines: 5,
-                hint: "Describe your hostel...",
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Total Rooms",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: rooms,
-                width: 414.w,
-                height: 50.h,
-                type: TextInputType.number,
-                hint: "i.e 20",
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Room Size",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: area,
-                width: 414.w,
-                height: 50.h,
-                hint: "i.e 2500 sqft",
-              ),
-              SizedBox(height: 150.h),
-            ],
-          ),
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 414.w,
-            minWidth: 414.w,
-            minHeight: 90.h,
-            maxHeight: 90.h,
-          ),
-          child: ColoredBox(
-            color: paleBlue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: appBlue,
-                      minimumSize: Size(180.w, 50.h),
-                    ),
-                    onPressed: previous,
-                    child: Text(
-                      "Go Back",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: appBlue,
-                      minimumSize: Size(180.w, 50.h),
-                    ),
-                    onPressed: next,
-                    child: Text(
-                      "Next",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+            SpecialForm(
+              controller: name,
+              width: 414.w,
+              height: 50.h,
+              hint: "Name of your hostel",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Hostel Description",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
               ),
             ),
-          ),
-        )
-      ],
+            SpecialForm(
+              controller: description,
+              width: 414.w,
+              height: 100.h,
+              maxLines: 5,
+              hint: "Describe your hostel...",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Total Rooms",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: rooms,
+              width: 414.w,
+              height: 50.h,
+              type: TextInputType.number,
+              hint: "i.e 20",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Room Size",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: area,
+              width: 414.w,
+              height: 50.h,
+              type: TextInputType.number,
+              hint: "i.e 2500 sqft",
+            ),
+            SizedBox(height: 150.h),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class _StepThree extends StatefulWidget {
-  final TextEditingController street;
-  final TextEditingController junction;
-  final TextEditingController state;
-  final TextEditingController country;
-
-  final VoidCallback next, previous;
+  final Map<String, dynamic> info;
 
   const _StepThree({
     super.key,
-    required this.street,
-    required this.junction,
-    required this.state,
-    required this.country,
-    required this.next,
-    required this.previous,
+    required this.info,
   });
 
   @override
@@ -645,9 +641,24 @@ class _StepThreeState extends State<_StepThree>
   late AnimationController controller;
   late Animation<double> animation;
 
+  late TextEditingController street;
+  late TextEditingController junction;
+  late TextEditingController state;
+  late TextEditingController country;
+
   @override
   void initState() {
     super.initState();
+
+    String address = widget.info["address"];
+
+    List<String> subs = address.split("#");
+
+    street = TextEditingController(text: subs[0]);
+    junction = TextEditingController(text: subs[1]);
+    state = TextEditingController(text: subs[2]);
+    country = TextEditingController(text: subs[3]);
+
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 750),
@@ -665,238 +676,186 @@ class _StepThreeState extends State<_StepThree>
 
   @override
   void dispose() {
+    street.dispose();
+    junction.dispose();
+    state.dispose();
+    country.dispose();
     controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  "STEP 3",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: appBlue,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Center(
-                child: Text(
-                  "Hostel Location",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Center(
-                child: Text(
-                  "Get started with any of your preferable account to be stress-free",
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack75,
-                  ),
-                ),
-              ),
-              SizedBox(height: 44.h),
-              Text(
-                "Street",
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                "STEP 3",
                 style: context.textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: weirdBlack,
+                  color: appBlue,
                 ),
-              ),
-              SpecialForm(
-                controller: widget.street,
-                width: 414.w,
-                height: 50.h,
-                hint: "i.e Behind Abans Factory",
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Junction",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: widget.junction,
-                width: 414.w,
-                height: 50.h,
-                hint: "i.e Accord",
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "State/Region",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: widget.state,
-                width: 414.w,
-                height: 50.h,
-                hint: "i.e Ogun State",
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Country/Nation",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack,
-                ),
-              ),
-              SpecialForm(
-                controller: widget.country,
-                width: 414.w,
-                height: 50.h,
-                hint: "i.e Nigeria",
-              ),
-              SizedBox(height: 16.h),
-              Row(
-                children: [
-                  Switch(
-                    value: share,
-                    onChanged: (value) {
-                      setState(() => share = !share);
-                      if (share) {
-                        controller.forward();
-                      } else {
-                        controller.reverse();
-                      }
-                    },
-                    activeColor: appBlue,
-                  ),
-                  Text(
-                    "Activate Google Maps to share your location",
-                    style: context.textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack75,
-                      fontSize: 15.sp,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              SizeTransition(
-                sizeFactor: animation,
-                child: Card(
-                  elevation: 1.0,
-                  child: SizedBox(
-                    height: 70.h,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 10.w),
-                        Container(
-                          width: 50.r,
-                          height: 50.r,
-                          alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                            color: paleBlue,
-                            shape: BoxShape.circle,
-                          ),
-                          child: SvgPicture.asset(
-                              "assets/images/Profile Blue Location.svg"),
-                        ),
-                        SizedBox(width: 15.w),
-                        SizedBox(
-                          width: 280.w,
-                          child: Text(
-                            "https://meet.google.com/?hs=197&authuser=0",
-                            overflow: TextOverflow.ellipsis,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: weirdBlack75,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 110.h),
-            ],
-          ),
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 414.w,
-            minWidth: 414.w,
-            minHeight: 90.h,
-            maxHeight: 90.h,
-          ),
-          child: ColoredBox(
-            color: paleBlue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: appBlue,
-                      minimumSize: Size(180.w, 50.h),
-                    ),
-                    onPressed: widget.previous,
-                    child: Text(
-                      "Go Back",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: appBlue,
-                      minimumSize: Size(180.w, 50.h),
-                    ),
-                    onPressed: widget.next,
-                    child: Text(
-                      "Next",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
-          ),
-        )
-      ],
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Hostel Location",
+                style: context.textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack,
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Get started with any of your preferable account to be stress-free",
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              ),
+            ),
+            SizedBox(height: 44.h),
+            Text(
+              "Street",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: street,
+              width: 414.w,
+              height: 50.h,
+              hint: "i.e Behind Abans Factory",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Junction",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: junction,
+              width: 414.w,
+              height: 50.h,
+              hint: "i.e Accord",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "State/Region",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: state,
+              width: 414.w,
+              height: 50.h,
+              hint: "i.e Ogun State",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Country/Nation",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: country,
+              width: 414.w,
+              height: 50.h,
+              hint: "i.e Nigeria",
+            ),
+            SizedBox(height: 16.h),
+            Row(
+              children: [
+                Switch(
+                  value: share,
+                  onChanged: (value) {
+                    setState(() => share = !share);
+                    if (share) {
+                      controller.forward();
+                    } else {
+                      controller.reverse();
+                    }
+                  },
+                  activeColor: appBlue,
+                ),
+                Text(
+                  "Activate Google Maps to share your location",
+                  style: context.textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: weirdBlack75,
+                    fontSize: 15.sp,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            SizeTransition(
+              sizeFactor: animation,
+              child: Card(
+                elevation: 1.0,
+                child: SizedBox(
+                  height: 70.h,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 10.w),
+                      Container(
+                        width: 50.r,
+                        height: 50.r,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                          color: paleBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(
+                            "assets/images/Profile Blue Location.svg"),
+                      ),
+                      SizedBox(width: 15.w),
+                      SizedBox(
+                        width: 280.w,
+                        child: Text(
+                          "https://meet.google.com/?hs=197&authuser=0",
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 110.h),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class _StepFour extends StatefulWidget {
-  final TextEditingController rule;
-  final List<String> rules;
-
-  final VoidCallback next, previous;
+  final Map<String, dynamic> info;
 
   const _StepFour({
     super.key,
-    required this.rules,
-    required this.rule,
-    required this.next,
-    required this.previous,
+    required this.info,
   });
 
   @override
@@ -904,171 +863,154 @@ class _StepFour extends StatefulWidget {
 }
 
 class _StepFourState extends State<_StepFour> {
+  final TextEditingController rule = TextEditingController();
+
+  late List<String> rules;
+
+  @override
+  void initState() {
+    super.initState();
+    rules = toStringList(widget.info["rules"]);
+    widget.info["rules"] = rules;
+  }
+
+  @override
+  void dispose() {
+    rule.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  "STEP 4",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: appBlue,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Center(
-                child: Text(
-                  "Hostel Rules",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Center(
-                child: Text(
-                  "Get started with any of your preferable account to be stress-free",
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack75,
-                  ),
-                ),
-              ),
-              SizedBox(height: 44.h),
-              Text(
-                "Hostel Rules & Regulations",
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                "STEP 4",
                 style: context.textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: weirdBlack,
+                  color: appBlue,
                 ),
               ),
-              SpecialForm(
-                controller: widget.rule,
-                width: 414.w,
-                height: 50.h,
-                hint: "i.e The Do's and Don't's of the hostel",
-                suffix: GestureDetector(
-                  onTap: () {
-                    String text = widget.rule.text.trim();
-                    if (text.isNotEmpty) {
-                      widget.rules.add(text);
-                      widget.rule.clear();
-                      setState(() {});
-                    }
-                  },
-                  child: Container(
-                    height: 50.h,
-                    width: 30.w,
-                    decoration: BoxDecoration(
-                      color: fadedBorder,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5.r),
-                        bottomRight: Radius.circular(5.r),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.add_circle_outline,
-                          color: weirdBlack50, size: 20),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                "Rules",
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Hostel Rules",
                 style: context.textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: weirdBlack,
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(
-                  widget.rules.length,
-                  (index) => Text(
-                    "${index + 1}. ${widget.rules[index]}",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack75,
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Get started with any of your preferable account to be stress-free",
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              ),
+            ),
+            SizedBox(height: 44.h),
+            Text(
+              "Hostel Rules & Regulations",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: rule,
+              width: 414.w,
+              height: 50.h,
+              hint: "i.e The Do's and Don't's of the hostel",
+              suffix: GestureDetector(
+                onTap: () {
+                  String text = rule.text.trim();
+                  if (text.isNotEmpty) {
+                    rules.add(text);
+                    rule.clear();
+                    setState(() {});
+                  }
+                },
+                child: Container(
+                  height: 50.h,
+                  width: 30.w,
+                  decoration: BoxDecoration(
+                    color: fadedBorder,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(5.r),
+                      bottomRight: Radius.circular(5.r),
                     ),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.add_circle_outline,
+                        color: weirdBlack50, size: 20),
                   ),
                 ),
               ),
-              SizedBox(height: 300.h),
-            ],
-          ),
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 414.w,
-            minWidth: 414.w,
-            minHeight: 90.h,
-            maxHeight: 90.h,
-          ),
-          child: ColoredBox(
-            color: paleBlue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: appBlue,
-                      minimumSize: Size(180.w, 50.h),
-                    ),
-                    onPressed: widget.previous,
-                    child: Text(
-                      "Go Back",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: appBlue,
-                      minimumSize: Size(180.w, 50.h),
-                    ),
-                    onPressed: widget.next,
-                    child: Text(
-                      "Next",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              "Rules",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
               ),
             ),
-          ),
-        )
-      ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                rules.length,
+                (index) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300.w,
+                      child: Text(
+                        "${index + 1}. ${rules[index]}",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: weirdBlack75,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Boxicons.bx_x, color: weirdBlack),
+                      iconSize: 20.r,
+                      splashRadius: 15.r,
+                      visualDensity: VisualDensity.compact,
+                      onPressed: () {
+                        rules.removeAt(index);
+                        setState(() {});
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 360.h),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class _StepFive extends StatefulWidget {
-  final List<String> facilities;
-  final VoidCallback next, previous;
+  final Map<String, dynamic> info;
 
   const _StepFive({
     super.key,
-    required this.facilities,
-    required this.next,
-    required this.previous,
+    required this.info,
   });
 
   @override
@@ -1092,62 +1034,77 @@ class _StepFiveState extends State<_StepFive> {
     "Security"
   ];
 
+  late List<String> facilities;
+
   @override
   void initState() {
     super.initState();
+    facilities = toStringList(widget.info["hostelFacilities"]);
+    widget.info["hostelFacilities"] = facilities;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "STEP 5",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: appBlue,
-                ),
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "STEP 5",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: appBlue,
               ),
-              SizedBox(height: 12.h),
-              Text(
-                "Hostel Facilities",
-                style: context.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: weirdBlack,
-                ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Hostel Facilities",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
               ),
-              SizedBox(height: 12.h),
-              Text(
-                "Get started with any of your preferable account to be stress-free",
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: weirdBlack75,
-                ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Get started with any of your preferable account to be stress-free",
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
               ),
-              SizedBox(height: 44.h),
-              SizedBox(
-                height: 500.h,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20.w,
-                    mainAxisSpacing: 20.w,
-                    mainAxisExtent: 90.h,
-                  ),
-                  itemBuilder: (_, index) => GestureDetector(
-                    onTap: () {},
+            ),
+            SizedBox(height: 44.h),
+            SizedBox(
+              height: 500.h,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20.w,
+                  mainAxisSpacing: 20.w,
+                  mainAxisExtent: 90.h,
+                ),
+                itemBuilder: (_, index) {
+                  bool present = facilities.contains(names[index]);
+                  return GestureDetector(
+                    onTap: () => setState(() {
+                      if (present) {
+                        facilities.remove(names[index]);
+                      } else {
+                        facilities.add(names[index]);
+                      }
+                    }),
                     child: Container(
                       width: 170.w,
                       height: 90.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.r),
-                        border: Border.all(color: fadedBorder),
+                        border: Border.all(
+                          color: present ? appBlue : fadedBorder,
+                        ),
+                        color:
+                            facilities.contains(names[index]) ? paleBlue : null,
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -1161,108 +1118,981 @@ class _StepFiveState extends State<_StepFive> {
                             SizedBox(
                               height: 90.h,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(images[index]),
+                                  SvgPicture.asset(images[index],
+                                      color: present ? appBlue : null),
                                   Text(
                                     names[index],
-                                    style: context.textTheme.bodyMedium!.copyWith(
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: weirdBlack50,
+                                      color: present ? appBlue : weirdBlack50,
                                     ),
                                   )
                                 ],
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () => setState(() {
-                                if (widget.facilities.contains(names[index])) {
-                                  widget.facilities.remove(names[index]);
-                                } else {
-                                  widget.facilities.add(names[index]);
-                                }
-                              }),
+                            AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 250),
                               child: Container(
                                 height: 15.r,
                                 width: 15.r,
                                 alignment: Alignment.center,
+                                key: ValueKey<bool>(present),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: fadedBorder),
                                   borderRadius: BorderRadius.circular(3.r),
-                                  color:
-                                      widget.facilities.contains(names[index])
-                                          ? appBlue
-                                          : null,
+                                  color: present ? appBlue : null,
                                 ),
-                                child: widget.facilities.contains(names[index])
-                                    ? const Icon(Icons.done_rounded,
-                                        color: Colors.white, size: 10)
+                                child: present
+                                    ? const Icon(
+                                        Icons.done_rounded,
+                                        color: Colors.white,
+                                        size: 10,
+                                      )
                                     : null,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  itemCount: names.length,
-                ),
-              )
-            ],
-          ),
+                  );
+                },
+                itemCount: names.length,
+              ),
+            )
+          ],
         ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 414.w,
-            minWidth: 414.w,
-            minHeight: 90.h,
-            maxHeight: 90.h,
-          ),
-          child: ColoredBox(
-            color: paleBlue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Center(
+      ),
+    );
+  }
+}
+
+class _StepSix extends StatefulWidget {
+  final Map<String, dynamic> info;
+
+  const _StepSix({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  State<_StepSix> createState() => _StepSixState();
+}
+
+class _StepSixState extends State<_StepSix> {
+  late bool isEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    isEmpty = widget.info["image"].isEmpty;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "STEP 6",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: appBlue,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Hostel Picture",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Get started with any of your preferable account to be stress-free",
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 44.h),
+            GestureDetector(
+              onTap: () => FileManager.single(type: FileType.image)
+                  .then((response) async {
+                if (response == null) return;
+                Uint8List data =
+                    await FileManager.convertSingleToData(response.path);
+                setState(() {
+                  widget.info["image"] = data;
+                  isEmpty = false;
+                });
+              }),
+              child: Container(
+                width: 350.w,
+                height: 270.h,
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: isEmpty ? paleBlue : null,
+                  image: isEmpty
+                      ? null
+                      : DecorationImage(
+                          image: MemoryImage(widget.info["image"]),
+                          fit: BoxFit.cover,
+                        ),
+                ),
+                child: isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/Hostel Image.svg",
+                            width: 40.r,
+                            height: 40.r,
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
+                            "Upload a front-view picture of your hostel",
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            "Maximum size allowed is 20MB of png and jpg format",
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      )
+                    : null,
+              ),
+            ),
+            SizedBox(height: 250.h),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StepSeven extends StatefulWidget {
+  final Map<String, dynamic> info;
+
+  const _StepSeven({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  State<_StepSeven> createState() => _StepSevenState();
+}
+
+class _StepSevenState extends State<_StepSeven> {
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "STEP 7",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: appBlue,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Room Vacancy",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Do you have any vacancy room(s) in your hostel?",
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 44.h),
+            SvgPicture.asset(
+              "assets/images/Room Vacancy.svg",
+              width: 200.r,
+              height: 200.r,
+            ),
+            SizedBox(height: 40.h),
+            Card(
+              elevation: 1.0,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appBlue,
-                        minimumSize: Size(180.w, 50.h),
-                      ),
-                      onPressed: widget.previous,
-                      child: Text(
-                        "Go Back",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.memory(
+                        widget.info["image"],
+                        width: 114.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appBlue,
-                        minimumSize: Size(180.w, 50.h),
+                    SizedBox(
+                      width: 220.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Yes",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                              Radio(
+                                value: widget.info["vacancy"],
+                                groupValue: true,
+                                onChanged: (value) => setState(
+                                    () => widget.info["vacancy"] = true),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "There are rooms available for rent in my hostel.",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
                       ),
-                      onPressed: widget.next,
-                      child: Text(
-                        "Next",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    )
                   ],
                 ),
               ),
             ),
-          ),
-        )
-      ],
+            SizedBox(height: 16.h),
+            Card(
+              elevation: 1.0,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.memory(
+                        widget.info["image"],
+                        width: 114.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "No",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                              Radio(
+                                value: widget.info["vacancy"],
+                                groupValue: false,
+                                onChanged: (value) => setState(
+                                    () => widget.info["vacancy"] = false),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "There are no rooms available for rent in my hostel.",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 40.h),
+          ],
+        ),
+      ),
     );
   }
+}
+
+class _StepEight extends StatefulWidget {
+  final Map<String, dynamic> info;
+  final Function onCreate;
+
+  const _StepEight({
+    super.key,
+    required this.info,
+    required this.onCreate,
+  });
+
+  @override
+  State<_StepEight> createState() => _StepEightState();
+}
+
+class _StepEightState extends State<_StepEight> {
+
+  late List<RoomInfo> rooms;
+
+  @override
+  void initState() {
+    super.initState();
+    rooms = toRoomList(widget.info["roomsLeft"]);
+    widget.info["roomsLeft"] = rooms;
+  }
+
+  bool exists(int index) => index < rooms.length;
+
+  int totalCards = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "STEP 8",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: appBlue,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Vacancy Presentation",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              "Get started with any of your preferable account to be stress-free",
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 44.h),
+            SizedBox(
+              height: 520.h,
+              child: ListView.separated(
+                itemCount: totalCards + 1,
+                itemBuilder: (context, index) {
+                  if (index == totalCards) {
+                    return Column(
+                      children: [
+                        SizedBox(height: 32.h),
+                        GestureDetector(
+                          onTap: () {
+                            if (exists(totalCards - 1)) {
+                              setState(() => ++totalCards);
+                            } else {
+                              showError(
+                                  "Please create a room with the card(s) above");
+                            }
+                          },
+                          child: Container(
+                            width: 160.w,
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.r),
+                              color: paleBlue,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.add_circle_outline,
+                                    color: appBlue, size: 16),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  "Add room",
+                                  textAlign: TextAlign.center,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: appBlue,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  }
+
+                  return !exists(index)
+                      ? GestureDetector(
+                          onTap: () => widget.onCreate(),
+                          child: const _NoRoom(),
+                        )
+                      : GestureDetector(
+                          onTap: () =>
+                              widget.onCreate(roomIndex: index),
+                          child: _CreateRoomCard(info: rooms[index]),
+                        );
+                },
+                separatorBuilder: (_, __) => SizedBox(height: 16.h),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoRoom extends StatelessWidget {
+  const _NoRoom({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 350.w,
+      height: 200.h,
+      padding: EdgeInsets.symmetric(horizontal: 25.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        color: paleBlue,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            "assets/images/Create Room.svg",
+            width: 40.r,
+            height: 40.r,
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            "Create room",
+            textAlign: TextAlign.center,
+            style: context.textTheme.bodyMedium!.copyWith(
+              color: weirdBlack75,
+              fontWeight: FontWeight.w500,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _CreateRoomCard extends StatelessWidget {
+  final RoomInfo info;
+
+  const _CreateRoomCard({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1.0,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Image.asset(
+                    info.media[0],
+                    width: 414.w,
+                    height: 156.h,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  top: 15.h,
+                  left: 15.w,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: infoRoomsLeftBackground,
+                      borderRadius: BorderRadius.circular(5.r),
+                    ),
+                    child: Text(
+                      "Available",
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: infoRoomsLeft,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 6.h),
+            Text(
+              info.name,
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(height: 6.h),
+            Text(
+              "This room will be made available for the students to rent and partner with their friends if requested.",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(height: 6.h),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "${currency()} ${formatAmountInDouble(info.price)}",
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      color: appBlue,
+                      fontFamily: "Inter",
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "/year",
+                    style: context.textTheme.bodySmall!.copyWith(
+                      color: appBlue,
+                      fontFamily: "Inter",
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StepNine extends StatefulWidget {
+  final Map<String, dynamic> info;
+  final int? index;
+
+
+  const _StepNine({
+    super.key,
+    required this.info,
+    this.index,
+  });
+
+  @override
+  State<_StepNine> createState() => _StepNineState();
+}
+
+class _StepNineState extends State<_StepNine> {
+
+  late TextEditingController name;
+  late TextEditingController price;
+
+  String? duration;
+
+  final List<String> images = [
+    "assets/images/Light-Off.svg",
+    "assets/images/Tap.svg",
+    "assets/images/Bathtub Pro.svg",
+    "assets/images/Toilet Pro.svg",
+    "assets/images/BathToilet.svg",
+    "assets/images/Kitchen Pro.svg",
+    "assets/images/Ceiling Fan.svg",
+    "assets/images/Wardrobe.svg",
+    "assets/images/Hanger.svg",
+  ];
+
+  final List<String> names = [
+    "Light",
+    "Tap Water",
+    "Bathroom",
+    "Toilet",
+    "Bath & Toilet",
+    "Kitchen",
+    "Ceiling Fan",
+    "Wardrobe",
+    "Hanger",
+  ];
+
+  late List<String> facilities;
+  late List<String> media;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    RoomInfo? room;
+
+    if(widget.index != null) {
+      List<RoomInfo> rooms = toRoomList(widget.info["roomsLeft"]);
+      widget.info["roomsLeft"] = rooms;
+      room = rooms[widget.index!];
+      facilities = room.facilities;
+      media = room.media;
+    } else {
+      facilities = [];
+      media = [];
+    }
+
+    name = TextEditingController(text: room?.name);
+    price = TextEditingController(text: room?.price.toStringAsFixed(0));
+  }
+
+  @override
+  void dispose() {
+    name.dispose();
+    price.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                "STEP 9",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: appBlue,
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Available Room",
+                style: context.textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack,
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Center(
+              child: Text(
+                "Get started with any of your preferable account to be stress-free",
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              ),
+            ),
+            SizedBox(height: 44.h),
+            Text(
+              "Room Number",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: name,
+              width: 414.w,
+              height: 50.h,
+              hint: "i.e Block A5",
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Price",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SpecialForm(
+              controller: price,
+              width: 414.w,
+              height: 50.h,
+              hint: "00.00",
+              type: TextInputType.number,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Duration",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            ComboBox(
+              hint: "Select",
+              value: duration,
+              dropdownItems: const [],
+              onChanged: (val) => setState(() => duration = val),
+              icon: const Icon(Boxicons.bxs_down_arrow),
+              buttonWidth: 414.w,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Room Facilities",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            SizedBox(
+              height: 550.h,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20.w,
+                  mainAxisSpacing: 20.w,
+                  mainAxisExtent: 90.h,
+                ),
+                itemBuilder: (_, index) {
+                  bool present = facilities.contains(names[index]);
+                  return GestureDetector(
+                    onTap: () => setState(() {
+                      if (present) {
+                        facilities.remove(names[index]);
+                      } else {
+                        facilities.add(names[index]);
+                      }
+                    }),
+                    child: Container(
+                      width: 170.w,
+                      height: 90.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        border: Border.all(
+                          color: present ? appBlue : fadedBorder,
+                        ),
+                        color:
+                        facilities.contains(names[index]) ? paleBlue : null,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 10.h,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: 90.h,
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(images[index],
+                                      color: present ? appBlue : null),
+                                  Text(
+                                    names[index],
+                                    style:
+                                    context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: present ? appBlue : weirdBlack50,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 250),
+                              child: Container(
+                                height: 15.r,
+                                width: 15.r,
+                                alignment: Alignment.center,
+                                key: ValueKey<bool>(present),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: fadedBorder),
+                                  borderRadius: BorderRadius.circular(3.r),
+                                  color: present ? appBlue : null,
+                                ),
+                                child: present
+                                    ? const Icon(
+                                  Icons.done_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                )
+                                    : null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                itemCount: names.length,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Room Pictures",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack,
+              ),
+            ),
+            media.isEmpty ?
+            GestureDetector(
+              onTap: () => FileManager.multiple(type: FileType.image)
+                  .then((response) async {
+                if (response.isEmpty) return;
+
+                for(var resp in response) {
+                  media.add(resp.path);
+                }
+
+                setState(() {});
+              }),
+              child: Container(
+                width: 350.w,
+                height: 270.h,
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: paleBlue,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/images/Hostel Image.svg",
+                      width: 40.r,
+                      height: 40.r,
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Upload a front-view picture of your hostel",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      "Maximum size allowed is 20MB of png and jpg format",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack75,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ) : GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10.r,
+                  mainAxisSpacing: 10.r,
+                  mainAxisExtent: 110.r,
+              ),
+              itemCount: media.length,
+              itemBuilder: (_, index) => ClipRRect(
+                borderRadius: BorderRadius.circular(5.r),
+                child: Image.file(
+                  File(media[index]),
+                  width: 110.r,
+                  height: 110.r,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StepTen extends StatelessWidget {
+  final Map<String, dynamic> info;
+
+  const _StepTen({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter();
+  }
+}
+
+List<String> toStringList(List<dynamic> list) {
+  List<String> result = [];
+  for(var element in list) {
+    result.add(element as String);
+  }
+  return result;
+}
+
+List<RoomInfo> toRoomList(List<dynamic> list) {
+  List<RoomInfo> result = [];
+  for(var element in list) {
+    result.add(element as RoomInfo);
+  }
+  return result;
 }

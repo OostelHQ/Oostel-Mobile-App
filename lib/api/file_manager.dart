@@ -123,7 +123,7 @@ class FileManager
     return null;
   }
 
-  static Future<List<SingleFileResponse>?> multiple({List<String> extensions = const [], FileType type = FileType.custom}) async {
+  static Future<List<SingleFileResponse>> multiple({List<String> extensions = const [], FileType type = FileType.custom}) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowedExtensions: type == FileType.custom ? extensions : null,
       type: type,
@@ -139,7 +139,7 @@ class FileManager
       return response;
     }
 
-    return null;
+    return [];
   }
 
   static SingleFileResponse _convert(PlatformFile file) => SingleFileResponse(
