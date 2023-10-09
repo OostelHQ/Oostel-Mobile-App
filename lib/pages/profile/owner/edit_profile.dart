@@ -40,7 +40,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   void initState() {
     super.initState();
 
-    Landowner student = ref.read(ownerProvider);
+    Landowner student = ref.read(currentUserProvider) as Landowner;
 
     email = TextEditingController(text: student.email);
     fullName = TextEditingController(text: student.mergedNames);

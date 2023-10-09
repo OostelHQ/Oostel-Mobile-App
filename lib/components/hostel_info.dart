@@ -43,47 +43,22 @@ class HostelInfo extends Equatable {
   @override
   List<Object?> get props => [id];
 
-  HostelInfo.fromJson(Map<String, dynamic> map)
-      : id = map["_id"],
-        name = map["name"],
-        image = map["image"],
-        bedrooms = map["bedrooms"],
-        bathrooms = map["bathrooms"],
-        area = map["area"],
-        price = map["price"],
-        address = map["address"],
-        category = map["category"],
-        roomsLeft = map["roomsLeft"],
-        description = map["description"],
-        rules = map["rules"],
-        totalRooms = map["totalRooms"],
-        hostelFacilities = map["hostelFacilities"],
-        media = map["media"],
-        owner = Landowner.fromJson(map["owner"]);
-
-  Map<String, dynamic> toJson() {
-    List<Map<String, dynamic>> jsonRooms = [];
-    for (RoomInfo info in roomsLeft) {
-      jsonRooms.add(info.toJson());
-    }
-
-    return {
-      "_id": id,
-      "name": name,
-      "image": image,
-      "bedrooms": bedrooms,
-      "bathrooms": bathrooms,
-      "area": area,
-      "address": address,
-      "price": price,
-      "rules": rules,
-      "category": category,
-      "totalRooms": totalRooms,
-      "description": description,
-      "roomsLeft": jsonRooms,
-      "hostelFacilities": hostelFacilities,
-      "media": media,
-      "owner": owner.toJson(),
-    };
-  }
+  factory HostelInfo.fromJson(Map<String, dynamic> map) => HostelInfo(
+        id: map["_id"],
+        name: map["name"],
+        image: map["image"],
+        bedrooms: map["bedrooms"],
+        bathrooms: map["bathrooms"],
+        area: map["area"],
+        price: map["price"],
+        address: map["address"],
+        category: map["category"],
+        roomsLeft: map["roomsLeft"],
+        description: map["description"],
+        rules: map["rules"],
+        totalRooms: map["totalRooms"],
+        hostelFacilities: map["hostelFacilities"],
+        media: map["media"],
+        owner: Landowner.fromJson(map["owner"]),
+      );
 }

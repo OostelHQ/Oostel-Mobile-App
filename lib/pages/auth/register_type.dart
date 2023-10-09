@@ -49,7 +49,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
                 onTap: () {
-                  ref.watch(isAStudent.notifier).state = true;
+                  ref.watch(currentUserProvider.notifier).state = defaultStudent;
                   context.router.pushReplacementNamed(Pages.register);
                 },
                 child: Card(
@@ -85,7 +85,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
                 onTap: () {
-                  ref.watch(isAStudent.notifier).state = false;
+                  ref.watch(currentUserProvider.notifier).state = defaultOwner;
                   context.router.pushReplacementNamed(Pages.register);
                 },
                 child: Card(

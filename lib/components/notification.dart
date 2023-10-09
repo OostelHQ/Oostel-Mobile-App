@@ -1,15 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:my_hostel/components/user.dart';
 
 class NotificationData extends Equatable {
   final String id;
-  final User sender;
+  final String image;
   final String message;
   final DateTime timestamp;
 
   const NotificationData({
     this.id = "",
-    required this.sender,
+    this.image = "",
     this.message = "",
     required this.timestamp,
   });
@@ -17,16 +16,11 @@ class NotificationData extends Equatable {
   @override
   List<Object?> get props => [id];
 
-  NotificationData.fromJson(Map<String, dynamic> map)
-      : id = map["_id"],
-        sender = User.fromJson(map["sender"]),
-        timestamp = DateTime.parse(map["createdAt"]),
-        message = map["message"];
-
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "createdAt": timestamp.toString(),
-        "sender": sender.toJson(),
-        "message": message,
-      };
+  factory NotificationData.fromJson(Map<String, dynamic> map) =>
+      NotificationData(
+        id: map["_id"],
+        image: map["image"],
+        timestamp: DateTime.parse(map["createdAt"]),
+        message: map["message"],
+      );
 }

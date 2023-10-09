@@ -6,6 +6,13 @@ class User extends Equatable {
   final String firstName;
   final String lastName;
   final String email;
+  final String contact;
+  final String religion;
+  final String gender;
+  final String denomination;
+  final DateTime dateJoined;
+  final int profileViews;
+  final int searchAppearances;
 
   const User({
     this.id = "",
@@ -13,23 +20,17 @@ class User extends Equatable {
     this.firstName = "",
     this.lastName = "",
     this.email = "",
+    this.gender = "",
+    this.contact = "",
+    this.religion = "",
+    this.denomination = "",
+    required this.dateJoined,
+    this.profileViews = 0,
+    this.searchAppearances = 0,
   });
+
+  String get mergedNames => "$lastName $firstName";
 
   @override
   List<Object?> get props => [id];
-
-  User.fromJson(Map<String, dynamic> map)
-      : id = map["_id"],
-        image = map["image"],
-        firstName = map["firstName"],
-        lastName = map["lastName"],
-        email = map["email"];
-
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "image": image,
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
-      };
 }

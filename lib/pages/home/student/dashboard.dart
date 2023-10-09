@@ -5,12 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/student.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/profile/student/settings.dart';
 
-import '../chats.dart';
+import '../../chats/chats.dart';
 import 'explore.dart';
 
 class StudentDashboardPage extends ConsumerStatefulWidget {
@@ -155,7 +156,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Student student = ref.watch(studentProvider);
+    User user = ref.watch(currentUserProvider);
     bool notifications = ref.watch(hasNotificationProvider);
 
     return CustomScrollView(
@@ -173,18 +174,18 @@ class _HomePageState extends ConsumerState<_HomePage> {
               children: [
                 CircleAvatar(
                   radius: 15.r,
-                  backgroundImage: AssetImage(student.image),
+                  backgroundImage: AssetImage(user.image),
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  "Hello, ${student.lastName} ",
+                  "Hello, ${user.lastName} ",
                   style: context.textTheme.bodyMedium!.copyWith(
                     color: weirdBlack75,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  student.gender == "Female" ? "🧑" : "🧒",
+                  user.gender == "Female" ? "🧑" : "🧒",
                   style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
                 ),
               ],

@@ -79,7 +79,7 @@ class _NotificationCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage(data.sender.image),
+              backgroundImage: AssetImage(data.image),
               radius: 16.r,
             ),
             SizedBox(width: 10.w),

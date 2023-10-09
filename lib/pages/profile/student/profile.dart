@@ -20,7 +20,7 @@ class StudentProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<StudentProfilePage> {
   @override
   Widget build(BuildContext context) {
-    Student student = ref.watch(studentProvider);
+    Student student = ref.watch(currentUserProvider) as Student;
     List<Receipt> receipts = ref.watch(receiptsProvider);
 
     int acquiredHostels = ref.watch(acquiredHostelsProvider).length;
@@ -151,7 +151,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                         ),
                         SizedBox(width: 5.w),
                         Text(
-                          "Joined ${formatDateRaw(student.joined)}",
+                          "Joined ${formatDateRaw(student.dateJoined)}",
                           style: context.textTheme.bodySmall!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),

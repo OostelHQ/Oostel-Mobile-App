@@ -11,6 +11,7 @@ const Color weirdBlack20 = Color.fromRGBO(1, 15, 30, 0.20);
 const Color infoRoomsLeftBackground = Color.fromRGBO(227, 245, 236, 1.0);
 const Color infoRoomsLeft = Color.fromRGBO(22, 152, 82, 1.0);
 const Color paleBlue = Color.fromRGBO(230, 237, 244, 1.0);
+const Color faintBlue = Color.fromRGBO(1, 15, 30, 0.06);
 
 const Color accentPurpleColor = Color(0xFF6A53A1);
 const Color primaryColor = Color(0xFF121212);
@@ -50,6 +51,7 @@ class Pages
   static const String studentDashboard = 'student-dashboard';
   static const String ownerDashboard = 'owner-dashboard';
   static const String hostelInfo = 'hostel-info';
+  static const String inbox = "inbox";
 
   static const String viewAcquires = 'view-acquires';
   static const String viewAvailable = 'view-available';

@@ -46,6 +46,7 @@ dependencies:
   elegant_notification:
   flutter_otp_text_field:
   dropdown_button2:
+  badges:
 
 dev_dependencies:
   flutter_test:

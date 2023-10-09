@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +29,11 @@ class Holder<T> {
     required this.content,
   });
 }
+
+const Widget loader = SpinKitThreeBounce(
+  color: appBlue,
+  size: 30,
+);
 
 enum AcquireType { hostel, roommate }
 
@@ -1270,9 +1278,11 @@ class RoomTypeCard extends ConsumerWidget {
 
 class AvailableRoomCard extends StatelessWidget {
   final RoomInfo info;
+  final bool isAsset;
 
   const AvailableRoomCard({
     super.key,
+    this.isAsset = true,
     required this.info,
   });
 
@@ -1297,7 +1307,8 @@ class AvailableRoomCard extends StatelessWidget {
                         SizedBox(height: 10.h),
                         Center(
                             child: SvgPicture.asset(
-                                "assets/images/Modal Line.svg")),
+                                "assets/images/Modal Line.svg"),
+                        ),
                         SizedBox(height: 25.h),
                         Center(
                           child: ClipRRect(
@@ -1305,8 +1316,13 @@ class AvailableRoomCard extends StatelessWidget {
                               topLeft: Radius.circular(15.r),
                               topRight: Radius.circular(15.r),
                             ),
-                            child: Image.asset(
+                            child: isAsset ? Image.asset(
                               info.media[0],
+                              width: 414.w,
+                              height: 175.h,
+                              fit: BoxFit.cover,
+                            ) : Image.file(
+                              File(info.media[0]),
                               width: 414.w,
                               height: 175.h,
                               fit: BoxFit.cover,

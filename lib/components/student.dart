@@ -1,13 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:my_hostel/components/user.dart';
 
-class Student extends Equatable {
-  final String id;
-  final String image;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String gender;
-  final String contact;
+class Student extends User {
 
   final int level;
   final String location;
@@ -15,82 +9,68 @@ class Student extends Equatable {
   final String hobby;
   final String origin;
   final String ageRange;
-  final String religion;
-  final String denomination;
   final bool available;
 
-  final DateTime joined;
-
-  final int profileViews;
-  final int searchAppearances;
-
   const Student({
-    this.id = "",
-    this.image = "",
-    this.firstName = "",
-    this.lastName = "",
-    this.email = "",
-    this.gender = "",
-    this.contact = "",
+    String id = "",
+    String image = "",
+    String firstName = "",
+    String lastName = "",
+    String gender = "",
+    String email = "",
+    String contact = "",
+    String religion = "",
+    String denomination = "",
+    int profileViews = 0,
+    int searchAppearances = 0,
+    required DateTime dateJoined,
     this.level = 100,
     this.location = "",
     this.amount = 0,
     this.available = false,
-    this.religion = "",
     this.ageRange = "",
     this.hobby = "",
     this.origin = "",
-    this.denomination = "",
-    this.profileViews = 0,
-    this.searchAppearances = 0,
-    required this.joined,
-  });
+  }) : super(
+    id: id,
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    image: image,
+    contact: contact,
+    gender: gender,
+    religion: religion,
+    dateJoined: dateJoined,
+    profileViews: profileViews,
+    searchAppearances: searchAppearances,
+    denomination: denomination,
+  );
+
 
   @override
   List<Object?> get props => [id];
 
-  String get mergedNames => "$lastName $firstName";
 
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "image": image,
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
-        "gender": gender,
-        "level": level,
-        "location": location,
-        "amount": amount,
-        "origin": origin,
-        "contact": contact,
-        "ageRange": ageRange,
-        "hobby": hobby,
-        "religion": religion,
-        "denomination": denomination,
-        "available": available,
-        "createdAt": joined.toString(),
-        "profileViews": profileViews,
-        "searchAppearances": searchAppearances,
-      };
-
-  Student.fromJson(Map<String, dynamic> map)
-      : id = map["_id"],
-        image = map["image"],
-        profileViews = map["profileViews"],
-        searchAppearances = map["searchAppearances"],
-        firstName = map["firstName"],
-        lastName = map["lastName"],
-        email = map["email"],
-        gender = map["gender"],
-        location = map["location"],
-        amount = map["amount"],
-        hobby = map["hobby"],
-        contact = map["contact"],
-        origin = map["origin"],
-        ageRange = map["ageRange"],
-        religion = map["religion"],
-        denomination = map["denomination"],
-        available = map["available"],
-        joined = DateTime.parse(map["createdAt"]),
-        level = map["level"];
+  factory Student.fromJson(Map<String, dynamic> map) =>
+      Student(
+        id: map["_id"],
+        image: map["image"],
+        profileViews: map["profileViews"],
+        searchAppearances: map["searchAppearances"],
+        firstName: map["firstName"],
+        lastName: map["lastName"],
+        email: map["email"],
+        gender: map["gender"],
+        location: map["location"],
+        amount: map["amount"],
+        hobby: map["hobby"],
+        contact: map["contact"],
+        origin: map["origin"],
+        ageRange: map["ageRange"],
+        religion: map["religion"],
+        denomination: map["denomination"],
+        available: map["available"],
+        dateJoined: DateTime.parse(map["createdAt"]),
+        level: map["level"],
+      );
 }

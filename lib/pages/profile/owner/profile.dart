@@ -25,7 +25,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    Landowner owner = ref.watch(ownerProvider);
+    Landowner owner = ref.watch(currentUserProvider) as Landowner;
 
     List<HostelInfo> allHostels = ref.watch(ownerHostelsProvider);
     int totalRooms = 0;

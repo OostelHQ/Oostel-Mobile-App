@@ -38,7 +38,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   void initState() {
     super.initState();
 
-    Student student = ref.read(studentProvider);
+    Student student = ref.read(currentUserProvider) as Student;
 
     email = TextEditingController(text: student.email);
     fullName = TextEditingController(text: student.mergedNames);

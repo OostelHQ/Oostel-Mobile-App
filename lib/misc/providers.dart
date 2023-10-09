@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_hostel/components/conversation.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/notification.dart';
@@ -8,58 +9,59 @@ import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/components/user.dart';
 
+
+final Student defaultStudent = Student(
+  firstName: "John",
+  lastName: "Doe",
+  gender: "Male",
+  image: "assets/images/watch man.jpg",
+  id: "Info 4",
+  level: 300,
+  email: "johndoe@mail.com",
+  location: "Kofesu",
+  amount: 50000,
+  available: true,
+  origin: "Ebonyi",
+  denomination: "Christ Apostolic Church",
+  hobby: "Singing and dancing",
+  ageRange: "21 - 25",
+  religion: "Christianity",
+  dateJoined: DateTime.now(),
+  searchAppearances: 19,
+  profileViews: 48,
+  contact: "09012345678",
+);
+
+final Landowner defaultOwner = Landowner(
+  dateJoined: DateTime.now(),
+  dob: DateTime(1985),
+  firstName: "Smith",
+  lastName: "Woods",
+  gender: "Male",
+  image: "assets/images/watch man.jpg",
+  id: "Landowner",
+  email: "landlord@mail.com",
+  contact: "09012345678",
+  religion: "Islam",
+  profileViews: 48,
+  searchAppearances: 19,
+  address: "Abeokuta, Ogun State",
+  verified: true,
+);
+
 final StateProvider<bool> hasInitializedProvider =
     StateProvider((ref) => false);
 
-final StateProvider<bool> isAStudent = StateProvider((ref) => true);
+final StateProvider<bool> isAStudent =
+    StateProvider((ref) => ref.watch(currentUserProvider) is Student);
 
 final StateProvider<bool> hasMessagesProvider = StateProvider((ref) => false);
 
 final StateProvider<bool> hasNotificationProvider =
     StateProvider((ref) => false);
 
-final StateProvider<Student> studentProvider = StateProvider(
-  (ref) => Student(
-    firstName: "John",
-    lastName: "Doe",
-    gender: "Male",
-    image: "assets/images/watch man.jpg",
-    id: "Info 4",
-    level: 300,
-    email: "johndoe@mail.com",
-    location: "Kofesu",
-    amount: 50000,
-    available: true,
-    origin: "Ebonyi",
-    denomination: "Christ Apostolic Church",
-    hobby: "Singing and dancing",
-    ageRange: "21 - 25",
-    religion: "Christianity",
-    joined: DateTime.now(),
-    searchAppearances: 19,
-    profileViews: 48,
-    contact: "09012345678",
-  ),
-);
-
-final StateProvider<Landowner> ownerProvider = StateProvider(
-  (ref) => Landowner(
-    dateJoined: DateTime.now(),
-    dob: DateTime(1985),
-    firstName: "Smith",
-    lastName: "Woods",
-    gender: "Male",
-    image: "assets/images/watch man.jpg",
-    id: "Landowner",
-    email: "landlord@mail.com",
-    contact: "09012345678",
-    religion: "Islam",
-    profileViews: 48,
-    searchAppearances: 19,
-    address: "Abeokuta, Ogun State",
-    verified: true,
-  ),
-);
+final StateProvider<User> currentUserProvider =
+    StateProvider((ref) => User(dateJoined: DateTime(1900)));
 
 final StateProvider<HostelInfo> ownerHostelProvider = StateProvider(
   (ref) => HostelInfo(
@@ -193,7 +195,7 @@ final StateProvider<HostelInfo> ownerHostelProvider = StateProvider(
       "assets/images/street.jpg",
       "assets/images/street.jpg",
     ],
-    owner: ref.watch(ownerProvider),
+    owner: defaultOwner
   ),
 );
 
@@ -805,7 +807,7 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     ),
     Student(
       firstName: "John",
@@ -822,7 +824,7 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     ),
     Student(
       firstName: "John",
@@ -839,7 +841,7 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     ),
     Student(
       firstName: "John",
@@ -856,7 +858,7 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     )
   ];
 });
@@ -1579,7 +1581,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         "assets/images/street.jpg",
         "assets/images/street.jpg",
       ],
-      owner: ref.watch(ownerProvider),
+      owner: defaultOwner
     ),
     HostelInfo(
       id: "12",
@@ -1713,7 +1715,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         "assets/images/street.jpg",
         "assets/images/street.jpg",
       ],
-      owner: ref.watch(ownerProvider),
+      owner: defaultOwner
     ),
     HostelInfo(
       id: "13",
@@ -1847,7 +1849,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         "assets/images/street.jpg",
         "assets/images/street.jpg",
       ],
-      owner: ref.watch(ownerProvider),
+      owner: defaultOwner
     ),
     HostelInfo(
       id: "14",
@@ -1981,7 +1983,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         "assets/images/street.jpg",
         "assets/images/street.jpg",
       ],
-      owner: ref.watch(ownerProvider),
+      owner: defaultOwner
     )
   ],
 );
@@ -2004,7 +2006,7 @@ final StateProvider<List<Student>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     ),
     Student(
       firstName: "John",
@@ -2021,7 +2023,7 @@ final StateProvider<List<Student>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     ),
     Student(
       firstName: "John",
@@ -2038,7 +2040,7 @@ final StateProvider<List<Student>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     ),
     Student(
       firstName: "John",
@@ -2055,7 +2057,7 @@ final StateProvider<List<Student>> availableRoommatesProvider =
       hobby: "Singing and dancing",
       ageRange: "15 - 20",
       religion: "Christianity",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
       profileViews: 48,
       searchAppearances: 19,
     )
@@ -2093,66 +2095,56 @@ final StateProvider<List<String>> banksProvider = StateProvider((ref) => [
     ]);
 
 final StateProvider<List<NotificationData>> notificationsProvider =
-    StateProvider((ref) {
-  User sender = const User(
-    id: "id",
-    image: "assets/images/watch man.jpg",
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@mail.com",
-  );
-
-  return [
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-    NotificationData(
-      sender: sender,
-      timestamp: DateTime.now(),
-      message:
-          "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
-    ),
-  ];
-});
+    StateProvider((ref) => [
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+      NotificationData(
+        image: "assets/images/watch man.jpg",
+        timestamp: DateTime.now(),
+        message:
+        "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet...",
+      ),
+    ]);
 
 final StateProvider<List<Receipt>> receiptsProvider = StateProvider(
   (ref) => [
@@ -2387,3 +2379,56 @@ final StateProvider<List<Transaction>> ownerTransactionsProvider =
 final StateProvider<double> expensesProvider = StateProvider((ref) => 65000);
 
 final StateProvider<double> walletProvider = StateProvider((ref) => 65000);
+
+final StateProvider<List<Conversation>> conversationsProvider = StateProvider(
+  (ref) => [
+    Conversation(
+      timeStamp: DateTime.now(),
+      lastMessage: "Hi. How far?",
+      otherUser: "123",
+      id: "0",
+      unreadMessages: 0,
+      target: "Manchester Hostel",
+    ),
+    Conversation(
+      timeStamp: DateTime.now(),
+      lastMessage: "Hi. How far?",
+      otherUser: "123",
+      id: "1",
+      unreadMessages: 3,
+      target: "Liverpool Hostel",
+    ),
+    Conversation(
+      timeStamp: DateTime.now(),
+      lastMessage: "Hi. How far?",
+      otherUser: "123",
+      id: "2",
+      unreadMessages: 0,
+      target: "Custom Hostel",
+    ),
+    Conversation(
+      timeStamp: DateTime.now(),
+      lastMessage: "Hi. How far?",
+      otherUser: "123",
+      id: "3",
+      unreadMessages: 10,
+      target: "Some Hostel",
+    ),
+    Conversation(
+      timeStamp: DateTime.now(),
+      lastMessage: "Hi. How far?",
+      otherUser: "123",
+      id: "4",
+      unreadMessages: 1,
+      target: "Fourth Hostel",
+    ),
+    Conversation(
+      timeStamp: DateTime.now(),
+      lastMessage: "Hi. How far?",
+      otherUser: "123",
+      id: "5",
+      unreadMessages: 6,
+      target: "Last Hostel",
+    ),
+  ],
+);

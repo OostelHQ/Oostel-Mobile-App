@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
@@ -35,7 +33,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
       firstName: "Elizabeth",
       lastName: "Enitan",
       image: "assets/images/watch man.jpg",
-      joined: DateTime.now(),
+      dateJoined: DateTime.now(),
     );
 
     DateTime now = DateTime.now();
@@ -664,16 +662,19 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         ),
                       ),
                     ),
-                    SliverGrid.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 5.r,
-                        mainAxisSpacing: 5.r,
-                      ),
-                      itemCount: widget.info.hostelFacilities.length,
-                      itemBuilder: (_, index) => FacilityContainer(
-                        text: widget.info.hostelFacilities[index],
-                      ),
+                    SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverGrid.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 5.r,
+                          mainAxisSpacing: 5.r,
+                        ),
+                        itemCount: widget.info.hostelFacilities.length,
+                        itemBuilder: (_, index) => FacilityContainer(
+                          text: widget.info.hostelFacilities[index],
+                        ),
+                      )
                     ),
                     SliverPadding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
