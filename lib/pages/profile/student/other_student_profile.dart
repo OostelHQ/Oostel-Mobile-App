@@ -48,111 +48,137 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    SizedBox(height: 40.h),
-                    Center(
-                      child: CircleAvatar(
-                        backgroundColor: appBlue,
-                        radius: 72.r,
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage(widget.info.image),
-                          radius: 68.r,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      widget.info.mergedNames,
-                      style: context.textTheme.bodyLarge!.copyWith(
-                          color: weirdBlack,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 22.sp),
-                    ),
-                    SizedBox(height: 5.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(
                       children: [
-                        SvgPicture.asset(
-                          "assets/images/Roomate Info Location.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          widget.info.location,
-                          style: context.textTheme.bodyMedium!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 5.h),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                                "${currency()} ${formatAmountInDouble(widget.info.amount)}",
-                            style: context.textTheme.bodyLarge!.copyWith(
-                              color: appBlue,
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w700,
+                        SizedBox(height: 40.h),
+                        Center(
+                          child: Container(
+                            width: 125.r,
+                            height: 125.r,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFFE0E5EC),
+                                    blurRadius: 1.0,
+                                    spreadRadius: 2.0,
+                                  )
+                                ]
+                            ),
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 118.r,
+                              height: 118.r,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: AssetImage(widget.info.image),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
-                          TextSpan(
-                            text: "/year",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: appBlue,
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 32.h),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                        ),
+                        SizedBox(height: 10.h),
                         Text(
-                          "Personal Details",
+                          widget.info.mergedNames,
                           style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
+                              color: weirdBlack,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 22.sp),
                         ),
-                        Text(
-                          "Public to fellow students",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
+                        SizedBox(height: 5.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/Roomate Info Location.svg",
+                              width: 15.r,
+                              height: 15.r,
+                              color: weirdBlack50,
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              widget.info.location,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack50, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5.h),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                "${currency()} ${formatAmountInDouble(widget.info.amount)}",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "/year",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
                           ),
-                        )
+                        ),
+                        SizedBox(height: 32.h),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 414.w,
+                            minHeight: 1.h,
+                            maxWidth: 414.w,
+                            maxHeight: 1.h,
+                          ),
+                          child: const ColoredBox(color: Colors.black12),
+                        ),
+                        SizedBox(height: 20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Personal Details",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600, color: weirdBlack),
+                            ),
+                            Text(
+                              "Public to fellow students",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 15.h),
+                        BasicStudentInfo(student: widget.info)
                       ],
                     ),
-                    SizedBox(height: 15.h),
-                    BasicStudentInfo(student: widget.info)
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 150.h),
+                ],
               ),
-              Container(
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
                 width: 414.w,
                 height: 90.h,
                 color: paleBlue,
@@ -197,8 +223,8 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                   ],
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

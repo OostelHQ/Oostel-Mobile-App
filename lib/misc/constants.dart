@@ -81,6 +81,8 @@ class Pages
 
   static const String hostelSettings = 'hostel-settings';
   static const String createHostel = 'create-hostel';
+
+  static const String viewMedia = 'view-media';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

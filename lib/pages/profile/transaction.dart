@@ -45,25 +45,25 @@ class TransactionDetailsPage extends ConsumerWidget {
                 isStudent
                     ? StudentTransactionDetailsContainer(transaction: transaction)
                     : OwnerTransactionDetailsContainer(transaction: transaction),
-                SizedBox(height: 270.h),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: Size(414.w, 50.h),
-                    maximumSize: Size(414.w, 50.h),
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "Download Receipt",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                SizedBox(height: 300.h),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    width: 414.w,
+                    height: 50.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: appBlue,
+                      borderRadius: BorderRadius.circular(5.r),
+                    ),
+                    child: Text(
+                      "Download Receipt",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
                     ),
                   ),
                 ),
-                SizedBox(height: 48.h),
-                const Center(child: Copyright()),
-                SizedBox(height: 24.h),
               ],
             ),
           ),
@@ -124,6 +124,7 @@ class _TransactionHistoryPageState
                   hint: "Filter: ",
                   value: filter,
                   dropdownItems: const [
+                    "All",
                     "Today",
                     "Yesterday",
                     "Last 14 days",
@@ -132,13 +133,13 @@ class _TransactionHistoryPageState
                     "Last 3 months",
                     "Last 9 months",
                     "Last 1 year",
-                    "All"
                   ],
                   onChanged: (val) => setState(() => filter = val),
                   icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 30.r,
                   iconEnabledColor: appBlue,
                   iconDisabledColor: weirdBlack50,
+                  dropdownHeight: 400.h,
                 ),
                 ComboBox(
                   hint: "Sort: ",
@@ -162,13 +163,7 @@ class _TransactionHistoryPageState
               child: ListView.separated(
                 itemBuilder: (_, index) {
                   if (index == transactions.length) {
-                    return Column(
-                      children: [
-                        SizedBox(height: 48.h),
-                        const Center(child: Copyright()),
-                        SizedBox(height: 24.h),
-                      ],
-                    );
+                    return SizedBox(height: 48.h);
                   }
 
                   return TransactionContainer(transaction: transactions[index]);

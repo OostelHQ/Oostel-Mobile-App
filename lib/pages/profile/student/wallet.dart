@@ -45,21 +45,20 @@ class _WalletPageState extends ConsumerState<StudentWalletPage> {
               SizedBox(height: 24.h),
               const WalletSlider(),
               SizedBox(height: 24.h),
-              ElevatedButton(
-                onPressed: () => context.router.pushNamed(Pages.topUp),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: appBlue,
-                  minimumSize: Size(414.w, 50.h),
-                  maximumSize: Size(414.w, 50.h),
-                ),
-                child: Hero(
-                  tag: "My Top-Up Wallet",
+              GestureDetector(
+                onTap: () => context.router.pushNamed(Pages.topUp),
+                child: Container(
+                  width: 414.w,
+                  height: 50.h,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: appBlue,
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
                   child: Text(
-                    "Top-Up Wallet",
+                    "Top-up Wallet",
                     style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                        fontWeight: FontWeight.w500, color: Colors.white),
                   ),
                 ),
               ),
@@ -88,7 +87,7 @@ class _WalletPageState extends ConsumerState<StudentWalletPage> {
                     ),
                 ],
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 15.h),
               Expanded(
                 child: ref.read(studentTransactionsProvider).isEmpty
                     ? Center(
@@ -102,7 +101,8 @@ class _WalletPageState extends ConsumerState<StudentWalletPage> {
                       )
                     : ListView.separated(
                         itemBuilder: (_, index) {
-                          if (index >= ref.read(studentTransactionsProvider).length) {
+                          if (index >=
+                              ref.read(studentTransactionsProvider).length) {
                             return const SizedBox();
                           }
 
@@ -110,7 +110,7 @@ class _WalletPageState extends ConsumerState<StudentWalletPage> {
                               transaction:
                                   ref.read(studentTransactionsProvider)[index]);
                         },
-                        separatorBuilder: (_, __) => SizedBox(height: 16.h),
+                        separatorBuilder: (_, __) => SizedBox(height: 20.h),
                         itemCount: 5,
                       ),
               )
@@ -158,6 +158,11 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
     ccv.dispose();
     super.dispose();
   }
+
+  bool isNotFilled() => (amount.text.isEmpty ||
+      number.text.isEmpty ||
+      expiry.text.isEmpty ||
+      ccv.text.isEmpty);
 
   @override
   Widget build(BuildContext context) {
@@ -207,6 +212,7 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   height: 50.h,
                   hint: "0000 0000 0000 0000",
                   type: TextInputType.number,
+                  onChange: (val) => setState(() {}),
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -220,10 +226,12 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   height: 50.h,
                   hint: "MM/YY",
                   type: TextInputType.number,
+                  maxLength: 4,
+                  onChange: (val) => setState(() {}),
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  "CCV",
+                  "CVV",
                   style: context.textTheme.bodyMedium!.copyWith(
                       color: weirdBlack75, fontWeight: FontWeight.w500),
                 ),
@@ -233,6 +241,8 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   height: 50.h,
                   hint: "123",
                   type: TextInputType.number,
+                  maxLength: 3,
+                  onChange: (val) => setState(() {}),
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -286,10 +296,10 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   type: TextInputType.number,
                   onChange: (val) {
                     double? value = double.tryParse(val);
-                    if(value == null) return;
+                    if (value == null) return;
 
                     setState(() {
-                      if(amounts.contains(value)) {
+                      if (amounts.contains(value)) {
                         selected = amounts.indexOf(value);
                       } else {
                         selected = null;
@@ -298,29 +308,32 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   },
                 ),
                 SizedBox(height: 150.h),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: Size(414.w, 50.h),
-                    maximumSize: Size(414.w, 50.h),
-                  ),
-                  onPressed: () => showModalBottomSheet(
-                    context: context,
-                    builder: (_) => const _PaymentModal(status: true),
-                  ).then((val) {
-                    if (val != null) context.router.pop();
-                  }),
-                  child: Text(
-                    "Top-Up",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    if (isNotFilled()) return;
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (_) => const _PaymentModal(status: false),
+                    ).then((val) {
+                      if (val != null) context.router.pop();
+                    });
+                  },
+                  child: Container(
+                    width: 414.w,
+                    height: 50.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isNotFilled() ? appBlue.withOpacity(0.4) : appBlue,
+                      borderRadius: BorderRadius.circular(5.r),
+                    ),
+                    child: Text(
+                      "Top-Up",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500, color: Colors.white),
                     ),
                   ),
                 ),
                 SizedBox(height: 48.h),
-                const Center(child: Copyright()),
-                SizedBox(height: 24.h),
               ],
             ),
           ),
@@ -353,7 +366,7 @@ class _PaymentModal extends StatelessWidget {
                 children: [
                   SizedBox(height: 10.h),
                   SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 25.h),
+                  SizedBox(height: 55.h),
                   Center(
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
@@ -387,65 +400,28 @@ class _PaymentModal extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 42.h),
-                  status
-                      ? ElevatedButton(
-                          onPressed: () => context.router.pop(status),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appBlue,
-                          ),
-                          child: Text(
-                            "Ok, thanks",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: appBlue,
-                              ),
-                              child: Text(
-                                "Cancel",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: appBlue,
-                              ),
-                              child: Text(
-                                "Try again",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                  SizedBox(height: 50.h),
+                  GestureDetector(
+                    onTap: () => context.router.pop(status),
+                    child: Container(
+                      width: 414.w,
+                      height: 50.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: appBlue,
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: Text(
+                        status
+                            ? "Ok, Thanks" : "Try Again",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500, color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 30.h),
-                  const Copyright(),
-                  SizedBox(height: 14.h)
-                ],
-              ),
-            )
           ],
         ),
       ),

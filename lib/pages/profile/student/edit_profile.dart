@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
@@ -27,7 +28,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   String? religion;
   String? age;
 
-
   late TextEditingController email;
   late TextEditingController fullName;
   late TextEditingController number;
@@ -42,7 +42,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     email = TextEditingController(text: student.email);
     fullName = TextEditingController(text: student.mergedNames);
-    number = TextEditingController(text: student.contact);
+    number = TextEditingController(text: student.contact.substring(1));
     denomination = TextEditingController(text: student.denomination);
     hobby = TextEditingController(text: student.hobby);
 
@@ -199,6 +199,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       onChanged: (val) => setState(() => origin = val),
                       buttonWidth: 414.w,
                       icon: const Icon(Boxicons.bxs_down_arrow),
+                      dropdownHeight: 400.4,
                     ),
                     SizedBox(height: 16.h),
                     Text(
@@ -223,7 +224,16 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ComboBox(
                       hint: "Select Level",
                       value: level,
-                      dropdownItems: const ["100", "200", "300", "400", "500", "600", "700", "Post Graduate"],
+                      dropdownItems: const [
+                        "100",
+                        "200",
+                        "300",
+                        "400",
+                        "500",
+                        "600",
+                        "700",
+                        "Post Graduate"
+                      ],
                       onChanged: (val) => setState(() => level = val),
                       icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
@@ -251,27 +261,32 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ComboBox(
                       hint: "Choose Age Range",
                       value: age,
-                      dropdownItems: const ["15 - 20", "21 - 25", "25 - 30", "30+"],
+                      dropdownItems: const [
+                        "15 - 20",
+                        "21 - 25",
+                        "25 - 30",
+                        "30+"
+                      ],
                       onChanged: (val) => setState(() => age = val),
                       icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
                     ),
                     SizedBox(height: 16.h),
-                    if(religion != null && religion == "Christianity")
-                    Text(
-                      "Denomination",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    if(religion != null && religion == "Christianity")
-                    SpecialForm(
-                      controller: denomination,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "What is the name of your church or mosque?",
-                    ),
-                    if(religion != null && religion == "Christianity")
-                    SizedBox(height: 16.h),
+                    if (religion != null && religion == "Christianity")
+                      Text(
+                        "Denomination",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                    if (religion != null && religion == "Christianity")
+                      SpecialForm(
+                        controller: denomination,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "What is the name of your church or mosque?",
+                      ),
+                    if (religion != null && religion == "Christianity")
+                      SizedBox(height: 16.h),
                     Text(
                       "Hobbies",
                       style: context.textTheme.bodyMedium!.copyWith(
@@ -284,18 +299,20 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       hint: "What do you like doing?",
                     ),
                     SizedBox(height: 50.h),
-                    ElevatedButton(
-                      onPressed: () => context.router.pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appBlue,
-                        minimumSize: Size(414.w, 50.h),
-                        maximumSize: Size(414.w, 50.h),
-                      ),
-                      child: Text(
-                        "Save Changes",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                    GestureDetector(
+                      onTap: () => context.router.pop(),
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: appBlue,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          "Save Changes",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500, color: Colors.white),
                         ),
                       ),
                     ),
@@ -324,24 +341,27 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       ),
                     ),
                     SizedBox(height: 28.h),
-                    ElevatedButton(
-                      onPressed: () => context.router.pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        minimumSize: Size(414.w, 50.h),
-                        maximumSize: Size(414.w, 50.h),
-                      ),
-                      child: Text(
-                        "Delete Account",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        unFocus();
+                        delete();
+                      },
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFDD0A0A),
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          "Delete Account",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500, color: Colors.white),
                         ),
                       ),
                     ),
                     SizedBox(height: 48.h),
-                    const Center(child: Copyright()),
-                    SizedBox(height: 24.h),
                   ],
                 ),
               ),
@@ -351,4 +371,106 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       ),
     );
   }
+
+  void delete() => showModalBottomSheet(
+        context: context,
+        builder: (_) => SizedBox(
+          height: 450.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10.h),
+                      SvgPicture.asset("assets/images/Modal Line.svg"),
+                      SizedBox(height: 55.h),
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                          child: Image.asset(
+                            "assets/images/Questions.png",
+                            width: 135.r,
+                            height: 135.h,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Do you want to delete account?",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        loremIpsum.substring(0, 100),
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 60.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: appBlue),
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "No, cancel",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: appBlue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              resetProviders(ref);
+                              context.router.goNamed(Pages.splash);
+                            },
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: appBlue,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "Yes, delete",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 }

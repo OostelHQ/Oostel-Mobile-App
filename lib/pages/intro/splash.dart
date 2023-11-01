@@ -85,7 +85,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
               SizedBox(height: 25.h),
               FadeTransition(
                 opacity: textAnimation,
-                child: Text("Oostel",
+                child: Text("Fynda",
                     style: context.textTheme.headlineLarge!.copyWith(
                         color: Colors.white, fontWeight: FontWeight.w500)),
               ),

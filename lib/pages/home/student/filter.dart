@@ -22,6 +22,10 @@ class _FilterPageState extends ConsumerState<FilterPage>
   final List<AnimationController> controllers = [];
   final List<Animation<double>> animations = [];
 
+  final TextEditingController areaController = TextEditingController();
+  final TextEditingController minController = TextEditingController();
+  final TextEditingController maxController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -49,10 +53,20 @@ class _FilterPageState extends ConsumerState<FilterPage>
 
   @override
   void dispose() {
+    minController.dispose();
+    maxController.dispose();
+    areaController.dispose();
     for (AnimationController controller in controllers) {
       controller.dispose();
     }
     super.dispose();
+  }
+
+  void reset() {
+    areaController.clear();
+    minController.clear();
+    maxController.clear();
+    setState(() {});
   }
 
   @override
@@ -85,10 +99,16 @@ class _FilterPageState extends ConsumerState<FilterPage>
                         ? _HostelFilter(
                             controllers: controllers,
                             animations: animations,
+                            areaController: areaController,
+                            maxController: maxController,
+                            minController: minController,
                           )
                         : _RoommateFilter(
                             controllers: controllers,
                             animations: animations,
+                            areaController: areaController,
+                            maxController: maxController,
+                            minController: minController,
                           ),
                   ],
                 ),
@@ -104,7 +124,7 @@ class _FilterPageState extends ConsumerState<FilterPage>
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
-                      onTap: () => context.router.pop(),
+                      onTap: reset,
                       child: Container(
                         width: 180.w,
                         height: 50.h,
@@ -115,7 +135,7 @@ class _FilterPageState extends ConsumerState<FilterPage>
                           border: Border.all(color: appBlue, width: 1.5),
                         ),
                         child: Text(
-                          "Cancel",
+                          "Reset",
                           style: context.textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.w500, color: appBlue),
                         ),
@@ -152,11 +172,17 @@ class _FilterPageState extends ConsumerState<FilterPage>
 class _HostelFilter extends ConsumerStatefulWidget {
   final List<AnimationController> controllers;
   final List<Animation<double>> animations;
+  final TextEditingController areaController;
+  final TextEditingController minController;
+  final TextEditingController maxController;
 
   const _HostelFilter({
     super.key,
     required this.controllers,
     required this.animations,
+    required this.areaController,
+    required this.minController,
+    required this.maxController,
   });
 
   @override
@@ -166,17 +192,6 @@ class _HostelFilter extends ConsumerStatefulWidget {
 class _HostelFilterState extends ConsumerState<_HostelFilter> {
   late List<bool> selectedCategories, selectedLocations;
   bool expandedCategories = true, expandedArea = true, expandedPrice = true;
-  final TextEditingController areaController = TextEditingController();
-  final TextEditingController minController = TextEditingController();
-  final TextEditingController maxController = TextEditingController();
-
-  @override
-  void dispose() {
-    minController.dispose();
-    maxController.dispose();
-    areaController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -202,8 +217,8 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedCategories = !expandedCategories);
                 if (expandedCategories) {
                   widget.controllers[0].forward();
@@ -211,8 +226,8 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
                   widget.controllers[0].reverse();
                 }
               },
-              icon: Icon(
-                expandedCategories
+              child: Icon(
+                !expandedCategories
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
@@ -220,14 +235,20 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
             )
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[0],
-          child: Wrap(
-            spacing: 12.w,
-            runSpacing: 12.w,
-            children: List.generate(
-              selectedCategories.length,
-              (index) => GestureDetector(
+          child: SizedBox(
+            height: 170.h,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisExtent: 40.h,
+                  mainAxisSpacing: 20.h,
+                  crossAxisSpacing: 20.w,
+              ),
+              itemCount: selectedCategories.length,
+              itemBuilder: (_, index) => GestureDetector(
                 onTap: () => setState(() =>
                     selectedCategories[index] = !selectedCategories[index]),
                 child: Container(
@@ -253,7 +274,7 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
             ),
           ),
         ),
-        SizedBox(height: !expandedCategories ? 10.h : 28.h),
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -263,8 +284,8 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedArea = !expandedArea);
                 if (expandedArea) {
                   widget.controllers[1].forward();
@@ -272,32 +293,37 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
                   widget.controllers[1].reverse();
                 }
               },
-              icon: Icon(
-                expandedArea
+              child: Icon(
+                !expandedArea
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
               ),
-            )
+            ),
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[1],
           child: Column(
             children: [
               SpecialForm(
-                controller: areaController,
+                controller: widget.areaController,
                 width: 414.w,
                 height: 45.h,
                 hint: "Type Address",
               ),
               SizedBox(height: 16.h),
-              Wrap(
-                spacing: 12.w,
-                runSpacing: 12.w,
-                children: List.generate(
-                  selectedLocations.length,
-                  (index) => GestureDetector(
+              SizedBox(
+                height: 170.h,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisExtent: 40.h,
+                      mainAxisSpacing: 20.h,
+                      crossAxisSpacing: 20.w),
+                  itemCount: selectedLocations.length,
+                  itemBuilder: (_, index) => GestureDetector(
                     onTap: () => setState(() =>
                         selectedLocations[index] = !selectedLocations[index]),
                     child: Container(
@@ -326,7 +352,7 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
             ],
           ),
         ),
-        SizedBox(height: !expandedArea ? 10.h : 28.h),
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -336,8 +362,8 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedPrice = !expandedPrice);
                 if (expandedPrice) {
                   widget.controllers[2].forward();
@@ -345,8 +371,8 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
                   widget.controllers[2].reverse();
                 }
               },
-              icon: Icon(
-                expandedPrice
+              child: Icon(
+                !expandedPrice
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
@@ -354,6 +380,7 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
             )
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[2],
           child: Row(
@@ -361,7 +388,7 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SpecialForm(
-                controller: minController,
+                controller: widget.minController,
                 width: 120.w,
                 height: 40.h,
                 hint: "80,000",
@@ -373,7 +400,7 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
                     .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
               ),
               SpecialForm(
-                controller: maxController,
+                controller: widget.maxController,
                 width: 120.w,
                 height: 40.h,
                 hint: "100,000",
@@ -391,11 +418,17 @@ class _HostelFilterState extends ConsumerState<_HostelFilter> {
 class _RoommateFilter extends ConsumerStatefulWidget {
   final List<AnimationController> controllers;
   final List<Animation<double>> animations;
+  final TextEditingController areaController;
+  final TextEditingController minController;
+  final TextEditingController maxController;
 
   const _RoommateFilter({
     super.key,
     required this.controllers,
     required this.animations,
+    required this.areaController,
+    required this.maxController,
+    required this.minController,
   });
 
   @override
@@ -412,19 +445,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
       expandedStatus = true,
       expandedArea = true,
       expandedPrice = true;
-  final TextEditingController areaController = TextEditingController();
-  final TextEditingController minController = TextEditingController();
-  final TextEditingController maxController = TextEditingController();
 
   late List<String> levels;
-
-  @override
-  void dispose() {
-    minController.dispose();
-    maxController.dispose();
-    areaController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -462,8 +484,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedGenders = !expandedGenders);
                 if (expandedGenders) {
                   widget.controllers[0].forward();
@@ -471,8 +493,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   widget.controllers[0].reverse();
                 }
               },
-              icon: Icon(
-                expandedGenders
+              child: Icon(
+                !expandedGenders
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
@@ -480,14 +502,19 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
             )
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[0],
-          child: Wrap(
-            spacing: 12.w,
-            runSpacing: 12.w,
-            children: List.generate(
-              selectedGenders.length,
-              (index) => GestureDetector(
+          child: SizedBox(
+            height: 55.h,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisExtent: 40.h,
+                mainAxisSpacing: 20.h,
+                crossAxisSpacing: 20.w,
+              ),
+              itemBuilder: (_, index) => GestureDetector(
                 onTap: () => setState(
                   () {
                     if (index == 0) {
@@ -524,10 +551,11 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   ),
                 ),
               ),
+              itemCount: 3,
             ),
           ),
         ),
-        SizedBox(height: !expandedGenders ? 10.h : 28.h),
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -537,8 +565,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedLevels = !expandedLevels);
                 if (expandedLevels) {
                   widget.controllers[1].forward();
@@ -546,8 +574,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   widget.controllers[1].reverse();
                 }
               },
-              icon: Icon(
-                expandedLevels
+              child: Icon(
+                !expandedLevels
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
@@ -555,14 +583,19 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
             )
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[1],
-          child: Wrap(
-            spacing: 12.w,
-            runSpacing: 12.w,
-            children: List.generate(
-              selectedLevels.length,
-              (index) => GestureDetector(
+          child: SizedBox(
+            height: 170.h,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisExtent: 40.h,
+                mainAxisSpacing: 20.h,
+                crossAxisSpacing: 20.w,
+              ),
+              itemBuilder: (_, index) => GestureDetector(
                 onTap: () => setState(
                     () => selectedLevels[index] = !selectedLevels[index]),
                 child: Container(
@@ -582,10 +615,11 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   ),
                 ),
               ),
+              itemCount: levels.length,
             ),
           ),
         ),
-        SizedBox(height: !expandedLevels ? 10.h : 28.h),
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -595,8 +629,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedStatus = !expandedStatus);
                 if (expandedStatus) {
                   widget.controllers[2].forward();
@@ -604,8 +638,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   widget.controllers[2].reverse();
                 }
               },
-              icon: Icon(
-                expandedStatus
+              child: Icon(
+                !expandedStatus
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
@@ -613,14 +647,19 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
             )
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[2],
-          child: Wrap(
-            spacing: 12.w,
-            runSpacing: 12.w,
-            children: List.generate(
-              selectedStatus.length,
-              (index) => GestureDetector(
+          child: SizedBox(
+            height: 55.h,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 40.h,
+                mainAxisSpacing: 20.h,
+                crossAxisSpacing: 20.w,
+              ),
+              itemBuilder: (_, index) => GestureDetector(
                 onTap: () => setState(
                   () {
                     if (index == 0) {
@@ -649,83 +688,92 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   ),
                 ),
               ),
+              itemCount: 2,
             ),
           ),
         ),
-        SizedBox(height: !expandedStatus ? 10.h : 28.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Area",
-              style: context.textTheme.bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() => expandedArea = !expandedArea);
-                if (expandedArea) {
-                  widget.controllers[3].forward();
-                } else {
-                  widget.controllers[3].reverse();
-                }
-              },
-              icon: Icon(
-                expandedArea
-                    ? Icons.keyboard_arrow_down_rounded
-                    : Icons.keyboard_arrow_up_rounded,
-                color: weirdBlack50,
-              ),
-            )
-          ],
-        ),
-        SizeTransition(
-          sizeFactor: widget.animations[3],
-          child: Column(
+        SizedBox(height: 10.h),
+        if (selectedStatus[0])
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SpecialForm(
-                controller: areaController,
-                width: 414.w,
-                height: 45.h,
-                hint: "Type Address",
+              Text(
+                "Area",
+                style: context.textTheme.bodyLarge!
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
               ),
-              SizedBox(height: 16.h),
-              Wrap(
-                spacing: 12.w,
-                runSpacing: 12.w,
-                children: List.generate(
-                  selectedLocations.length,
-                  (index) => GestureDetector(
-                    onTap: () => setState(() =>
-                        selectedLocations[index] = !selectedLocations[index]),
-                    child: Container(
-                      height: 40.h,
-                      width: 105.w,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: selectedLocations[index]
-                                  ? appBlue
-                                  : fadedBorder),
-                          borderRadius: BorderRadius.circular(5.r),
-                          color: selectedLocations[index] ? paleBlue : null),
-                      child: Text(
-                        ref.read(locationProvider)[index],
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: selectedLocations[index]
-                                ? appBlue
-                                : weirdBlack50,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  setState(() => expandedArea = !expandedArea);
+                  if (expandedArea) {
+                    widget.controllers[3].forward();
+                  } else {
+                    widget.controllers[3].reverse();
+                  }
+                },
+                child: Icon(
+                  !expandedArea
+                      ? Icons.keyboard_arrow_down_rounded
+                      : Icons.keyboard_arrow_up_rounded,
+                  color: weirdBlack50,
                 ),
               ),
             ],
           ),
-        ),
-        SizedBox(height: !expandedArea ? 10.h : 28.h),
+        if (selectedStatus[0]) SizedBox(height: 12.h),
+        if (selectedStatus[0])
+          SizeTransition(
+            sizeFactor: widget.animations[3],
+            child: Column(
+              children: [
+                SpecialForm(
+                  controller: widget.areaController,
+                  width: 414.w,
+                  height: 45.h,
+                  hint: "Type Address",
+                ),
+                SizedBox(height: 16.h),
+                SizedBox(
+                  height: 170.h,
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisExtent: 40.h,
+                      mainAxisSpacing: 20.h,
+                      crossAxisSpacing: 20.w,
+                    ),
+                    itemCount: selectedLocations.length,
+                    itemBuilder: (_, index) => GestureDetector(
+                      onTap: () => setState(() =>
+                          selectedLocations[index] = !selectedLocations[index]),
+                      child: Container(
+                        height: 40.h,
+                        width: 105.w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: selectedLocations[index]
+                                    ? appBlue
+                                    : fadedBorder),
+                            borderRadius: BorderRadius.circular(5.r),
+                            color: selectedLocations[index] ? paleBlue : null),
+                        child: Text(
+                          ref.read(locationProvider)[index],
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: selectedLocations[index]
+                                  ? appBlue
+                                  : weirdBlack50,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -735,8 +783,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
               style: context.textTheme.bodyLarge!
                   .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
             ),
-            IconButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 setState(() => expandedPrice = !expandedPrice);
                 if (expandedPrice) {
                   widget.controllers[4].forward();
@@ -744,8 +792,8 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                   widget.controllers[4].reverse();
                 }
               },
-              icon: Icon(
-                expandedPrice
+              child: Icon(
+                !expandedPrice
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: weirdBlack50,
@@ -753,6 +801,7 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
             )
           ],
         ),
+        SizedBox(height: 12.h),
         SizeTransition(
           sizeFactor: widget.animations[4],
           child: Row(
@@ -760,7 +809,7 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SpecialForm(
-                controller: minController,
+                controller: widget.minController,
                 width: 120.w,
                 height: 40.h,
                 hint: "80,000",
@@ -772,7 +821,7 @@ class _RoommateFilterState extends ConsumerState<_RoommateFilter> {
                     .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
               ),
               SpecialForm(
-                controller: maxController,
+                controller: widget.maxController,
                 width: 120.w,
                 height: 40.h,
                 hint: "100,000",

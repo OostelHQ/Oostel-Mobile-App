@@ -35,25 +35,26 @@ class AboutPage extends StatelessWidget {
                   style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500, color: weirdBlack75),
                 ),
-                SizedBox(height: 120.h),
-                ElevatedButton(
-                  onPressed: () => context.router.pop(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: Size(414.w, 50.h),
-                    maximumSize: Size(414.w, 50.h),
-                  ),
-                  child: Text(
-                    "Done",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                SizedBox(height: 180.h),
+                GestureDetector(
+                  onTap: () => context.router.pop(),
+                  child: Container(
+                    width: 414.w,
+                    height: 50.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.r),
+                      color: appBlue,
+                    ),
+                    child: Text(
+                      "Done",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 48.h),
-                const Center(child: Copyright()),
-                SizedBox(height: 24.h),
               ],
             ),
           ),

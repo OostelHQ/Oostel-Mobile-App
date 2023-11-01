@@ -85,7 +85,7 @@ class _ViewAcquiresPageState extends ConsumerState<ViewAcquiresPage> {
                       return StudentCard(info: element);
                     }
                   },
-                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                  separatorBuilder: (_, __) => const SizedBox(),
                   itemCount: acquireList.length,
                 ),
               )

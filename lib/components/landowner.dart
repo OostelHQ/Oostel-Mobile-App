@@ -43,8 +43,6 @@ class Landowner extends User {
   @override
   List<Object?> get props => [id];
 
-  String get mergedNames => "$firstName $lastName";
-
   factory Landowner.fromJson(Map<String, dynamic> map) => Landowner(
         id: map["_id"],
         image: map["image"],

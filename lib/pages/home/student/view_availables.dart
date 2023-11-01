@@ -30,8 +30,8 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
     super.initState();
     isHostel = widget.hostel;
     acquireList = widget.hostel
-        ? ref.read(acquiredHostelsProvider)
-        : ref.read(acquiredRoommatesProvider);
+        ? ref.read(availableHostelsProvider)
+        : ref.read(availableRoommatesProvider);
   }
 
   @override
@@ -60,12 +60,12 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               HomeSwitcher(
-                useDefault: false,
+                useDefault: true,
                 initialHostel: isHostel,
                 onHostelDisplayed: () => setState(() {
                   acquireList = ref.watch(availableHostelsProvider);
@@ -109,7 +109,8 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
                     ? GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          mainAxisSpacing: 10.h,
+                          mainAxisSpacing: 10.r,
+                          crossAxisSpacing: 15.r,
                           mainAxisExtent: 260.h,
                         ),
                         itemBuilder: (_, index) =>
@@ -119,7 +120,7 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
                     : ListView.separated(
                         itemBuilder: (_, index) =>
                             StudentCard(info: acquireList[index]),
-                        separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                        separatorBuilder: (_, __) => const SizedBox(),
                         itemCount: acquireList.length,
                       ),
               )

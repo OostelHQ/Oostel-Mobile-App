@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -61,16 +63,24 @@ String formatDateRaw(DateTime date, {bool shorten = false}) =>
     formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
 String formatDateWithTime(DateTime date, {bool shorten = false}) =>
-    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
+    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten, time: date);
 
-String formatDate(String dateTime, {bool shorten = false}) {
+
+
+
+String formatDate(String dateTime, {bool shorten = false, DateTime? time}) {
   int firIndex = dateTime.indexOf("/");
   String d = dateTime.substring(0, firIndex);
   int secIndex = dateTime.indexOf("/", firIndex + 1);
   String m = dateTime.substring(firIndex + 1, secIndex);
   String y = dateTime.substring(secIndex + 1);
 
-  return "${month(m, shorten)} ${day(d)}, $y";
+  String formatTime = "";
+  if(time != null) {
+    formatTime = " ${(time.hour - 12) < 10 ? "0" : ""}${time.hour - 12}:${time.minute} ${time.hour < 12 ? "AM" : "PM"}";
+  }
+
+  return "${day(d)} ${month(m, shorten)}, $y$formatTime";
 }
 
 String month(String val, bool shorten) {

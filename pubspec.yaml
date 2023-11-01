@@ -42,11 +42,11 @@ dependencies:
   flutter_lazy_listview:
   fluttertoast:
   flutter_rating_stars:
-  flutter_neumorphic:
-  elegant_notification:
   flutter_otp_text_field:
   dropdown_button2:
   badges:
+  photo_view:
+  animated_text_kit:
 
 dev_dependencies:
   flutter_test:

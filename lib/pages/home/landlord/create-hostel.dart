@@ -200,8 +200,18 @@ class _StepOneState extends State<_StepOne> {
                   ),
                 ),
                 SizedBox(height: 44.h),
-                Card(
-                  elevation: 1.0,
+                Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -258,8 +268,18 @@ class _StepOneState extends State<_StepOne> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                Card(
-                  elevation: 1.0,
+                Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -316,8 +336,18 @@ class _StepOneState extends State<_StepOne> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                Card(
-                  elevation: 1.0,
+                Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -374,8 +404,18 @@ class _StepOneState extends State<_StepOne> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                Card(
-                  elevation: 1.0,
+                Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -1013,8 +1053,18 @@ class _StepThreeState extends State<_StepThree>
                   SizedBox(height: 20.h),
                   SizeTransition(
                     sizeFactor: animation,
-                    child: Card(
-                      elevation: 1.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ]
+                      ),
                       child: SizedBox(
                         height: 70.h,
                         child: Row(
@@ -1916,8 +1966,18 @@ class _StepSevenState extends State<_StepSeven> {
                 height: 200.r,
               ),
               SizedBox(height: 40.h),
-              Card(
-                elevation: 1.0,
+              Container(
+                decoration: BoxDecoration(
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(4.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 6.0,
+                        spreadRadius: 1.0,
+                      )
+                    ]
+                ),
                 child: Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -1973,8 +2033,18 @@ class _StepSevenState extends State<_StepSeven> {
                 ),
               ),
               SizedBox(height: 16.h),
-              Card(
-                elevation: 1.0,
+              Container(
+                decoration: BoxDecoration(
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(4.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 6.0,
+                        spreadRadius: 1.0,
+                      )
+                    ]
+                ),
                 child: Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -2653,7 +2723,7 @@ class _StepNineState extends State<_StepNine> {
                   ComboBox(
                     hint: "Select",
                     value: duration,
-                    dropdownItems: const [],
+                    dropdownItems: const ["Daily", "Monthly", "Yearly"],
                     onChanged: (val) => setState(() => duration = val),
                     icon: const Icon(Boxicons.bxs_down_arrow),
                     buttonWidth: 414.w,

@@ -20,9 +20,6 @@ class OwnerProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
-
-
-
   @override
   Widget build(BuildContext context) {
     Landowner owner = ref.watch(currentUserProvider) as Landowner;
@@ -75,12 +72,30 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         Positioned(
                           left: 20.w,
                           bottom: 10.r,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 48.r,
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage(owner.image),
-                              radius: 45.r,
+                          child: Container(
+                            width: 100.r,
+                            height: 100.r,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFFE0E5EC),
+                                    blurRadius: 1.0,
+                                    spreadRadius: 2.0,
+                                  )
+                                ]),
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 95.r,
+                              height: 95.r,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: AssetImage(owner.image),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -128,14 +143,14 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                     ),
                     Text(
                       owner.email,
-                      style: context.textTheme.bodyLarge!.copyWith(
+                      style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
                       owner.contact,
-                      style: context.textTheme.bodyLarge!.copyWith(
+                      style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,
                       ),
@@ -154,7 +169,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         SizedBox(width: 5.w),
                         Text(
                           "Nigeria",
-                          style: context.textTheme.bodySmall!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                         SizedBox(width: 15.w),
@@ -167,7 +182,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         SizedBox(width: 5.w),
                         Text(
                           "Joined ${formatDateRaw(owner.dateJoined)}",
-                          style: context.textTheme.bodySmall!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -179,11 +194,12 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                  text:
-                                      "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500)),
+                                text:
+                                    "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w600),
+                              ),
                               TextSpan(
                                 text: " Hostels",
                                 style: context.textTheme.bodySmall!.copyWith(
@@ -203,7 +219,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                                     "${totalRooms < 10 ? "0" : ""}$totalRooms",
                                 style: context.textTheme.bodySmall!.copyWith(
                                   color: weirdBlack75,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               TextSpan(
@@ -215,6 +231,61 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                             ],
                           ),
                         )
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            width: 180.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: appBlue,
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              "Invite Agent",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            width: 180.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(5.r),
+                              border: Border.all(color: appBlue, width: 1.5),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.share_rounded,
+                                  color: appBlue,
+                                  size: 20.r,
+                                ),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  "Share",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: appBlue),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 32.h),
@@ -359,11 +430,6 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       text: "Address",
                     ),
                     SizedBox(height: 16.h),
-
-
-
-
-
                     SizedBox(height: 24.h),
                     ConstrainedBox(
                       constraints: BoxConstraints(
@@ -393,8 +459,18 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       ],
                     ),
                     SizedBox(height: 15.h),
-                    Card(
-                      elevation: 1.0,
+                    Container(
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ]
+                      ),
                       child: SizedBox(
                         height: 70.h,
                         child: Row(
@@ -414,13 +490,14 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                             ),
                             SizedBox(width: 15.w),
                             Text(
-                              owner.verified ? "Successfully done" : "Not verified",
+                              owner.verified
+                                  ? "Successfully done"
+                                  : "Not verified",
                               style: context.textTheme.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: weirdBlack),
                             ),
-                            SizedBox(width: !owner.verified ? 100.w : 40.w),
-
+                            SizedBox(width: !owner.verified ? 100.w : 60.w),
                             if (owner.verified)
                               Container(
                                 width: 70.w,
@@ -442,20 +519,11 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 48.h),
                   ],
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: 48.h),
-                  const Center(child: Copyright()),
-                  SizedBox(height: 24.h),
-                ],
-              ),
-            )
           ],
         ),
       ),

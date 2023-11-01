@@ -284,13 +284,13 @@ class _HomePageState extends ConsumerState<_HomePage> {
               : SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (_, index) {
-                      if (index >= hostels.length) {
-                        return const SizedBox();
+                      if (index == 3) {
+                        return SizedBox(height: 50.h);
                       }
 
                       return LandlordHostelCard(info: hostels[index]);
                     },
-                    childCount: 3,
+                    childCount: 4,
                   ),
                 ),
         ),

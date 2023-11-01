@@ -27,6 +27,7 @@ import 'package:my_hostel/pages/home/notification.dart';
 import 'package:my_hostel/pages/home/student/view_acquires.dart';
 import 'package:my_hostel/pages/home/student/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 import 'package:my_hostel/pages/profile/about.dart';
 import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
 import 'package:my_hostel/pages/profile/owner/hostel_settings.dart';
@@ -98,7 +99,6 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.hostelSettings,
           builder: (_, __) => const HostelSettingsPage(),
         ),
-
         GoRoute(
           path: Pages.createHostel.path,
           name: Pages.createHostel,
@@ -247,7 +247,6 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.ownerProfile,
           builder: (_, __) => const OwnerProfilePage(),
         ),
-
         GoRoute(
           path: Pages.otherStudent.path,
           name: Pages.otherStudent,
@@ -260,6 +259,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, state) =>
               HostelInformationPage(info: state.extra as HostelInfo),
         ),
+        GoRoute(
+          path: Pages.viewMedia.path,
+          name: Pages.viewMedia,
+          builder: (_, state) => ViewMedia(info: state.extra as ViewInfo),
+        ),
       ],
     );
   }
@@ -268,11 +272,12 @@ class _MyHostelAppState extends State<MyHostelApp> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       builder: (context, widget) => MaterialApp.router(
-        title: 'Oostel',
+        title: 'Fynda',
         theme: FlexThemeData.light(
           fontFamily: "WorkSans",
           useMaterial3: true,
           scheme: FlexScheme.tealM3,
+          scaffoldBackground: const Color(0xFFFBFDFF),
         ),
         themeMode: ThemeMode.light,
         routerConfig: _router,

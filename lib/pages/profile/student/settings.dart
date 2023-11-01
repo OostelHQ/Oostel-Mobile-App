@@ -70,105 +70,106 @@ class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
   }
 
   void logout() => showModalBottomSheet(
-        context: context,
-    isDismissible: false,
-        builder: (_) => SizedBox(
-          height: 450.h,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+    context: context,
+    builder: (_) => SizedBox(
+      height: 450.h,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10.h),
+                  SvgPicture.asset("assets/images/Modal Line.svg"),
+                  SizedBox(height: 55.h),
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.r),
+                        topRight: Radius.circular(15.r),
+                      ),
+                      child: Image.asset(
+                        "assets/images/Profile Logout.png",
+                        width: 135.r,
+                        height: 135.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Do you want to logout?",
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    "Fynda wants to ensure that users are logging out intentionally.",
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack50,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 60.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SizedBox(height: 10.h),
-                      SvgPicture.asset("assets/images/Modal Line.svg"),
-                      SizedBox(height: 25.h),
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15.r),
-                            topRight: Radius.circular(15.r),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          width: 180.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: appBlue),
+                            borderRadius: BorderRadius.circular(5.r),
                           ),
-                          child: Image.asset(
-                            "assets/images/Profile Logout.png",
-                            width: 135.r,
-                            height: 135.h,
-                            fit: BoxFit.cover,
+                          child: Text(
+                            "No, cancel",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: appBlue,
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Do you want to logout?",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        "Lorem ipsum",
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack50,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 42.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: appBlue,
-                            ),
-                            child: Text(
-                              "Cancel",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
+                      GestureDetector(
+                        onTap: () {
+                          resetProviders(ref);
+                          context.router.goNamed(Pages.splash);
+                        },
+                        child: Container(
+                          width: 180.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: appBlue,
+                            borderRadius: BorderRadius.circular(5.r),
+                          ),
+                          child: Text(
+                            "Yes, logout",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              resetProviders(ref);
-                              context.router.goNamed(Pages.splash);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: appBlue,
-                            ),
-                            child: Text(
-                              "Yes, logout",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 30.h),
-                      const Copyright(),
-                      SizedBox(height: 14.h)
-                    ],
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -194,12 +195,31 @@ class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                CircleAvatar(
-                  backgroundColor: appBlue,
-                  radius: 45.r,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(user.image),
-                    radius: 42.r,
+                Container(
+                  width: 125.r,
+                  height: 125.r,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 1.0,
+                        spreadRadius: 2.0,
+                      )
+                    ]
+                  ),
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 118.r,
+                    height: 118.r,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage(user.image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -224,7 +244,18 @@ class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
                           logout();
                         }
                       },
-                      child: Card(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ],
+                        ),
                         child: SizedBox(
                           height: 50.h,
                           child: Padding(
@@ -314,7 +345,18 @@ class StudentProfileSettingsPage extends StatelessWidget {
                               ? Pages.changePassword
                               : Pages.notificationSettings,
                     ),
-                    child: Card(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ]
+                      ),
                       child: SizedBox(
                         height: 50.h,
                         child: Padding(

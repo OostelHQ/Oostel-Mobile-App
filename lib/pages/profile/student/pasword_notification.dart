@@ -69,6 +69,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   width: 414.w,
                   height: 50.h,
                   obscure: !showRecent,
+                  onChange: (val) {},
                   suffix: GestureDetector(
                     onTap: () => setState(() => showRecent = !showRecent),
                     child: AnimatedSwitcherTranslation.right(
@@ -95,6 +96,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   width: 414.w,
                   height: 50.h,
                   obscure: !showNew,
+                  onChange: (val) {},
                   suffix: GestureDetector(
                     onTap: () => setState(() => showNew = !showNew),
                     child: AnimatedSwitcherTranslation.right(
@@ -121,6 +123,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   width: 414.w,
                   height: 50.h,
                   obscure: !showConfirm,
+                  onChange: (val) {},
                   suffix: GestureDetector(
                     onTap: () => setState(() => showConfirm = !showConfirm),
                     child: AnimatedSwitcherTranslation.right(
@@ -136,25 +139,29 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 320.h),
-                ElevatedButton(
-                  onPressed: () => context.router.pop(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: Size(414.w, 50.h),
-                    maximumSize: Size(414.w, 50.h),
-                  ),
-                  child: Text(
-                    "Save Changes",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                SizedBox(height: 370.h),
+                GestureDetector(
+                  onTap: () {
+                    if(recent.text.isEmpty || newOne.text.isEmpty || confirm.text.isEmpty) return;
+                    context.router.pop();
+                  },
+                  child: Container(
+                    width: 414.w,
+                    height: 50.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4.r),
+                        color: (recent.text.isEmpty || newOne.text.isEmpty || confirm.text.isEmpty) ? appBlue.withOpacity(0.4) : appBlue
+                    ),
+                    child: Text(
+                      "Save Changes",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 48.h),
-                const Center(child: Copyright()),
-                SizedBox(height: 24.h),
               ],
             ),
           ),
@@ -223,24 +230,25 @@ class _ProfileNotificationPageState extends State<ProfileNotificationPage> {
                   ),
                 ),
                 SizedBox(height: 500.h),
-                ElevatedButton(
-                  onPressed: () => context.router.pop(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: Size(414.w, 50.h),
-                    maximumSize: Size(414.w, 50.h),
-                  ),
-                  child: Text(
-                    "Save Changes",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                GestureDetector(
+                  onTap: () => context.router.pop(),
+                  child: Container(
+                    width: 414.w,
+                    height: 50.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4.r),
+                        color: appBlue,
+                    ),
+                    child: Text(
+                      "Save Changes",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 48.h),
-                const Center(child: Copyright()),
-                SizedBox(height: 24.h),
               ],
             ),
           ),

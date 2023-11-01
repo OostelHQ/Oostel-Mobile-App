@@ -90,6 +90,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         height: 50.h,
                         hintStyle: context.textTheme.bodyMedium!
                             .copyWith(color: fadedBorder),
+                        onChange: (text) => setState(() {}),
                         hint: "Surname",
                         onSave: (val) =>
                             setState(() => authDetails["firstName"] = val!),
@@ -106,6 +107,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         height: 50.h,
                         hintStyle: context.textTheme.bodyMedium!
                             .copyWith(color: fadedBorder),
+                        onChange: (text) => setState(() {}),
                         hint: "Other Name",
                         onSave: (val) =>
                             setState(() => authDetails["lastName"] = val!),
@@ -120,6 +122,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         controller: emailController,
                         width: 414.w,
                         height: 50.h,
+                        onChange: (text) => setState(() {}),
                         hintStyle: context.textTheme.bodyMedium!
                             .copyWith(color: fadedBorder),
                         hint: "example@example.com",
@@ -137,6 +140,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         width: 414.w,
                         height: 50.h,
                         obscure: !showPassword,
+                        onChange: (text) => setState(() {}),
                         onSave: (val) =>
                             setState(() => authDetails["password"] = val!),
                         suffix: GestureDetector(
@@ -155,12 +159,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 16.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Checkbox(
                             value: readTerms,
+                            activeColor: appBlue,
                             onChanged: (val) =>
                                 setState(() => readTerms = !readTerms),
                           ),
@@ -185,22 +189,28 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           )
                         ],
                       ),
-                      SizedBox(height: 36.h),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: appBlue,
-                          minimumSize: Size(414.w, 50.h),
-                          maximumSize: Size(414.w, 50.h),
-                        ),
-                        onPressed: () => context.router.pushNamed(ref.read(isAStudent)
-                            ? Pages.studentDashboard
-                            : Pages.ownerDashboard,
-                        ),
-                        child: Text(
-                          "Create Account",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                      SizedBox(height: 70.h),
+                      GestureDetector(
+                        onTap: () {
+                          if(!readTerms || (emailController.text.isEmpty || passwordController.text.isEmpty || lastNameController.text.isEmpty || firstNameController.text.isEmpty)) return;
+                          context.router.pushNamed(ref.read(isAStudent)
+                              ? Pages.studentDashboard
+                              : Pages.ownerDashboard);
+                        },
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                              color: !readTerms || (emailController.text.isEmpty || passwordController.text.isEmpty || lastNameController.text.isEmpty || firstNameController.text.isEmpty) ? appBlue.withOpacity(0.4) : appBlue
+                          ),
+                          child: Text(
+                            "Create Account",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -227,9 +237,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 48.h),
-                      const Center(child: Copyright()),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: 60.h),
                     ],
                   ),
                 ),

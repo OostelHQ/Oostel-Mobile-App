@@ -68,12 +68,31 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                         Positioned(
                           left: 20.w,
                           bottom: 10.r,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 48.r,
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage(student.image),
-                              radius: 45.r,
+                          child: Container(
+                            width: 100.r,
+                            height: 100.r,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFFE0E5EC),
+                                    blurRadius: 1.0,
+                                    spreadRadius: 2.0,
+                                  )
+                                ]
+                            ),
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 95.r,
+                              height: 95.r,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: AssetImage(student.image),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -81,7 +100,8 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                           right: 20.w,
                           bottom: 30.r,
                           child: GestureDetector(
-                            onTap: () => context.router.pushNamed(Pages.editProfile),
+                            onTap: () =>
+                                context.router.pushNamed(Pages.editProfile),
                             child: Container(
                               width: 40.r,
                               height: 40.r,
@@ -120,7 +140,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                     ),
                     Text(
                       student.email,
-                      style: context.textTheme.bodyLarge!.copyWith(
+                      style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,
                       ),
@@ -139,7 +159,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                         SizedBox(width: 5.w),
                         Text(
                           "Nigeria",
-                          style: context.textTheme.bodySmall!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                         SizedBox(width: 15.w),
@@ -152,7 +172,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                         SizedBox(width: 5.w),
                         Text(
                           "Joined ${formatDateRaw(student.dateJoined)}",
-                          style: context.textTheme.bodySmall!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -164,11 +184,12 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                  text:
-                                      "${acquiredHostels < 10 ? "0" : ""}$acquiredHostels",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500)),
+                                text:
+                                    "${acquiredHostels < 10 ? "0" : ""}$acquiredHostels",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w600),
+                              ),
                               TextSpan(
                                 text: " Rented Hostels",
                                 style: context.textTheme.bodySmall!.copyWith(
@@ -188,7 +209,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                                     "${acquiredRoommates < 10 ? "0" : ""}$acquiredRoommates",
                                 style: context.textTheme.bodySmall!.copyWith(
                                   color: weirdBlack75,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               TextSpan(
@@ -209,7 +230,6 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                         GestureDetector(
                           onTap: () => showModalBottomSheet(
                             context: context,
-                            isDismissible: false,
                             isScrollControlled: true,
                             builder: (_) => const _RoommateActivation(),
                           ),
@@ -374,13 +394,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: 48.h),
-                  const Center(child: Copyright()),
-                  SizedBox(height: 24.h),
-                ],
-              ),
+              child: SizedBox(height: 48.h),
             )
           ],
         ),
@@ -405,11 +419,16 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
 
   bool activated = false;
 
-
   @override
   void dispose() {
     amount.dispose();
     super.dispose();
+  }
+
+  bool isFilled() {
+    if(gottenHostel == null) return false;
+    if(gottenHostel == "Yes" && selectedLocation == null) return false;
+    return amount.text.isNotEmpty;
   }
 
   @override
@@ -423,221 +442,207 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         child: CustomScrollView(
           slivers: [
-            !activated ?
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10.h),
-                  Center(
-                      child: SvgPicture.asset("assets/images/Modal Line.svg")),
-                  SizedBox(height: 25.h),
-                  Center(
-                    child: Text(
-                      "Activate Availability for Partnering",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: weirdBlack,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Center(
-                    child: Text(
-                      "Writing a comment helps your colleague to vividly understand the status of this hostel.",
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack50,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 32.h),
-                  Text(
-                    "Have you gotten a hostel?",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 8.h),
-                  ComboBox(
-                    hint: "Yes/No",
-                    value: gottenHostel,
-                    dropdownItems: const ["Yes", "No"],
-                    onChanged: (val) => setState(() => gottenHostel = val),
-                    icon: const Icon(Boxicons.bxs_down_arrow),
-                    buttonWidth: 240.w,
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Hostel Address",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 8.h),
-                  Wrap(
-                    spacing: 12.w,
-                    runSpacing: 12.w,
-                    children: List.generate(
-                      locations.length,
-                      (index) => GestureDetector(
-                        onTap: () => setState(() => selectedLocation = index),
-                        child: Container(
-                          height: 40.h,
-                          width: 105.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: selectedLocation != null &&
-                                      selectedLocation == index
-                                  ? appBlue
-                                  : fadedBorder,
-                            ),
-                            borderRadius: BorderRadius.circular(5.r),
-                            color: selectedLocation != null &&
-                                    selectedLocation == index
-                                ? paleBlue
-                                : null,
-                          ),
+            !activated
+                ? SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 10.h),
+                        Center(
+                            child: SvgPicture.asset(
+                                "assets/images/Modal Line.svg")),
+                        SizedBox(height: 25.h),
+                        Center(
                           child: Text(
-                            locations[index],
+                            "Activate Availability for Partnering",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: weirdBlack,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Center(
+                          child: Text(
+                            "Writing a comment helps your colleague to vividly understand the status of this hostel.",
+                            textAlign: TextAlign.center,
                             style: context.textTheme.bodyMedium!.copyWith(
-                              color: selectedLocation != null &&
-                                      selectedLocation == index
-                                  ? appBlue
-                                  : weirdBlack50,
+                              color: weirdBlack50,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Amount",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 8.h),
-                  SpecialForm(
-                    controller: amount,
-                    width: 414.w,
-                    height: 50.h,
-                    hint: "00.00",
-                    type: TextInputType.number,
-                  ),
-                  SizedBox(height: 40.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        onTap: () => context.router.pop(),
-                        child: Container(
-                          width: 180.w,
-                          height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(5.r),
-                            border: Border.all(color: appBlue, width: 1.5),
-                          ),
-                          child: Text(
-                            "Cancel",
+                        SizedBox(height: 32.h),
+                        Text(
+                          "Have you gotten a hostel?",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(height: 8.h),
+                        ComboBox(
+                          hint: "Yes/No",
+                          value: gottenHostel,
+                          dropdownItems: const ["Yes", "No"],
+                          onChanged: (val) =>
+                              setState(() => gottenHostel = val),
+                          icon: const Icon(Boxicons.bxs_down_arrow),
+                          buttonWidth: 414.w,
+                          dropdownWidth: 370.w,
+                        ),
+                        SizedBox(height: 16.h),
+                        if (gottenHostel != null && gottenHostel == "Yes")
+                          Text(
+                            "Hostel Address",
                             style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: appBlue),
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500),
                           ),
+                        if (gottenHostel != null && gottenHostel == "Yes")
+                          SizedBox(height: 8.h),
+                        if (gottenHostel != null && gottenHostel == "Yes")
+                          SizedBox(
+                            height: 170.h,
+                            child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisExtent: 40.h,
+                                mainAxisSpacing: 20.h,
+                                crossAxisSpacing: 20.w,
+                              ),
+                              itemCount: locations.length,
+                              itemBuilder: (_, index) => GestureDetector(
+                                onTap: () =>
+                                    setState(() => selectedLocation = index),
+                                child: Container(
+                                  height: 40.h,
+                                  width: 105.w,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: selectedLocation != null &&
+                                                  selectedLocation == index
+                                              ? appBlue
+                                              : fadedBorder),
+                                      borderRadius: BorderRadius.circular(5.r),
+                                      color: selectedLocation != null &&
+                                              selectedLocation == index
+                                          ? paleBlue
+                                          : null),
+                                  child: Text(
+                                    locations[index],
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
+                                            color: selectedLocation != null &&
+                                                    selectedLocation == index
+                                                ? appBlue
+                                                : weirdBlack50,
+                                            fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Amount",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () => setState(() => activated = true),
-                        child: Container(
-                          width: 180.w,
+                        SizedBox(height: 8.h),
+                        SpecialForm(
+                          controller: amount,
+                          width: 414.w,
                           height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: appBlue,
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Text(
-                            "Available",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
+                          hint: "00.00",
+                          type: TextInputType.number,
+                        ),
+                        SizedBox(height: 40.h),
+                        GestureDetector(
+                          onTap: () {
+                            if(!isFilled()) return;
+                            setState(() => activated = true);
+                          },
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isFilled() ? appBlue : appBlue.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              "Activate",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-
-                    ],
-                  ),
-                ],
-              ),
-            ) : SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 25.h),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15.r),
-                        topRight: Radius.circular(15.r),
-                      ),
-                      child: Image.asset(
-                        "assets/images/Open To.png",
-                        width: 135.r,
-                        height: 135.h,
-                        fit: BoxFit.cover,
-                      ),
+                        SizedBox(height: 20.h),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Activated Successfully",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    "You're now open to collaborate with other students as your roommate",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 42.h),
-                    ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appBlue,
-                      ),
-                      child: Text(
-                        "Ok, thanks",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                  )
+                : SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10.h),
+                        SvgPicture.asset("assets/images/Modal Line.svg"),
+                        SizedBox(height: 55.h),
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.r),
+                              topRight: Radius.circular(15.r),
+                            ),
+                            child: Image.asset(
+                              "assets/images/Open To.png",
+                              width: 135.r,
+                              height: 135.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Activated Successfully",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: weirdBlack,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          "You're now open to collaborate with other students as your roommate",
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack50,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 50.h),
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isFilled() ? appBlue : appBlue.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              "Ok, Thanks",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-
-                ],
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 30.h),
-                  const Copyright(),
-                  SizedBox(height: 14.h)
-                ],
-              ),
-            )
+                  ),
           ],
         ),
       ),

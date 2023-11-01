@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/comment.dart';
@@ -8,18 +9,21 @@ import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
-class HostelInformationPage extends StatefulWidget {
+class HostelInformationPage extends ConsumerStatefulWidget {
   final HostelInfo info;
 
   const HostelInformationPage({super.key, required this.info});
 
   @override
-  State<HostelInformationPage> createState() => _HostelInformationPageState();
+  ConsumerState<HostelInformationPage> createState() =>
+      _HostelInformationPageState();
 }
 
-class _HostelInformationPageState extends State<HostelInformationPage> {
+class _HostelInformationPageState extends ConsumerState<HostelInformationPage> {
   late ScrollController scrollController;
 
   late List<Comment> comments;
@@ -148,7 +152,15 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         top: 80.h,
                         right: 30.w,
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            String id = ref.read(currentUserProvider).id;
+                            if (widget.info.likes.contains(id)) {
+                              widget.info.likes.remove(id);
+                            } else {
+                              widget.info.likes.add(id);
+                            }
+                            setState(() {});
+                          },
                           child: Container(
                             width: 40.r,
                             height: 40.r,
@@ -159,8 +171,14 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             child: Hero(
                               tag: "Hostel ID: ${widget.info.id} Liked",
                               flightShuttleBuilder: flightShuttleBuilder,
-                              child: Icon(Icons.favorite_rounded,
-                                  color: Colors.red, size: 26.r),
+                              child: Icon(
+                                Icons.favorite_rounded,
+                                color: widget.info.likes.contains(
+                                        ref.read(currentUserProvider).id)
+                                    ? Colors.red
+                                    : Colors.white,
+                                size: 26.r,
+                              ),
                             ),
                           ),
                         ),
@@ -356,7 +374,7 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                                 SizedBox(width: 10.w),
                                 SizedBox(
                                   height: 85.h,
-                                  width: 280.w,
+                                  width: 300.w,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -496,71 +514,68 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         ),
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        width: 414.w,
-                        height: 90.h,
-                        color: paleBlue,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                width: 180.w,
-                                height: 50.h,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(5.r),
-                                  border:
-                                      Border.all(color: appBlue, width: 1.5),
-                                ),
-                                child: Text(
-                                  "Start a chat",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: appBlue),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => showModalBottomSheet(
-                                context: context,
-                                isDismissible: false,
-                                builder: (_) =>
-                                    HostelInfoModal(info: widget.info),
-                              ),
-                              child: Container(
-                                width: 180.w,
-                                height: 50.h,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: appBlue,
-                                  borderRadius: BorderRadius.circular(5.r),
-                                ),
-                                child: Text(
-                                  "Pay",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
+                    SliverFillRemaining(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          SizedBox(height: 48.h),
-                          const Copyright(),
-                          SizedBox(height: 24.h)
+                          Container(
+                            width: 414.w,
+                            height: 90.h,
+                            color: paleBlue,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 180.w,
+                                    height: 50.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                      border: Border.all(
+                                          color: appBlue, width: 1.5),
+                                    ),
+                                    child: Text(
+                                      "Start a chat",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: appBlue),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => showModalBottomSheet(
+                                    context: context,
+                                    isDismissible: true,
+                                    builder: (_) =>
+                                        HostelInfoModal(info: widget.info),
+                                  ),
+                                  child: Container(
+                                    width: 180.w,
+                                    height: 50.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: appBlue,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    child: Text(
+                                      "Pay",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
                 CustomScrollView(
@@ -663,19 +678,20 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                       ),
                     ),
                     SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      sliver: SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 5.r,
-                          mainAxisSpacing: 5.r,
-                        ),
-                        itemCount: widget.info.hostelFacilities.length,
-                        itemBuilder: (_, index) => FacilityContainer(
-                          text: widget.info.hostelFacilities[index],
-                        ),
-                      )
-                    ),
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        sliver: SliverGrid.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 5.r,
+                            mainAxisSpacing: 15.r,
+                            mainAxisExtent: 105.r,
+                          ),
+                          itemCount: widget.info.hostelFacilities.length,
+                          itemBuilder: (_, index) => FacilityContainer(
+                            text: widget.info.hostelFacilities[index],
+                          ),
+                        )),
                     SliverPadding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       sliver: SliverToBoxAdapter(
@@ -703,13 +719,23 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                             mainAxisSpacing: 10.r,
                             mainAxisExtent: 110.r),
                         itemCount: widget.info.media.length,
-                        itemBuilder: (_, index) => ClipRRect(
-                          borderRadius: BorderRadius.circular(5.r),
-                          child: Image.asset(
-                            widget.info.media[index],
-                            width: 110.r,
-                            height: 110.r,
-                            fit: BoxFit.cover,
+                        itemBuilder: (_, index) => GestureDetector(
+                          onTap: () => context.router.pushNamed(
+                            Pages.viewMedia,
+                            extra: ViewInfo(
+                              type: DisplayType.asset,
+                              paths: widget.info.media,
+                              current: index,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5.r),
+                            child: Image.asset(
+                              widget.info.media[index],
+                              width: 110.r,
+                              height: 110.r,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -762,9 +788,10 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                         ),
                       ),
                     ),
-                    SliverToBoxAdapter(
+                    SliverFillRemaining(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           SizedBox(height: 20.h),
                           Container(
@@ -791,9 +818,6 @@ class _HostelInformationPageState extends State<HostelInformationPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 48.h),
-                          const Copyright(),
-                          SizedBox(height: 24.h)
                         ],
                       ),
                     )

@@ -139,13 +139,7 @@ class _HelpPageState extends State<HelpPage> with TickerProviderStateMixin {
                           child: ListView.separated(
                             itemBuilder: (_, index) {
                               if (index == faqs.length) {
-                                return Column(
-                                  children: [
-                                    SizedBox(height: 48.h),
-                                    const Center(child: Copyright()),
-                                    SizedBox(height: 24.h),
-                                  ],
-                                );
+                                return SizedBox(height: 48.h);
                               }
                               return _FAQContainer(
                                 controller: controllers[index],
@@ -391,9 +385,6 @@ class _HelpPageState extends State<HelpPage> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                          SizedBox(height: 48.h),
-                          const Center(child: Copyright()),
-                          SizedBox(height: 24.h),
                         ],
                       ),
                     ),
@@ -436,8 +427,18 @@ class _FAQContainerState extends State<_FAQContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1.0,
+    return Container(
+      decoration: BoxDecoration(
+          color: const Color(0xFFF8FBFF),
+          borderRadius: BorderRadius.circular(4.r),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0xFFE0E5EC),
+              blurRadius: 6.0,
+              spreadRadius: 1.0,
+            )
+          ]
+      ),
       child: Column(
         children: [
           Padding(
@@ -474,7 +475,7 @@ class _FAQContainerState extends State<_FAQContainer> {
             sizeFactor: widget.animation,
             child: Padding(
               padding: EdgeInsets.only(
-                  left: 20.w, top: 10.h, right: 10.w, bottom: 10.h),
+                  left: 20.w, top: 10.h, right: 10.w, bottom: 20.h),
               child: Text(
                 widget.faq.answer,
                 style: context.textTheme.bodyMedium!.copyWith(

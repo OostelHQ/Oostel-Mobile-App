@@ -79,18 +79,12 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
                 child: ListView.separated(
                   itemBuilder: (_, index) {
                     if (index == acquireList.length) {
-                      return Column(
-                        children: [
-                          SizedBox(height: 48.h),
-                          const Center(child: Copyright()),
-                          SizedBox(height: 24.h),
-                        ],
-                      );
+                      return SizedBox(height: 48.h);
                     }
 
                     return LandlordHostelCard(info: acquireList[index]);
                   },
-                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                  separatorBuilder: (_, __) => const SizedBox(),
                   itemCount: acquireList.length + 1,
                 ),
               ),

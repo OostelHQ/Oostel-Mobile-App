@@ -52,11 +52,21 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                   ref.watch(currentUserProvider.notifier).state = defaultStudent;
                   context.router.pushReplacementNamed(Pages.register);
                 },
-                child: Card(
-                  elevation: 1.0,
-                  color: Colors.white,
+                child: Container(
+                  width: 400.w,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                   child: SizedBox(
-                    height: 100.h,
+                    height: 80.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -85,24 +95,34 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
                 onTap: () {
-                  ref.watch(currentUserProvider.notifier).state = defaultOwner;
+                  ref.watch(currentUserProvider.notifier).state = defaultAgent;
                   context.router.pushReplacementNamed(Pages.register);
                 },
-                child: Card(
-                  elevation: 1.0,
-                  color: Colors.white,
+                child: Container(
+                  width: 400.w,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                   child: SizedBox(
-                    height: 100.h,
+                    height: 80.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SvgPicture.asset(
-                          "assets/images/landlord.svg",
+                          "assets/images/Agent.svg",
                           width: 60.r,
                           height: 60.r,
                         ),
                         Text(
-                          "I am a Landowner",
+                          "I am an Agent",
                           style: context.textTheme.bodyLarge!
                               .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
                         ),
@@ -116,8 +136,52 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                 ),
               ),
             ),
-            SizedBox(height: 48.h),
-            const Copyright(),
+            SizedBox(height: 28.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: GestureDetector(
+                onTap: () {
+                  ref.watch(currentUserProvider.notifier).state = defaultOwner;
+                  context.router.pushReplacementNamed(Pages.register);
+                },
+                child: Container(
+                  width: 400.w,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
+                  child: SizedBox(
+                    height: 80.h,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/landlord.svg",
+                          width: 60.r,
+                          height: 60.r,
+                        ),
+                        Text(
+                          "I am a Landlord",
+                          style: context.textTheme.bodyLarge!
+                              .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
+                        ),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          size: 26.r,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

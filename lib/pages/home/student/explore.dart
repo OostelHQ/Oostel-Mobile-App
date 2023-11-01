@@ -83,7 +83,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (_, index) => RoomTypeCard(index: index),
                     separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                    itemCount: 3,
+                    itemCount: 5,
                   ),
                 ),
                 SizedBox(height: 20.h),
@@ -108,18 +108,18 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                 ),
                 SizedBox(height: 12.h),
                 SizedBox(
-                  height: 260.h,
+                  height: 270.h,
                   width: 414.w,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (_, index) => GestureDetector(
-                      onTap: () {},
-                      child: HostelExploreCard(
-                        info: hostels[index],
-                      ),
-                    ),
-                    separatorBuilder: (_, __) => SizedBox(width: 5.w),
-                    itemCount: 2,
+                            onTap: () {},
+                            child: HostelExploreCard(
+                              info: hostels[index],
+                            ),
+                          ),
+                    separatorBuilder: (_, __) => SizedBox(width: 20.w),
+                    itemCount: 4,
                   ),
                 ),
                 SizedBox(height: 20.h),
@@ -148,7 +148,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
           ),
         ),
         SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (_, index) => Column(
@@ -157,7 +157,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                   SizedBox(height: 10.h)
                 ],
               ),
-              childCount: 2,
+              childCount: 4,
             ),
           ),
         )

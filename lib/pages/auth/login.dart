@@ -86,6 +86,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         hintStyle: context.textTheme.bodyMedium!
                             .copyWith(color: fadedBorder),
                         hint: "example@example.com",
+                        onChange: (text) => setState(() {}),
                         onSave: (val) =>
                             setState(() => authDetails["email"] = val!),
                         onValidate: (value) {
@@ -107,6 +108,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         width: 414.w,
                         height: 50.h,
                         obscure: !showPassword,
+                        onChange: (text) => setState(() {}),
                         onSave: (val) =>
                             setState(() => authDetails["password"] = val!),
                         suffix: GestureDetector(
@@ -159,23 +161,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 36.h),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: appBlue,
-                          minimumSize: Size(414.w, 50.h),
-                          maximumSize: Size(414.w, 50.h),
-                        ),
-                        onPressed: () => context.router.pushNamed(
+                      SizedBox(height: 140.h),
+                      GestureDetector(
+                        onTap: () {
+                          if(!remember || (emailController.text.isEmpty || passwordController.text.isEmpty)) return;
+                          context.router.pushNamed(
                             ref.read(isAStudent)
                                 ? Pages.studentDashboard
                                 : Pages.ownerDashboard,
-                        ),
-                        child: Text(
-                          "Login",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                          );
+                        },
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: !remember || emailController.text.isEmpty || passwordController.text.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
+                          ),
+                          child: Text(
+                            "Login",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -203,9 +212,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 48.h),
-                      const Center(child: Copyright()),
-                      SizedBox(height: 24.h),
                     ],
                   ),
                 ),
