@@ -362,10 +362,6 @@ class PrivacyPolicyPage extends ConsumerWidget {
         ),
       );
 
-  Widget get landlordPolicy => Column(
-        children: [],
-      );
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -398,9 +394,7 @@ class PrivacyPolicyPage extends ConsumerWidget {
                       fontWeight: FontWeight.w500, color: weirdBlack75),
                 ),
                 SizedBox(height: 32.h),
-                ref.read(currentUserProvider).type == UserType.student
-                    ? studentPolicy
-                    : landlordPolicy,
+                studentPolicy,
                 SizedBox(height: 16.h),
                 Text(
                   "7. Contact Us",

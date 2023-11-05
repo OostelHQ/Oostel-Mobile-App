@@ -38,7 +38,12 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
       _Link(
         name: "View profile",
         route: Pages.ownerProfile,
-        image: "assets/images/Danger.svg",
+        image: "assets/images/View Profile.svg",
+      ),
+      _Link(
+        name: "Co-workers",
+        route: Pages.ownerProfile,
+        image: "assets/images/Agents.svg",
       ),
       _Link(
         name: "Settings",
@@ -48,17 +53,17 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
       _Link(
         name: "Terms of Service",
         route: Pages.about,
-        image: "assets/images/Danger.svg",
+        image: "assets/images/Terms.svg",
       ),
       _Link(
         name: "Help & Support",
         route: Pages.help,
-        image: "assets/images/Danger.svg",
+        image: "assets/images/Help.svg",
       ),
       _Link(
         name: "Privacy Policy",
         route: Pages.privacyPolicy,
-        image: "assets/images/Danger.svg",
+        image: "assets/images/Privacy.svg",
       ),
       _Link(
         name: "Logout",

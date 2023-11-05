@@ -4,9 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_hostel/components/hostel_info.dart';
-import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/room_details.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/misc/constants.dart';
@@ -30,6 +27,7 @@ import 'package:my_hostel/pages/home/student/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
 import 'package:my_hostel/pages/profile/about.dart';
+import 'package:my_hostel/pages/profile/owner/agents.dart';
 import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
 import 'package:my_hostel/pages/profile/owner/hostel_settings.dart';
 import 'package:my_hostel/pages/profile/owner/profile.dart';
@@ -316,6 +314,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.viewMedia,
           builder: (_, state) => ViewMedia(info: state.extra as ViewInfo),
         ),
+        GoRoute(
+          path: Pages.agents.path,
+          name: Pages.agents,
+          builder: (_, __) => const AgentsPage(),
+        )
       ],
     );
   }

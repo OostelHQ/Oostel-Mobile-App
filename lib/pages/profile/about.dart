@@ -641,6 +641,389 @@ class AboutPage extends ConsumerWidget {
                 color: weirdBlack75,
               ),
             ),
+            SizedBox(height: 16.h),
+            Text(
+              "Privacy",
+              style: context.textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Your use of the Fynda App is subject to our Privacy Policy, which outlines how we collect, "
+                  "use, and disclose your personal information. Please review our Privacy Policy to "
+                  "understand our data practices.",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "User Responsibilities",
+              style: context.textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "You agree to use the App responsibly and not to engage in any unlawful, harmful, or "
+                  "disruptive activities while using the service. You also agree not to violate the "
+                  "rights or privacy of others while using the App.",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "Rules and Regulations",
+              style: context.textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "To create a positive and secure environment for both landlords/landladies and tenants, we "
+                  "have established the following rules and regulations for Fynda App users in the role "
+                  "of a landlord/landlady. By using our platform, you agree to adhere to these guidelines:",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Accurate and Up-to-Date Listings: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Provide accurate, complete, and up-to-date information about your '
+                        'accommodations, including room availability, rental rates, amenities, and any house rules.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Privacy and Confidentiality: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "Respect the privacy and confidentiality of tenant information. Do not share personal "
+                        "contact information within the app's messaging system.",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Secure and Responsible Payment Handling: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Ensure secure and transparent handling of payments through the app. Do not request '
+                        'payments outside of the platform or engage in any fraudulent financial transactions.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Cancellation and Refund Policies: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "Clearly communicate your accommodation's cancellation and refund policies "
+                        "to tenants. Honour the policies you specify and handle cancellations "
+                        "in accordance with these policies.",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Respectful and Non-Discriminatory Behaviour: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Treat all tenants with respect, regardless of their background, nationality, or personal '
+                        'characteristics. Discrimination or any form of harassment will not be tolerated.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Transparent Communication: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Communicate openly and transparently with potential tenants about the terms and conditions of '
+                        'your accommodations, including any house rules, policies, and expectations.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Maintenance and Cleanliness: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Maintain your accommodations in good condition and ensure they are clean and '
+                        'safe for tenants. Promptly address any issues or maintenance requests.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Prompt Response: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Respond to tenant inquiries, booking requests, and messages in a timely and '
+                        'professional manner. Good communication is key to a positive rental experience.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Tenant Privacy and Data Protection: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Safeguard tenant information and data privacy. Do not misuse or share '
+                        'tenant information for purposes other than the rental transaction.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Respectful Use of Reviews and Feedback: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Use reviews and feedback constructively and honestly. Do not post false or malicious reviews. '
+                        'Address any disputes or issues professionally and privately with tenants.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Compliance with Local Laws and Regulations: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Ensure that your accommodations comply with all local laws '
+                        'and regulations, including safety and building codes.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Proper Maintenance of Your Fynda Account: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Maintain your Fynda account responsibly, including '
+                        'keeping your account information up to date and secure. '
+                        'Do not share your login credentials with others.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Accountability for Accommodation Accuracy: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Be accountable for the accuracy of your accommodation listings. '
+                        'Update your listings to reflect any changes or updates.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Communitiy Guidelines: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "Follow any additional community guidelines or specific rules "
+                        "provided by the Fynda community in your location or chosen accommodation.",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\t\u2022 Cooperation with Fynda Support: ',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Cooperate with Fynda support in case of issues, disputes, or reported violations. '
+                        'Provide any requested information or assistance for investigations.',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack75,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              "By using the Fynda App as a landlord or landlady, you acknowledge that you have read and "
+                  "agreed to these rules and regulations. We expect all users to maintain a professional, "
+                  "respectful, and responsible presence on our platform to create a positive experience "
+                  "for everyone.",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: weirdBlack75,
+              ),
+            ),
           ],
         ),
   );
