@@ -50,10 +50,23 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                 SizedBox(height: 12.h),
                 SpecialForm(
                   controller: controller,
-                  width: 414.w,
                   height: 50.h,
-                  fillColor: Colors.white,
+                  width: 414.w,
                   hint: "Search here...",
+                  prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
+                  borderColor: Colors.transparent,
+                  fillColor: Colors.white,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ]
+                  ),
                 ),
                 SizedBox(height: 20.h),
                 Row(

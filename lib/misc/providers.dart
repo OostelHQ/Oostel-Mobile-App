@@ -89,6 +89,7 @@ final StateProvider<HostelInfo> ownerHostelProvider = StateProvider(
       bathrooms: 1,
       area: 2500,
       price: 100000,
+      likes: [],
       address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
       description:
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -109,7 +110,7 @@ final StateProvider<HostelInfo> ownerHostelProvider = StateProvider(
         "Water",
         "Security",
       ],
-      roomsLeft: const [
+      rooms: const [
         RoomInfo(
           name: "Room 1",
           facilities: [
@@ -225,7 +226,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
     StateProvider((ref) => [
           HostelInfo(
             id: "1",
-            name: "Manchester Hostel Askj",
+            name: "Manchester Hostel",
             image: "assets/images/street.jpg",
             bedrooms: 1,
             bathrooms: 1,
@@ -242,7 +243,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            likes: const [],
+            likes: [],
             hostelFacilities: const [
               "Light",
               "Water",
@@ -252,7 +253,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -377,6 +378,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
+            likes: [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -388,7 +390,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -522,6 +524,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
+            likes: [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -542,7 +545,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -667,6 +670,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
+            likes: [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -687,7 +691,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -810,6 +814,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             image: "assets/images/street.jpg",
             bedrooms: 1,
             bathrooms: 1,
+            likes: [],
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -823,7 +828,6 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            likes: const [],
             hostelFacilities: const [
               "Light",
               "Water",
@@ -833,7 +837,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -951,6 +955,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "6",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -969,7 +974,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -1096,6 +1101,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "7",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -1123,7 +1129,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -1241,6 +1247,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "8",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -1268,7 +1275,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -1532,6 +1539,7 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
 final StateProvider<List<HostelInfo>> availableHostelsProvider =
     StateProvider((ref) => [
           HostelInfo(
+            likes: [],
             id: "11",
             name: "Manchester Hostel Askj",
             image: "assets/images/street.jpg",
@@ -1559,7 +1567,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -1677,6 +1685,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "12",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -1695,7 +1704,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -1822,6 +1831,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "13",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -1840,7 +1850,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -1967,6 +1977,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "14",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -1985,7 +1996,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2112,6 +2123,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "15",
             name: "Manchester Hostel Askj",
             image: "assets/images/street.jpg",
@@ -2139,7 +2151,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2257,6 +2269,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "16",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -2275,7 +2288,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2402,6 +2415,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "17",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -2420,7 +2434,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2547,6 +2561,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "18",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -2565,7 +2580,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2692,6 +2707,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "19",
             name: "Manchester Hostel Askj",
             image: "assets/images/street.jpg",
@@ -2719,7 +2735,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Water",
               "Security",
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2837,6 +2853,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "20",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -2855,7 +2872,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -2982,6 +2999,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "21",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -3000,7 +3018,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -3127,6 +3145,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
+            likes: [],
             id: "22",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -3145,7 +3164,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            roomsLeft: const [
+            rooms: const [
               RoomInfo(
                 name: "Room 1",
                 facilities: [
@@ -3277,7 +3296,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
   (ref) => [
     HostelInfo(
         id: "11",
-        name: "Manchester Hostel Askj",
+      likes: [],
+        name: "Manchester Hostel",
         image: "assets/images/street.jpg",
         bedrooms: 1,
         bathrooms: 1,
@@ -3303,8 +3323,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
           "Water",
           "Security",
         ],
-        totalRooms: 12,
-        roomsLeft: const [
+      roomsLeft: const ["Room 1 ID", "Room 2 ID", "Room 3 ID", "Room 4 ID", "Room 5 ID"],
+        rooms: const [
           RoomInfo(
             name: "Room 1",
             facilities: [
@@ -3407,8 +3427,10 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
           "assets/images/street.jpg",
           "assets/images/street.jpg",
         ],
-        owner: defaultOwner),
+        owner: defaultOwner,
+    ),
     HostelInfo(
+        likes: [],
         id: "12",
         name: "Liverpool Hostel",
         image: "assets/images/street.jpg",
@@ -3416,7 +3438,6 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         bathrooms: 1,
         area: 2500,
         price: 100000,
-        totalRooms: 12,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
         description:
             "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -3428,7 +3449,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
           "Nam utcurs usipsum dolor sit amet.",
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
         ],
-        roomsLeft: const [
+        roomsLeft: const ["Room 1 ID", "Room 2 ID", "Room 3 ID", "Room 4 ID", "Room 5 ID"],
+        rooms: const [
           RoomInfo(
             name: "Room 1",
             facilities: [
@@ -3542,6 +3564,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         ],
         owner: defaultOwner),
     HostelInfo(
+        likes: [],
         id: "13",
         name: "Scotland",
         image: "assets/images/street.jpg",
@@ -3549,7 +3572,6 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         bathrooms: 1,
         area: 2500,
         price: 100000,
-        totalRooms: 12,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
         description:
             "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -3561,7 +3583,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
           "Nam utcurs usipsum dolor sit amet.",
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
         ],
-        roomsLeft: const [
+        roomsLeft: const ["Room 1 ID", "Room 2 ID", "Room 3 ID", "Room 4 ID", "Room 5 ID"],
+        rooms: const [
           RoomInfo(
             name: "Room 1",
             facilities: [
@@ -3675,13 +3698,13 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         ],
         owner: defaultOwner),
     HostelInfo(
+        likes: [],
         id: "14",
         name: "Grace Ville",
         image: "assets/images/street.jpg",
         bedrooms: 1,
         bathrooms: 1,
         area: 2500,
-        totalRooms: 12,
         price: 100000,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
         description:
@@ -3694,7 +3717,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
           "Nam utcurs usipsum dolor sit amet.",
           "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
         ],
-        roomsLeft: const [
+        roomsLeft: const ["Room 1 ID", "Room 2 ID", "Room 3 ID", "Room 4 ID", "Room 5 ID"],
+        rooms: const [
           RoomInfo(
             name: "Room 1",
             facilities: [

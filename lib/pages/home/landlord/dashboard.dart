@@ -70,7 +70,7 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
         currentIndex: index,
         onTap: (newIndex) {
           if(newIndex == 2) {
-            context.router.pushNamed(Pages.createHostel);
+            context.router.pushNamed(Pages.stepOne);
           } else {
             ref.watch(dashboardTabIndexProvider.notifier).state = newIndex;
           }
@@ -167,7 +167,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
   @override
   void initState() {
     super.initState();
-    hostels = ref.read(acquiredHostelsProvider);
+    hostels = ref.read(ownerHostelsProvider);
   }
 
   @override

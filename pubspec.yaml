@@ -42,6 +42,7 @@ dependencies:
   flutter_lazy_listview:
   fluttertoast:
   flutter_rating_stars:
+  url_launcher:
   flutter_otp_text_field:
   dropdown_button2:
   badges:

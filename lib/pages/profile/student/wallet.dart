@@ -1,5 +1,6 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -211,6 +212,7 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   width: 414.w,
                   height: 50.h,
                   hint: "0000 0000 0000 0000",
+                  formatters: const [CustomGrouper(then: 4)],
                   type: TextInputType.number,
                   onChange: (val) => setState(() {}),
                 ),
@@ -226,7 +228,6 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   height: 50.h,
                   hint: "MM/YY",
                   type: TextInputType.number,
-                  maxLength: 4,
                   onChange: (val) => setState(() {}),
                 ),
                 SizedBox(height: 16.h),
@@ -241,8 +242,8 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
                   height: 50.h,
                   hint: "123",
                   type: TextInputType.number,
-                  maxLength: 3,
                   onChange: (val) => setState(() {}),
+                  formatters: [LengthLimitingTextInputFormatter(3)],
                 ),
                 SizedBox(height: 16.h),
                 Text(

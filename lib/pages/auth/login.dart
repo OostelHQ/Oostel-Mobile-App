@@ -165,7 +165,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       GestureDetector(
                         onTap: () {
                           if(!remember || (emailController.text.isEmpty || passwordController.text.isEmpty)) return;
-                          context.router.pushNamed(
+                          context.router.pushReplacementNamed(
                             ref.read(isAStudent)
                                 ? Pages.studentDashboard
                                 : Pages.ownerDashboard,

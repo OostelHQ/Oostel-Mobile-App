@@ -33,7 +33,6 @@ extension OostelExtension on BuildContext {
   GoRouter get router => GoRouter.of(this);
 }
 
-
 class Pages
 {
   static const String splash = "splash";
@@ -80,9 +79,20 @@ class Pages
   static const String withdraw = 'withdraw';
 
   static const String hostelSettings = 'hostel-settings';
-  static const String createHostel = 'create-hostel';
 
   static const String viewMedia = 'view-media';
+  static const String ownerHostelInfo = 'owner-hostel-info';
+
+  static const String stepOne = 'step-one';
+  static const String stepTwo = 'step-two';
+  static const String stepThree = 'step-three';
+  static const String stepFour = 'step-four';
+  static const String stepFive = 'step-five';
+  static const String stepSix = 'step-six';
+  static const String stepSeven = 'step-seven';
+  static const String stepEight = 'step-eight';
+  static const String stepNine = 'step-nine';
+  static const String stepTen = 'step-ten';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

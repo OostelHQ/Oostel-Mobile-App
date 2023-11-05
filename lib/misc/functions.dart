@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'constants.dart' show appBlue;
 
@@ -132,4 +133,45 @@ String day(String val) {
 String joinToAddress(String address) {
   List<String> subs = address.split("#");
   return "${subs[0]}, ${subs[1]}, ${subs[2]}, ${subs[3]}";
+}
+
+Future<void> launchSocialMediaUrl(String url) async {
+  if(url.isEmpty) return;
+
+  Uri destination = Uri.parse("https://$url");
+  await launchUrl(destination, mode: LaunchMode.externalApplication);
+}
+
+Future<void> launchContactUrl(String contact, {String countryCode = "+234"}) async {
+  if(contact.isEmpty) return;
+  Uri number = Uri.parse("tel:$countryCode${contact.substring(1)}");
+  await launchUrl(number);
+}
+
+Future<void> launchEmail(String address, {String emailSubject = "", String emailBody = ""}) async {
+  String email = Uri.encodeComponent(address);
+  String subject = Uri.encodeComponent("Fynda:$emailSubject");
+  String body = Uri.encodeComponent(emailBody);
+  Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
+  await launchUrl(mail);
+}
+
+Future<void> launchWebUrl(String url) async {
+  String prefix = "https://";
+  Uri address = Uri.parse("$prefix$url");
+  await launchUrl(address, mode: LaunchMode.externalApplication);
+}
+
+String generateWhatsAppLink({String number = "", String code = "+234", String text = ""}) {
+  String link = "wa.me/$code$number?text=";
+  List<String> split = text.split(" ");
+  for(int i = 0; i < split.length; ++i) {
+    String s = split[i];
+    link = "$link$s";
+    if(i != split.length - 1) {
+      link = "$link%20";
+    }
+  }
+
+  return link;
 }

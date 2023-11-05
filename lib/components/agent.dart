@@ -34,6 +34,7 @@ class Agent extends User {
     contact: contact,
     religion: religion,
     gender: gender,
+    type: UserType.agent,
     dateJoined: dateJoined,
     profileViews: profileViews,
     searchAppearances: searchAppearances,

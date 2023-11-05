@@ -34,3 +34,6 @@ class RoomInfo extends Equatable {
         "media": media,
       };
 }
+
+
+const RoomInfo noRoom = RoomInfo(id: "Empty");

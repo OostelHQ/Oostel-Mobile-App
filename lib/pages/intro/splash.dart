@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,18 +77,19 @@ class _SplashPageState extends ConsumerState<SplashPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 365.h),
+              SizedBox(height: 305.h),
               ScaleTransition(
                 scale: logoAnimation,
-                child: SvgPicture.asset("assets/images/logo.svg",
-                    width: 153.w, height: 45.h),
+                child: Image.asset("assets/images/oostel.png",
+                    width: 120.r, height: 120.r),
               ),
-              SizedBox(height: 25.h),
               FadeTransition(
                 opacity: textAnimation,
-                child: Text("Fynda",
-                    style: context.textTheme.headlineLarge!.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.w500)),
+                child: Text(
+                  "Fynda",
+                  style: context.textTheme.headlineLarge!.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
               ),
               SizedBox(height: 335.h),
               FadeTransition(

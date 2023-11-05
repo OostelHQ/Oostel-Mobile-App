@@ -11,11 +11,12 @@ class HostelInfo extends Equatable {
   final int bathrooms;
   final double area;
   final double price;
-  final int totalRooms;
   final String description;
   final List<String> rules;
   final List<String> hostelFacilities;
-  final List<RoomInfo> roomsLeft;
+  final List<RoomInfo> rooms;
+  final int totalRooms;
+  final List<String> roomsLeft;
   final List<String> media;
   final List<String> likes;
   final String category;
@@ -30,9 +31,10 @@ class HostelInfo extends Equatable {
     this.address = "",
     this.bedrooms = 0,
     this.bathrooms = 0,
+    this.totalRooms = 0,
     this.area = 0.0,
     this.price = 0.0,
-    this.totalRooms = 0,
+    this.rooms = const [],
     this.roomsLeft = const [],
     required this.owner,
     this.description = "",
@@ -45,6 +47,23 @@ class HostelInfo extends Equatable {
   @override
   List<Object?> get props => [id];
 
+
+  RoomInfo roomAt(int index) {
+    String id = roomsLeft[index];
+    return rooms.firstWhere((room) => room.id == id, orElse: () => noRoom);
+  }
+
+  bool isAvailable(RoomInfo info) => roomsLeft.contains(info.id);
+  bool isAvailableIndex(int index) => roomsLeft.contains(rooms[index].id);
+
+  int indexAt(int index) {
+    String id = roomsLeft[index];
+    for(int i = 0; i < rooms.length; ++i) {
+      if(rooms[i].id == id) return i;
+    }
+    return -1;
+  }
+
   factory HostelInfo.fromJson(Map<String, dynamic> map) => HostelInfo(
         id: map["_id"],
         name: map["name"],
@@ -53,12 +72,12 @@ class HostelInfo extends Equatable {
         bathrooms: map["bathrooms"],
         area: map["area"],
         price: map["price"],
+        totalRooms: map["totalRooms"],
         address: map["address"],
         category: map["category"],
         roomsLeft: map["roomsLeft"],
         description: map["description"],
         rules: map["rules"],
-        totalRooms: map["totalRooms"],
         likes: map["likes"],
         hostelFacilities: map["hostelFacilities"],
         media: map["media"],

@@ -18,6 +18,7 @@ import 'package:my_hostel/pages/auth/register_type.dart';
 import 'package:my_hostel/pages/chats/inbox.dart';
 import 'package:my_hostel/pages/home/landlord/create-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/dashboard.dart';
+import 'package:my_hostel/pages/home/landlord/landlord_hostel_details_page.dart';
 import 'package:my_hostel/pages/home/landlord/view_hostels.dart';
 import 'package:my_hostel/pages/home/student/dashboard.dart';
 import 'package:my_hostel/pages/home/student/explore.dart';
@@ -100,9 +101,54 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, __) => const HostelSettingsPage(),
         ),
         GoRoute(
-          path: Pages.createHostel.path,
-          name: Pages.createHostel,
-          builder: (_, __) => const CreateHostelPage(),
+          path: Pages.stepOne.path,
+          name: Pages.stepOne,
+          builder: (_, __) => const StepOne(),
+        ),
+        GoRoute(
+          path: Pages.stepTwo.path,
+          name: Pages.stepTwo,
+          builder: (_, state) => StepTwo(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepThree.path,
+          name: Pages.stepThree,
+          builder: (_, state) => StepThree(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepFour.path,
+          name: Pages.stepFour,
+          builder: (_, state) => StepFour(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepFive.path,
+          name: Pages.stepFive,
+          builder: (_, state) => StepFive(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepSix.path,
+          name: Pages.stepSix,
+          builder: (_, state) => StepSix(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepSeven.path,
+          name: Pages.stepSeven,
+          builder: (_, state) => StepSeven(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepEight.path,
+          name: Pages.stepEight,
+          builder: (_, state) => StepEight(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepNine.path,
+          name: Pages.stepNine,
+          builder: (_, state) => StepNine(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.stepTen.path,
+          name: Pages.stepTen,
+          builder: (_, state) => StepTen(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.studentProfileSettings.path,
@@ -260,6 +306,12 @@ class _MyHostelAppState extends State<MyHostelApp> {
               HostelInformationPage(info: state.extra as HostelInfo),
         ),
         GoRoute(
+          path: Pages.ownerHostelInfo.path,
+          name: Pages.ownerHostelInfo,
+          builder: (_, state) =>
+              LandlordHostelInformationPage(info: state.extra as HostelInfo),
+        ),
+        GoRoute(
           path: Pages.viewMedia.path,
           name: Pages.viewMedia,
           builder: (_, state) => ViewMedia(info: state.extra as ViewInfo),
@@ -282,6 +334,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
         themeMode: ThemeMode.light,
         routerConfig: _router,
       ),
+      useInheritedMediaQuery: true,
       splitScreenMode: true,
       designSize: const Size(414, 896),
       minTextAdapt: true,

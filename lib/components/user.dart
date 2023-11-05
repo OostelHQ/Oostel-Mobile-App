@@ -13,6 +13,7 @@ class User extends Equatable {
   final DateTime dateJoined;
   final int profileViews;
   final int searchAppearances;
+  final UserType type;
 
   const User({
     this.id = "",
@@ -25,6 +26,7 @@ class User extends Equatable {
     this.religion = "",
     this.denomination = "",
     required this.dateJoined,
+    this.type = UserType.nil,
     this.profileViews = 0,
     this.searchAppearances = 0,
   });
@@ -34,3 +36,6 @@ class User extends Equatable {
   @override
   List<Object?> get props => [id];
 }
+
+
+enum UserType {agent, landlord, nil, student}

@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:my_hostel/components/comment.dart';
@@ -39,9 +40,10 @@ const Widget loader = SpinKitThreeBounce(
 enum AcquireType { hostel, roommate }
 
 class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
-  TabHeaderDelegate({required this.tabBar});
+  TabHeaderDelegate({required this.tabBar, this.color});
 
   final TabBar tabBar;
+  final Color? color;
 
   @override
   double get minExtent => tabBar.preferredSize.height;
@@ -53,7 +55,7 @@ class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
           BuildContext context, double shrinkOffset, bool overlapsContent) =>
       Container(
-        color: Colors.white,
+        color: color ?? Colors.white,
         child: tabBar,
       );
 
@@ -86,7 +88,47 @@ class WidgetHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(WidgetHeaderDelegate oldDelegate) => false;
 }
 
-class SpecialForm extends StatefulWidget {
+class CustomGrouper extends TextInputFormatter {
+  final int? by;
+  final int then;
+
+  const CustomGrouper({
+    this.by,
+    required this.then,
+  });
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    if (by != null && text.length == by!) {
+      return newValue;
+    }
+
+    String rest = "", firstGroup = "";
+
+    if (by != null) {
+      firstGroup = text.substring(0, by);
+      rest = text.substring(by!);
+    }
+
+    String source = r'.{$then}';
+    rest =
+        rest.replaceAllMapped(RegExp(r'.{4}'), (match) => "${match.group(0)} ");
+    text = "$firstGroup $rest";
+    if (by == null) {
+      text = text.substring(1);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
+
+class SpecialForm extends StatelessWidget {
   final Widget? prefix;
   final Widget? suffix;
   final String? hint;
@@ -109,15 +151,17 @@ class SpecialForm extends StatefulWidget {
   final TextStyle? style;
   final bool readOnly;
   final int maxLines;
-  final int? maxLength;
   final double width;
   final double height;
+  final List<TextInputFormatter> formatters;
+  final BoxDecoration? decoration;
 
   const SpecialForm({
     Key? key,
     required this.controller,
     required this.width,
     required this.height,
+    this.formatters = const [],
     this.fillColor,
     this.borderColor,
     this.padding,
@@ -138,80 +182,80 @@ class SpecialForm extends StatefulWidget {
     this.hint,
     this.prefix,
     this.suffix,
-    this.maxLength,
+    this.decoration,
     this.maxLines = 1,
   }) : super(key: key);
 
   @override
-  State<SpecialForm> createState() => _SpecialFormState();
-}
-
-class _SpecialFormState extends State<SpecialForm> {
-  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: TextFormField(
-        style: widget.style ??
-            context.textTheme.bodyMedium!
-                .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
-        autovalidateMode: widget.autoValidate
-            ? AutovalidateMode.always
-            : AutovalidateMode.disabled,
-
-        maxLines: widget.maxLines,
-        focusNode: widget.focus,
-        autofocus: widget.autoFocus,
-        controller: widget.controller,
-        obscureText: widget.obscure,
-        keyboardType: widget.type,
-        textInputAction: widget.action,
-        readOnly: widget.readOnly,
-        onEditingComplete: () =>
-            widget.onActionPressed!(widget.controller.text),
-        cursorColor: appBlue,
-        decoration: InputDecoration(
-          errorMaxLines: 1,
-          errorStyle: const TextStyle(height: 0, fontSize: 0),
-          fillColor: widget.fillColor ?? Colors.transparent,
-          filled: true,
-          contentPadding: widget.padding ??
-              EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-          prefixIcon: widget.prefix,
-          suffixIcon: widget.suffix,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: widget.borderColor ?? fadedBorder,
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: widget.borderColor ?? fadedBorder,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: widget.borderColor ?? fadedBorder,
-            ),
-          ),
-          hintText: widget.hint,
-          hintStyle: widget.hintStyle ??
+    return DecoratedBox(
+      decoration: decoration ?? const BoxDecoration(),
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: TextFormField(
+          style: style ??
               context.textTheme.bodyMedium!
-                  .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
+                  .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+          autovalidateMode: autoValidate
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
+          inputFormatters: formatters,
+          maxLines: maxLines,
+          focusNode: focus,
+          autofocus: autoFocus,
+          controller: controller,
+          obscureText: obscure,
+          keyboardType: type,
+          textInputAction: action,
+          readOnly: readOnly,
+          onEditingComplete: () => onActionPressed!(controller.text),
+          cursorColor: appBlue,
+          decoration: InputDecoration(
+            errorMaxLines: 1,
+            errorStyle: const TextStyle(height: 0, fontSize: 0),
+            fillColor: fillColor ?? Colors.transparent,
+            filled: true,
+            contentPadding: padding ??
+                EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            prefixIcon: prefix,
+            suffixIcon: suffix,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: borderColor ?? fadedBorder,
+              ),
+              borderRadius: radius ?? BorderRadius.circular(0),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: borderColor ?? fadedBorder,
+              ),
+              borderRadius: radius ?? BorderRadius.circular(0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: borderColor ?? fadedBorder,
+              ),
+              borderRadius: radius ?? BorderRadius.circular(0),
+            ),
+            hintText: hint,
+            hintStyle: hintStyle ??
+                context.textTheme.bodyMedium!
+                    .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
+          ),
+          onChanged: (value) {
+            if (onChange == null) return;
+            onChange!(value);
+          },
+          validator: (value) {
+            if (onValidate == null) return null;
+            return onValidate!(value);
+          },
+          onSaved: (value) {
+            if (onSave == null) return;
+            onSave!(value);
+          },
         ),
-        onChanged: (value) {
-          if (widget.onChange == null) return;
-          widget.onChange!(value);
-        },
-        validator: (value) {
-          if (widget.onValidate == null) return null;
-          return widget.onValidate!(value);
-        },
-        onSaved: (value) {
-          if (widget.onSave == null) return;
-          widget.onSave!(value);
-        },
       ),
     );
   }
@@ -399,7 +443,7 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
   }
 }
 
-class HostelInfoCard extends StatefulWidget {
+class HostelInfoCard extends ConsumerStatefulWidget {
   final HostelInfo info;
 
   const HostelInfoCard({
@@ -408,11 +452,10 @@ class HostelInfoCard extends StatefulWidget {
   });
 
   @override
-  State<HostelInfoCard> createState() => _HostelInfoCardState();
+  ConsumerState<HostelInfoCard> createState() => _HostelInfoCardState();
 }
 
-class _HostelInfoCardState extends State<HostelInfoCard> {
-  bool liked = false;
+class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +463,7 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
       onTap: () => context.router.pushNamed(
         Pages.hostelInfo,
         extra: widget.info,
-      ),
+      ).then((val) => setState(() {})),
       child: SizedBox(
         height: 135.h,
         child: Center(
@@ -479,14 +522,26 @@ class _HostelInfoCardState extends State<HostelInfoCard> {
                               Hero(
                                 tag: "Hostel ID: ${widget.info.id} Liked",
                                 child: GestureDetector(
-                                  onTap: () => setState(() => liked = !liked),
+                                  onTap: () {
+                                    String id = ref.read(currentUserProvider).id;
+                                    if (widget.info.likes.contains(id)) {
+                                      widget.info.likes.remove(id);
+                                    } else {
+                                      widget.info.likes.add(id);
+                                    }
+                                    setState(() {});
+                                  },
                                   child: AnimatedSwitcherTranslation.right(
                                     duration: const Duration(milliseconds: 500),
                                     child: Icon(
                                       Icons.favorite_rounded,
-                                      color: liked ? Colors.red : weirdBlack20,
+                                      color: widget.info.likes.contains(
+                                          ref.read(currentUserProvider).id)
+                                          ? Colors.red
+                                          : weirdBlack20,
                                       size: 18,
-                                      key: ValueKey<bool>(liked),
+                                      key: ValueKey<bool>(widget.info.likes.contains(
+                                          ref.read(currentUserProvider).id)),
                                     ),
                                   ),
                                 ),
@@ -800,7 +855,7 @@ class _StudentCardState extends State<StudentCard> {
   }
 }
 
-class HostelExploreCard extends StatefulWidget {
+class HostelExploreCard extends ConsumerStatefulWidget {
   final HostelInfo info;
 
   const HostelExploreCard({
@@ -809,11 +864,11 @@ class HostelExploreCard extends StatefulWidget {
   });
 
   @override
-  State<HostelExploreCard> createState() => _HostelExploreCardState();
+  ConsumerState<HostelExploreCard> createState() => _HostelExploreCardState();
 }
 
-class _HostelExploreCardState extends State<HostelExploreCard> {
-  bool liked = false;
+class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -821,7 +876,7 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
       onTap: () => context.router.pushNamed(
         Pages.hostelInfo,
         extra: widget.info,
-      ),
+      ).then((val) => setState(() {})),
       child: SizedBox(
         height: 270.h,
         child: Center(
@@ -838,7 +893,8 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                     blurRadius: 6.0,
                     spreadRadius: 1.0,
                   )
-                ]),
+                ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -866,14 +922,26 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => setState(() => liked = !liked),
+                      onTap: () {
+                        String id = ref.read(currentUserProvider).id;
+                        if (widget.info.likes.contains(id)) {
+                          widget.info.likes.remove(id);
+                        } else {
+                          widget.info.likes.add(id);
+                        }
+                        setState(() {});
+                      },
                       child: AnimatedSwitcherTranslation.right(
                         duration: const Duration(milliseconds: 500),
                         child: Icon(
                           Icons.favorite_rounded,
-                          color: liked ? Colors.red : weirdBlack25,
+                          color: widget.info.likes.contains(
+                              ref.read(currentUserProvider).id)
+                              ? Colors.red
+                              : weirdBlack25,
                           size: 18,
-                          key: ValueKey<bool>(liked),
+                          key: ValueKey<bool>(widget.info.likes.contains(
+                              ref.read(currentUserProvider).id)),
                         ),
                       ),
                     )
@@ -991,10 +1059,45 @@ class _HostelExploreCardState extends State<HostelExploreCard> {
   }
 }
 
-class CommentCard extends StatelessWidget {
+class CommentCard extends StatefulWidget {
   final Comment comment;
+  final bool isStudentSection;
 
-  const CommentCard({super.key, required this.comment});
+  const CommentCard({super.key, required this.comment, this.isStudentSection = false});
+
+  @override
+  State<CommentCard> createState() => _CommentCardState();
+}
+
+class _CommentCardState extends State<CommentCard>
+    with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+  final TextEditingController commentController = TextEditingController();
+
+  bool expand = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeIn,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    commentController.dispose();
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1005,50 +1108,103 @@ class CommentCard extends StatelessWidget {
         border: Border.all(color: weirdBlack.withOpacity(0.15)),
         color: Colors.transparent,
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 8.h),
-            RatingStars(
-              value: comment.ratings,
-              starBuilder: (_, color) => Icon(
-                Boxicons.bxs_star,
-                color: color,
-                size: 18.r,
-              ),
-              valueLabelVisibility: false,
-              starCount: 5,
-              starSize: 18.r,
-              starSpacing: 5.w,
-              starColor: Colors.orange,
-              starOffColor: weirdBlack.withOpacity(0.1),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RatingStars(
+                      value: widget.comment.ratings,
+                      starBuilder: (_, color) => Icon(
+                        Boxicons.bxs_star,
+                        color: color,
+                        size: 18.r,
+                      ),
+                      valueLabelVisibility: false,
+                      starCount: 5,
+                      starSize: 18.r,
+                      starSpacing: 5.w,
+                      starColor: accentYellowColor,
+                      starOffColor: weirdBlack.withOpacity(0.1),
+                    ),
+                    if(!widget.isStudentSection)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() => expand = !expand);
+                        if(expand) {
+                          controller.forward();
+                        } else {
+                          controller.reverse();
+                        }
+                      },
+                        child: Text(
+                      expand ? "Cancel" : "Reply",
+                      style: context.textTheme.bodyMedium!.copyWith(color: appBlue, fontWeight: FontWeight.w500),
+                    ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  widget.comment.header,
+                  style: context.textTheme.bodyLarge!
+                      .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+                ),
+                if (widget.comment.subtitle.isNotEmpty) SizedBox(height: 8.h),
+                if (widget.comment.subtitle.isNotEmpty)
+                  Text(
+                    widget.comment.subtitle,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodyMedium!
+                        .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+                  ),
+                SizedBox(height: 8.h),
+                Text(
+                    "${formatDate(DateFormat("dd/MM/yyyy").format(widget.comment.postTime), shorten: true)} "
+                    "by ${widget.comment.postedBy.mergedNames}",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: weirdBlack.withOpacity(0.4))),
+                SizedBox(height: 10.h),
+              ],
             ),
-            SizedBox(height: 8.h),
-            Text(
-              comment.header,
-              style: context.textTheme.bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
-            ),
-            if (comment.subtitle.isNotEmpty) SizedBox(height: 8.h),
-            if (comment.subtitle.isNotEmpty)
-              Text(
-                comment.subtitle,
-                overflow: TextOverflow.ellipsis,
-                style: context.textTheme.bodyMedium!
-                    .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
-              ),
-            SizedBox(height: 8.h),
-            Text(
-                "${formatDate(DateFormat("dd/MM/yyyy").format(comment.postTime), shorten: true)} "
-                "by ${comment.postedBy.mergedNames}",
-                style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack.withOpacity(0.4))),
-            SizedBox(height: 10.h),
-          ],
-        ),
+          ),
+          if(!widget.isStudentSection)
+          SizeTransition(
+              sizeFactor: animation,
+              child: ColoredBox(
+                  color: paleBlue,
+                  child: SizedBox(
+                    height: 60.h,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SpecialForm(
+                            controller: commentController,
+                            width: 300.w,
+                            height: 45.h,
+                            hint: "Add your message...",
+                            suffix: const Icon(Icons.emoji_emotions_rounded, color: appBlue),
+                            fillColor: Colors.white,
+                            borderColor: Colors.transparent,
+                            radius: BorderRadius.circular(22.5.h),
+                          ),
+                          GestureDetector(
+                              child: Icon(Icons.send_rounded, color: appBlue, size: 26.r)
+                          ),
+                        ]
+                    ),
+                  )
+              )
+          ),
+        ],
       ),
     );
   }
@@ -1109,18 +1265,20 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.end,
-                    children: [
-                      Text("0",
-                          style: context.textTheme.headlineLarge!
-                              .copyWith(fontWeight: FontWeight.bold)),
-                      Text(
-                        "/5",
-                        style: context.textTheme.bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      )
-                    ],
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(text: "0",
+                            style: context.textTheme.headlineLarge!
+                                .copyWith(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                          text: "/5",
+                          style: context.textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )
+
                   ),
                   SizedBox(height: 15.h),
                   RatingStars(
@@ -1134,7 +1292,7 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                     starCount: 5,
                     starSize: 14.r,
                     starSpacing: 5.w,
-                    starColor: Colors.orange,
+                    starColor: accentYellowColor,
                     starOffColor: weirdBlack.withOpacity(0.1),
                   ),
                   SizedBox(height: 10.h),
@@ -1175,7 +1333,7 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                           value: 0.3,
                           minHeight: 8.h,
                           borderRadius: BorderRadius.circular(5.h),
-                          color: Colors.orange,
+                          color: accentYellowColor,
                           backgroundColor: weirdBlack.withOpacity(0.1),
                         ),
                       )
@@ -1344,163 +1502,164 @@ class RoomTypeCard extends ConsumerWidget {
 class AvailableRoomCard extends StatelessWidget {
   final RoomInfo info;
   final bool isAsset;
+  final bool available;
+  final VoidCallback? onTap;
 
   const AvailableRoomCard({
     super.key,
+    this.available = false,
     this.isAsset = true,
     required this.info,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: onTap ?? () {
         showModalBottomSheet(
           context: context,
           elevation: 1.0,
-          builder: (_) => DraggableScrollableSheet(
-            builder: (_, controller) => SizedBox(
-              width: 414.w,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                child: CustomScrollView(
-                  controller: controller,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 10.h),
-                          Center(
-                            child: SvgPicture.asset(
-                                "assets/images/Modal Line.svg"),
+          builder: (_) => SizedBox(
+            width: 414.w,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 10.h),
+                        Center(
+                          child:
+                              SvgPicture.asset("assets/images/Modal Line.svg"),
+                        ),
+                        SizedBox(height: 25.h),
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.r),
+                              topRight: Radius.circular(15.r),
+                            ),
+                            child: isAsset
+                                ? Image.asset(
+                                    info.media[0],
+                                    width: 414.w,
+                                    height: 175.h,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(info.media[0]),
+                                    width: 414.w,
+                                    height: 175.h,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                          SizedBox(height: 25.h),
-                          Center(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15.r),
-                                topRight: Radius.circular(15.r),
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          info.name,
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22.sp,
+                            color: weirdBlack,
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: currency(),
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                              child: isAsset
-                                  ? Image.asset(
-                                      info.media[0],
-                                      width: 414.w,
-                                      height: 175.h,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(info.media[0]),
-                                      width: 414.w,
-                                      height: 175.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            info.name,
-                            style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 22.sp,
-                              color: weirdBlack,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: currency(),
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              TextSpan(
+                                text: formatAmountInDouble(info.price),
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                TextSpan(
-                                  text: formatAmountInDouble(info.price),
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              ),
+                              TextSpan(
+                                text: "/year",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                TextSpan(
-                                  text: "/year",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Rooms Facilities",
-                            style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600, color: weirdBlack),
-                          ),
-                          SizedBox(height: 8.h),
-                        ],
-                      ),
-                    ),
-                    SliverGrid.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 5.r,
-                        mainAxisSpacing: 15.r,
-                        mainAxisExtent: 105.r,
-                      ),
-                      itemBuilder: (_, index) =>
-                          FacilityContainer(text: info.facilities[index]),
-                      itemCount: info.facilities.length,
-                    ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Gallery",
-                            style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600, color: weirdBlack),
-                          ),
-                          SizedBox(height: 8.h),
-                        ],
-                      ),
-                    ),
-                    SliverGrid.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10.r,
-                          mainAxisSpacing: 10.r,
-                          mainAxisExtent: 110.r),
-                      itemCount: info.media.length,
-                      itemBuilder: (_, index) => GestureDetector(
-                        onTap: () => context.router.pushNamed(
-                          Pages.viewMedia,
-                          extra: ViewInfo(
-                            type: DisplayType.asset,
-                            paths: info.media,
-                            current: index,
+                              )
+                            ],
                           ),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5.r),
-                          child: Image.asset(
-                            info.media[index],
-                            width: 110.r,
-                            height: 110.r,
-                            fit: BoxFit.cover,
-                          ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Rooms Facilities",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
+                        ),
+                        SizedBox(height: 8.h),
+                      ],
+                    ),
+                  ),
+                  SliverGrid.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 5.r,
+                      mainAxisSpacing: 15.r,
+                      mainAxisExtent: 105.r,
+                    ),
+                    itemBuilder: (_, index) =>
+                        FacilityContainer(text: info.facilities[index]),
+                    itemCount: info.facilities.length,
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Gallery",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
+                        ),
+                        SizedBox(height: 8.h),
+                      ],
+                    ),
+                  ),
+                  SliverGrid.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10.r,
+                        mainAxisSpacing: 10.r,
+                        mainAxisExtent: 110.r),
+                    itemCount: info.media.length,
+                    itemBuilder: (_, index) => GestureDetector(
+                      onTap: () => context.router.pushNamed(
+                        Pages.viewMedia,
+                        extra: ViewInfo(
+                          type: DisplayType.asset,
+                          paths: info.media,
+                          current: index,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5.r),
+                        child: Image.asset(
+                          info.media[index],
+                          width: 110.r,
+                          height: 110.r,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -1514,67 +1673,97 @@ class AvailableRoomCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
           color: null,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.r),
-                topRight: Radius.circular(10.r),
-              ),
-              child: Image.asset(
-                info.media[0],
-                fit: BoxFit.cover,
-                width: 185.w,
-                height: 140.h,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.r),
+                    topRight: Radius.circular(10.r),
+                  ),
+                  child: isAsset ? Image.asset(
+                    info.media[0],
+                    fit: BoxFit.cover,
+                    width: 185.w,
+                    height: 140.h,
+                  ) : Image.file(
+                    File(info.media[0]),
+                    fit: BoxFit.cover,
+                    width: 185.w,
+                    height: 140.h,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        info.name,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      SizedBox(height: 8.h),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: currency(),
+                              style: context.textTheme.bodySmall!.copyWith(
+                                color: appBlue,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            TextSpan(
+                              text: formatAmountInDouble(info.price),
+                              style: context.textTheme.bodySmall!.copyWith(
+                                color: appBlue,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "/year",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                color: appBlue,
+                                fontSize: 10.sp,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Positioned(
+              top: 10.r,
+              left: 10.r,
+              child: Container(
+                width: 60.w,
+                height: 25.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: infoRoomsLeftBackground,
+                  borderRadius: BorderRadius.circular(5.r),
+                ),
+                child: Text(
+                  "Available",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: infoRoomsLeft,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13.sp,
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: 8.h),
-            Padding(
-              padding: EdgeInsets.only(left: 10.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    info.name,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600, color: weirdBlack),
-                  ),
-                  SizedBox(height: 8.h),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: currency(),
-                          style: context.textTheme.bodySmall!.copyWith(
-                            color: appBlue,
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        TextSpan(
-                          text: formatAmountInDouble(info.price),
-                          style: context.textTheme.bodySmall!.copyWith(
-                            color: appBlue,
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "/year",
-                          style: context.textTheme.bodySmall!.copyWith(
-                            color: appBlue,
-                            fontSize: 10.sp,
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),
@@ -1707,46 +1896,65 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                         ),
                         SizedBox(height: 42.h),
                         if (hasEnough && status)
-                          ElevatedButton(
-                            onPressed: () => context.router.pop(),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: appBlue,
-                            ),
-                            child: Text(
-                              "Ok, thanks",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              width: 414.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.r),
+                                color: appBlue,
+                              ),
+                              child: Text(
+                                "Ok, thanks",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         if (hasEnough && !status)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appBlue,
-                                ),
-                                child: Text(
-                                  "Cancel",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    border: Border.all(color: appBlue),
+                                  ),
+                                  child: Text(
+                                    "Cancel",
+                                    style: context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: appBlue,
+                                    ),
                                   ),
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appBlue,
-                                ),
-                                child: Text(
-                                  "Try again",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: appBlue,
+                                  ),
+                                  child: Text(
+                                    "Try again",
+                                    style: context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1755,36 +1963,48 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                         if (!hasEnough)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appBlue,
-                                ),
-                                child: Text(
-                                  "Cancel",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    border: Border.all(color: appBlue),
+                                  ),
+                                  child: Text(
+                                    "Cancel",
+                                    style: context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: appBlue,
+                                    ),
                                   ),
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () =>
-                                    context.router.pushNamed(Pages.topUp),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appBlue,
-                                ),
-                                child: Text(
-                                  "Top-up",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                              GestureDetector(
+                                onTap: () => context.router.pushNamed(Pages.topUp),
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: appBlue,
+                                  ),
+                                  child: Text(
+                                    "Top-up",
+                                    style: context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
-                          )
+                          ),
                       ],
                     ),
                   )
@@ -1836,7 +2056,7 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                         ? paleBlue
                                         : null),
                                 child: Text(
-                                  widget.info.roomsLeft[index].name,
+                                  widget.info.rooms[index].name,
                                   style: context.textTheme.bodyMedium!.copyWith(
                                       color: selectedRoom != null &&
                                               selectedRoom == index
@@ -1849,19 +2069,26 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                           ),
                         ),
                         SizedBox(height: 42.h),
-                        ElevatedButton(
-                          onPressed: () => setState(() => selected = true),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appBlue,
-                          ),
-                          child: Text(
-                            "Pay ${currency()}${formatAmountInDouble(widget.info.price)}",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                        GestureDetector(
+                          onTap: () => setState(() => selected = true),
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: appBlue,
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              "Pay ${currency()}${formatAmountInDouble(widget.info.price)}",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
+
                       ],
                     ),
                   ),
@@ -2165,97 +2392,143 @@ class WalletSlider extends ConsumerStatefulWidget {
 class _WalletSliderState extends ConsumerState<WalletSlider> {
   bool showBalance = true, showExpenses = true;
 
+  double scrollValue = 0.0;
+
   String amount(int index) {
     double amount =
         (index == 0) ? ref.read(walletProvider) : ref.read(expensesProvider);
     return "${currency()}${formatAmount(amount.toStringAsFixed(0))}";
   }
 
+  final ScrollController controller = ScrollController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 414.w,
-      height: 145.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (_, index) => Container(
-          width: 270.w,
-          height: 145.h,
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.r),
-            color: index == 0 ? appBlue : const Color(0xFF116BAE),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 15.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Total ${index == 0 ? "Balance" : "Expenses"}",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
+    return Column(
+      children: [
+        NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            WidgetsBinding.instance.addPostFrameCallback(
+                (_) => setState(() => scrollValue = controller.offset / 162.0));
+            return true;
+          },
+          child: SizedBox(
+            width: 414.w,
+            height: 145.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              controller: controller,
+              itemBuilder: (_, index) => Container(
+                width: 270.w,
+                height: 145.h,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.r),
+                  color: index == 0 ? appBlue : const Color(0xFF116BAE),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 15.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Total ${index == 0 ? "Balance" : "Expenses"}",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => setState(
+                            () {
+                              if (index == 0) {
+                                showBalance = !showBalance;
+                              } else {
+                                showExpenses = !showExpenses;
+                              }
+                            },
+                          ),
+                          child: AnimatedSwitcherZoom.zoomIn(
+                            duration: const Duration(milliseconds: 500),
+                            child: SvgPicture.asset(
+                              "assets/images/Eye ${((index == 0) ? showBalance : showExpenses) ? "Hidden" : "Visible"}.svg",
+                              key: ValueKey<bool>(
+                                ((index == 0) ? showBalance : showExpenses),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () => setState(
-                      () {
-                        if (index == 0) {
-                          showBalance = !showBalance;
-                        } else {
-                          showExpenses = !showExpenses;
-                        }
-                      },
-                    ),
-                    child: AnimatedSwitcherZoom.zoomIn(
+                    SizedBox(height: 25.h),
+                    AnimatedSwitcherTranslation.top(
                       duration: const Duration(milliseconds: 500),
-                      child: SvgPicture.asset(
-                        "assets/images/Eye ${((index == 0) ? showBalance : showExpenses) ? "Hidden" : "Visible"}.svg",
+                      child: Text(
+                        ((index == 0) ? showBalance : showExpenses)
+                            ? amount(index)
+                            : "********",
                         key: ValueKey<bool>(
-                          ((index == 0) ? showBalance : showExpenses),
+                            ((index == 0) ? showBalance : showExpenses)),
+                        style: context.textTheme.headlineMedium!.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Inter",
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  )
-                ],
-              ),
-              SizedBox(height: 25.h),
-              AnimatedSwitcherTranslation.top(
-                duration: const Duration(milliseconds: 500),
-                child: Text(
-                  ((index == 0) ? showBalance : showExpenses)
-                      ? amount(index)
-                      : "********",
-                  key: ValueKey<bool>(
-                      ((index == 0) ? showBalance : showExpenses)),
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontFamily: "Inter",
-                    color: Colors.white,
-                  ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      index == 0
+                          ? "Available funds in wallet"
+                          : "Amount spent on acquires",
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 10.h),
-              Text(
-                index == 0
-                    ? "Available funds in wallet"
-                    : "Amount spent on acquires",
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
+              separatorBuilder: (_, __) => SizedBox(width: 20.w),
+              itemCount: 2,
+            ),
           ),
         ),
-        separatorBuilder: (_, __) => SizedBox(width: 20.w),
-        itemCount: 2,
-      ),
+        SizedBox(height: 25.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 10.r,
+              width: 10.r,
+              decoration: BoxDecoration(
+                  color:
+                      Color.lerp(appBlue, const Color(0xFFD9EAFF), scrollValue),
+                  shape: BoxShape.circle),
+            ),
+            SizedBox(width: 10.w),
+            Container(
+              height: 10.r,
+              width: 10.r,
+              decoration: BoxDecoration(
+                  color:
+                      Color.lerp(const Color(0xFFD9EAFF), appBlue, scrollValue),
+                  shape: BoxShape.circle),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -2321,8 +2594,8 @@ class TransactionContainer extends StatelessWidget {
                         ),
                         Text(
                           "${transaction.type == TransactionType.credit ? "+" : "-"}"
-                              "${currency()}"
-                              "${formatAmountInDouble(transaction.amount)}",
+                          "${currency()}"
+                          "${formatAmountInDouble(transaction.amount)}",
                           style: context.textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
@@ -2342,11 +2615,13 @@ class TransactionContainer extends StatelessWidget {
                         Text(
                           fromStatus(transaction.status),
                           style: context.textTheme.bodyMedium!.copyWith(
-                            color: transaction.status == TransactionStatus.success
-                                ? successColor
-                                : (transaction.status == TransactionStatus.failed
-                                ? failColor
-                                : pendingColor),
+                            color:
+                                transaction.status == TransactionStatus.success
+                                    ? successColor
+                                    : (transaction.status ==
+                                            TransactionStatus.failed
+                                        ? failColor
+                                        : pendingColor),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -2567,8 +2842,7 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
               blurRadius: 6.0,
               spreadRadius: 1.0,
             )
-          ]
-      ),
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -2605,8 +2879,8 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
                         ),
                         Text(
                           "${transaction.type == TransactionType.credit ? "+" : "-"}"
-                              "${currency()}"
-                              "${formatAmountInDouble(transaction.amount)}",
+                          "${currency()}"
+                          "${formatAmountInDouble(transaction.amount)}",
                           style: context.textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
@@ -2626,13 +2900,13 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
                         Text(
                           fromStatus(transaction.status),
                           style: context.textTheme.bodyMedium!.copyWith(
-                              color:
-                              transaction.status == TransactionStatus.success
+                              color: transaction.status ==
+                                      TransactionStatus.success
                                   ? successColor
                                   : (transaction.status ==
-                                  TransactionStatus.failed
-                                  ? failColor
-                                  : pendingColor),
+                                          TransactionStatus.failed
+                                      ? failColor
+                                      : pendingColor),
                               fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -2889,8 +3163,7 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
               blurRadius: 6.0,
               spreadRadius: 1.0,
             )
-          ]
-      ),
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -3091,23 +3364,22 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          transaction.purpose,
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        Text(
-                          "${transaction.type == TransactionType.credit ? "+" : "-"}"
-                              "${currency()}"
-                              "${formatAmountInDouble(transaction.amount)}",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                      ]
-                    ),
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            transaction.purpose,
+                            style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600, color: weirdBlack),
+                          ),
+                          Text(
+                            "${transaction.type == TransactionType.credit ? "+" : "-"}"
+                            "${currency()}"
+                            "${formatAmountInDouble(transaction.amount)}",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600, color: weirdBlack),
+                          ),
+                        ]),
                     SizedBox(height: 5.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3122,13 +3394,13 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
                         Text(
                           fromStatus(transaction.status),
                           style: context.textTheme.bodyMedium!.copyWith(
-                              color:
-                              transaction.status == TransactionStatus.success
+                              color: transaction.status ==
+                                      TransactionStatus.success
                                   ? successColor
                                   : (transaction.status ==
-                                  TransactionStatus.failed
-                                  ? failColor
-                                  : pendingColor),
+                                          TransactionStatus.failed
+                                      ? failColor
+                                      : pendingColor),
                               fontWeight: FontWeight.w500),
                         ),
                       ],

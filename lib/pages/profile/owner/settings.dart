@@ -46,7 +46,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
         image: "assets/images/Settings.svg",
       ),
       _Link(
-        name: "About",
+        name: "Terms of Service",
         route: Pages.about,
         image: "assets/images/Danger.svg",
       ),

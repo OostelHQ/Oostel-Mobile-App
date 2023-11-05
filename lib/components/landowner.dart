@@ -33,6 +33,7 @@ class Landowner extends User {
           image: image,
           contact: contact,
           religion: religion,
+          type: UserType.landlord,
           gender: gender,
           dateJoined: dateJoined,
           profileViews: profileViews,
@@ -42,6 +43,7 @@ class Landowner extends User {
 
   @override
   List<Object?> get props => [id];
+
 
   factory Landowner.fromJson(Map<String, dynamic> map) => Landowner(
         id: map["_id"],

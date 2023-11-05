@@ -39,6 +39,7 @@ class Student extends User {
     image: image,
     contact: contact,
     gender: gender,
+    type: UserType.student,
     religion: religion,
     dateJoined: dateJoined,
     profileViews: profileViews,

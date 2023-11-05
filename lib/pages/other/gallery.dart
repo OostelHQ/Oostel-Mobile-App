@@ -80,6 +80,7 @@ class _ViewMediaState extends State<ViewMedia> {
                     : widget.info.paths.length,
                 loadingBuilder: (context, event) => const Center(child: loader),
                 pageController: pageController,
+                backgroundDecoration: const BoxDecoration(color: Color(0xFFFBFDFF)),
               ),
             ),
           ],

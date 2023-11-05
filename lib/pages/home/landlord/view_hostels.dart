@@ -63,15 +63,22 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
             children: [
               SpecialForm(
                 controller: controller,
-                width: 414.w,
                 height: 50.h,
-                hint: "Search Hostels ...",
-                prefix: SizedBox(
-                  height: 50.h,
-                  width: 30.w,
-                  child: const Center(
-                    child: Icon(Boxicons.bx_search, color: weirdBlack20),
-                  ),
+                width: 414.w,
+                hint: "Search Hostels...",
+                prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
+                borderColor: Colors.transparent,
+                fillColor: Colors.white,
+                decoration: BoxDecoration(
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(4.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 6.0,
+                        spreadRadius: 1.0,
+                      )
+                    ]
                 ),
               ),
               SizedBox(height: 20.h),
