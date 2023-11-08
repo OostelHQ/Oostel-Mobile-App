@@ -35,7 +35,6 @@ class _StepOneState extends State<StepOne> {
     super.initState();
     info = {
       "name": "",
-      "image": Uint8List(0),
       "bedrooms": 0,
       "bathrooms": 0,
       "area": null,
@@ -1724,12 +1723,14 @@ class StepSix extends StatefulWidget {
 }
 
 class _StepSixState extends State<StepSix> {
-  late bool isEmpty;
+  late List<Uint8List> media;
+  int page = 0;
 
   @override
   void initState() {
     super.initState();
-    isEmpty = widget.info["image"].isEmpty;
+    media = toDataList(widget.info["media"]);
+    widget.info["media"] = media;
   }
 
   @override
@@ -1761,10 +1762,7 @@ class _StepSixState extends State<StepSix> {
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() {
-                  widget.info["image"] = Uint8List(0);
-                  isEmpty = true;
-                }),
+                onSelected: (result) => setState(() => media.clear()),
               ),
             ),
             SizedBox(height: 18.h),
@@ -1788,7 +1786,7 @@ class _StepSixState extends State<StepSix> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  "Hostel Picture",
+                  page == 0 ? "Hostel Picture" : "Environment Picture",
                   style: context.textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: weirdBlack,
@@ -1796,8 +1794,10 @@ class _StepSixState extends State<StepSix> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  "Upload a clear front view image of your hostel building "
-                  "to attract tenants with a welcoming facade",
+                  page == 0 ? "Upload a clear front view image of your hostel building "
+                  "to attract tenants with a welcoming facade" :
+                  "Capture the essence of your hostel environment in pictures. "
+                  "Showcase the surroundings to attract potential tenants.",
                   textAlign: TextAlign.center,
                   style: context.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
@@ -1805,32 +1805,42 @@ class _StepSixState extends State<StepSix> {
                   ),
                 ),
                 SizedBox(height: 44.h),
+                if(page == 0 || (page == 1 && media.length == 1))
                 GestureDetector(
-                  onTap: () => FileManager.single(type: FileType.image)
-                      .then((response) async {
-                    if (response == null) return;
-                    Uint8List data =
+                  onTap: () {
+                    if(page == 0) {
+                      FileManager.single(type: FileType.image)
+                          .then((response) async {
+                        if (response == null) return;
+                        Uint8List data =
                         await FileManager.convertSingleToData(response.path);
-                    setState(() {
-                      widget.info["image"] = data;
-                      isEmpty = false;
-                    });
-                  }),
+                        setState(() => media.add(data));
+                      });
+                    } else {
+                      FileManager.multiple(type: FileType.image).then((response) async {
+                        if(response.isEmpty) return;
+                        List<String> paths = response.map((e) => e.path).toList();
+                        List<Uint8List> data = await FileManager.convertToData(paths);
+                        setState(() => media.addAll(data));
+                      });
+                    }
+
+                  },
                   child: Container(
                     width: 350.w,
                     height: 270.h,
                     padding: EdgeInsets.symmetric(horizontal: 25.w),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.r),
-                      color: isEmpty ? paleBlue : null,
-                      image: isEmpty
+                      color: media.isEmpty ? paleBlue : null,
+                      image: media.isEmpty
                           ? null
                           : DecorationImage(
-                              image: MemoryImage(widget.info["image"]),
+                              image: MemoryImage(media.first),
                               fit: BoxFit.cover,
                             ),
                     ),
-                    child: isEmpty
+                    child: (media.isEmpty && page == 0) || (media.length == 1 && page == 1)
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1842,7 +1852,8 @@ class _StepSixState extends State<StepSix> {
                               ),
                               SizedBox(height: 16.h),
                               Text(
-                                "Upload a front-view picture of your hostel",
+                                page == 0 ? "Upload a front-view picture of your hostel"
+                                : "Upload the environment pictures of your hostel",
                                 textAlign: TextAlign.center,
                                 style: context.textTheme.bodyMedium!.copyWith(
                                   color: weirdBlack,
@@ -1863,6 +1874,55 @@ class _StepSixState extends State<StepSix> {
                         : null,
                   ),
                 ),
+                if(page == 1 && media.length > 1)
+                  CustomScrollView(
+                    slivers: [
+                      SliverGrid.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10.r,
+                          mainAxisSpacing: 10.r,
+                          mainAxisExtent: 110.r,
+                        ),
+                        itemCount: media.length - 1,
+                        itemBuilder: (_, index) => Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5.r),
+                              child: Image.memory(
+                                media[index + 1],
+                                width: 110.r,
+                                height: 110.r,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              right: 10.r,
+                              top: 5.r,
+                              child: GestureDetector(
+                                onTap: () =>
+                                    setState(() => media.removeAt(index + 1)),
+                                child: Icon(Boxicons.bx_x,
+                                    color: Colors.white, size: 26.r),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]
+                  ),
+                if(page == 1)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.w),
+                  child: Text(
+                    "*Note that you must to upload minimum of 4 and above images before you can proceed.",
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodySmall!.copyWith(
+                      color: weirdBlack50,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
                 SizedBox(height: 250.h),
               ],
             ),
@@ -1879,7 +1939,13 @@ class _StepSixState extends State<StepSix> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () => context.router.pop(),
+              onTap: () {
+                if(page == 1) {
+                  setState(() => page = 0);
+                } else {
+                  context.router.pop();
+                }
+              },
               child: Container(
                 width: 170.w,
                 height: 50.h,
@@ -1908,9 +1974,12 @@ class _StepSixState extends State<StepSix> {
             ),
             GestureDetector(
               onTap: () {
-                if (isEmpty) {
+                if (media.isEmpty) {
                   showError(
                       "Please choose an image for your hostel front view");
+                  return;
+                } else if(media.length < 5) {
+                  showError("You need to select at least 5 images in total");
                   return;
                 }
 
@@ -2060,7 +2129,7 @@ class _StepSevenState extends State<StepSeven> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(5.r),
                           child: Image.memory(
-                            widget.info["image"],
+                            widget.info["media"].first,
                             width: 114.w,
                             height: 100.h,
                             fit: BoxFit.cover,
@@ -2129,7 +2198,7 @@ class _StepSevenState extends State<StepSeven> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(5.r),
                           child: Image.memory(
-                            widget.info["image"],
+                            widget.info["media"].first,
                             width: 114.w,
                             height: 100.h,
                             fit: BoxFit.cover,
@@ -2421,7 +2490,7 @@ class _StepEightState extends State<StepEight> {
                                     .then((value) => setState(() {
                                           if (value == null) return;
                                           rooms.add(value as RoomInfo);
-                                        }));
+                                        },),);
                               },
                               child: const _NoRoom(),
                             )
@@ -3767,6 +3836,14 @@ List<RoomInfo> toRoomList(List<dynamic> list) {
   List<RoomInfo> result = [];
   for (var element in list) {
     result.add(element as RoomInfo);
+  }
+  return result;
+}
+
+List<Uint8List> toDataList(List<dynamic> list) {
+  List<Uint8List> result = [];
+  for (var element in list) {
+    result.add(element as Uint8List);
   }
   return result;
 }

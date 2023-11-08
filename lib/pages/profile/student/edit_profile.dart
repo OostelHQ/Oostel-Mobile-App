@@ -334,7 +334,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                      "Ready to say goodbye? Deleting your account is a final step – "
+                          "make sure you've backed up any important data before proceeding.",
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,
@@ -411,7 +412,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        loremIpsum.substring(0, 100),
+                        "Fynda wants to ensure that users are deleting their account intentionally.",
                         textAlign: TextAlign.center,
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: weirdBlack50,

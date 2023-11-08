@@ -25,7 +25,7 @@ class _HostelSettingsPageState extends ConsumerState<HostelSettingsPage> {
   void initState() {
     super.initState();
 
-    HostelInfo info = ref.read(ownerHostelProvider);
+    HostelInfo info = ref.read(ownerHostelsProvider).first;
 
     name = TextEditingController(text: info.name);
     number = TextEditingController();
@@ -72,7 +72,7 @@ class _HostelSettingsPageState extends ConsumerState<HostelSettingsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                  "Update your hostel details as needed. Keep your listing accurate and attractive to potential tenants.",
                   style: context.textTheme.bodyMedium!.copyWith(
                     color: weirdBlack75,
                     fontWeight: FontWeight.w500,

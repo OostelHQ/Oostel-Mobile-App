@@ -328,7 +328,7 @@ class StudentProfileSettingsPage extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                "Explore your settings to customize your preferences and enhance your interaction with our platform.",
                 style: context.textTheme.bodyMedium!.copyWith(
                   color: weirdBlack75,
                   fontWeight: FontWeight.w500,

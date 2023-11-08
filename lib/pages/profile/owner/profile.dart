@@ -20,12 +20,6 @@ class OwnerProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
-  void inviteAgent() => showModalBottomSheet(
-        context: context,
-        builder: (_) => const _AgentInvite(),
-        isScrollControlled: true,
-      );
-
   @override
   Widget build(BuildContext context) {
     Landowner owner = ref.watch(currentUserProvider) as Landowner;
@@ -82,15 +76,16 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                             width: 100.r,
                             height: 100.r,
                             decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xFFE0E5EC),
-                                    blurRadius: 1.0,
-                                    spreadRadius: 2.0,
-                                  )
-                                ]),
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFFE0E5EC),
+                                  blurRadius: 1.0,
+                                  spreadRadius: 2.0,
+                                )
+                              ],
+                            ),
                             alignment: Alignment.center,
                             child: Container(
                               width: 95.r,
@@ -244,7 +239,11 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () => showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => const AgentInvite(),
+                          ),
                           child: Container(
                             width: 180.w,
                             height: 50.h,
@@ -420,22 +419,21 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                     SizedBox(height: 15.h),
                     ProfileInfoCard(
                       image: "assets/images/Profile Blue Location.svg",
-                      header: owner.address,
+                      header: allHostels.first.name,
                       text: "Hostel name",
                     ),
                     SizedBox(height: 16.h),
                     ProfileInfoCard(
                       image: "assets/images/Profile Blue Location.svg",
-                      header: owner.address,
+                      header: allHostels.first.id,
                       text: "Identification number",
                     ),
                     SizedBox(height: 16.h),
                     ProfileInfoCard(
                       image: "assets/images/Profile Blue Location.svg",
-                      header: owner.address,
+                      header: allHostels.first.address,
                       text: "Address",
                     ),
-                    SizedBox(height: 16.h),
                     SizedBox(height: 24.h),
                     ConstrainedBox(
                       constraints: BoxConstraints(
@@ -537,14 +535,14 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
   }
 }
 
-class _AgentInvite extends StatefulWidget {
-  const _AgentInvite({super.key});
+class AgentInvite extends StatefulWidget {
+  const AgentInvite({super.key});
 
   @override
-  State<_AgentInvite> createState() => _AgentInviteState();
+  State<AgentInvite> createState() => _AgentInviteState();
 }
 
-class _AgentInviteState extends State<_AgentInvite> {
+class _AgentInviteState extends State<AgentInvite> {
   final TextEditingController email = TextEditingController(),
       note = TextEditingController();
 

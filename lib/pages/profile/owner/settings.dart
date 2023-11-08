@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
@@ -42,7 +44,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
       ),
       _Link(
         name: "Co-workers",
-        route: Pages.ownerProfile,
+        route: Pages.agents,
         image: "assets/images/Agents.svg",
       ),
       _Link(
@@ -178,6 +180,11 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(currentUserProvider);
+    List<HostelInfo> allHostels = ref.watch(ownerHostelsProvider);
+    int totalRooms = 0;
+    for (HostelInfo info in allHostels) {
+      totalRooms += info.rooms.length;
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -185,57 +192,168 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 25.h),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Profile",
-                    style: context.textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22.sp,
-                    ),
+                SizedBox(
+                  height: 150.h,
+                  child: Stack(
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 100.h,
+                          minWidth: 414.w,
+                          maxHeight: 100.h,
+                          maxWidth: 414.w,
+                        ),
+                        child: const ColoredBox(
+                          color: paleBlue,
+                        ),
+                      ),
+                      Positioned(
+                        left: 20.w,
+                        bottom: 10.r,
+                        child: Container(
+                          width: 100.r,
+                          height: 100.r,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFFE0E5EC),
+                                blurRadius: 1.0,
+                                spreadRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 95.r,
+                            height: 95.r,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(user.image),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 20.h),
-                Container(
-                  width: 125.r,
-                  height: 125.r,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xFFE0E5EC),
-                          blurRadius: 1.0,
-                          spreadRadius: 2.0,
-                        )
-                      ]
+                Text(
+                  user.mergedNames,
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    color: weirdBlack,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22.sp,
                   ),
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 118.r,
-                    height: 118.r,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(user.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                ),
+                Text(
+                  user.email,
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: weirdBlack75,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  user.contact,
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: weirdBlack75,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Text(
-                  user.mergedNames,
-                  style: context.textTheme.bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/images/Roomate Info Location.svg",
+                      width: 15.r,
+                      height: 15.r,
+                      color: weirdBlack50,
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      "Nigeria",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(width: 15.w),
+                    SvgPicture.asset(
+                      "assets/images/Calender.svg",
+                      width: 15.r,
+                      height: 15.r,
+                      color: weirdBlack50,
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      "Joined ${formatDateRaw(user.dateJoined)}",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50, fontWeight: FontWeight.w500),
+                    ),
+                  ],
                 ),
-                Text(
-                  "Active Now",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50, fontWeight: FontWeight.w500),
+                SizedBox(height: 6.h),
+                Row(
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                            "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                            style: context.textTheme.bodySmall!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          TextSpan(
+                            text: " Hostels",
+                            style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 15.w),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                            "${totalRooms < 10 ? "0" : ""}$totalRooms",
+                            style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " Rooms",
+                            style: context.textTheme.bodySmall!.copyWith(
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 414.w,
+                    minHeight: 1.h,
+                    maxWidth: 414.w,
+                    maxHeight: 1.h,
+                  ),
+                  child: const ColoredBox(color: Colors.black12),
                 ),
                 SizedBox(height: 45.h),
                 Expanded(
@@ -332,7 +450,7 @@ class OwnerProfileSettingsPage extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                "Explore your settings to customize your preferences and enhance your interaction with our platform.",
                 style: context.textTheme.bodyMedium!.copyWith(
                   color: weirdBlack75,
                   fontWeight: FontWeight.w500,

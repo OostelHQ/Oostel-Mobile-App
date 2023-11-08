@@ -88,13 +88,13 @@ class FileManager
   static Future<Uint8List> convertSingleToData(String path) async => File(path).readAsBytes();
 
 
-  static List<Uint8List> convertToData(List<String?> data)
+  static Future<List<Uint8List>> convertToData(List<String?> data) async
   {
     List<Uint8List> response = [];
     for(var path in data)
     {
       File f = File(path!);
-      response.add(f.readAsBytesSync());
+      response.add(await f.readAsBytes());
     }
     return response;
   }

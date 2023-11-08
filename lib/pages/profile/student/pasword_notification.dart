@@ -52,7 +52,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                  "Enhance your security – Update your password to keep your account safe and protected from unauthorized access.",
                   style: context.textTheme.bodyMedium!.copyWith(
                     color: weirdBlack75,
                     fontWeight: FontWeight.w500,
@@ -207,7 +207,8 @@ class _ProfileNotificationPageState extends State<ProfileNotificationPage> {
             child: Column(
               children: [
                 Text(
-                  "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                  "Stay informed with ease – Manage your notification preferences "
+                      "to receive updates and alerts tailored to your needs.",
                   style: context.textTheme.bodyMedium!.copyWith(
                     color: weirdBlack75,
                     fontWeight: FontWeight.w500,

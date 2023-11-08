@@ -95,6 +95,7 @@ class Pages
   static const String stepTen = 'step-ten';
 
   static const String agents = 'agents';
+  static const String viewAgent = 'view-agent';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

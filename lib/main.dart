@@ -17,30 +17,30 @@ import 'package:my_hostel/pages/home/landlord/create-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/dashboard.dart';
 import 'package:my_hostel/pages/home/landlord/landlord_hostel_details_page.dart';
 import 'package:my_hostel/pages/home/landlord/view_hostels.dart';
+import 'package:my_hostel/pages/home/notification.dart';
 import 'package:my_hostel/pages/home/student/dashboard.dart';
 import 'package:my_hostel/pages/home/student/explore.dart';
 import 'package:my_hostel/pages/home/student/filter.dart';
 import 'package:my_hostel/pages/home/student/student_hostel_details_page.dart';
-import 'package:my_hostel/pages/home/notification.dart';
 import 'package:my_hostel/pages/home/student/view_acquires.dart';
 import 'package:my_hostel/pages/home/student/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
 import 'package:my_hostel/pages/profile/about.dart';
+import 'package:my_hostel/pages/profile/help.dart';
 import 'package:my_hostel/pages/profile/owner/agents.dart';
 import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
 import 'package:my_hostel/pages/profile/owner/hostel_settings.dart';
 import 'package:my_hostel/pages/profile/owner/profile.dart';
+import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
 import 'package:my_hostel/pages/profile/student/edit_profile.dart';
-import 'package:my_hostel/pages/profile/help.dart';
+import 'package:my_hostel/pages/profile/student/other_student_profile.dart';
 import 'package:my_hostel/pages/profile/student/pasword_notification.dart';
 import 'package:my_hostel/pages/profile/student/profile.dart';
 import 'package:my_hostel/pages/profile/student/settings.dart';
-import 'package:my_hostel/pages/profile/owner/settings.dart';
-import 'package:my_hostel/pages/profile/student/other_student_profile.dart';
-import 'package:my_hostel/pages/profile/transaction.dart';
 import 'package:my_hostel/pages/profile/student/wallet.dart';
+import 'package:my_hostel/pages/profile/transaction.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyHostelApp()));
@@ -318,6 +318,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.agents.path,
           name: Pages.agents,
           builder: (_, __) => const AgentsPage(),
+        ),
+        GoRoute(
+          path: Pages.viewAgent.path,
+          name: Pages.viewAgent,
+          builder: (_, state) => ViewAgentPage(data: state.extra as AgentData),
         )
       ],
     );

@@ -6,10 +6,12 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
@@ -17,9 +19,9 @@ class EditOwnerProfilePage extends ConsumerStatefulWidget {
   const EditOwnerProfilePage({super.key});
 
   @override
-  ConsumerState<EditOwnerProfilePage> createState() => _EditOwnerProfilePageState();
+  ConsumerState<EditOwnerProfilePage> createState() =>
+      _EditOwnerProfilePageState();
 }
-
 
 class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   String? profileImage;
@@ -28,13 +30,15 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   String? level;
   String? religion;
   String? age;
-
+  DateTime? pickedDate;
 
   late TextEditingController email;
   late TextEditingController fullName;
   late TextEditingController number;
   late TextEditingController denomination;
   late TextEditingController hobby;
+
+  late TextEditingController street, region, country;
 
   @override
   void initState() {
@@ -47,15 +51,29 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     number = TextEditingController(text: student.contact);
     denomination = TextEditingController(text: student.denomination);
 
-
-    //profileImage = student.image;
+    profileImage = student.image;
 
     religion = student.religion;
     gender = student.gender;
+
+    street = TextEditingController();
+    region = TextEditingController();
+    country = TextEditingController();
+
+    pickedDate = student.dob;
+    hobby = TextEditingController(
+      text: pickedDate == null
+          ? ""
+          : formatDate(DateFormat("dd/MM/yyyy").format(pickedDate!),
+              shorten: true),
+    );
   }
 
   @override
   void dispose() {
+    street.dispose();
+    region.dispose();
+    country.dispose();
     fullName.dispose();
     denomination.dispose();
     number.dispose();
@@ -188,17 +206,39 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                     ),
                     SizedBox(height: 16.h),
                     Text(
-                      "State of Origin",
+                      "Street",
                       style: context.textTheme.bodyMedium!.copyWith(
                           color: weirdBlack75, fontWeight: FontWeight.w500),
                     ),
-                    ComboBox(
-                      hint: "Select State",
-                      value: origin,
-                      dropdownItems: states,
-                      onChanged: (val) => setState(() => origin = val),
-                      buttonWidth: 414.w,
-                      icon: const Icon(Boxicons.bxs_down_arrow),
+                    SpecialForm(
+                      controller: street,
+                      width: 414.w,
+                      height: 50.h,
+                      hint: "i.e Behind Abans Factory, Accord Junction",
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "State/Region",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75, fontWeight: FontWeight.w500),
+                    ),
+                    SpecialForm(
+                      controller: region,
+                      width: 414.w,
+                      height: 50.h,
+                      hint: "i.e Ogun State",
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Country",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75, fontWeight: FontWeight.w500),
+                    ),
+                    SpecialForm(
+                      controller: country,
+                      width: 414.w,
+                      height: 50.h,
+                      hint: "i.e Nigeria",
                     ),
                     SizedBox(height: 16.h),
                     Text(
@@ -211,20 +251,6 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                       value: gender,
                       dropdownItems: const ["Male", "Female"],
                       onChanged: (val) => setState(() => gender = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow),
-                      buttonWidth: 414.w,
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "School Level",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    ComboBox(
-                      hint: "Select Level",
-                      value: level,
-                      dropdownItems: const ["100", "200", "300", "400", "500", "600", "700", "Post Graduate"],
-                      onChanged: (val) => setState(() => level = val),
                       icon: const Icon(Boxicons.bxs_down_arrow),
                       buttonWidth: 414.w,
                     ),
@@ -243,59 +269,72 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                       buttonWidth: 414.w,
                     ),
                     SizedBox(height: 16.h),
+                    if (religion != null && religion == "Christianity")
+                      Text(
+                        "Denomination",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                    if (religion != null && religion == "Christianity")
+                      SpecialForm(
+                        controller: denomination,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "What is the name of your church or mosque?",
+                      ),
+                    if (religion != null && religion == "Christianity")
+                      SizedBox(height: 16.h),
                     Text(
-                      "Age",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    ComboBox(
-                      hint: "Choose Age Range",
-                      value: age,
-                      dropdownItems: const ["15 - 20", "21 - 25", "25 - 30", "30+"],
-                      onChanged: (val) => setState(() => age = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow),
-                      buttonWidth: 414.w,
-                    ),
-                    SizedBox(height: 16.h),
-                    if(religion != null && religion == "Christianity")
-                    Text(
-                      "Denomination",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    if(religion != null && religion == "Christianity")
-                    SpecialForm(
-                      controller: denomination,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "What is the name of your church or mosque?",
-                    ),
-                    if(religion != null && religion == "Christianity")
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Hobbies",
+                      "Date of Birth",
                       style: context.textTheme.bodyMedium!.copyWith(
                           color: weirdBlack75, fontWeight: FontWeight.w500),
                     ),
                     SpecialForm(
+                      prefix: IconButton(
+                        splashRadius: 0.01,
+                        iconSize: 16.r,
+                        icon: const Icon(
+                          Icons.calendar_month_rounded,
+                          color: weirdBlack50,
+                        ),
+                        onPressed: () async {
+                          pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime(2100));
+                          if (pickedDate != null) {
+                            setState(
+                              () => hobby.text = formatDate(
+                                  DateFormat("dd/MM/yyyy").format(pickedDate!),
+                                  shorten: true),
+                            );
+                          }
+                        },
+                      ),
                       controller: hobby,
                       width: 414.w,
+                      hint: "Jan 1, 1960",
                       height: 50.h,
-                      hint: "What do you like doing?",
+                      readOnly: true,
                     ),
                     SizedBox(height: 50.h),
-                    ElevatedButton(
-                      onPressed: () => context.router.pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: appBlue,
-                        minimumSize: Size(414.w, 50.h),
-                        maximumSize: Size(414.w, 50.h),
-                      ),
-                      child: Text(
-                        "Save Changes",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                    GestureDetector(
+                      onTap: () => context.router.pop(),
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.r),
+                          color: appBlue,
+                        ),
+                        child: Text(
+                          "Save Changes",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -317,31 +356,37 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                      "Ready to say goodbye? Deleting your account is a final step – "
+                      "make sure you've backed up any important data before proceeding.",
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(height: 28.h),
-                    ElevatedButton(
-                      onPressed: () => context.router.pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        minimumSize: Size(414.w, 50.h),
-                        maximumSize: Size(414.w, 50.h),
-                      ),
-                      child: Text(
-                        "Delete Account",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        unFocus();
+                        delete();
+                      },
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.r),
+                          color: const Color(0xFFDD0A0A),
+                        ),
+                        child: Text(
+                          "Delete Account",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 48.h),
-                    const Center(child: Copyright()),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 50.h),
                   ],
                 ),
               ),
@@ -351,4 +396,106 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
       ),
     );
   }
+
+  void delete() => showModalBottomSheet(
+        context: context,
+        builder: (_) => SizedBox(
+          height: 450.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10.h),
+                      SvgPicture.asset("assets/images/Modal Line.svg"),
+                      SizedBox(height: 55.h),
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                          child: Image.asset(
+                            "assets/images/Questions.png",
+                            width: 135.r,
+                            height: 135.h,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Do you want to delete account?",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        "Fynda wants to ensure that users are deleting their account intentionally.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 60.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: appBlue),
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "No, cancel",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: appBlue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              resetProviders(ref);
+                              context.router.goNamed(Pages.splash);
+                            },
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: appBlue,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "Yes, delete",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 }
