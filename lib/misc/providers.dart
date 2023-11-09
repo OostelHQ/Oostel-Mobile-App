@@ -70,7 +70,13 @@ final StateProvider<bool> hasInitializedProvider =
     StateProvider((ref) => false);
 
 final StateProvider<bool> isAStudent =
-    StateProvider((ref) => ref.watch(currentUserProvider) is Student);
+    StateProvider((ref) => ref.watch(currentUserProvider).type == UserType.student);
+
+final StateProvider<bool> isAgent =
+StateProvider((ref) => ref.watch(currentUserProvider).type == UserType.agent);
+
+final StateProvider<bool> isLandlord =
+StateProvider((ref) => ref.watch(currentUserProvider).type == UserType.landlord);
 
 final StateProvider<bool> hasMessagesProvider = StateProvider((ref) => false);
 
@@ -81,6 +87,8 @@ final StateProvider<User> currentUserProvider =
     StateProvider((ref) => User(dateJoined: DateTime(1900)));
 
 final StateProvider<int> dashboardTabIndexProvider = StateProvider((ref) => 0);
+
+final StateProvider<bool> newNotificationProvider = StateProvider((ref) => false);
 
 void resetProviders(WidgetRef ref) {
   ref.watch(dashboardTabIndexProvider.notifier).state = 0;

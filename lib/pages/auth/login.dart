@@ -168,7 +168,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           context.router.pushReplacementNamed(
                             ref.read(isAStudent)
                                 ? Pages.studentDashboard
-                                : Pages.ownerDashboard,
+                                : ref.read(isAgent) ? Pages.agentDashboard :
+                            Pages.ownerDashboard,
                           );
                         },
                         child: Container(

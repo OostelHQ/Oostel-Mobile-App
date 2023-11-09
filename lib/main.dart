@@ -13,6 +13,7 @@ import 'package:my_hostel/pages/auth/privacy.dart';
 import 'package:my_hostel/pages/auth/register.dart';
 import 'package:my_hostel/pages/auth/register_type.dart';
 import 'package:my_hostel/pages/chats/inbox.dart';
+import 'package:my_hostel/pages/home/agent/dashboard.dart';
 import 'package:my_hostel/pages/home/landlord/create-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/dashboard.dart';
 import 'package:my_hostel/pages/home/landlord/landlord_hostel_details_page.dart';
@@ -27,6 +28,10 @@ import 'package:my_hostel/pages/home/student/view_availables.dart';
 import 'package:my_hostel/pages/intro/splash.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
 import 'package:my_hostel/pages/profile/about.dart';
+import 'package:my_hostel/pages/profile/agent/edit_profile.dart';
+import 'package:my_hostel/pages/profile/agent/profile.dart';
+import 'package:my_hostel/pages/profile/agent/settings.dart';
+import 'package:my_hostel/pages/profile/agent/wallet.dart';
 import 'package:my_hostel/pages/profile/help.dart';
 import 'package:my_hostel/pages/profile/owner/agents.dart';
 import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
@@ -106,47 +111,56 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.stepTwo.path,
           name: Pages.stepTwo,
-          builder: (_, state) => StepTwo(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepTwo(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepThree.path,
           name: Pages.stepThree,
-          builder: (_, state) => StepThree(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepThree(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepFour.path,
           name: Pages.stepFour,
-          builder: (_, state) => StepFour(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepFour(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepFive.path,
           name: Pages.stepFive,
-          builder: (_, state) => StepFive(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepFive(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepSix.path,
           name: Pages.stepSix,
-          builder: (_, state) => StepSix(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepSix(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepSeven.path,
           name: Pages.stepSeven,
-          builder: (_, state) => StepSeven(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepSeven(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepEight.path,
           name: Pages.stepEight,
-          builder: (_, state) => StepEight(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepEight(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepNine.path,
           name: Pages.stepNine,
-          builder: (_, state) => StepNine(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepNine(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.stepTen.path,
           name: Pages.stepTen,
-          builder: (_, state) => StepTen(info: state.extra as Map<String, dynamic>),
+          builder: (_, state) =>
+              StepTen(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
           path: Pages.studentProfileSettings.path,
@@ -323,6 +337,31 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.viewAgent.path,
           name: Pages.viewAgent,
           builder: (_, state) => ViewAgentPage(data: state.extra as AgentData),
+        ),
+        GoRoute(
+          path: Pages.agentDashboard.path,
+          name: Pages.agentDashboard,
+          builder: (_, __) => const AgentDashboardPage(),
+        ),
+        GoRoute(
+          path: Pages.agentSettings.path,
+          name: Pages.agentSettings,
+          builder: (_, __) => const AgentSettingsPage(),
+        ),
+        GoRoute(
+          path: Pages.agentWallet.path,
+          name: Pages.agentWallet,
+          builder: (_, __) => const AgentWalletPage(),
+        ),
+        GoRoute(
+          path: Pages.agentProfile.path,
+          name: Pages.agentProfile,
+          builder: (_, __) => const AgentProfilePage(),
+        ),
+        GoRoute(
+          path: Pages.editAgentProfile.path,
+          name: Pages.editAgentProfile,
+          builder: (_, __) => const EditAgentProfilePage(),
         )
       ],
     );

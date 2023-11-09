@@ -12,6 +12,7 @@ import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 bool validate(GlobalKey<FormState> formKey) {
   if (formKey.currentState == null) return false;
@@ -1736,44 +1737,46 @@ class _StepSixState extends State<StepSix> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        title: Column(
-          children: [
-            SizedBox(height: 25.h),
-            SizedBox(
-              width: 414.w,
-              child: LinearProgressIndicator(
-                value: 0.6,
-                color: appBlue,
-                minHeight: 1.5.h,
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: PopupMenuButton<String>(
-                itemBuilder: (context) => [
-                  PopupMenuItem<String>(
-                    value: "Reset",
-                    child: Text(
-                      "Reset",
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  )
-                ],
-                onSelected: (result) => setState(() => media.clear()),
-              ),
-            ),
-            SizedBox(height: 18.h),
-          ],
-        ),
-        automaticallyImplyLeading: false,
-      ),
       body: SafeArea(
-        child: Padding(
+          child: CustomScrollView(slivers: [
+        SliverAppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          pinned: true,
+          title: Column(
+            children: [
+              SizedBox(height: 25.h),
+              SizedBox(
+                width: 414.w,
+                child: LinearProgressIndicator(
+                  value: 0.6,
+                  color: appBlue,
+                  minHeight: 1.5.h,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: PopupMenuButton<String>(
+                  itemBuilder: (context) => [
+                    PopupMenuItem<String>(
+                      value: "Reset",
+                      child: Text(
+                        "Reset",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                    )
+                  ],
+                  onSelected: (result) => setState(() => media.clear()),
+                ),
+              ),
+              SizedBox(height: 18.h),
+            ],
+          ),
+          automaticallyImplyLeading: false,
+        ),
+        SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SingleChildScrollView(
+          sliver: SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -1794,10 +1797,11 @@ class _StepSixState extends State<StepSix> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  page == 0 ? "Upload a clear front view image of your hostel building "
-                  "to attract tenants with a welcoming facade" :
-                  "Capture the essence of your hostel environment in pictures. "
-                  "Showcase the surroundings to attract potential tenants.",
+                  page == 0
+                      ? "Upload a clear front view image of your hostel building "
+                          "to attract tenants with a welcoming facade"
+                      : "Capture the essence of your hostel environment in pictures. "
+                          "Showcase the surroundings to attract potential tenants.",
                   textAlign: TextAlign.center,
                   style: context.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
@@ -1805,130 +1809,190 @@ class _StepSixState extends State<StepSix> {
                   ),
                 ),
                 SizedBox(height: 44.h),
-                if(page == 0 || (page == 1 && media.length == 1))
-                GestureDetector(
-                  onTap: () {
-                    if(page == 0) {
-                      FileManager.single(type: FileType.image)
-                          .then((response) async {
-                        if (response == null) return;
-                        Uint8List data =
-                        await FileManager.convertSingleToData(response.path);
-                        setState(() => media.add(data));
-                      });
-                    } else {
-                      FileManager.multiple(type: FileType.image).then((response) async {
-                        if(response.isEmpty) return;
-                        List<String> paths = response.map((e) => e.path).toList();
-                        List<Uint8List> data = await FileManager.convertToData(paths);
-                        setState(() => media.addAll(data));
-                      });
-                    }
-
-                  },
-                  child: Container(
-                    width: 350.w,
-                    height: 270.h,
-                    padding: EdgeInsets.symmetric(horizontal: 25.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: media.isEmpty ? paleBlue : null,
-                      image: media.isEmpty
-                          ? null
-                          : DecorationImage(
-                              image: MemoryImage(media.first),
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                    child: (media.isEmpty && page == 0) || (media.length == 1 && page == 1)
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/images/Hostel Image.svg",
-                                width: 40.r,
-                                height: 40.r,
-                              ),
-                              SizedBox(height: 16.h),
-                              Text(
-                                page == 0 ? "Upload a front-view picture of your hostel"
-                                : "Upload the environment pictures of your hostel",
-                                textAlign: TextAlign.center,
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  color: weirdBlack,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                "Maximum size allowed is 20MB of png and jpg format",
-                                textAlign: TextAlign.center,
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  color: weirdBlack75,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          )
-                        : null,
-                  ),
-                ),
-                if(page == 1 && media.length > 1)
-                  CustomScrollView(
-                    slivers: [
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10.r,
-                          mainAxisSpacing: 10.r,
-                          mainAxisExtent: 110.r,
-                        ),
-                        itemCount: media.length - 1,
-                        itemBuilder: (_, index) => Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5.r),
-                              child: Image.memory(
-                                media[index + 1],
-                                width: 110.r,
-                                height: 110.r,
+                if (page == 0 || (page == 1 && media.length == 1))
+                  GestureDetector(
+                    onTap: () {
+                      if (page == 0) {
+                        FileManager.single(type: FileType.image)
+                            .then((response) async {
+                          if (response == null) return;
+                          Uint8List data =
+                              await FileManager.convertSingleToData(
+                                  response.path);
+                          setState(() => media.add(data));
+                        });
+                      } else {
+                        FileManager.multiple(type: FileType.image)
+                            .then((response) async {
+                          if (response.isEmpty) return;
+                          List<String> paths =
+                              response.map((e) => e.path).toList();
+                          List<Uint8List> data =
+                              await FileManager.convertToData(paths);
+                          setState(() => media.addAll(data));
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: 350.w,
+                      height: 270.h,
+                      padding: EdgeInsets.symmetric(horizontal: 25.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: (media.isEmpty && page == 0) ||
+                                (media.length == 1 && page == 1)
+                            ? paleBlue
+                            : null,
+                        image: (media.isEmpty && page == 0) ||
+                                (media.length == 1 && page == 1)
+                            ? null
+                            : DecorationImage(
+                                image: MemoryImage(media.first),
                                 fit: BoxFit.cover,
                               ),
-                            ),
-                            Positioned(
-                              right: 10.r,
-                              top: 5.r,
-                              child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => media.removeAt(index + 1)),
-                                child: Icon(Boxicons.bx_x,
-                                    color: Colors.white, size: 26.r),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    ]
-                  ),
-                if(page == 1)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.w),
-                  child: Text(
-                    "*Note that you must to upload minimum of 4 and above images before you can proceed.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodySmall!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
+                      child: (media.isEmpty && page == 0) ||
+                              (media.length == 1 && page == 1)
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/images/Hostel Image.svg",
+                                  width: 40.r,
+                                  height: 40.r,
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  page == 0
+                                      ? "Upload a front-view picture of your hostel"
+                                      : "Upload the environment pictures of your hostel",
+                                  textAlign: TextAlign.center,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  "Maximum size allowed is 20MB of png and jpg format",
+                                  textAlign: TextAlign.center,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            )
+                          : null,
                     ),
                   ),
-                ),
-                SizedBox(height: 250.h),
               ],
             ),
           ),
         ),
-      ),
+        if (page == 1 && media.length > 1)
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            sliver: SliverGrid.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10.r,
+                mainAxisSpacing: 10.r,
+                mainAxisExtent: 110.r,
+              ),
+              itemCount: media.length - 1,
+              itemBuilder: (_, index) => Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.router.pushNamed(
+                      Pages.viewMedia,
+                      extra: ViewInfo(
+                        bytes: media.sublist(1),
+                        type: DisplayType.memory,
+                        current: index,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5.r),
+                      child: Image.memory(
+                        media[index + 1],
+                        width: 110.r,
+                        height: 110.r,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 10.r,
+                    top: 5.r,
+                    child: GestureDetector(
+                      onTap: () => setState(() => media.removeAt(index + 1)),
+                      child:
+                          Icon(Boxicons.bx_x, color: Colors.white, size: 26.r),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: 45.w),
+          sliver: SliverToBoxAdapter(
+              child: Column(children: [
+            SizedBox(height: 5.h),
+            if (page == 1)
+              Text(
+                "*Note that you must to upload minimum of 4 and above images before you can proceed.",
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodySmall!.copyWith(
+                  color: weirdBlack50,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            SizedBox(height: 30.h),
+            if (media.length > 1)
+              GestureDetector(
+                onTap: () {
+                  FileManager.multiple(type: FileType.image)
+                      .then((response) async {
+                    if (response.isEmpty) return;
+                    List<String> paths = response.map((e) => e.path).toList();
+                    List<Uint8List> data =
+                        await FileManager.convertToData(paths);
+                    setState(() => media.addAll(data));
+                  });
+                },
+                child: Container(
+                  width: 160.w,
+                  height: 50.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.r),
+                    color: paleBlue,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.add_circle_outline,
+                          color: appBlue, size: 16),
+                      SizedBox(width: 10.w),
+                      Text(
+                        "Add images",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: appBlue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            SizedBox(height: 200.h),
+          ])),
+        ),
+      ])),
       bottomNavigationBar: Container(
         width: 414.w,
         height: 90.h,
@@ -1940,7 +2004,7 @@ class _StepSixState extends State<StepSix> {
           children: [
             GestureDetector(
               onTap: () {
-                if(page == 1) {
+                if (page == 1) {
                   setState(() => page = 0);
                 } else {
                   context.router.pop();
@@ -1974,12 +2038,19 @@ class _StepSixState extends State<StepSix> {
             ),
             GestureDetector(
               onTap: () {
-                if (media.isEmpty) {
-                  showError(
-                      "Please choose an image for your hostel front view");
+                if (page == 0) {
+                  if (media.isEmpty) {
+                    showError(
+                        "Please choose an image for your hostel front view");
+                    return;
+                  }
+
+                  setState(() => page = 1);
                   return;
-                } else if(media.length < 5) {
-                  showError("You need to select at least 5 images in total");
+                }
+
+                if (media.length < 5) {
+                  showError("You need to select at least 4 images");
                   return;
                 }
 
@@ -2487,10 +2558,14 @@ class _StepEightState extends State<StepEight> {
                                 context.router
                                     .pushNamed(Pages.stepNine,
                                         extra: widget.info)
-                                    .then((value) => setState(() {
+                                    .then(
+                                      (value) => setState(
+                                        () {
                                           if (value == null) return;
                                           rooms.add(value as RoomInfo);
-                                        },),);
+                                        },
+                                      ),
+                                    );
                               },
                               child: const _NoRoom(),
                             )
@@ -3405,7 +3480,7 @@ class StepTen extends StatelessWidget {
                 Center(
                   child: Text(
                     "Before going live, get a preview of your hostel details and ensure your "
-                        "listing is (are) ready to impress potential tenants.",
+                    "listing is (are) ready to impress potential tenants.",
                     textAlign: TextAlign.center,
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -3426,8 +3501,8 @@ class StepTen extends StatelessWidget {
                       )
                     ],
                   ),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 10.w, vertical: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -3479,8 +3554,7 @@ class StepTen extends StatelessWidget {
                         joinToAddress(info["address"]),
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75,
-                            fontWeight: FontWeight.w500),
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
                       SizedBox(height: 8.h),
                       Row(
@@ -3499,8 +3573,7 @@ class StepTen extends StatelessWidget {
                               SizedBox(width: 5.w),
                               Text(
                                 "$availableRooms",
-                                style: context.textTheme.bodySmall!
-                                    .copyWith(
+                                style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack50,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -3518,8 +3591,7 @@ class StepTen extends StatelessWidget {
                               SizedBox(width: 5.w),
                               Text(
                                 "${totalProps[0]}",
-                                style: context.textTheme.bodySmall!
-                                    .copyWith(
+                                style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack50,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -3537,8 +3609,7 @@ class StepTen extends StatelessWidget {
                               SizedBox(width: 5.w),
                               Text(
                                 "${totalProps[1]}",
-                                style: context.textTheme.bodySmall!
-                                    .copyWith(
+                                style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack50,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -3556,8 +3627,7 @@ class StepTen extends StatelessWidget {
                               SizedBox(width: 5.w),
                               Text(
                                 "${totalProps[2]}",
-                                style: context.textTheme.bodySmall!
-                                    .copyWith(
+                                style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack50,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -3575,8 +3645,7 @@ class StepTen extends StatelessWidget {
                               SizedBox(width: 5.w),
                               Text(
                                 "${(info["area"]).toStringAsFixed(0)} sqft",
-                                style: context.textTheme.bodySmall!
-                                    .copyWith(
+                                style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack50,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -3590,7 +3659,7 @@ class StepTen extends StatelessWidget {
                           children: [
                             TextSpan(
                               text:
-                              "${currency()} ${formatAmountInDouble(info["price"])}",
+                                  "${currency()} ${formatAmountInDouble(info["price"])}",
                               style: context.textTheme.bodyLarge!.copyWith(
                                 color: appBlue,
                                 fontFamily: "Inter",
@@ -3647,7 +3716,7 @@ class StepTen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: List.generate(
                           rules.length,
-                              (index) => Text(
+                          (index) => Text(
                             "${index + 1}. ${rules[index]}",
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack75,
@@ -3666,21 +3735,21 @@ class StepTen extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       SizedBox(
-                          height: (facilities.length ~/ 4 +
-                              (facilities.length % 4 == 0 ? 0 : 1)) *
-                              110.r,
-                          child: GridView.builder(
-                            gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 5.r,
-                                mainAxisSpacing: 5.r,
-                                mainAxisExtent: 105.r),
-                            itemCount: facilities.length,
-                            itemBuilder: (_, index) => FacilityContainer(
-                              text: facilities[index],
-                            ),
+                        height: (facilities.length ~/ 4 +
+                                (facilities.length % 4 == 0 ? 0 : 1)) *
+                            110.r,
+                        child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                  crossAxisSpacing: 5.r,
+                                  mainAxisSpacing: 5.r,
+                                  mainAxisExtent: 105.r),
+                          itemCount: facilities.length,
+                          itemBuilder: (_, index) => FacilityContainer(
+                            text: facilities[index],
                           ),
+                        ),
                       ),
                       SizedBox(height: 16.h),
                       Text(
@@ -3693,11 +3762,11 @@ class StepTen extends StatelessWidget {
                       SizedBox(height: 8.h),
                       SizedBox(
                         height: (rooms.length ~/ 2 +
-                            (rooms.length % 2 == 0 ? 0 : 1)) *
+                                (rooms.length % 2 == 0 ? 0 : 1)) *
                             210.h,
                         child: GridView.builder(
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 15.r,
                             mainAxisSpacing: 15.r,
@@ -3722,11 +3791,11 @@ class StepTen extends StatelessWidget {
                       SizedBox(height: 8.h),
                       SizedBox(
                           height: (media.length ~/ 3 +
-                              (media.length % 3 == 0 ? 0 : 1)) *
+                                  (media.length % 3 == 0 ? 0 : 1)) *
                               110.r,
                           child: GridView.builder(
                             gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               crossAxisSpacing: 10.r,
                               mainAxisSpacing: 10.r,

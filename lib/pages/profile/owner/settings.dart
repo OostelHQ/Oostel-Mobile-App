@@ -188,236 +188,248 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 25.h),
-                SizedBox(
-                  height: 150.h,
-                  child: Stack(
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: 100.h,
-                          minWidth: 414.w,
-                          maxHeight: 100.h,
-                          maxWidth: 414.w,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 150.h,
+                child: Stack(
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: 100.h,
+                        minWidth: 414.w,
+                        maxHeight: 100.h,
+                        maxWidth: 414.w,
+                      ),
+                      child: const ColoredBox(
+                        color: paleBlue,
+                      ),
+                    ),
+                    Positioned(
+                      left: 20.w,
+                      bottom: 10.r,
+                      child: Container(
+                        width: 100.r,
+                        height: 100.r,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 1.0,
+                              spreadRadius: 2.0,
+                            )
+                          ],
                         ),
-                        child: const ColoredBox(
-                          color: paleBlue,
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 95.r,
+                          height: 95.r,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage(user.image),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
-                      Positioned(
-                        left: 20.w,
-                        bottom: 10.r,
-                        child: Container(
-                          width: 100.r,
-                          height: 100.r,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xFFE0E5EC),
-                                blurRadius: 1.0,
-                                spreadRadius: 2.0,
-                              )
-                            ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20.h),
+                      Text(
+                        user.mergedNames,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          color: weirdBlack,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 22.sp,
+                        ),
+                      ),
+                      Text(
+                        user.email,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        user.contact,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/Roomate Info Location.svg",
+                            width: 15.r,
+                            height: 15.r,
+                            color: weirdBlack50,
                           ),
-                          alignment: Alignment.center,
+                          SizedBox(width: 5.w),
+                          Text(
+                            "Nigeria",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack50, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(width: 15.w),
+                          SvgPicture.asset(
+                            "assets/images/Calender.svg",
+                            width: 15.r,
+                            height: 15.r,
+                            color: weirdBlack50,
+                          ),
+                          SizedBox(width: 5.w),
+                          Text(
+                            "Joined ${formatDateRaw(user.dateJoined)}",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack50, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 6.h),
+                      Row(
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                  "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                TextSpan(
+                                  text: " Hostels",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 15.w),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                  "${totalRooms < 10 ? "0" : ""}$totalRooms",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " Rooms",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 16.h),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 414.w,
+                          minHeight: 1.h,
+                          maxWidth: 414.w,
+                          maxHeight: 1.h,
+                        ),
+                        child: const ColoredBox(color: Colors.black12),
+                      ),
+                      SizedBox(height: 15.h),
+                    ]
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (_, index) => Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (index != links.length - 1) {
+                              context.router.pushNamed(links[index].route);
+                            } else {
+                              logout();
+                            }
+                          },
                           child: Container(
-                            width: 95.r,
-                            height: 95.r,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage(user.image),
-                                fit: BoxFit.cover,
+                              color: const Color(0xFFF8FBFF),
+                              borderRadius: BorderRadius.circular(4.r),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0xFFE0E5EC),
+                                  blurRadius: 6.0,
+                                  spreadRadius: 1.0,
+                                )
+                              ],
+                            ),
+                            child: SizedBox(
+                              height: 50.h,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(links[index].image,
+                                            color: weirdBlack75),
+                                        SizedBox(width: 16.w),
+                                        Text(
+                                          links[index].name,
+                                          style: context.textTheme.bodyMedium!
+                                              .copyWith(
+                                            color: weirdBlack75,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Icon(Icons.chevron_right_rounded,
+                                        color: Colors.black54, size: 26.r),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Text(
-                  user.mergedNames,
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    color: weirdBlack,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22.sp,
-                  ),
-                ),
-                Text(
-                  user.email,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    color: weirdBlack75,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  user.contact,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    color: weirdBlack75,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/images/Roomate Info Location.svg",
-                      width: 15.r,
-                      height: 15.r,
-                      color: weirdBlack50,
+                        SizedBox(height: 16.h),
+                      ],
                     ),
-                    SizedBox(width: 5.w),
-                    Text(
-                      "Nigeria",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack50, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(width: 15.w),
-                    SvgPicture.asset(
-                      "assets/images/Calender.svg",
-                      width: 15.r,
-                      height: 15.r,
-                      color: weirdBlack50,
-                    ),
-                    SizedBox(width: 5.w),
-                    Text(
-                      "Joined ${formatDateRaw(user.dateJoined)}",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack50, fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                  childCount: links.length,
                 ),
-                SizedBox(height: 6.h),
-                Row(
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                            "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
-                            style: context.textTheme.bodySmall!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          TextSpan(
-                            text: " Hostels",
-                            style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 15.w),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                            "${totalRooms < 10 ? "0" : ""}$totalRooms",
-                            style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack75,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          TextSpan(
-                            text: " Rooms",
-                            style: context.textTheme.bodySmall!.copyWith(
-                                color: weirdBlack50,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 16.h),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: 414.w,
-                    minHeight: 1.h,
-                    maxWidth: 414.w,
-                    maxHeight: 1.h,
-                  ),
-                  child: const ColoredBox(color: Colors.black12),
-                ),
-                SizedBox(height: 45.h),
-                Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (_, index) => GestureDetector(
-                      onTap: () {
-                        if (index != links.length - 1) {
-                          context.router.pushNamed(links[index].route);
-                        } else {
-                          logout();
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8FBFF),
-                          borderRadius: BorderRadius.circular(4.r),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xFFE0E5EC),
-                              blurRadius: 6.0,
-                              spreadRadius: 1.0,
-                            )
-                          ],
-                        ),
-                        child: SizedBox(
-                          height: 50.h,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(links[index].image,
-                                        color: weirdBlack75),
-                                    SizedBox(width: 16.w),
-                                    Text(
-                                      links[index].name,
-                                      style: context.textTheme.bodyMedium!
-                                          .copyWith(
-                                        color: weirdBlack75,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.chevron_right_rounded,
-                                    color: Colors.black54, size: 26.r),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    separatorBuilder: (_, __) => SizedBox(height: 16.h),
-                    itemCount: links.length,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+              )
+            )
+          ]
+        )
       ),
     );
   }

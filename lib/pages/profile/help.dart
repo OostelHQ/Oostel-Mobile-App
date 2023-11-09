@@ -38,7 +38,7 @@ class _HelpPageState extends ConsumerState<HelpPage>
   void initState() {
     super.initState();
 
-    bool isStudent = ref.read(currentUserProvider).type == UserType.student;
+    bool isStudent = ref.read(isAStudent), isAnAgent = ref.read(isAgent);
 
     faqs = isStudent
         ? const [
@@ -163,117 +163,195 @@ class _HelpPageState extends ConsumerState<HelpPage>
                   " thoroughly review listings and communicate with potential roommates to ensure a good fit.",
             )
           ]
-        : const [
-            _FAQ(
-              question: "What is Fynda App?",
-              answer:
-                  "Fynda App is a platform that helps landlords/landladies to market and manage their hostels to students in "
+        : !isAnAgent
+            ? const [
+                _FAQ(
+                  question: "What is Fynda App?",
+                  answer:
+                      "Fynda App is a platform that helps landlords/landladies to market and manage their hostels to students in "
                       "higher institutions.",
-            ),
-            _FAQ(
-              question: "How can it benefit me as a landlord/landlady?",
-              answer:
-                  "It provides a convenient way to connect with potential tenants and manage payments securely.",
-            ),
-            _FAQ(
-              question: "How does Fynda App benefit me as a landlord/landlady?",
-              answer:
-                  "Fynda App helps landlords/landladies to: \nList their hostels on the app and reach a large audience of "
+                ),
+                _FAQ(
+                  question: "How can it benefit me as a landlord/landlady?",
+                  answer:
+                      "It provides a convenient way to connect with potential tenants and manage payments securely.",
+                ),
+                _FAQ(
+                  question:
+                      "How does Fynda App benefit me as a landlord/landlady?",
+                  answer:
+                      "Fynda App helps landlords/landladies to: \nList their hostels on the app and reach a large audience of "
                       "potential students \nProcess rental payments securely and efficiently \nManage their hostel bookings "
                       "and reservations \nCommunicate with their tenants directly through the app",
-            ),
-            _FAQ(
-              question:
-                  "How do I get started as a landlord/landlady on the Fynda App?",
-              answer:
-                  "To get started, download the app, create an account, and list your accommodations with details such as "
+                ),
+                _FAQ(
+                  question:
+                      "How do I get started as a landlord/landlady on the Fynda App?",
+                  answer:
+                      "To get started, download the app, create an account, and list your accommodations with details such as "
                       "location, room availability, rental rates etc.",
-            ),
-            _FAQ(
-              question: "How much does it cost to open an Fynda account?",
-              answer: "It is free to open an account on Fynda App.",
-            ),
-            _FAQ(
-              question:
-                  "How can I receive payments for my hostel through the Fynda App?",
-              answer:
-                  "The Fynda App facilitates secure payment processing through third-party payment providers. Tenants "
+                ),
+                _FAQ(
+                  question: "How much does it cost to open an Fynda account?",
+                  answer: "It is free to open an account on Fynda App.",
+                ),
+                _FAQ(
+                  question:
+                      "How can I receive payments for my hostel through the Fynda App?",
+                  answer:
+                      "The Fynda App facilitates secure payment processing through third-party payment providers. Tenants "
                       "can make payments through the app and the funds will be transferred to your local bank wallet.",
-            ),
-            _FAQ(
-              question:
-                  "Can I set my own cancellation and refund policies for my accommodations?",
-              answer:
-                  "Yes, you have control over setting and communicating your own cancellation and refund policies to tenants. "
+                ),
+                _FAQ(
+                  question:
+                      "Can I set my own cancellation and refund policies for my accommodations?",
+                  answer:
+                      "Yes, you have control over setting and communicating your own cancellation and refund policies to tenants. "
                       "Tenants will be subject to the policies you specify.",
-            ),
-            _FAQ(
-              question:
-                  "How do I communicate with my tenants through Fynda App?",
-              answer:
-                  "Fynda App provides a built-in messaging system that allows you to communicate with your tenants directly. "
+                ),
+                _FAQ(
+                  question:
+                      "How do I communicate with my tenants through Fynda App?",
+                  answer:
+                      "Fynda App provides a built-in messaging system that allows you to communicate with your tenants directly. "
                       "You can use the messaging system to send and receive messages, share photos and videos, and coordinate move-in dates.",
-            ),
-            _FAQ(
-                question:
-                    "How do I ensure the security and privacy of my personal information on the Fynda App?",
-                answer:
-                    "We take data privacy seriously and implement security measures. Please refer to our Privacy Policy to "
+                ),
+                _FAQ(
+                    question:
+                        "How do I ensure the security and privacy of my personal information on the Fynda App?",
+                    answer:
+                        "We take data privacy seriously and implement security measures. Please refer to our Privacy Policy to "
                         "understand how we protect your data."),
-            _FAQ(
-              question:
-                  "Can I list accommodations in different locations within the Institution environment?",
-              answer:
-                  "Yes, you can list accommodations in multiple locations, depending on your preferences and availability.",
-            ),
-            _FAQ(
-              question: "How can I report issues with tenants or reservations?",
-              answer:
-                  "You can report issues or violations through the app using the reporting feature. We take these reports "
+                _FAQ(
+                  question:
+                      "Can I list accommodations in different locations within the Institution environment?",
+                  answer:
+                      "Yes, you can list accommodations in multiple locations, depending on your preferences and availability.",
+                ),
+                _FAQ(
+                  question:
+                      "How can I report issues with tenants or reservations?",
+                  answer:
+                      "You can report issues or violations through the app using the reporting feature. We take these reports "
                       "seriously and will investigate as needed.",
-            ),
-            _FAQ(
-              question:
-                  "How do I communicate with potential tenants, and what is the messaging process like?",
-              answer:
-                  "You can communicate with tenants through the app's messaging system. When a tenant is interested in your "
+                ),
+                _FAQ(
+                  question:
+                      "How do I communicate with potential tenants, and what is the messaging process like?",
+                  answer:
+                      "You can communicate with tenants through the app's messaging system. When a tenant is interested in your "
                       "accommodation, you can use this feature to discuss details and answer questions.",
-            ),
-            _FAQ(
-              question:
-                  "Do you offer any assistance or support for landlord/landlady users?",
-              answer:
-                  "Yes, we have a support team available to assist you with any questions, issues, or concerns you may have. "
+                ),
+                _FAQ(
+                  question:
+                      "Do you offer any assistance or support for landlord/landlady users?",
+                  answer:
+                      "Yes, we have a support team available to assist you with any questions, issues, or concerns you may have. "
                       "You can reach out for support directly through the app.",
-            ),
-            _FAQ(
-              question:
-                  "Can I edit or update my accommodation listings after they are posted?",
-              answer:
-                  "Yes, you have the ability to edit and update your listings at any time to reflect changes or updates in "
+                ),
+                _FAQ(
+                  question:
+                      "Can I edit or update my accommodation listings after they are posted?",
+                  answer:
+                      "Yes, you have the ability to edit and update your listings at any time to reflect changes or updates in "
                       "your accommodations.",
-            ),
-            _FAQ(
-              question:
-                  "Are there any specific guidelines I should follow as a landlord/landlady on the Fynda App?",
-              answer:
-                  "Please adhere to the Fynda App's Terms of Service and follow any additional guidelines or community rules"
+                ),
+                _FAQ(
+                  question:
+                      "Are there any specific guidelines I should follow as a landlord/landlady on the Fynda App?",
+                  answer:
+                      "Please adhere to the Fynda App's Terms of Service and follow any additional guidelines or community rules"
                       " that may be provided by the community in your area.",
-            ),
-            _FAQ(
-              question: "Is Fynda App safe?",
-              answer:
-                  "Yes, Fynda App is safe to use. Fynda uses a variety of security measures to protect your information, "
+                ),
+                _FAQ(
+                  question: "Is Fynda App safe?",
+                  answer:
+                      "Yes, Fynda App is safe to use. Fynda uses a variety of security measures to protect your information, "
                       "including:\nSecure payment processing\nData encryption\nFraud detection and prevention",
-            ),
-            _FAQ(
-              question:
-                  "How can I provide feedback or suggestions to improve the Fynda App for landlords/landladies?",
-              answer:
-                  "We appreciate your feedback. You can share your suggestions and comments through the app or by "
+                ),
+                _FAQ(
+                  question:
+                      "How can I provide feedback or suggestions to improve the Fynda App for landlords/landladies?",
+                  answer:
+                      "We appreciate your feedback. You can share your suggestions and comments through the app or by "
                       "contacting our support team.",
-            ),
-          ];
+                ),
+              ]
+            : const [
+                _FAQ(
+                  question: "What is Fynda App?",
+                  answer:
+                      "Fynda App is a mobile app that helps agents to list and manage hostels for landlords.",
+                ),
+                _FAQ(
+                  question: "What is the role of an Agent on Fynda App?",
+                  answer:
+                      "Agents on Fynda App assist Landlords in listing and managing hostels, including creating accurate property listings, managing property details, and facilitating communication with potential tenants.",
+                ),
+                _FAQ(
+                  question:
+                      "What is the minimum contract term for agents on Fynda App?",
+                  answer:
+                      "The minimum contract term for agents on Fynda App is determined by the landlord/landlady.",
+                ),
+                _FAQ(
+                  question: "Can I work with multiple Landlords as an Agent?",
+                  answer:
+                      "Yes, Agents can work with multiple Landlords to assist in listing and managing their hostels.",
+                ),
+                _FAQ(
+                  question:
+                      "Are there any qualifications or requirements to become an Agent?",
+                  answer:
+                      "The qualifications and requirements would be determined by the landlord/landlady.",
+                ),
+                _FAQ(
+                  question:
+                      "How do I handle privacy and data protection as an Agent?",
+                  answer:
+                      "Agents are responsible for respecting the privacy and data protection rights of both Landlords and Tenants. Personal data should only be used for facilitating property management and listings.",
+                ),
+                _FAQ(
+                  question:
+                      "What should I do if I suspect fraudulent or unethical activities on the platform?",
+                  answer:
+                      "If you suspect fraudulent or unethical activities, report them to Fynda App support for investigation.",
+                ),
+                _FAQ(
+                  question:
+                      "Can I use personal photos and descriptions in hostel listings as an Agent?",
+                  answer:
+                      "It's important to use accurate and relevant information in hostel listings. Personal photos and descriptions should be related to the property and its features.",
+                ),
+                _FAQ(
+                  question:
+                      "How do I handle communication with Landlords and Tenants?",
+                  answer:
+                      "Maintain clear and respectful communication with all parties. Respond to messages and inquiries in a timely manner.",
+                ),
+                _FAQ(
+                  question:
+                      "Are there withdrawal restrictions for Agents on Fynda App?",
+                  answer:
+                      "Yes, Fynda App have withdrawal restrictions for Agents. Review and understand the withdrawal policies and timelines provided on the platform.",
+                ),
+                _FAQ(
+                  question:
+                      "What happens if a Landlord or Tenant has an issue with my services as an Agent?",
+                  answer: "If an issue arises, try to resolve it amicably.",
+                ),
+                _FAQ(
+                  question:
+                      "Can I voluntarily terminate my account as an Agent?",
+                  answer:
+                      "Yes, you can voluntarily terminate your account by providing notice to Fynda App.",
+                ),
+                _FAQ(
+                  question: "I have a question that is not answered here.",
+                  answer:
+                      "If you have a question that is not answered here, please contact Fynda App support at fynda.care@gmail.com",
+                ),
+              ];
 
     controller = TabController(vsync: this, length: 2);
     for (int i = 0; i < faqs.length; ++i) {
@@ -311,6 +389,8 @@ class _HelpPageState extends ConsumerState<HelpPage>
 
   @override
   Widget build(BuildContext context) {
+    UserType type = ref.watch(currentUserProvider).type;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -328,296 +408,313 @@ class _HelpPageState extends ConsumerState<HelpPage>
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            TabBar(
-              controller: controller,
-              indicatorColor: appBlue,
-              labelColor: appBlue,
-              labelStyle: context.textTheme.bodyMedium!
-                  .copyWith(color: appBlue, fontWeight: FontWeight.w500),
-              unselectedLabelStyle: context.textTheme.bodyMedium!
-                  .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
-              tabs: const [
-                Tab(text: "FAQs"),
-                Tab(text: "Contact Us"),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
+          child: DefaultTabController(
+        length: 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, something) => [
+            SliverPersistentHeader(
+                delegate: TabHeaderDelegate(
+              tabBar: TabBar(
                 controller: controller,
-                children: [
-                  Padding(
+                indicatorColor: appBlue,
+                labelColor: appBlue,
+                labelStyle: context.textTheme.bodyMedium!
+                    .copyWith(color: appBlue, fontWeight: FontWeight.w500),
+                unselectedLabelStyle: context.textTheme.bodyMedium!
+                    .copyWith(color: weirdBlack50, fontWeight: FontWeight.w500),
+                tabs: const [
+                  Tab(text: "FAQs"),
+                  Tab(text: "Contact Us"),
+                ],
+              ),
+            ))
+          ],
+          body: TabBarView(
+            controller: controller,
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverPadding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 24.h),
-                        Text(
-                          "Frequently Asked Questions",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          ref.read(currentUserProvider).type == UserType.student
-                              ? "Please note that these FAQs are provided for informational purposes and may not cover "
-                                  "every specific question or scenario. If you have additional questions or need further "
-                                  "assistance, please don't hesitate to reach out to us."
-                              : "If you have additional questions or need further assistance as a landlord or landlady on "
-                                  "the Fynda App, please feel free to reach out to us. Your satisfaction and success as a "
-                                  "host are important to us.",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 24.h),
-                        Expanded(
-                          child: ListView.separated(
-                            itemBuilder: (_, index) {
-                              if (index == faqs.length) {
-                                return SizedBox(height: 48.h);
-                              }
-                              return _FAQContainer(
-                                controller: controllers[index],
-                                animation: animations[index],
-                                faq: faqs[index],
-                              );
-                            },
-                            separatorBuilder: (_, __) => SizedBox(height: 16.h),
-                            itemCount: faqs.length + 1,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: SingleChildScrollView(
+                    sliver: SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 24.h),
                           Text(
-                            "Come say hello!",
+                            "Frequently Asked Questions",
                             style: context.textTheme.bodyLarge!.copyWith(
                                 fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                            type == UserType.student
+                                ? "Please note that these FAQs are provided for informational purposes and may not cover "
+                                    "every specific question or scenario. If you have additional questions or need further "
+                                    "assistance, please don't hesitate to reach out to us."
+                                : "If you have additional questions or need further assistance as "
+                                    "${type == UserType.landlord ? "a landlord or landlady" : "an agent"} on "
+                                    "the Fynda App, please feel free to reach out to us. Your satisfaction and success as a "
+                                    "host are important to us.",
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack75,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           SizedBox(height: 24.h),
-                          Text(
-                            "Phone Number",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: number,
-                            width: 414.w,
-                            height: 50.h,
-                            readOnly: true,
-                            hint: "080 1234 5678",
-                            prefix: SizedBox(
-                              height: 50.h,
-                              width: 30.w,
-                              child: Center(
-                                child: Text(
-                                  "+234",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ),
-                            suffix: GestureDetector(
-                              onTap: () async => launchContactUrl("0${number.text}"),
-                              child: Container(
-                                height: 50.h,
-                                width: 30.w,
-                                decoration: BoxDecoration(
-                                  color: fadedBorder,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5.r),
-                                    bottomRight: Radius.circular(5.r),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.phone_rounded,
-                                      color: weirdBlack50, size: 20),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Email Address",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: email,
-                            width: 414.w,
-                            height: 50.h,
-                            readOnly: true,
-                            suffix: GestureDetector(
-                              onTap: () async => launchEmail(email.text),
-                              child: Container(
-                                height: 50.h,
-                                width: 30.w,
-                                decoration: BoxDecoration(
-                                  color: fadedBorder,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5.r),
-                                    bottomRight: Radius.circular(5.r),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.mail_rounded,
-                                      color: weirdBlack50, size: 20),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Twitter Page",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: twitter,
-                            width: 414.w,
-                            height: 50.h,
-                            readOnly: true,
-                            hint: "Fynda's Twitter Url",
-                            prefix: SizedBox(
-                              height: 50.h,
-                              width: 30.w,
-                              child: const Center(
-                                child: Icon(Boxicons.bxl_twitter,
-                                    color: weirdBlack50, size: 20),
-                              ),
-                            ),
-                            suffix: GestureDetector(
-                              onTap: () async => launchSocialMediaUrl(twitter.text),
-                              child: Container(
-                                height: 50.h,
-                                width: 30.w,
-                                decoration: BoxDecoration(
-                                  color: fadedBorder,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5.r),
-                                    bottomRight: Radius.circular(5.r),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.link,
-                                      color: weirdBlack50, size: 20),
-                                ),
-                              ),
-                            ),
-                            type: TextInputType.number,
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Facebook Page",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: facebook,
-                            width: 414.w,
-                            height: 50.h,
-                            readOnly: true,
-                            hint: "Fynda's Facebook Url",
-                            prefix: SizedBox(
-                              height: 50.h,
-                              width: 30.w,
-                              child: const Center(
-                                child: Icon(Boxicons.bxl_facebook_circle,
-                                    color: weirdBlack50, size: 20),
-                              ),
-                            ),
-                            suffix: GestureDetector(
-                              onTap: () async => launchSocialMediaUrl(facebook.text),
-                              child: Container(
-                                height: 50.h,
-                                width: 30.w,
-                                decoration: BoxDecoration(
-                                  color: fadedBorder,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5.r),
-                                    bottomRight: Radius.circular(5.r),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.link,
-                                      color: weirdBlack50, size: 20),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Instagram Page",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: instagram,
-                            width: 414.w,
-                            height: 50.h,
-                            readOnly: true,
-                            hint: "Fynda's Instagram Url",
-                            prefix: SizedBox(
-                              height: 50.h,
-                              width: 30.w,
-                              child: const Center(
-                                child: Icon(Boxicons.bxl_instagram,
-                                    color: weirdBlack50, size: 20),
-                              ),
-                            ),
-                            suffix: GestureDetector(
-                              onTap: () async => launchSocialMediaUrl(instagram.text),
-                              child: Container(
-                                height: 50.h,
-                                width: 30.w,
-                                decoration: BoxDecoration(
-                                  color: fadedBorder,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5.r),
-                                    bottomRight: Radius.circular(5.r),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.link,
-                                      color: weirdBlack50, size: 20),
-                                ),
-                              ),
-                            ),
-                          ),
                         ],
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, index) {
+                          if (index == faqs.length) {
+                            return SizedBox(height: 50.h);
+                          }
+
+                          return Column(
+                            children: [
+                              _FAQContainer(
+                                controller: controllers[index],
+                                animation: animations[index],
+                                faq: faqs[index],
+                              ),
+                              SizedBox(height: 16.h),
+                            ],
+                          );
+                        },
+                        childCount: faqs.length + 1,
                       ),
                     ),
                   ),
                 ],
               ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 24.h),
+                      Text(
+                        "Come say hello!",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        "Have questions or feedback? We're here to help you. Reach out "
+                            "to our support team, and we'll assist you promptly.",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+                      Text(
+                        "Phone Number",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: number,
+                        width: 414.w,
+                        height: 50.h,
+                        readOnly: true,
+                        hint: "080 1234 5678",
+                        prefix: SizedBox(
+                          height: 50.h,
+                          width: 30.w,
+                          child: Center(
+                            child: Text(
+                              "+234",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack75,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        suffix: GestureDetector(
+                          onTap: () async =>
+                              launchContactUrl("0${number.text}"),
+                          child: Container(
+                            height: 50.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: fadedBorder,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.r),
+                                bottomRight: Radius.circular(5.r),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.phone_rounded,
+                                  color: weirdBlack50, size: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Email Address",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: email,
+                        width: 414.w,
+                        height: 50.h,
+                        readOnly: true,
+                        suffix: GestureDetector(
+                          onTap: () async => launchEmail(email.text),
+                          child: Container(
+                            height: 50.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: fadedBorder,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.r),
+                                bottomRight: Radius.circular(5.r),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.mail_rounded,
+                                  color: weirdBlack50, size: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Twitter Page",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: twitter,
+                        width: 414.w,
+                        height: 50.h,
+                        readOnly: true,
+                        hint: "Fynda's Twitter Url",
+                        prefix: SizedBox(
+                          height: 50.h,
+                          width: 30.w,
+                          child: const Center(
+                            child: Icon(Boxicons.bxl_twitter,
+                                color: weirdBlack50, size: 20),
+                          ),
+                        ),
+                        suffix: GestureDetector(
+                          onTap: () async => launchSocialMediaUrl(twitter.text),
+                          child: Container(
+                            height: 50.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: fadedBorder,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.r),
+                                bottomRight: Radius.circular(5.r),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.link,
+                                  color: weirdBlack50, size: 20),
+                            ),
+                          ),
+                        ),
+                        type: TextInputType.number,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Facebook Page",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: facebook,
+                        width: 414.w,
+                        height: 50.h,
+                        readOnly: true,
+                        hint: "Fynda's Facebook Url",
+                        prefix: SizedBox(
+                          height: 50.h,
+                          width: 30.w,
+                          child: const Center(
+                            child: Icon(Boxicons.bxl_facebook_circle,
+                                color: weirdBlack50, size: 20),
+                          ),
+                        ),
+                        suffix: GestureDetector(
+                          onTap: () async =>
+                              launchSocialMediaUrl(facebook.text),
+                          child: Container(
+                            height: 50.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: fadedBorder,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.r),
+                                bottomRight: Radius.circular(5.r),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.link,
+                                  color: weirdBlack50, size: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Instagram Page",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: instagram,
+                        width: 414.w,
+                        height: 50.h,
+                        readOnly: true,
+                        hint: "Fynda's Instagram Url",
+                        prefix: SizedBox(
+                          height: 50.h,
+                          width: 30.w,
+                          child: const Center(
+                            child: Icon(Boxicons.bxl_instagram,
+                                color: weirdBlack50, size: 20),
+                          ),
+                        ),
+                        suffix: GestureDetector(
+                          onTap: () async =>
+                              launchSocialMediaUrl(instagram.text),
+                          child: Container(
+                            height: 50.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: fadedBorder,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.r),
+                                bottomRight: Radius.circular(5.r),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.link,
+                                  color: weirdBlack50, size: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      )),
     );
   }
 }
@@ -698,12 +795,17 @@ class _FAQContainerState extends State<_FAQContainer> {
           ),
           SizeTransition(
             sizeFactor: widget.animation,
-            child: Text(
-              widget.faq.answer,
-              style: context.textTheme.bodyMedium!.copyWith(
-                color: weirdBlack75,
-                fontWeight: FontWeight.w500,
-              ),
+            child: Column(
+              children: [
+                SizedBox(height: 10.h),
+                Text(
+                  widget.faq.answer,
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: weirdBlack75,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           )
         ],

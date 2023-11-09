@@ -301,11 +301,11 @@ class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
   }
 }
 
-class StudentProfileSettingsPage extends StatelessWidget {
+class StudentProfileSettingsPage extends ConsumerWidget {
   const StudentProfileSettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -340,7 +340,7 @@ class StudentProfileSettingsPage extends StatelessWidget {
                   itemBuilder: (_, index) => GestureDetector(
                     onTap: () => context.router.pushNamed(
                       index == 0
-                          ? Pages.editProfile
+                          ? (ref.watch(isAStudent) ? Pages.editProfile : Pages.editAgentProfile)
                           : (index == 1)
                               ? Pages.changePassword
                               : Pages.notificationSettings,

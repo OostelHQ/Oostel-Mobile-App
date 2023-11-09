@@ -26,7 +26,9 @@ class AboutPage extends ConsumerWidget {
             Text(
               "To use the Fynda App, you must create an account and provide certain information, "
               "such as your name, email address, and phone number. You must also create a "
-              "password and agree to keep it confidential.",
+              "password and agree to keep it confidential. You are responsible for all activity that "
+                  "occurs under your Fynda account. You agree to use your account only for lawful purposes "
+                  "and in accordance with these Terms of Service.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -196,7 +198,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Provide accurate, truthful, and up-to-date information in your user profile and listings. '
+                    text:
+                        'Provide accurate, truthful, and up-to-date information in your user profile and listings. '
                         'Misrepresenting yourself or your accommodation is not allowed.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -217,7 +220,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Treat all users with respect and consideration. Discrimination, harassment, or any '
+                    text:
+                        'Treat all users with respect and consideration. Discrimination, harassment, or any '
                         'form of disrespectful behaviour will not be tolerated.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -238,7 +242,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "Respect the privacy and confidentiality of other users. Do not share personal contact information "
+                    text:
+                        "Respect the privacy and confidentiality of other users. Do not share personal contact information "
                         "(phone numbers, email addresses, etc.) within the app's messaging system.",
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -259,7 +264,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'When booking accommodation, ensure that you comply with the payment terms and '
+                    text:
+                        'When booking accommodation, ensure that you comply with the payment terms and '
                         'schedules as communicated by the landlord or landlady. And avoid paying for hostel'
                         ' reservation without using this platform because of receipt generation and security & '
                         'reference purpose.',
@@ -282,7 +288,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Adhere to the cancellation policies specified by the landlord or landlady '
+                    text:
+                        'Adhere to the cancellation policies specified by the landlord or landlady '
                         'when making a booking. Cancellations should be made in accordance with the '
                         'provided guidelines.',
                     style: context.textTheme.bodyMedium!.copyWith(
@@ -304,7 +311,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'If you encounter any issues, violations of our rules, or feel unsafe, '
+                    text:
+                        'If you encounter any issues, violations of our rules, or feel unsafe, '
                         'please use the in-app reporting feature to notify us. We take all reports seriously '
                         'and will investigate as needed.',
                     style: context.textTheme.bodyMedium!.copyWith(
@@ -348,7 +356,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'As a tenant, maintain the rented accommodation in good'
+                    text:
+                        'As a tenant, maintain the rented accommodation in good'
                         ' condition and report any issues promptly to the landlord or landlady.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -369,7 +378,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'When seeking or sharing accommodation with roommates, '
+                    text:
+                        'When seeking or sharing accommodation with roommates, '
                         'communicate openly about your expectations and house rules to '
                         'ensure a harmonious living situation.',
                     style: context.textTheme.bodyMedium!.copyWith(
@@ -391,7 +401,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Provide honest and constructive feedback in reviews to help '
+                    text:
+                        'Provide honest and constructive feedback in reviews to help '
                         'improve the Fynda App. Avoid posting false or malicious reviews.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -412,7 +423,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Refrain from posting offensive, explicit, or inappropriate content '
+                    text:
+                        'Refrain from posting offensive, explicit, or inappropriate content '
                         'on the app, including in your profile, listings, or messages.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -433,7 +445,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Protect your account by using strong and secure passwords. '
+                    text:
+                        'Protect your account by using strong and secure passwords. '
                         'Do not share your login credentials with others.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -454,7 +467,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Follow any additional community guidelines or specific rules '
+                    text:
+                        'Follow any additional community guidelines or specific rules '
                         'provided by the community in your location or chosen accommodation.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -475,7 +489,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "Adhere to the Fynda App's Terms of Service and Privacy Policy. Violating these "
+                    text:
+                        "Adhere to the Fynda App's Terms of Service and Privacy Policy. Violating these "
                         "terms may result in the suspension or termination of your account.",
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -496,7 +511,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Reach out to Fynda support for assistance or clarification of rules, '
+                    text:
+                        'Reach out to Fynda support for assistance or clarification of rules, '
                         'should you need it. We are here to help resolve issues and provide guidance.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -511,7 +527,7 @@ class AboutPage extends ConsumerWidget {
       );
 
   Widget get landlordTerms => Builder(
-    builder: (context) => Column(
+        builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -524,14 +540,14 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "By using the Fynda App, you accept and agree to be bound by these Terms, "
-                  "including any updates or changes that may be made from time to time. "
-                  "If you do not agree with these Terms, do not use the App. Account Creation "
-                  "and Use To use the Fynda App, you must create an account and provide certain "
-                  "information, such as your name, email address, and phone number. You must also "
-                  "create a password and agree to keep it confidential. You are responsible for "
-                  "maintaining the confidentiality of your account information and are solely "
-                  "responsible for all activities that occur under your account. You agree to "
-                  "provide accurate and complete information when creating your account.",
+              "including any updates or changes that may be made from time to time. "
+              "If you do not agree with these Terms, do not use the App. Account Creation "
+              "and Use To use the Fynda App, you must create an account and provide certain "
+              "information, such as your name, email address, and phone number. You must also "
+              "create a password and agree to keep it confidential. You are responsible for "
+              "maintaining the confidentiality of your account information and are solely "
+              "responsible for all activities that occur under your account. You agree to "
+              "provide accurate and complete information when creating your account.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -548,9 +564,9 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "The Fynda App allows you to list your hostels and accommodations for students to discover and "
-                  "book. You are responsible for providing accurate and up-to-date information about your "
-                  "accommodations, including location, available rooms, rental rates, hostel facilities, "
-                  "photos, videos and rules and regulations guiding the hostel.",
+              "book. You are responsible for providing accurate and up-to-date information about your "
+              "accommodations, including location, available rooms, rental rates, hostel facilities, "
+              "photos, videos and rules and regulations guiding the hostel.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -567,9 +583,9 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "Through the Fynda App, you can receive payments for booked accommodations. Payments will be processed "
-                  "and transferred to your local bank wallet through secure third-party payment processors. "
-                  "You agree to provide accurate and complete payment information and understand "
-                  "that transaction fees may apply.",
+              "and transferred to your local bank wallet through secure third-party payment processors. "
+              "You agree to provide accurate and complete payment information and understand "
+              "that transaction fees may apply.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -584,21 +600,24 @@ class AboutPage extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            Text('\t\u2022 You must provide a valid local bank wallet account in order to receive '
-                'payments through the Fynda App.',
+            Text(
+              '\t\u2022 You must provide a valid local bank wallet account in order to receive '
+              'payments through the Fynda App.',
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
               ),
             ),
-            Text('\t\u2022 Fynda may charge a small fee for processing hostel payments.',
+            Text(
+              '\t\u2022 Fynda may charge a small fee for processing hostel payments.',
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
               ),
             ),
-            Text('\t\u2022 Fynda reserves the right to withhold payments if it believes that'
-                ' there is a fraudulent or suspicious activity.',
+            Text(
+              '\t\u2022 Fynda reserves the right to withhold payments if it believes that'
+              ' there is a fraudulent or suspicious activity.',
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -615,8 +634,8 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "You are responsible for setting and communicating your cancellation and refund policies "
-                  "to tenants. Fynda is not responsible for refunds, and all disputes regarding "
-                  "cancellations should be resolved directly with the tenants.",
+              "to tenants. Fynda is not responsible for refunds, and all disputes regarding "
+              "cancellations should be resolved directly with the tenants.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -633,9 +652,9 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "You are responsible for all content that you post or upload to the Fynda App. You agree not to "
-                  "post or upload any content that is illegal, harmful, threatening, abusive, harassing, vulgar, "
-                  "obscene, defamatory, or otherwise objectionable. You also agree not to use the Fynda App to "
-                  "engage in any activity that is disruptive or harmful to the app or its users.",
+              "post or upload any content that is illegal, harmful, threatening, abusive, harassing, vulgar, "
+              "obscene, defamatory, or otherwise objectionable. You also agree not to use the Fynda App to "
+              "engage in any activity that is disruptive or harmful to the app or its users.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -652,8 +671,8 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "Your use of the Fynda App is subject to our Privacy Policy, which outlines how we collect, "
-                  "use, and disclose your personal information. Please review our Privacy Policy to "
-                  "understand our data practices.",
+              "use, and disclose your personal information. Please review our Privacy Policy to "
+              "understand our data practices.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -670,8 +689,8 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "You agree to use the App responsibly and not to engage in any unlawful, harmful, or "
-                  "disruptive activities while using the service. You also agree not to violate the "
-                  "rights or privacy of others while using the App.",
+              "disruptive activities while using the service. You also agree not to violate the "
+              "rights or privacy of others while using the App.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -688,8 +707,8 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "To create a positive and secure environment for both landlords/landladies and tenants, we "
-                  "have established the following rules and regulations for Fynda App users in the role "
-                  "of a landlord/landlady. By using our platform, you agree to adhere to these guidelines:",
+              "have established the following rules and regulations for Fynda App users in the role "
+              "of a landlord/landlady. By using our platform, you agree to adhere to these guidelines:",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -707,7 +726,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Provide accurate, complete, and up-to-date information about your '
+                    text:
+                        'Provide accurate, complete, and up-to-date information about your '
                         'accommodations, including room availability, rental rates, amenities, and any house rules.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -728,7 +748,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "Respect the privacy and confidentiality of tenant information. Do not share personal "
+                    text:
+                        "Respect the privacy and confidentiality of tenant information. Do not share personal "
                         "contact information within the app's messaging system.",
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -749,7 +770,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Ensure secure and transparent handling of payments through the app. Do not request '
+                    text:
+                        'Ensure secure and transparent handling of payments through the app. Do not request '
                         'payments outside of the platform or engage in any fraudulent financial transactions.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -770,7 +792,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "Clearly communicate your accommodation's cancellation and refund policies "
+                    text:
+                        "Clearly communicate your accommodation's cancellation and refund policies "
                         "to tenants. Honour the policies you specify and handle cancellations "
                         "in accordance with these policies.",
                     style: context.textTheme.bodyMedium!.copyWith(
@@ -785,14 +808,16 @@ class AboutPage extends ConsumerWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '\t\u2022 Respectful and Non-Discriminatory Behaviour: ',
+                    text:
+                        '\t\u2022 Respectful and Non-Discriminatory Behaviour: ',
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: weirdBlack75,
                     ),
                   ),
                   TextSpan(
-                    text: 'Treat all tenants with respect, regardless of their background, nationality, or personal '
+                    text:
+                        'Treat all tenants with respect, regardless of their background, nationality, or personal '
                         'characteristics. Discrimination or any form of harassment will not be tolerated.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -813,7 +838,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Communicate openly and transparently with potential tenants about the terms and conditions of '
+                    text:
+                        'Communicate openly and transparently with potential tenants about the terms and conditions of '
                         'your accommodations, including any house rules, policies, and expectations.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -834,7 +860,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Maintain your accommodations in good condition and ensure they are clean and '
+                    text:
+                        'Maintain your accommodations in good condition and ensure they are clean and '
                         'safe for tenants. Promptly address any issues or maintenance requests.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -855,7 +882,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Respond to tenant inquiries, booking requests, and messages in a timely and '
+                    text:
+                        'Respond to tenant inquiries, booking requests, and messages in a timely and '
                         'professional manner. Good communication is key to a positive rental experience.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -876,7 +904,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Safeguard tenant information and data privacy. Do not misuse or share '
+                    text:
+                        'Safeguard tenant information and data privacy. Do not misuse or share '
                         'tenant information for purposes other than the rental transaction.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -897,7 +926,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Use reviews and feedback constructively and honestly. Do not post false or malicious reviews. '
+                    text:
+                        'Use reviews and feedback constructively and honestly. Do not post false or malicious reviews. '
                         'Address any disputes or issues professionally and privately with tenants.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -911,14 +941,16 @@ class AboutPage extends ConsumerWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '\t\u2022 Compliance with Local Laws and Regulations: ',
+                    text:
+                        '\t\u2022 Compliance with Local Laws and Regulations: ',
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: weirdBlack75,
                     ),
                   ),
                   TextSpan(
-                    text: 'Ensure that your accommodations comply with all local laws '
+                    text:
+                        'Ensure that your accommodations comply with all local laws '
                         'and regulations, including safety and building codes.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -954,14 +986,16 @@ class AboutPage extends ConsumerWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '\t\u2022 Accountability for Accommodation Accuracy: ',
+                    text:
+                        '\t\u2022 Accountability for Accommodation Accuracy: ',
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: weirdBlack75,
                     ),
                   ),
                   TextSpan(
-                    text: 'Be accountable for the accuracy of your accommodation listings. '
+                    text:
+                        'Be accountable for the accuracy of your accommodation listings. '
                         'Update your listings to reflect any changes or updates.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -982,7 +1016,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "Follow any additional community guidelines or specific rules "
+                    text:
+                        "Follow any additional community guidelines or specific rules "
                         "provided by the Fynda community in your location or chosen accommodation.",
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -1003,7 +1038,8 @@ class AboutPage extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Cooperate with Fynda support in case of issues, disputes, or reported violations. '
+                    text:
+                        'Cooperate with Fynda support in case of issues, disputes, or reported violations. '
                         'Provide any requested information or assistance for investigations.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -1016,9 +1052,9 @@ class AboutPage extends ConsumerWidget {
             SizedBox(height: 16.h),
             Text(
               "By using the Fynda App as a landlord or landlady, you acknowledge that you have read and "
-                  "agreed to these rules and regulations. We expect all users to maintain a professional, "
-                  "respectful, and responsible presence on our platform to create a positive experience "
-                  "for everyone.",
+              "agreed to these rules and regulations. We expect all users to maintain a professional, "
+              "respectful, and responsible presence on our platform to create a positive experience "
+              "for everyone.",
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,
@@ -1026,6 +1062,604 @@ class AboutPage extends ConsumerWidget {
             ),
           ],
         ),
+      );
+
+  Widget get agentTerms => Builder(
+    builder: (context) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "1. Account Creation and Use",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "To use the Fynda App, you must create an account and provide certain "
+              "information, such as your name, email address, and phone number. You "
+              "must also create a password and agree to keep it confidential. You are "
+              "responsible for all activity that occurs under your Fynda account. You "
+              "agree to use your account only for lawful purposes and in accordance with "
+              "these Terms of Service.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "2. Agent Role and Responsibilities",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t2.1 ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Fynda App provides a platform for Agents to assist Landlords/landladies in "
+                    "listing and managing hostels. As an Agent, you agree to use the platform"
+                    " responsibly and ethically, adhering to all applicable laws and regulations.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t2.2 ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Your primary responsibilities include, but are not limited to, assisting "
+                    "Landlords/landladies in creating accurate hostel listings, managing property "
+                    "details, and facilitating communication with potential tenants.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "3. Hostel Listing and Management",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text("As an agent, you can use the Fynda App to list and manage hostels "
+            "for landlords/landladies. You agree to provide accurate and complete "
+            "information about the hostels that you list. You also agree to keep "
+            "the information up-to-date.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text("You are responsible for managing all aspects of the hostel listings that you create, including:",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          '\t\u2022 Responding to inquiries from potential tenants',
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        Text(
+          '\t\u2022 Scheduling showings',
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        Text(
+          '\t\u2022 Processing rental applications',
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        Text(
+          '\t\u2022 Collecting rent through Fynda App',
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        Text(
+          '\t\u2022 Managing tenant move-ins and move-outs',
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "4. Rules and Regulations",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text("Certainly, here are some rules and regulations that can guide Agents in the Fynda App below:",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.1 Ethical Conduct: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents must conduct themselves in an ethical and professional "
+                    "manner at all times. You must also avoid engaging in any "
+                    "deceptive, fraudulent, or unethical activities.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.2 Account Security: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents are responsible for the security of their accounts. "
+                    "Keep login credentials confidential and report any suspicious activity to Fynda App.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.3 Privacy and Data Protection: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents must respect the privacy of both Landlords and Tenants. "
+                    "Do not misuse or share personal data for purposes other than "
+                    "facilitating property management and listings.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.4 Accurate Listings: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Ensure that hostel listings are accurate, complete, "
+                "and up to date. Provide truthful and transparent information about properties.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.5 Communication: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Maintain clear and respectful communication with "
+                "Landlords and Tenants. Respond to messages and inquiries in a timely manner.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.6 Compliance with Laws: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents must comply with all applicable laws and regulations, "
+                    "including those related to property rental and data protection.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.7 No Unauthorized Transactions: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents must not conduct transactions or discussions"
+                    " outside the Fynda App platform. All transactions "
+                    "should occur within the platform to ensure security.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.8 Intellectual Property: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Respect the intellectual property rights of"
+                    " Fynda App and others. Do not reproduce, distribute, or use "
+                    "any platform content without proper authorization.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t4.9 Reporting: ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents should report any issues or violations by Landlords, "
+                  "Tenants, or other Agents to Fynda App support. ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "5. Agent Restrictions",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t5.1 ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents are hereby informed that withdrawals from the Fynda "
+                "App will be restricted to ensure the smooth operation of the platform.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "\t\t5.2 ",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: weirdBlack75,
+                ),
+              ),
+              TextSpan(
+                text:
+                "Agents do not have access to update the landlords/landladies account details on Fynda App.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: weirdBlack75,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "6. Termination",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "Fynda App reserves the right to terminate or suspend an Agent's account at its sole discretion,"
+              " with or without cause. Agents may also terminate their account voluntarily "
+              "by providing notice to Fynda App.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "7. Content and Conduct",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "You are responsible for all content that you post or upload to the "
+              "Fynda App. You agree not to post or upload any content that is illegal, "
+              "harmful, threatening, abusive, harassing, vulgar, obscene, defamatory, or "
+              "otherwise objectionable.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "You also agree not to use the Fynda App to engage "
+              "in any activity that is disruptive or harmful "
+              "to the app or its users.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "8. Privacy and Data Usage",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "Agents must adhere to Fynda App's privacy and data usage policies, "
+              "respecting the privacy and data protection rights of both Landlords and Tenants.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "Agents must not share or use personal data for any purpose other "
+              "than facilitating hostel management and listings.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "9. Intellectual Property",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "The Fynda App and all of its content are protected by copyright and "
+              "other intellectual property laws. You agree not to copy, distribute, "
+              "or modify the Fynda App or its content without the express written "
+              "permission of Fynda App.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "10. Limitation of Liability",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "Fynda App shall not be liable for any damages of any kind arising from your use of the Fynda App.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "11. Changes to Terms of Service",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "Fynda App reserves the right to amend or modify these Terms of Service at "
+              "any time. Notice of changes will be provided to Agents, and continued use "
+              "of the platform after the effective date of changes constitutes acceptance "
+              "of the amended terms.",
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          "12. Contact Us",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: weirdBlack75,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        RichText(
+          text: TextSpan(children: [
+            TextSpan(
+              text:
+              'If you have questions, concerns, or requests regarding your privacy or '
+                  'these Terms of Service, please contact us at ',
+              style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500, color: weirdBlack75),
+            ),
+            TextSpan(
+                text: "+2349012111170",
+                style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500, color: appBlue),
+                recognizer: TapGestureRecognizer()
+                  ..onTap =
+                      () async => launchContactUrl("09012111170")),
+            TextSpan(
+              text: " or ",
+              style: context.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500, color: weirdBlack75),
+            ),
+            TextSpan(
+                text: "fynda.care@gmail.com",
+                style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500, color: appBlue),
+                recognizer: TapGestureRecognizer()
+                  ..onTap =
+                      () async => launchEmail("fynda.care@gmail.com"))
+          ]),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          'By using the Fynda App as an agent, you acknowledge that you have read, understood, and agreed to '
+              'these Terms of Service. These Terms are a legal agreement between you and Fynda, so please '
+              'make sure you fully comprehend them before using the App.',
+          style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500, color: weirdBlack75),
+        ),
+      ],
+    ),
   );
 
   @override
@@ -1055,107 +1689,115 @@ class AboutPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  type == UserType.student ?
-                  'These Terms of Service ("Terms") govern the use of the Fynda App (the "App"),'
-                  ' a platform that assists students in higher institutions in securing '
-                  'accommodation and collaborating with their desired roommates. '
-                  'By accessing or using the App, you agree to comply with and be bound by '
-                  'these Terms. Please read them carefully.' :
-                  'These Terms of Service ("Terms") govern the use of the Fynda App (the "App") by '
-                      'landlords and landladies who wish to market and manage their hostels to students '
-                      'in higher institutions and receive payments through the Fynda App to their local '
-                      'bank wallet. By accessing or using the App, you agree to comply with and be bound '
-                      'by these Terms. Please read them carefully.'
-                  ,
+                  type == UserType.student
+                      ? 'These Terms of Service ("Terms") govern the use of the Fynda App (the "App"),'
+                          ' a platform that assists students in higher institutions in securing '
+                          'accommodation and collaborating with their desired roommates. '
+                          'By accessing or using the App, you agree to comply with and be bound by '
+                          'these Terms. Please read them carefully.'
+                      : type == UserType.landlord
+                          ? 'These Terms of Service ("Terms") govern the use of the Fynda App (the "App") by '
+                              'landlords and landladies who wish to market and manage their hostels to students '
+                              'in higher institutions and receive payments through the Fynda App to their local '
+                              'bank wallet. By accessing or using the App, you agree to comply with and be bound '
+                              'by these Terms. Please read them carefully.'
+                          : 'These Terms of Service ("Agreement") are entered into between you ("Agent" or "you") '
+                              'and Fynda App ("we," "our," or "Fynda App"). Fynda App helps agents to list and '
+                              'manage hostels for landlords/landladies. By using the Fynda App platform, you agree '
+                              'to the following terms and conditions.',
                   style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w500, color: weirdBlack75),
                 ),
                 SizedBox(height: 32.h),
-                type == UserType.student
-                    ? studentTerms
-                    : landlordTerms,
-                SizedBox(height: 16.h),
-                Text(
-                  "Termination",
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack75,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  "We reserve the right to terminate or suspend your account and access to the App at our discretion, "
-                      "with or without notice, if you violate these Terms or engage in any activity that we deem harmful to "
-                      "the App or its users.",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack75,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  "Changes to Terms of Service",
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack75,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  "We may update or modify these Terms from time to time. Any changes will be effective upon posting, "
-                  "and it is your responsibility to review these Terms periodically. Your continued use of the App after "
-                  "any changes constitutes your acceptance of the modified Terms.",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack75,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  "Contact Information",
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack75,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                      text:
+                type == UserType.student ? studentTerms : type == UserType.agent ? agentTerms : landlordTerms,
+                if(type != UserType.agent)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Termination",
+                      style: context.textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "We reserve the right to terminate or suspend your account and access to the App at our discretion, "
+                          "with or without notice, if you violate these Terms or engage in any activity that we deem harmful to "
+                          "the App or its users.",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Changes to Terms of Service",
+                      style: context.textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "We may update or modify these Terms from time to time. Any changes will be effective upon posting, "
+                          "and it is your responsibility to review these Terms periodically. Your continued use of the App after "
+                          "any changes constitutes your acceptance of the modified Terms.",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Contact Information",
+                      style: context.textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text:
                           'If you have questions, concerns, or requests regarding your privacy or '
-                          'these Terms of Service, please contact us at ',
-                      style: context.textTheme.bodyMedium!.copyWith(
+                              'these Terms of Service, please contact us at ',
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500, color: weirdBlack75),
+                        ),
+                        TextSpan(
+                            text: "+2349012111170",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500, color: appBlue),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap =
+                                  () async => launchContactUrl("09012111170")),
+                        TextSpan(
+                          text: " or ",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500, color: weirdBlack75),
+                        ),
+                        TextSpan(
+                            text: "fynda.care@gmail.com",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500, color: appBlue),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap =
+                                  () async => launchEmail("fynda.care@gmail.com"))
+                      ]),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'By using the Fynda App${type == UserType.landlord ? " as a landlord or landlady" : " as a student"}, you acknowledge that you have read, understood, and agreed to '
+                          'these Terms of Service. These Terms are a legal agreement between you and Fynda, so please '
+                          'make sure you fully comprehend them before using the App.',
+                      style: context.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.w500, color: weirdBlack75),
                     ),
-                    TextSpan(
-                        text: "+2349012111170",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w500, color: appBlue),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap =
-                              () async => launchContactUrl("09012111170")),
-                    TextSpan(
-                      text: " or ",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w500, color: weirdBlack75),
-                    ),
-                    TextSpan(
-                        text: "fynda.care@gmail.com",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w500, color: appBlue),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap =
-                              () async => launchEmail("fynda.care@gmail.com"))
-                  ]),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  'By using the Fynda App${type == UserType.landlord ? " as a landlord or landlady" : ""}, you acknowledge that you have read, understood, and agreed to '
-                  'these Terms of Service. These Terms are a legal agreement between you and Fynda, so please '
-                  'make sure you fully comprehend them before using the App.',
-                  style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w500, color: weirdBlack75),
+                  ],
                 ),
                 SizedBox(height: 32.h),
                 GestureDetector(

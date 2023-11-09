@@ -55,13 +55,17 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => setState(
+              () {
+                if (tabIndex == 0 && scrollController.offset > 250.h) {
+                  scrollController.jumpTo(250.h);
+                }
                 isCollapsed = scrollController.hasClients &&
                     scrollController.offset > 450.h;
-                if (tabIndex == 0 && scrollController.offset > 455.h) {
-                  scrollController.jumpTo(455.h);
-                }
-              }));
+              },
+            ),
+          );
 
           return true;
         },
@@ -884,25 +888,28 @@ class _WriteCommentState extends State<_WriteComment> {
                     SizedBox(height: 10.h),
                     SvgPicture.asset("assets/images/Modal Line.svg"),
                     SizedBox(height: 25.h),
-                    if(index == 2)
-                    Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.r),
-                          topRight: Radius.circular(15.r),
-                        ),
-                        child: Image.asset(
-                          "assets/images/Thank You.png",
-                          width: 135.r,
-                          height: 135.h,
-                          fit: BoxFit.cover,
+                    if (index == 2)
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                          child: Image.asset(
+                            "assets/images/Thank You.png",
+                            width: 135.r,
+                            height: 135.h,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    if(index == 2)
-                    SizedBox(height: 16.h),
+                    if (index == 2) SizedBox(height: 16.h),
                     Text(
-                      index == 0 ? "Write a comment" : index == 1 ? "Please rate the hostel" : "Thanks for helping others",
+                      index == 0
+                          ? "Write a comment"
+                          : index == 1
+                              ? "Please rate the hostel"
+                              : "Thanks for helping others",
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
                         color: weirdBlack,
@@ -912,8 +919,9 @@ class _WriteCommentState extends State<_WriteComment> {
                     Text(
                       index == 0
                           ? "Writing a comment helps your colleagues to vividly understand the status of this hostel."
-                          : index == 1 ? "Rating this hostel help your colleagues to know more about this hostel before they can be considered to pay the hostel rent."
-                      : "Your feedback have made it easy for others to know the status of the hostel.",
+                          : index == 1
+                              ? "Rating this hostel help your colleagues to know more about this hostel before they can be considered to pay the hostel rent."
+                              : "Your feedback have made it easy for others to know the status of the hostel.",
                       textAlign: TextAlign.center,
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack50,
@@ -921,15 +929,15 @@ class _WriteCommentState extends State<_WriteComment> {
                       ),
                     ),
                     SizedBox(height: 30.h),
-                    if(index == 0)
-                    SpecialForm(
-                      controller: controller,
-                      width: 390.w,
-                      height: 100.h,
-                      maxLines: 6,
-                      onChange: (val) => setState(() {}),
-                    ),
-                    if(index == 1)
+                    if (index == 0)
+                      SpecialForm(
+                        controller: controller,
+                        width: 390.w,
+                        height: 100.h,
+                        maxLines: 6,
+                        onChange: (val) => setState(() {}),
+                      ),
+                    if (index == 1)
                       RatingStars(
                         value: starValue,
                         starBuilder: (_, color) => Icon(
@@ -937,7 +945,8 @@ class _WriteCommentState extends State<_WriteComment> {
                           color: color,
                           size: 40.r,
                         ),
-                        onValueChanged: (value) => setState(() => starValue = value),
+                        onValueChanged: (value) =>
+                            setState(() => starValue = value),
                         valueLabelVisibility: false,
                         starCount: 5,
                         starSize: 40.r,
@@ -948,12 +957,12 @@ class _WriteCommentState extends State<_WriteComment> {
                     SizedBox(height: index == 2 ? 0.h : 60.h),
                     GestureDetector(
                       onTap: () {
-                        if(index == 2) {
+                        if (index == 2) {
                           Navigator.of(context).pop();
                           return;
                         }
 
-                        if(controller.text.isEmpty) return;
+                        if (controller.text.isEmpty) return;
                         setState(() => ++index);
                       },
                       child: Container(
@@ -975,8 +984,7 @@ class _WriteCommentState extends State<_WriteComment> {
                         ),
                       ),
                     ),
-                    if(index == 2)
-                      SizedBox(height: 30.h),
+                    if (index == 2) SizedBox(height: 30.h),
                   ],
                 ),
               ),

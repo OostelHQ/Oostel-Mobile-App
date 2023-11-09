@@ -105,7 +105,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                           bottom: 30.r,
                           child: GestureDetector(
                             onTap: () =>
-                                context.router.pushNamed(Pages.editProfile),
+                                context.router.pushNamed(Pages.editOwnerProfile),
                             child: Container(
                               width: 40.r,
                               height: 40.r,
@@ -431,7 +431,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                     SizedBox(height: 16.h),
                     ProfileInfoCard(
                       image: "assets/images/Profile Blue Location.svg",
-                      header: allHostels.first.address,
+                      header: joinToAddress(allHostels.first.address),
                       text: "Address",
                     ),
                     SizedBox(height: 24.h),
@@ -557,124 +557,125 @@ class _AgentInviteState extends State<AgentInvite> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 450.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 55.h),
-                  if (sent)
-                    Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.r),
-                          topRight: Radius.circular(15.r),
-                        ),
-                        child: Image.asset(
-                          "assets/images/Agent Invite.png",
-                          width: 135.r,
-                          height: 135.h,
-                          fit: BoxFit.cover,
+    return AnimatedPadding(
+      padding: MediaQuery.of(context).viewInsets,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.decelerate,
+      child: SizedBox(
+        height: 555.h,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 10.h),
+                    SvgPicture.asset("assets/images/Modal Line.svg"),
+                    SizedBox(height: sent ? 55.h : 25.h),
+                    if (sent)
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                          child: Image.asset(
+                            "assets/images/Agent Invite.png",
+                            width: 135.r,
+                            height: 135.h,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
+                    if (sent) SizedBox(height: 16.h),
+                    Text(
+                      !sent ? "Invite an Agent" : "Invite Sent",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack,
+                      ),
                     ),
-                  if (sent) SizedBox(height: 16.h),
-                  Text(
-                    !sent ? "Invite an Agent" : "Invite Sent",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
+                    SizedBox(height: 12.h),
+                    Text(
+                      !sent
+                          ? "Invite your own co-worker to help you manage and market your hostel to the students."
+                          : "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack75,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    !sent
-                        ? "Invite your own co-worker to help you manage and market your hostel to the students."
-                        : "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack75,
-                      fontWeight: FontWeight.w500,
+                    if (sent) SizedBox(height: 60.h),
+                    SizedBox(height: 32.h),
+                    Text(
+                      "Email",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75, fontWeight: FontWeight.w500),
                     ),
-                  ),
-                  if (sent) SizedBox(height: 60.h),
-                  SizedBox(height: 32.h),
-                  Text(
-                    "Email",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 8.h),
-                  SpecialForm(
-                    controller: email,
-                    width: 414.w,
-                    height: 50.h,
-                    hintStyle: context.textTheme.bodyMedium!
-                        .copyWith(color: fadedBorder),
-                    hint: "example@example.com",
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Short note",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 8.h),
-                  SpecialForm(
-                    controller: email,
-                    width: 414.w,
-                    height: 150.h,
-                    maxLines: 6,
-                    hintStyle: context.textTheme.bodyMedium!
-                        .copyWith(color: fadedBorder),
-                    hint:
-                        "Hello, \n\nI'm hereby inviting you to this platform as an Agent to manage my apartment.\n\nThanks.",
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (!sent) {
-                        setState(() => sent = true);
-                        return;
-                      }
-                      context.router.pop();
-                    },
-                    child: Container(
+                    SizedBox(height: 8.h),
+                    SpecialForm(
+                      controller: email,
                       width: 414.w,
                       height: 50.h,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: appBlue,
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: Text(
-                        !sent ? "Send Invite" : "Ok, thanks",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                      hint: "example@example.com",
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Short note",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 8.h),
+                    SpecialForm(
+                      controller: note,
+                      width: 414.w,
+                      height: 150.h,
+                      maxLines: 6,
+                      hint:
+                          "Hello, \n\nI'm hereby inviting you to this platform as an Agent to manage my apartment.\n\nThanks.",
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (!sent) {
+                          setState(() => sent = true);
+                          return;
+                        }
+                        context.router.pop();
+                      },
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: appBlue,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          !sent ? "Send Invite" : "Ok, thanks",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Note that: Your co-workers do not have access to withdraw any received payments from students and change the settings made by you.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodySmall!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Note that: Your co-workers do not have access to withdraw any received payments from students and change the settings made by you.",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: weirdBlack50,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

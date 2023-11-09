@@ -72,8 +72,8 @@ class _AgentsPageState extends ConsumerState<AgentsPage> {
           ),
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 70.h,
+    bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: GestureDetector(
           onTap: () => showModalBottomSheet(
             context: context,

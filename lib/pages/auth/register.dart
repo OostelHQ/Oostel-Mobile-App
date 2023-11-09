@@ -195,7 +195,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           if(!readTerms || (emailController.text.isEmpty || passwordController.text.isEmpty || lastNameController.text.isEmpty || firstNameController.text.isEmpty)) return;
                           context.router.pushNamed(ref.read(isAStudent)
                               ? Pages.studentDashboard
-                              : Pages.ownerDashboard);
+                              : ref.read(isAgent) ? Pages.agentDashboard :
+                          Pages.ownerDashboard);
                         },
                         child: Container(
                           width: 414.w,

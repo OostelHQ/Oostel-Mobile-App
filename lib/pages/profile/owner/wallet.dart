@@ -4,9 +4,6 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:my_hostel/components/student.dart';
-import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -24,26 +21,35 @@ class _WalletPageState extends ConsumerState<OwnerWalletPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 0.01,
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => context.router.pop(),
-        ),
+        automaticallyImplyLeading: false,
         elevation: 0.0,
-        centerTitle: true,
         title: Text(
           "Wallet",
           style: context.textTheme.bodyLarge!
               .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 22.w),
+            child: GestureDetector(
+              onTap: () => context.router.pushNamed(Pages.notification),
+              child: AnimatedSwitcherTranslation.right(
+                duration: const Duration(milliseconds: 500),
+                child: SvgPicture.asset(
+                  "assets/images/Notification ${ref.watch(newNotificationProvider) ? "Active" : "None"}.svg",
+                  height: 25.h,
+                  key: ValueKey<bool>(ref.watch(newNotificationProvider)),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           child: Column(
             children: [
-              SizedBox(height: 24.h),
               const WalletSlider(),
               SizedBox(height: 24.h),
               GestureDetector(

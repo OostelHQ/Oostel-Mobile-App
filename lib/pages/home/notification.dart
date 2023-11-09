@@ -15,46 +15,66 @@ class NotificationPage extends ConsumerWidget {
     List<NotificationData> notifications = ref.watch(notificationsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 0.01,
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => context.router.pop(),
-        ),
-        elevation: 0.0,
-        centerTitle: true,
-        title: Text(
-          "Notifications",
-          style: context.textTheme.bodyLarge!
-              .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
-        ),
-        actions: [
-          IconButton(
-            iconSize: 26.r,
-            splashRadius: 20.r,
-            icon: const Icon(Icons.more_vert_rounded),
-            onPressed: () {},
-          )
-        ],
-      ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: ListView.separated(
-            itemBuilder: (_, index) {
-              if (index == notifications.length) {
-                return SizedBox(height: 48.h);
-              }
-              return _NotificationCard(
-                data: notifications[index],
-                onRemove: () => notifications.removeAt(index),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(height: 15.h),
-            itemCount: notifications.length + 1,
-          ),
-        ),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              leading: IconButton(
+                iconSize: 26.r,
+                splashRadius: 0.01,
+                icon: const Icon(Icons.chevron_left),
+                onPressed: () => context.router.pop(),
+              ),
+              elevation: 0.0,
+              centerTitle: true,
+              pinned: true,
+              title: Text(
+                "Notifications",
+                style: context.textTheme.bodyLarge!
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+              ),
+              actions: [
+                PopupMenuButton<String>(
+                  itemBuilder: (context) => [
+                    PopupMenuItem<String>(
+                      value: "Refresh",
+                      child: Text(
+                        "Refresh",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                    )
+                  ],
+                  onSelected: (result) {
+                    // Navigate to edit hostel
+                  },
+                ),
+              ],
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (_, index) {
+                      if (index == notifications.length) {
+                        return SizedBox(height: 48.h);
+                      }
+                      return Column(
+                        children: [
+                          _NotificationCard(
+                            data: notifications[index],
+                            onRemove: () => notifications.removeAt(index),
+                          ),
+                          SizedBox(height: 15.h),
+                        ],
+                      );
+
+                    },
+                  childCount: notifications.length + 1,
+                ),
+              ),
+            ),
+          ],
+        )
       ),
     );
   }

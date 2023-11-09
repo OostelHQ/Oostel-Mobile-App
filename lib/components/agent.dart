@@ -6,6 +6,7 @@ class Agent extends User {
   final double ratings;
   final int totalRated;
   final DateTime dob;
+  final List<String> affiliatedLandlords;
 
   const Agent({
     String id = "",
@@ -24,6 +25,7 @@ class Agent extends User {
     this.ratings = 0.0,
     this.totalRated = 0,
     this.address = "",
+    this.affiliatedLandlords = const [],
     required this.dob,
   }) : super(
     id: id,

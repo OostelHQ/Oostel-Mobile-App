@@ -1,9 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,7 +8,6 @@ import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
-import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
 
@@ -29,12 +23,27 @@ class LandlordHostelInformationPage extends ConsumerStatefulWidget {
 
 class _LandlordHostelInformationPageState
     extends ConsumerState<LandlordHostelInformationPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final ScrollController scrollController = ScrollController();
+  late TabController tabController;
   bool isCollapsed = false;
+  int tabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    tabController = TabController(length: 6, vsync: this);
+    tabController.addListener(() {
+      WidgetsBinding.instance.addPostFrameCallback(
+              (_) => setState(() => tabIndex = tabController.index));
+    });
+  }
+
 
   @override
   void dispose() {
+    tabController.dispose();
     scrollController.dispose();
     super.dispose();
   }
@@ -45,297 +54,304 @@ class _LandlordHostelInformationPageState
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() =>
-              isCollapsed = scrollController.hasClients &&
-                  scrollController.offset > 450.h));
+          WidgetsBinding.instance.addPostFrameCallback(
+                (_) => setState(
+                  () {
+                if ((tabIndex == 0 || tabIndex == 5) && scrollController.offset > 250.h) {
+                  scrollController.jumpTo(250.h);
+                }
+                isCollapsed = scrollController.hasClients &&
+                    scrollController.offset > 450.h;
+              },
+            ),
+          );
           return true;
         },
-        child: DefaultTabController(
-          length: 6,
-          child: NestedScrollView(
-            headerSliverBuilder: (context, isScrolled) => [
-              SliverAppBar(
-                title: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: isCollapsed ? 1 : 0,
-                  child: Text(
-                    widget.info.name,
-                    style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600, color: weirdBlack),
-                  ),
-                ),
-                leading: isCollapsed
-                    ? IconButton(
-                        onPressed: () => context.router.pop(),
-                        iconSize: 26.r,
-                        splashRadius: 20.r,
-                        icon: const Icon(Icons.chevron_left_rounded),
-                      )
-                    : null,
-                automaticallyImplyLeading: false,
-                centerTitle: true,
-                elevation: 0.0,
-                expandedHeight: 470.h,
-                pinned: true,
-                collapsedHeight: kToolbarHeight,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Hero(
-                        tag:
-                            "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
-                        flightShuttleBuilder: flightShuttleBuilder,
-                        child: Image.asset(
-                          widget.info.image,
-                          width: 414.w,
-                          height: 470.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        top: 80.h,
-                        left: 30.w,
-                        child: GestureDetector(
-                          onTap: () => context.router.pop(),
-                          child: Container(
-                            width: 40.r,
-                            height: 40.r,
-                            decoration: BoxDecoration(
-                              color: Colors.black45,
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Icon(Icons.chevron_left_rounded,
-                                color: Colors.white, size: 26.r),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 80.h,
-                        right: 30.w,
-                        child: PopupMenuButton<String>(
-                          itemBuilder: (context) => [
-                            PopupMenuItem<String>(
-                              value: "Edit hostel details",
-                              child: Text(
-                                "Edit hostel details",
-                                style: context.textTheme.bodyMedium,
-                              ),
-                            )
-                          ],
-                          onSelected: (result) {
-                            // Navigate to edit hostel
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+        child: NestedScrollView(
+          headerSliverBuilder: (context, isScrolled) => [
+            SliverAppBar(
+              title: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: isCollapsed ? 1 : 0,
+                child: Text(
+                  widget.info.name,
+                  style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600, color: weirdBlack),
                 ),
               ),
-              SliverToBoxAdapter(
-                child: SizedBox(height: 15.h),
-              ),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 280.w,
-                            child: Hero(
-                              tag:
-                                  "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
-                              flightShuttleBuilder: flightShuttleBuilder,
-                              child: Text(
-                                widget.info.name,
-                                style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack,
-                                ),
-                              ),
-                            ),
+              leading: isCollapsed
+                  ? IconButton(
+                      onPressed: () => context.router.pop(),
+                      iconSize: 26.r,
+                      splashRadius: 20.r,
+                      icon: const Icon(Icons.chevron_left_rounded),
+                    )
+                  : null,
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+              elevation: 0.0,
+              expandedHeight: 470.h,
+              pinned: true,
+              collapsedHeight: kToolbarHeight,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Hero(
+                      tag:
+                          "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                      flightShuttleBuilder: flightShuttleBuilder,
+                      child: Image.asset(
+                        widget.info.image,
+                        width: 414.w,
+                        height: 470.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      top: 80.h,
+                      left: 30.w,
+                      child: GestureDetector(
+                        onTap: () => context.router.pop(),
+                        child: Container(
+                          width: 40.r,
+                          height: 40.r,
+                          decoration: BoxDecoration(
+                            color: Colors.black45,
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
-                          Container(
-                            width: 85.w,
-                            height: 25.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: infoRoomsLeftBackground,
-                              borderRadius: BorderRadius.circular(5.r),
-                            ),
+                          child: Icon(Icons.chevron_left_rounded,
+                              color: Colors.white, size: 26.r),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 80.h,
+                      right: 30.w,
+                      child: PopupMenuButton<String>(
+                        itemBuilder: (context) => [
+                          PopupMenuItem<String>(
+                            value: "Edit hostel details",
                             child: Text(
-                              "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: infoRoomsLeft,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.sp,
-                              ),
+                              "Edit hostel details",
+                              style: context.textTheme.bodyMedium,
                             ),
                           )
                         ],
+                        onSelected: (result) {
+                          // Navigate to edit hostel
+                        },
                       ),
-                      SizedBox(height: 15.h),
-                      Text(
-                        joinToAddress(widget.info.address),
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 8.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/Hostel Info Bed.svg",
-                            width: 15.r,
-                            height: 15.r,
-                            color: weirdBlack50,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 15.h),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 280.w,
+                          child: Hero(
+                            tag:
+                                "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                            flightShuttleBuilder: flightShuttleBuilder,
+                            child: Text(
+                              widget.info.name,
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: weirdBlack,
+                              ),
+                            ),
                           ),
-                          SizedBox(width: 5.w),
-                          Text(
-                            "${widget.info.bedrooms}",
-                            style: context.textTheme.bodySmall!.copyWith(
-                                color: weirdBlack50,
-                                fontWeight: FontWeight.w500),
+                        ),
+                        Container(
+                          width: 85.w,
+                          height: 25.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: infoRoomsLeftBackground,
+                            borderRadius: BorderRadius.circular(5.r),
                           ),
-                          SizedBox(width: 10.w),
-                          SvgPicture.asset(
-                            "assets/images/Hostel Info Bath.svg",
-                            width: 15.r,
-                            height: 15.r,
-                            color: weirdBlack50,
+                          child: Text(
+                            "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: infoRoomsLeft,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13.sp,
+                            ),
                           ),
-                          SizedBox(width: 5.w),
-                          Text(
-                            "${widget.info.bathrooms}",
-                            style: context.textTheme.bodySmall!.copyWith(
-                                color: weirdBlack50,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(width: 10.w),
-                          SvgPicture.asset(
-                            "assets/images/Hostel Info Area.svg",
-                            width: 15.r,
-                            height: 15.r,
-                            color: weirdBlack20,
-                          ),
-                          SizedBox(width: 5.w),
-                          Text(
-                            "${widget.info.area.toStringAsFixed(0)} sqft",
-                            style: context.textTheme.bodySmall!.copyWith(
-                                color: weirdBlack50,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text:
-                                      "${currency()} ${formatAmountInDouble(widget.info.price)}",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 15.h),
+                    Text(
+                      joinToAddress(widget.info.address),
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/Hostel Info Bed.svg",
+                          width: 15.r,
+                          height: 15.r,
+                          color: weirdBlack50,
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          "${widget.info.bedrooms}",
+                          style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(width: 10.w),
+                        SvgPicture.asset(
+                          "assets/images/Hostel Info Bath.svg",
+                          width: 15.r,
+                          height: 15.r,
+                          color: weirdBlack50,
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          "${widget.info.bathrooms}",
+                          style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(width: 10.w),
+                        SvgPicture.asset(
+                          "assets/images/Hostel Info Area.svg",
+                          width: 15.r,
+                          height: 15.r,
+                          color: weirdBlack20,
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          "${widget.info.area.toStringAsFixed(0)} sqft",
+                          style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    "${currency()} ${formatAmountInDouble(widget.info.price)}",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                TextSpan(
-                                  text: "/year",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                              TextSpan(
+                                text: "/year",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: appBlue,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
                           ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(22.5.r),
-                            child: Image.asset(
-                              "assets/images/funaab logo.png",
-                              width: 50.r,
-                              height: 50.r,
-                              fit: BoxFit.contain,
-                            ),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(22.5.r),
+                          child: Image.asset(
+                            "assets/images/funaab logo.png",
+                            width: 50.r,
+                            height: 50.r,
+                            fit: BoxFit.contain,
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                    ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              ),
+            ),
+            SliverPersistentHeader(
+              delegate: TabHeaderDelegate(
+                color: const Color(0xFFFBFDFF),
+                tabBar: TabBar(
+                  indicatorColor: appBlue,
+                  controller: tabController,
+                  labelColor: appBlue,
+                  labelStyle: context.textTheme.bodyMedium!
+                      .copyWith(color: appBlue, fontWeight: FontWeight.w500),
+                  unselectedLabelStyle: context.textTheme.bodyMedium!
+                      .copyWith(
+                          color: weirdBlack50, fontWeight: FontWeight.w500),
+                  isScrollable: true,
+                  tabs: const [
+                    Tab(text: "Analytics"),
+                    Tab(text: "About"),
+                    Tab(text: "Chats"),
+                    Tab(text: "Rooms"),
+                    Tab(text: "Comments"),
+                    Tab(text: "Calender")
+                  ],
+                ),
+              ),
+              pinned: true,
+            )
+          ],
+          controller: scrollController,
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              Center(
+                child: Text(
+                  "Coming Soon...",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: weirdBlack75,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-              SliverPersistentHeader(
-                delegate: TabHeaderDelegate(
-                  color: const Color(0xFFFBFDFF),
-                  tabBar: TabBar(
-                    indicatorColor: appBlue,
-                    labelColor: appBlue,
-                    labelStyle: context.textTheme.bodyMedium!
-                        .copyWith(color: appBlue, fontWeight: FontWeight.w500),
-                    unselectedLabelStyle: context.textTheme.bodyMedium!
-                        .copyWith(
-                            color: weirdBlack50, fontWeight: FontWeight.w500),
-                    isScrollable: true,
-                    tabs: const [
-                      Tab(text: "Analytics"),
-                      Tab(text: "About"),
-                      Tab(text: "Chats"),
-                      Tab(text: "Rooms"),
-                      Tab(text: "Comments"),
-                      Tab(text: "Calender")
-                    ],
+              _AboutSection(info: widget.info),
+              Center(
+                child: Text(
+                  "Coming Soon...",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: weirdBlack75,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                pinned: true,
-              )
+              ),
+              _RoomSection(info: widget.info),
+              const _CommentSection(),
+              Center(
+                child: Text(
+                  "Coming Soon...",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: weirdBlack75,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ],
-            controller: scrollController,
-            body: TabBarView(
-              children: [
-                Center(
-                  child: Text(
-                    "Coming Soon...",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack75,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                _AboutSection(info: widget.info),
-                Center(
-                  child: Text(
-                    "Coming Soon...",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack75,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                _RoomSection(info: widget.info),
-                const _CommentSection(),
-                Center(
-                  child: Text(
-                    "Coming Soon...",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack75,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

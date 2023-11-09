@@ -96,6 +96,11 @@ class Pages
 
   static const String agents = 'agents';
   static const String viewAgent = 'view-agent';
+  static const String agentDashboard = 'agent-dashboard';
+  static const String agentWallet = 'agent-wallet';
+  static const String agentSettings = 'agent-settings';
+  static const String agentProfile = 'agent-profile';
+  static const String editAgentProfile = 'edit-agent-profile';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

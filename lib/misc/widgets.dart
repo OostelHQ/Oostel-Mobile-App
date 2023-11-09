@@ -1793,7 +1793,7 @@ class FacilityContainer extends StatelessWidget {
             color: paleBlue,
           ),
           child: SvgPicture.asset(
-            "assets/images/$text.svg",
+            "assets/images/$text${text == "Security" ? "-On" : ""}.svg",
             width: 35.r,
             height: 35.r,
           ),
@@ -2146,10 +2146,14 @@ class ProfileInfoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  header,
-                  style: context.textTheme.bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+                SizedBox(
+                  width: 260.w,
+                  child: Text(
+                    header,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+                  ),
                 ),
                 Text(
                   text,

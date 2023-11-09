@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:my_hostel/api/file_manager.dart';
+import 'package:my_hostel/components/agent.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
@@ -15,15 +16,15 @@ import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class EditOwnerProfilePage extends ConsumerStatefulWidget {
-  const EditOwnerProfilePage({super.key});
+class EditAgentProfilePage extends ConsumerStatefulWidget {
+  const EditAgentProfilePage({super.key});
 
   @override
-  ConsumerState<EditOwnerProfilePage> createState() =>
-      _EditOwnerProfilePageState();
+  ConsumerState<EditAgentProfilePage> createState() =>
+      _EditAgentProfilePageState();
 }
 
-class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
+class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
   String? profileImage;
   String? origin;
   String? gender;
@@ -44,7 +45,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   void initState() {
     super.initState();
 
-    Landowner student = ref.read(currentUserProvider) as Landowner;
+    Agent student = ref.read(currentUserProvider) as Agent;
 
     email = TextEditingController(text: student.email);
     fullName = TextEditingController(text: student.mergedNames);
@@ -65,7 +66,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
       text: pickedDate == null
           ? ""
           : formatDate(DateFormat("dd/MM/yyyy").format(pickedDate!),
-              shorten: true),
+          shorten: true),
     );
   }
 
@@ -109,20 +110,20 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
               Center(
                 child: profileImage != null
                     ? CircleAvatar(
-                        backgroundImage: FileImage(File(profileImage!)),
-                        radius: 75.r,
-                      )
+                  backgroundImage: FileImage(File(profileImage!)),
+                  radius: 75.r,
+                )
                     : Image.asset(
-                        "assets/images/Choose Image.png",
-                        width: 160.r,
-                        height: 160.r,
-                      ),
+                  "assets/images/Choose Image.png",
+                  width: 160.r,
+                  height: 160.r,
+                ),
               ),
               SizedBox(height: 20.h),
               Center(
                 child: GestureDetector(
                   onTap: () => FileManager.single(type: FileType.image).then(
-                    (value) => setState(() => profileImage = value?.path),
+                        (value) => setState(() => profileImage = value?.path),
                   ),
                   child: Container(
                     width: 135.w,
@@ -305,7 +306,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                               lastDate: DateTime(2100));
                           if (pickedDate != null) {
                             setState(
-                              () => hobby.text = formatDate(
+                                  () => hobby.text = formatDate(
                                   DateFormat("dd/MM/yyyy").format(pickedDate!),
                                   shorten: true),
                             );
@@ -357,7 +358,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                     SizedBox(height: 8.h),
                     Text(
                       "Ready to say goodbye? Deleting your account is a final step – "
-                      "make sure you've backed up any important data before proceeding.",
+                          "make sure you've backed up any important data before proceeding.",
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,
@@ -398,104 +399,104 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   }
 
   void delete() => showModalBottomSheet(
-        context: context,
-        builder: (_) => SizedBox(
-          height: 450.h,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+    context: context,
+    builder: (_) => SizedBox(
+      height: 450.h,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10.h),
+                  SvgPicture.asset("assets/images/Modal Line.svg"),
+                  SizedBox(height: 55.h),
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.r),
+                        topRight: Radius.circular(15.r),
+                      ),
+                      child: Image.asset(
+                        "assets/images/Questions.png",
+                        width: 135.r,
+                        height: 135.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Do you want to delete account?",
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    "Fynda wants to ensure that users are deleting their account intentionally.",
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack50,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 60.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SizedBox(height: 10.h),
-                      SvgPicture.asset("assets/images/Modal Line.svg"),
-                      SizedBox(height: 55.h),
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15.r),
-                            topRight: Radius.circular(15.r),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          width: 180.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: appBlue),
+                            borderRadius: BorderRadius.circular(5.r),
                           ),
-                          child: Image.asset(
-                            "assets/images/Questions.png",
-                            width: 135.r,
-                            height: 135.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Do you want to delete account?",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        "Fynda wants to ensure that users are deleting their account intentionally.",
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack50,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 60.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 180.w,
-                              height: 50.h,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: appBlue),
-                                borderRadius: BorderRadius.circular(5.r),
-                              ),
-                              child: Text(
-                                "No, cancel",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: appBlue,
-                                ),
-                              ),
+                          child: Text(
+                            "No, cancel",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: appBlue,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              resetProviders(ref);
-                              context.router.goNamed(Pages.splash);
-                            },
-                            child: Container(
-                              width: 180.w,
-                              height: 50.h,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: appBlue,
-                                borderRadius: BorderRadius.circular(5.r),
-                              ),
-                              child: Text(
-                                "Yes, delete",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          resetProviders(ref);
+                          context.router.goNamed(Pages.splash);
+                        },
+                        child: Container(
+                          width: 180.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: appBlue,
+                            borderRadius: BorderRadius.circular(5.r),
+                          ),
+                          child: Text(
+                            "Yes, delete",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
