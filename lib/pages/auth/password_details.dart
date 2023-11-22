@@ -1,10 +1,13 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -26,20 +29,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        leading: IconButton(
+          iconSize: 26.r,
+          splashRadius: 20.r,
+          icon: const Icon(Icons.chevron_left_rounded),
+          onPressed: () => context.router.pop(),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 25.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  iconSize: 26.r,
-                  splashRadius: 20.r,
-                  icon: const Icon(Icons.chevron_left_rounded),
-                  onPressed: () => context.router.pop(),
-                ),
-              ),
+
               SvgPicture.asset(
                 "assets/images/Forgot Password.svg",
                 width: 220.r,
@@ -143,6 +147,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   bool showConfirmPassword = false;
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
   void dispose() {
     passwordController.dispose();
     confirmController.dispose();
@@ -152,20 +162,21 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        leading: IconButton(
+          iconSize: 26.r,
+          splashRadius: 20.r,
+          icon: const Icon(Icons.chevron_left_rounded),
+          onPressed: () => context.router.pop(),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 25.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  iconSize: 26.r,
-                  splashRadius: 20.r,
-                  icon: const Icon(Icons.chevron_left_rounded),
-                  onPressed: () => context.router.pop(),
-                ),
-              ),
+
               SvgPicture.asset(
                 "assets/images/Reset Password.svg",
                 width: 220.r,
@@ -310,7 +321,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 }
 
-class AccountVerificationPage extends StatefulWidget {
+class AccountVerificationPage extends ConsumerStatefulWidget {
   final String email;
 
   const AccountVerificationPage({
@@ -319,11 +330,11 @@ class AccountVerificationPage extends StatefulWidget {
   });
 
   @override
-  State<AccountVerificationPage> createState() =>
+  ConsumerState<AccountVerificationPage> createState() =>
       _AccountVerificationPageState();
 }
 
-class _AccountVerificationPageState extends State<AccountVerificationPage> {
+class _AccountVerificationPageState extends ConsumerState<AccountVerificationPage> {
   final List<TextStyle?> otpTextStyles = [];
 
   @override
@@ -340,24 +351,57 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
   TextStyle? createStyle(Color color) =>
       context.textTheme.displaySmall?.copyWith(color: color);
 
+  void navigate() {
+    context.router.pushReplacementNamed(
+      ref.read(isAStudent)
+          ? Pages.studentDashboard
+          : ref.read(isAgent)
+              ? Pages.agentDashboard
+              : Pages.ownerDashboard,
+    );
+  }
+
+  Future<void> verify(String verificationCode) async {
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          verifyOTP({"email": widget.email, "otp": verificationCode})
+              .then((resp) {
+            showError(resp.message);
+            if (!resp.success) {
+              Navigator.of(context).pop();
+            } else {
+              navigate();
+            }
+          });
+
+          return const Dialog(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            child: loader,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        leading: IconButton(
+          iconSize: 26.r,
+          splashRadius: 20.r,
+          icon: const Icon(Icons.chevron_left_rounded),
+          onPressed: () => context.router.pop(),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 25.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  iconSize: 26.r,
-                  splashRadius: 20.r,
-                  icon: const Icon(Icons.chevron_left_rounded),
-                  onPressed: () => context.router.pop(),
-                ),
-              ),
               SvgPicture.asset(
                 "assets/images/Confirm Email.svg",
                 width: 220.r,
@@ -404,10 +448,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
                 showFieldAsBox: true,
                 fieldWidth: 65.r,
                 keyboardType: TextInputType.number,
-                onCodeChanged: (code) => setState(() {}),
-                onSubmit: (verificationCode) {
-                  context.router.pushNamed(Pages.resetPassword);
-                }, // end onSubmit
+                onSubmit: (verificationCode) => verify(verificationCode), // end onSubmit
               ),
               SizedBox(height: 80.h),
               Text(

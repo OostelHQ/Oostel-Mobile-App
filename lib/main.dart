@@ -91,7 +91,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.accountVerification.path,
           name: Pages.accountVerification,
-          builder: (_, __) => const AccountVerificationPage(),
+          builder: (_, state) => AccountVerificationPage(email: state.extra as String),
         ),
         GoRoute(
           path: Pages.privacyPolicy.path,

@@ -54,7 +54,8 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
     bool isStudent = ref.read(isAStudent);
 
     for (Conversation conversation in conversations) {
-      User? user = await getUser(conversation.otherUser);
+      // User? user = await getUser(conversation.otherUser);
+      User? user;
       user ??= isStudent ? defaultOwner : defaultStudent;
       details.add(Detail(
         name: user.mergedNames,

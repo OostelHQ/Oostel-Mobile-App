@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -19,11 +20,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  final GlobalKey<FormState> formKey = GlobalKey();
+
   bool showPassword = false;
   bool remember = false;
 
   final Map<String, dynamic> authDetails = {
-    "email": "",
+    "emailAddress": "",
     "password": "",
   };
 
@@ -32,6 +35,49 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  bool validate() {
+    unFocus();
+    FormState? currentState = formKey.currentState;
+    if (currentState != null) {
+      if (!currentState.validate()) return false;
+
+      currentState.save();
+      return true;
+    }
+    return false;
+  }
+
+  void navigate() {
+    context.router.pushReplacementNamed(
+      ref.read(isAStudent)
+          ? Pages.studentDashboard
+          : ref.read(isAgent) ? Pages.agentDashboard :
+      Pages.ownerDashboard,
+    );
+  }
+
+  Future<void> login() async {
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          loginUser(authDetails).then((resp) {
+            showError(resp.message);
+            if (!resp.success) {
+              Navigator.of(context).pop();
+            } else {
+              navigate();
+            }
+          });
+
+          return const Dialog(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            child: loader,
+          );
+        });
   }
 
   @override
@@ -71,149 +117,154 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: SizedBox(
                   width: 414.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Email Address",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SpecialForm(
-                        controller: emailController,
-                        width: 414.w,
-                        height: 50.h,
-                        hintStyle: context.textTheme.bodyMedium!
-                            .copyWith(color: fadedBorder),
-                        hint: "example@example.com",
-                        onChange: (text) => setState(() {}),
-                        onSave: (val) =>
-                            setState(() => authDetails["email"] = val!),
-                        onValidate: (value) {
-                          if (value!.trim().isEmpty || !value.contains("@")) {
-                            showError("Invalid Email Address");
-                            return '';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Password",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SpecialForm(
-                        controller: passwordController,
-                        width: 414.w,
-                        height: 50.h,
-                        obscure: !showPassword,
-                        onChange: (text) => setState(() {}),
-                        onSave: (val) =>
-                            setState(() => authDetails["password"] = val!),
-                        suffix: GestureDetector(
-                          onTap: () =>
-                              setState(() => showPassword = !showPassword),
-                          child: AnimatedSwitcherTranslation.right(
-                            duration: const Duration(milliseconds: 500),
-                            child: Icon(
-                              showPassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                              key: ValueKey<bool>(showPassword),
-                              size: 18.r,
-                              color: Colors.grey,
-                            ),
-                          ),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Email Address",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 200.w,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Checkbox(
-                                  value: remember,
-                                  activeColor: appBlue,
-                                  onChanged: (val) =>
-                                      setState(() => remember = !remember),
-                                ),
-                                Text(
-                                  "Remember Me",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () =>
-                                context.router.pushNamed(Pages.forgotPassword),
-                            child: Text(
-                              "Forgot Password",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 140.h),
-                      GestureDetector(
-                        onTap: () {
-                          if(!remember || (emailController.text.isEmpty || passwordController.text.isEmpty)) return;
-                          context.router.pushReplacementNamed(
-                            ref.read(isAStudent)
-                                ? Pages.studentDashboard
-                                : ref.read(isAgent) ? Pages.agentDashboard :
-                            Pages.ownerDashboard,
-                          );
-                        },
-                        child: Container(
+                        SpecialForm(
+                          controller: emailController,
                           width: 414.w,
                           height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.r),
-                            color: !remember || emailController.text.isEmpty || passwordController.text.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
-                          ),
-                          child: Text(
-                            "Login",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                          type: TextInputType.emailAddress,
+                          hintStyle: context.textTheme.bodyMedium!
+                              .copyWith(color: fadedBorder),
+                          hint: "example@example.com",
+                          onSave: (val) =>
+                              setState(() => authDetails["emailAddress"] = val!),
+                          onValidate: (value) {
+                            if (value!.trim().isEmpty || !value.contains("@")) {
+                              showError("Invalid Email Address");
+                              return '';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Password",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SpecialForm(
+                          controller: passwordController,
+                          width: 414.w,
+                          height: 50.h,
+                          obscure: !showPassword,
+                          onValidate: (value) {
+                            if (value!.trim().length < 6) {
+                              showError(
+                                  "Please use at least 6 characters for your password");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) =>
+                              setState(() => authDetails["password"] = val!),
+                          suffix: GestureDetector(
+                            onTap: () =>
+                                setState(() => showPassword = !showPassword),
+                            child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: Icon(
+                                showPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                key: ValueKey<bool>(showPassword),
+                                size: 18.r,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 24.h),
-                      Center(
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Don't have an account yet?",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  color: weirdBlack75,
-                                  fontWeight: FontWeight.w500),
+                            SizedBox(
+                              width: 200.w,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    value: remember,
+                                    activeColor: appBlue,
+                                    onChanged: (val) =>
+                                        setState(() => remember = !remember),
+                                  ),
+                                  Text(
+                                    "Remember Me",
+                                    style: context.textTheme.bodyMedium!.copyWith(
+                                        color: weirdBlack75,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
                             ),
                             GestureDetector(
-                              onTap: () => context.router
-                                  .pushReplacementNamed(Pages.register),
+                              onTap: () =>
+                                  context.router.pushNamed(Pages.forgotPassword),
                               child: Text(
-                                " Create Account",
+                                "Forgot Password",
                                 style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontWeight: FontWeight.w500),
+                                    color: appBlue, fontWeight: FontWeight.w500),
                               ),
-                            )
+                            ),
                           ],
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 140.h),
+                        GestureDetector(
+                          onTap: () {
+                            if(!validate()) return;
+                            login();
+                          },
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                              color: !remember || emailController.text.isEmpty || passwordController.text.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
+                            ),
+                            child: Text(
+                              "Login",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 24.h),
+                        Center(
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              Text(
+                                "Don't have an account yet?",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              GestureDetector(
+                                onTap: () => context.router
+                                    .pushReplacementNamed(Pages.register),
+                                child: Text(
+                                  " Create Account",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: appBlue,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

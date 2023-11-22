@@ -32,9 +32,9 @@ class Holder<T> {
   });
 }
 
-const Widget loader = SpinKitThreeBounce(
-  color: appBlue,
-  size: 30,
+const Widget loader = SpinKitSpinningLines(
+  color: Colors.white,
+  size: 50,
 );
 
 enum AcquireType { hostel, roommate }
