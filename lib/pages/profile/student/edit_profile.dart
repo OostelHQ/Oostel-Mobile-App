@@ -12,6 +12,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
@@ -21,7 +22,7 @@ class EditProfilePage extends ConsumerStatefulWidget {
 }
 
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
-  String? profileImage;
+  late String profileImage;
   String? origin;
   String? gender;
   String? level;
@@ -42,16 +43,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     email = TextEditingController(text: student.email);
     fullName = TextEditingController(text: student.mergedNames);
-    number = TextEditingController(text: student.contact.substring(1));
+    number = TextEditingController(
+        text: student.contact.isEmpty ? "" : student.contact.substring(1));
     denomination = TextEditingController(text: student.denomination);
     hobby = TextEditingController(text: student.hobby);
 
-    //profileImage = student.image;
-    level = "${student.level}";
-    origin = student.origin;
-    religion = student.religion;
-    age = student.ageRange;
-    gender = student.gender;
+    profileImage = student.image;
+    level = student.level == 0 ? null : "${student.level}";
+    origin = student.origin == "" ? null : student.origin;
+    religion = student.religion == "" ? null : student.religion;
+    age = student.ageRange == "" ? null : student.ageRange;
+    gender = student.gender == "" ? null : student.gender;
   }
 
   @override
@@ -89,10 +91,20 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             children: [
               SizedBox(height: 50.h),
               Center(
-                child: profileImage != null
-                    ? CircleAvatar(
-                        backgroundImage: FileImage(File(profileImage!)),
-                        radius: 75.r,
+                child: profileImage.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () => context.router.pushNamed(
+                          Pages.viewMedia,
+                          extra: ViewInfo(
+                              current: 0,
+                              type: DisplayType.file,
+                              paths: [profileImage],
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          backgroundImage: FileImage(File(profileImage)),
+                          radius: 80.r,
+                        ),
                       )
                     : Image.asset(
                         "assets/images/Choose Image.png",
@@ -104,7 +116,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               Center(
                 child: GestureDetector(
                   onTap: () => FileManager.single(type: FileType.image).then(
-                    (value) => setState(() => profileImage = value?.path),
+                    (value) => setState(() {
+                      if (value == null) {
+                        profileImage = "";
+                        return;
+                      }
+                      profileImage = value.path;
+                    }),
                   ),
                   child: Container(
                     width: 135.w,
@@ -335,7 +353,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     SizedBox(height: 8.h),
                     Text(
                       "Ready to say goodbye? Deleting your account is a final step – "
-                          "make sure you've backed up any important data before proceeding.",
+                      "make sure you've backed up any important data before proceeding.",
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75,
                         fontWeight: FontWeight.w500,

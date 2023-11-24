@@ -1,4 +1,5 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -185,9 +186,42 @@ class _HomePageState extends ConsumerState<_HomePage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
+                user.image == ""
+                    ? CircleAvatar(
                   radius: 15.r,
-                  backgroundImage: AssetImage(user.image),
+                  backgroundColor: appBlue,
+                  child: Text(
+                    user.firstName.substring(0, 1),
+                    style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                )
+                    : CachedNetworkImage(
+                  imageUrl: user.image,
+                  errorWidget: (context, url, error) => CircleAvatar(
+                    backgroundColor: weirdBlack20,
+                    radius: 15.r,
+                    child: Center(
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        color: appBlue,
+                        size: 20.r,
+                      ),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, download) {
+                    return CircleAvatar(
+                      radius: 15.r,
+                      backgroundColor: weirdBlack50,
+                    );
+                  },
+                  imageBuilder: (context, provider) {
+                    return CircleAvatar(
+                      backgroundImage: provider,
+                      radius: 15.r,
+                    );
+                  },
                 ),
                 SizedBox(width: 10.w),
                 Text(
@@ -198,7 +232,11 @@ class _HomePageState extends ConsumerState<_HomePage> {
                   ),
                 ),
                 Text(
-                  user.gender == "Female" ? "🧑" : "🧒",
+                  user.gender == "Female"
+                      ? "🧑"
+                      : user.gender == "Male"
+                      ? "🧒"
+                      : "",
                   style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
                 ),
               ],

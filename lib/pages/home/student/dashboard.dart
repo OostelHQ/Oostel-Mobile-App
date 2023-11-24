@@ -1,10 +1,12 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/hostel_info.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -18,7 +20,8 @@ class StudentDashboardPage extends ConsumerStatefulWidget {
   const StudentDashboardPage({super.key});
 
   @override
-  ConsumerState<StudentDashboardPage> createState() => _StudentDashboardPageState();
+  ConsumerState<StudentDashboardPage> createState() =>
+      _StudentDashboardPageState();
 }
 
 class _StudentDashboardPageState extends ConsumerState<StudentDashboardPage> {
@@ -63,7 +66,8 @@ class _StudentDashboardPageState extends ConsumerState<StudentDashboardPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
-        onTap: (newIndex) => ref.watch(dashboardTabIndexProvider.notifier).state = newIndex,
+        onTap: (newIndex) =>
+            ref.watch(dashboardTabIndexProvider.notifier).state = newIndex,
         selectedItemColor: appBlue,
         selectedLabelStyle: context.textTheme.bodySmall!
             .copyWith(color: appBlue, fontWeight: FontWeight.w500),
@@ -126,8 +130,6 @@ class _StudentDashboardPageState extends ConsumerState<StudentDashboardPage> {
   }
 }
 
-
-
 class _HomePage extends ConsumerStatefulWidget {
   const _HomePage({super.key});
 
@@ -135,21 +137,38 @@ class _HomePage extends ConsumerStatefulWidget {
   ConsumerState<_HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<_HomePage> {
+class _HomePageState extends ConsumerState<_HomePage>
+    with SingleTickerProviderStateMixin {
   final ScrollController controller = ScrollController();
-
   List<dynamic> acquireList = [];
-
   bool hostelSelect = true;
+
+  late AnimationController animationController;
+  late Animation<double> animation;
 
   @override
   void initState() {
     super.initState();
     acquireList = ref.read(acquiredHostelsProvider);
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeIn,
+      ),
+    );
+    if (ref.read(currentUserProvider).hasCompletedProfile < 100) {
+      Future.delayed(const Duration(milliseconds: 200),
+          () => animationController.forward());
+    }
   }
 
   @override
   void dispose() {
+    animationController.dispose();
     controller.dispose();
     super.dispose();
   }
@@ -159,156 +178,290 @@ class _HomePageState extends ConsumerState<_HomePage> {
     User user = ref.watch(currentUserProvider);
     bool notifications = ref.watch(hasNotificationProvider);
 
-    return CustomScrollView(
-      controller: controller,
-      slivers: [
-        SliverAppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0.0,
-          pinned: true,
-          centerTitle: true,
-          title: GestureDetector(
-            onTap: () => context.router.pushNamed(Pages.studentProfile),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 15.r,
-                  backgroundImage: AssetImage(user.image),
-                ),
-                SizedBox(width: 10.w),
-                Text(
-                  "Hello, ${user.lastName} ",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    color: weirdBlack75,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  user.gender == "Female" ? "🧑" : "🧒",
-                  style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 22.w),
-              child: GestureDetector(
-                onTap: () => context.router.pushNamed(Pages.notification),
-                child: AnimatedSwitcherTranslation.right(
-                  duration: const Duration(milliseconds: 500),
-                  child: SvgPicture.asset(
-                    "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
-                    height: 25.h,
-                    key: ValueKey<bool>(notifications),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const WalletSlider(),
-                SizedBox(height: 35.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        CustomScrollView(
+          controller: controller,
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              elevation: 0.0,
+              pinned: true,
+              centerTitle: true,
+              title: GestureDetector(
+                onTap: () => context.router.pushNamed(Pages.studentProfile),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Hero(
-                      tag: "My Acquires Header",
-                      child: Text(
-                        "My Acquires",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w600, color: weirdBlack),
+                    user.image == ""
+                        ? CircleAvatar(
+                            radius: 15.r,
+                            backgroundColor: appBlue,
+                            child: Text(
+                              user.firstName.substring(0, 1),
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: user.image,
+                            errorWidget: (context, url, error) => CircleAvatar(
+                              backgroundColor: weirdBlack20,
+                              radius: 15.r,
+                              child: Center(
+                                child: Icon(
+                                  Icons.person_outline_rounded,
+                                  color: appBlue,
+                                  size: 20.r,
+                                ),
+                              ),
+                            ),
+                            progressIndicatorBuilder: (context, url, download) {
+                              return CircleAvatar(
+                                radius: 15.r,
+                                backgroundColor: weirdBlack50,
+                              );
+                            },
+                            imageBuilder: (context, provider) {
+                              return CircleAvatar(
+                                backgroundImage: provider,
+                                radius: 15.r,
+                              );
+                            },
+                          ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "Hello, ${user.lastName} ",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack75,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    if (acquireList.length >= 3)
-                      GestureDetector(
-                        onTap: () => context.router
-                            .pushNamed(Pages.viewAcquires, extra: hostelSelect),
-                        child: Text(
-                          "See All",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                              color: appBlue, fontWeight: FontWeight.w500),
-                        ),
-                      ),
+                    Text(
+                      user.gender == "Female"
+                          ? "🧑"
+                          : user.gender == "Male"
+                              ? "🧒"
+                              : "",
+                      style: context.textTheme.bodyLarge!
+                          .copyWith(fontSize: 22.sp),
+                    ),
                   ],
                 ),
-                SizedBox(height: 10.h),
-                Hero(
-                  tag: "Home Switcher",
-                  child: HomeSwitcher(
-                    onHostelDisplayed: () => setState(() {
-                      acquireList = ref.watch(acquiredHostelsProvider);
-                      hostelSelect = true;
-                    }),
-                    onRoommateDisplayed: () => setState(() {
-                      acquireList = ref.watch(acquiredRoommatesProvider);
-                      hostelSelect = false;
-                    }),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-              ],
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
-          sliver: acquireList.isEmpty
-              ? SliverFillRemaining(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "You have no ${hostelSelect ? "hostel" : "roommate"} acquires yet!",
-                          style: context.textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: weirdBlack50,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        GestureDetector(
-                          onTap: () => ref
-                              .watch(dashboardTabIndexProvider.notifier)
-                              .state = 1,
-                          child: Text(
-                            "Explore ${hostelSelect ? "Hostels" : "Roommates"}",
-                            style: context.textTheme.bodySmall!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: appBlue,
-                            ),
-                          ),
-                        ),
-                      ],
+              ),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.only(right: 22.w),
+                  child: GestureDetector(
+                    onTap: () => context.router.pushNamed(Pages.notification),
+                    child: AnimatedSwitcherTranslation.right(
+                      duration: const Duration(milliseconds: 500),
+                      child: SvgPicture.asset(
+                        "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
+                        height: 25.h,
+                        key: ValueKey<bool>(notifications),
+                      ),
                     ),
                   ),
                 )
-              : SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (_, index) {
-                      if (index >= acquireList.length) {
-                        return const SizedBox();
-                      }
-
-                      dynamic element = acquireList[index];
-                      if (element is HostelInfo) {
-                        return HostelInfoCard(info: element);
-                      } else {
-                        return StudentCard(info: element);
-                      }
-                    },
-                    childCount: 4,
-                  ),
+              ],
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 22.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const WalletSlider(),
+                    SizedBox(height: 35.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Hero(
+                          tag: "My Acquires Header",
+                          child: Text(
+                            "My Acquires",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600, color: weirdBlack),
+                          ),
+                        ),
+                        if (acquireList.length >= 3)
+                          GestureDetector(
+                            onTap: () => context.router.pushNamed(
+                                Pages.viewAcquires,
+                                extra: hostelSelect),
+                            child: Text(
+                              "See All",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Hero(
+                      tag: "Home Switcher",
+                      child: HomeSwitcher(
+                        onHostelDisplayed: () => setState(() {
+                          acquireList = ref.watch(acquiredHostelsProvider);
+                          hostelSelect = true;
+                        }),
+                        onRoommateDisplayed: () => setState(() {
+                          acquireList = ref.watch(acquiredRoommatesProvider);
+                          hostelSelect = false;
+                        }),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                  ],
                 ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 22.w),
+              sliver: acquireList.isEmpty
+                  ? SliverFillRemaining(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "You have no ${hostelSelect ? "hostel" : "roommate"} acquires yet!",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: weirdBlack50,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            GestureDetector(
+                              onTap: () => ref
+                                  .watch(dashboardTabIndexProvider.notifier)
+                                  .state = 1,
+                              child: Text(
+                                "Explore ${hostelSelect ? "Hostels" : "Roommates"}",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: appBlue,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, index) {
+                          if (index >= acquireList.length) {
+                            return const SizedBox();
+                          }
+
+                          dynamic element = acquireList[index];
+                          if (element is HostelInfo) {
+                            return HostelInfoCard(info: element);
+                          } else {
+                            return StudentCard(info: element);
+                          }
+                        },
+                        childCount: 4,
+                      ),
+                    ),
+            ),
+          ],
         ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: SizeTransition(
+            sizeFactor: animation,
+            child: Container(
+              height: 140.h,
+              color: user.hasCompletedProfile < 100
+                  ? incompleteBackground
+                  : completeBackground,
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        user.hasCompletedProfile < 100
+                            ? "Complete your Profile"
+                            : "Profile Completed!",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      GestureDetector(
+                        onTap: () => animationController.reverse(),
+                        child: Icon(
+                          Boxicons.bx_x,
+                          color: weirdBlack,
+                          size: 26.r,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 15.h),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: user.hasCompletedProfile < 100
+                              ? "You are ${user.hasCompletedProfile}% done from unlocking the full potential of your account. "
+                              : "Congratulations! You have unlocked the full potential of your account. ",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500, color: weirdBlack75),
+                        ),
+                        if (user.hasCompletedProfile < 100)
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Click ",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: weirdBlack75,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "here",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: appBlue,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => context.router.pushNamed(
+                                        ref.watch(isAStudent)
+                                            ? Pages.editProfile
+                                            : ref.watch(isLandlord)
+                                                ? Pages.editOwnerProfile
+                                                : Pages.editAgentProfile,
+                                      ),
+                              )
+                            ],
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  LinearProgressIndicator(
+                    color: user.hasCompletedProfile < 100
+                        ? incompleteBar
+                        : completeBar,
+                    value: user.hasCompletedProfile * 0.01,
+                    backgroundColor: incompleteFadedBar,
+                    minHeight: 10.h,
+                    borderRadius: BorderRadius.circular(5.r),
+                  )
+                ],
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

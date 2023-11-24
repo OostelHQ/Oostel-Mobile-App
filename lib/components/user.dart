@@ -31,7 +31,9 @@ class User extends Equatable {
     this.searchAppearances = 0,
   });
 
-  String get mergedNames => "$lastName $firstName";
+  String get mergedNames => "$firstName $lastName";
+
+  int get hasCompletedProfile => 20;
 
   @override
   List<Object?> get props => [id];

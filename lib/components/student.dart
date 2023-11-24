@@ -24,7 +24,7 @@ class Student extends User {
     int profileViews = 0,
     int searchAppearances = 0,
     required DateTime dateJoined,
-    this.level = 100,
+    this.level = 0,
     this.location = "",
     this.amount = 0,
     this.available = false,

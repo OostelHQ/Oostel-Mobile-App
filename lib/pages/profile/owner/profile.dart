@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 class OwnerProfilePage extends ConsumerStatefulWidget {
   const OwnerProfilePage({super.key});
@@ -87,16 +89,50 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                               ],
                             ),
                             alignment: Alignment.center,
-                            child: Container(
-                              width: 95.r,
-                              height: 95.r,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: AssetImage(owner.image),
-                                  fit: BoxFit.cover,
+                            child: owner.image == "" ? CircleAvatar(
+                              radius: 47.5.r,
+                              backgroundColor: appBlue,
+                              child: Center(
+                                child: Text(
+                                  owner.firstName.substring(0, 1),
+                                  style: context.textTheme.displaySmall!
+                                      .copyWith(color: Colors.white),
                                 ),
                               ),
+                            ) : CachedNetworkImage(imageUrl: owner.image,
+                              errorWidget: (context, url, error) => CircleAvatar(
+                                backgroundColor: weirdBlack20,
+                                radius: 47.5.r,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.person_outline_rounded,
+                                    color: appBlue,
+                                    size: 42.r,
+                                  ),
+                                ),
+                              ),
+                              progressIndicatorBuilder: (context, url, download) {
+                                return CircleAvatar(
+                                  radius: 47.5.r,
+                                  backgroundColor: weirdBlack50,
+                                );
+                              },
+                              imageBuilder: (context, provider) {
+                                return GestureDetector(
+                                  onTap: () => context.router.pushNamed(
+                                    Pages.viewMedia,
+                                    extra: ViewInfo(
+                                      current: 0,
+                                      type: DisplayType.network,
+                                      paths: [owner.image],
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    backgroundImage: provider,
+                                    radius: 47.5.r,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),

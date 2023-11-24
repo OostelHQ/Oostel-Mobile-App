@@ -43,7 +43,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Column(
             children: [
               SizedBox(height: 25.h),
-
               SvgPicture.asset(
                 "assets/images/Forgot Password.svg",
                 width: 220.r,
@@ -149,7 +148,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -176,7 +174,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           child: Column(
             children: [
               SizedBox(height: 25.h),
-
               SvgPicture.asset(
                 "assets/images/Reset Password.svg",
                 width: 220.r,
@@ -334,7 +331,8 @@ class AccountVerificationPage extends ConsumerStatefulWidget {
       _AccountVerificationPageState();
 }
 
-class _AccountVerificationPageState extends ConsumerState<AccountVerificationPage> {
+class _AccountVerificationPageState
+    extends ConsumerState<AccountVerificationPage> {
   final List<TextStyle?> otpTextStyles = [];
 
   @override
@@ -352,36 +350,29 @@ class _AccountVerificationPageState extends ConsumerState<AccountVerificationPag
       context.textTheme.displaySmall?.copyWith(color: color);
 
   void navigate() {
-    context.router.pushReplacementNamed(
-      ref.read(isAStudent)
-          ? Pages.studentDashboard
-          : ref.read(isAgent)
-              ? Pages.agentDashboard
-              : Pages.ownerDashboard,
-    );
+    context.router.pushReplacementNamed(Pages.login);
   }
 
   Future<void> verify(String verificationCode) async {
-    await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          verifyOTP({"email": widget.email, "otp": verificationCode})
-              .then((resp) {
-            showError(resp.message);
-            if (!resp.success) {
-              Navigator.of(context).pop();
-            } else {
-              navigate();
-            }
-          });
+    verifyOTP({"email": widget.email, "otp": verificationCode}).then((resp) {
+      if (!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        navigate();
+      }
+    });
 
-          return const Dialog(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            child: loader,
-          );
-        });
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
   }
 
   @override
@@ -448,7 +439,8 @@ class _AccountVerificationPageState extends ConsumerState<AccountVerificationPag
                 showFieldAsBox: true,
                 fieldWidth: 65.r,
                 keyboardType: TextInputType.number,
-                onSubmit: (verificationCode) => verify(verificationCode), // end onSubmit
+                onSubmit: (verificationCode) =>
+                    verify(verificationCode), // end onSubmit
               ),
               SizedBox(height: 80.h),
               Text(

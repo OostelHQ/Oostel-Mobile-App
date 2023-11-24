@@ -90,8 +90,11 @@ final StateProvider<int> dashboardTabIndexProvider = StateProvider((ref) => 0);
 
 final StateProvider<bool> newNotificationProvider = StateProvider((ref) => false);
 
+final StateProvider<bool> showCompleteProfileProvider = StateProvider((ref) => false);
+
 void resetProviders(WidgetRef ref) {
-  ref.watch(dashboardTabIndexProvider.notifier).state = 0;
+  ref.invalidate(dashboardTabIndexProvider);
+  ref.invalidate(showCompleteProfileProvider);
 }
 
 final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
@@ -1273,7 +1276,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 1",
       level: 100,
       location: "Harmony",
@@ -1290,7 +1292,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 2",
       level: 300,
       location: "Isolu",
@@ -1307,7 +1308,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 3",
       level: 200,
       location: "Accord",
@@ -1324,7 +1324,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 4",
       level: 500,
       location: "Kofesu",
@@ -1341,14 +1340,12 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 5",
       level: 500,
       location: "Kofesu",
       amount: 40000,
       available: true,
       origin: "Ebonyi",
-      denomination: "Christ Apostolic Church",
       hobby: "Singing and dancing",
       ageRange: "23 - 30",
       religion: "Christianity",
@@ -1358,7 +1355,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 6",
       level: 500,
       location: "Kofesu",
@@ -1375,7 +1371,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 7",
       level: 500,
       location: "Kofesu",
@@ -1392,7 +1387,6 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
       firstName: "John",
       lastName: "Doe",
       gender: "Male",
-      image: "assets/images/watch man.jpg",
       id: "Info 8",
       level: 500,
       location: "Kofesu",

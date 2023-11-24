@@ -1,13 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/student.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
-import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 class OtherStudentProfilePage extends StatefulWidget {
   final Student info;
@@ -67,20 +66,56 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                             blurRadius: 1.0,
                             spreadRadius: 2.0,
                           )
-                        ]
-                    ),
+                        ]),
                     alignment: Alignment.center,
-                    child: Container(
-                      width: 118.r,
-                      height: 118.r,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(widget.info.image),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    child: widget.info.image == ""
+                        ? CircleAvatar(
+                            radius: 59.r,
+                            backgroundColor: appBlue,
+                            child: Center(
+                              child: Text(
+                                widget.info.firstName.substring(0, 1),
+                                style: context.textTheme.displaySmall!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: widget.info.image,
+                            errorWidget: (context, url, error) => CircleAvatar(
+                              backgroundColor: weirdBlack20,
+                              radius: 59.r,
+                              child: Center(
+                                child: Icon(
+                                  Icons.person_outline_rounded,
+                                  color: appBlue,
+                                  size: 64.r,
+                                ),
+                              ),
+                            ),
+                            progressIndicatorBuilder: (context, url, download) {
+                              return CircleAvatar(
+                                radius: 59.r,
+                                backgroundColor: weirdBlack50,
+                              );
+                            },
+                            imageBuilder: (context, provider) {
+                              return GestureDetector(
+                                onTap: () => context.router.pushNamed(
+                                  Pages.viewMedia,
+                                  extra: ViewInfo(
+                                    current: 0,
+                                    type: DisplayType.network,
+                                    paths: [widget.info.image],
+                                  ),
+                                ),
+                                child: CircleAvatar(
+                                  backgroundImage: provider,
+                                  radius: 59.r,
+                                ),
+                              );
+                            },
+                          ),
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -116,7 +151,7 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                     children: [
                       TextSpan(
                         text:
-                        "${currency()} ${formatAmountInDouble(widget.info.amount)}",
+                            "${currency()} ${formatAmountInDouble(widget.info.amount)}",
                         style: context.textTheme.bodyLarge!.copyWith(
                           color: appBlue,
                           fontFamily: "Inter",
@@ -164,7 +199,7 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                 ),
                 SizedBox(height: 15.h),
                 BasicStudentInfo(student: widget.info),
-                SizedBox(height: 150.h),
+                SizedBox(height: 50.h),
               ],
             ),
           ),
@@ -190,8 +225,8 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                 ),
                 child: Text(
                   "Start a chat",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500, color: appBlue),
+                  style: context.textTheme.bodyMedium!
+                      .copyWith(fontWeight: FontWeight.w500, color: appBlue),
                 ),
               ),
             ),

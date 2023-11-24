@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
@@ -9,6 +11,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 class _Link {
   final String name;
@@ -142,6 +145,8 @@ class _SettingsPageState extends ConsumerState<AgentSettingsPage> {
                       GestureDetector(
                         onTap: () {
                           resetProviders(ref);
+                          FileManager.saveAuthDetails(null);
+                          FileManager.saveBool("autoLogin", false);
                           context.router.goNamed(Pages.splash);
                         },
                         child: Container(
@@ -216,12 +221,61 @@ class _SettingsPageState extends ConsumerState<AgentSettingsPage> {
                             child: Container(
                               width: 95.r,
                               height: 95.r,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                image: DecorationImage(
+                                color: user.image == "" ? appBlue : null,
+                                image: user.image == ""
+                                    ? null
+                                    : DecorationImage(
                                   image: AssetImage(user.image),
                                   fit: BoxFit.cover,
                                 ),
+                              ),
+                              child: user.image == "" ? CircleAvatar(
+                                radius: 47.5.r,
+                                backgroundColor: appBlue,
+                                child: Center(
+                                  child: Text(
+                                    user.firstName.substring(0, 1),
+                                    style: context.textTheme.displaySmall!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              ) : CachedNetworkImage(imageUrl: user.image,
+                                errorWidget: (context, url, error) => CircleAvatar(
+                                  backgroundColor: weirdBlack20,
+                                  radius: 47.5.r,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.person_outline_rounded,
+                                      color: appBlue,
+                                      size: 42.r,
+                                    ),
+                                  ),
+                                ),
+                                progressIndicatorBuilder: (context, url, download) {
+                                  return CircleAvatar(
+                                    radius: 47.5.r,
+                                    backgroundColor: weirdBlack50,
+                                  );
+                                },
+                                imageBuilder: (context, provider) {
+                                  return GestureDetector(
+                                    onTap: () => context.router.pushNamed(
+                                      Pages.viewMedia,
+                                      extra: ViewInfo(
+                                        current: 0,
+                                        type: DisplayType.network,
+                                        paths: [user.image],
+                                      ),
+                                    ),
+                                    child: CircleAvatar(
+                                      backgroundImage: provider,
+                                      radius: 47.5.r,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),

@@ -1,3 +1,4 @@
+import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'base.dart';
 
@@ -32,6 +33,19 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
 
     if(response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
+      Map<String, dynamic> data = response.data as Map<String, dynamic>;
+      token = data["data"]["token"];
+
+      late User? user;
+      if(data["data"]["role"] == "Student") {
+        String name = data["data"]["fullname"], email = data["data"]["email"];
+        List<String> names = name.split(" ");
+        user = Student(dateJoined: DateTime(1960), firstName: names[0], lastName: names[1], email: email);
+      } else {
+        user = null;
+      }
+
+      return FyndaResponse<User?>(message: data["message"], payload: user, success: true);
     }
   } catch (e) {
     log("Login User Error: $e");
@@ -39,7 +53,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
 
 
   return const FyndaResponse(
-    message: "An error occurred. Please try again.",
+    message: "An unknown error occurred. Please try again.",
     payload: null,
     success: false,
   );

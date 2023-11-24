@@ -24,6 +24,14 @@ const Color successColor = Color.fromRGBO(22, 152, 82, 1.0);
 const Color pendingColor = Color.fromRGBO(255, 201, 44, 1.0);
 const Color failColor = Color.fromRGBO(235, 11, 11, 1.0);
 
+
+const Color incompleteBackground = Color(0xFFFFEF98);
+const Color incompleteBar = Color(0xFFC6960B);
+const Color incompleteFadedBar = Color(0x50C6960B);
+
+const Color completeBackground = Color(0xFF8FF1BC);
+const Color completeBar = Color(0xFF169852);
+
 extension PathExtension on String {
   String get path => "/$this";
 }

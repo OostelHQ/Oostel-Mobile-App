@@ -106,16 +106,18 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                     height: 50.h,
                     fillColor: Colors.white,
                     hint: "Search name",
-                    prefix: SizedBox(
-                      width: 30.w,
-                      height: 50.h,
-                      child: const Center(
-                        child: Icon(
-                          Icons.search_rounded,
-                          size: 18,
-                          color: weirdBlack50,
-                        ),
-                      ),
+                    prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
+                    borderColor: Colors.transparent,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF8FBFF),
+                        borderRadius: BorderRadius.circular(4.r),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE0E5EC),
+                            blurRadius: 6.0,
+                            spreadRadius: 1.0,
+                          )
+                        ]
                     ),
                   ),
                   SizedBox(height: 20.h),

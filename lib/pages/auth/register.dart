@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -58,29 +59,30 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   void navigate() {
+    FileManager.saveBool("registeredFynda", true);
     context.router.pushReplacementNamed(Pages.accountVerification, extra: authDetails["emailAddress"]);
   }
 
   Future<void> register() async {
-    await showDialog(
+    registerUser(authDetails).then((resp) {
+      if(!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        navigate();
+      }
+    });
+
+    showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) {
-          registerUser(authDetails).then((resp) {
-            showError(resp.message);
-            if (!resp.success) {
-              Navigator.of(context).pop();
-            } else {
-              navigate();
-            }
-          });
-
-          return const Dialog(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            child: loader,
-          );
-        });
+        builder: (context) => const Dialog(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: loader,
+        ),
+    );
   }
 
   @override
@@ -272,16 +274,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           SizedBox(height: 70.h),
                           GestureDetector(
                             onTap: () {
-                              // if (!readTerms) {
-                              //   showError(
-                              //       "Please read and accept Fynda's Privacy Policy to proceed");
-                              //   return;
-                              // }
-                              //
-                              // if (!validate()) return;
-                              //
-                              // register();
-                              navigate();
+                              if (!readTerms) {
+                                showError(
+                                    "Please read and accept Fynda's Privacy Policy to proceed");
+                                return;
+                              }
+
+                              if (!validate()) return;
+
+                              register();
                             },
                             child: Container(
                               width: 414.w,

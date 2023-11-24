@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 class StudentProfilePage extends ConsumerStatefulWidget {
   const StudentProfilePage({super.key});
@@ -80,19 +82,53 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                                     blurRadius: 1.0,
                                     spreadRadius: 2.0,
                                   )
-                                ]
+                                ],
                             ),
                             alignment: Alignment.center,
-                            child: Container(
-                              width: 95.r,
-                              height: 95.r,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: AssetImage(student.image),
-                                  fit: BoxFit.cover,
+                            child: student.image == "" ? CircleAvatar(
+                              radius: 47.5.r,
+                              backgroundColor: appBlue,
+                              child: Center(
+                                child: Text(
+                                  student.firstName.substring(0, 1),
+                                  style: context.textTheme.displaySmall!
+                                      .copyWith(color: Colors.white),
                                 ),
                               ),
+                            ) : CachedNetworkImage(imageUrl: student.image,
+                              errorWidget: (context, url, error) => CircleAvatar(
+                                backgroundColor: weirdBlack20,
+                                radius: 47.5.r,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.person_outline_rounded,
+                                    color: appBlue,
+                                    size: 42.r,
+                                  ),
+                                ),
+                              ),
+                              progressIndicatorBuilder: (context, url, download) {
+                                return CircleAvatar(
+                                  radius: 47.5.r,
+                                  backgroundColor: weirdBlack50,
+                                );
+                              },
+                              imageBuilder: (context, provider) {
+                                return GestureDetector(
+                                  onTap: () => context.router.pushNamed(
+                                    Pages.viewMedia,
+                                    extra: ViewInfo(
+                                      current: 0,
+                                      type: DisplayType.network,
+                                      paths: [student.image],
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    backgroundImage: provider,
+                                    radius: 47.5.r,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -352,50 +388,11 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                     ),
                     SizedBox(height: 15.h),
                     BasicStudentInfo(student: student),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Receipts",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        Text(
-                          "Private to you",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.h),
+                    SizedBox(height: 50.h),
                   ],
                 ),
               ),
             ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, index) => ReceiptContainer(receipt: receipts[index]),
-                  childCount: receipts.length,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 48.h),
-            )
           ],
         ),
       ),
@@ -426,8 +423,8 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
   }
 
   bool isFilled() {
-    if(gottenHostel == null) return false;
-    if(gottenHostel == "Yes" && selectedLocation == null) return false;
+    if (gottenHostel == null) return false;
+    if (gottenHostel == "Yes" && selectedLocation == null) return false;
     return amount.text.isNotEmpty;
   }
 
@@ -478,7 +475,8 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                           Text(
                             "Have you gotten a hostel?",
                             style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75, fontWeight: FontWeight.w500),
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8.h),
                           ComboBox(
@@ -526,7 +524,8 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                                                     selectedLocation == index
                                                 ? appBlue
                                                 : fadedBorder),
-                                        borderRadius: BorderRadius.circular(5.r),
+                                        borderRadius:
+                                            BorderRadius.circular(5.r),
                                         color: selectedLocation != null &&
                                                 selectedLocation == index
                                             ? paleBlue
@@ -549,7 +548,8 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                           Text(
                             "Amount",
                             style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75, fontWeight: FontWeight.w500),
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8.h),
                           SpecialForm(
@@ -562,7 +562,7 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                           SizedBox(height: 40.h),
                           GestureDetector(
                             onTap: () {
-                              if(!isFilled()) return;
+                              if (!isFilled()) return;
                               setState(() => activated = true);
                             },
                             child: Container(
@@ -570,7 +570,9 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                               height: 50.h,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: isFilled() ? appBlue : appBlue.withOpacity(0.4),
+                                color: isFilled()
+                                    ? appBlue
+                                    : appBlue.withOpacity(0.4),
                                 borderRadius: BorderRadius.circular(5.r),
                               ),
                               child: Text(
@@ -631,7 +633,9 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
                               height: 50.h,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: isFilled() ? appBlue : appBlue.withOpacity(0.4),
+                                color: isFilled()
+                                    ? appBlue
+                                    : appBlue.withOpacity(0.4),
                                 borderRadius: BorderRadius.circular(5.r),
                               ),
                               child: Text(

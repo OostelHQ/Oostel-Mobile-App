@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -25,7 +27,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   bool showPassword = false;
   bool remember = false;
 
-  final Map<String, dynamic> authDetails = {
+  final Map<String, String> authDetails = {
     "emailAddress": "",
     "password": "",
   };
@@ -49,7 +51,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return false;
   }
 
-  void navigate() {
+  void navigate(User? user) {
+    FileManager.saveBool("autoLogin", remember);
+    FileManager.saveBool("registeredFynda", true);
+    if(remember) {
+      FileManager.saveAuthDetails(authDetails);
+    }
+
+    ref.watch(hasInitializedProvider.notifier).state = true;
+    ref.watch(currentUserProvider.notifier).state = user!;
     context.router.pushReplacementNamed(
       ref.read(isAStudent)
           ? Pages.studentDashboard
@@ -59,25 +69,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Future<void> login() async {
-    await showDialog(
+
+    loginUser(authDetails).then((resp) {
+      if(!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        navigate(resp.payload);
+      }
+    });
+
+    showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) {
-          loginUser(authDetails).then((resp) {
-            showError(resp.message);
-            if (!resp.success) {
-              Navigator.of(context).pop();
-            } else {
-              navigate();
-            }
-          });
-
-          return const Dialog(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            child: loader,
-          );
-        });
+        builder: (context) => const Dialog(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: loader,
+        ),
+    );
   }
 
   @override
@@ -228,7 +239,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4.r),
-                              color: !remember || emailController.text.isEmpty || passwordController.text.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
+                              color: emailController.text.isEmpty || passwordController.text.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
                             ),
                             child: Text(
                               "Login",
