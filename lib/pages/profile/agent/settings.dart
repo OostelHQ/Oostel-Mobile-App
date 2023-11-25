@@ -147,6 +147,7 @@ class _SettingsPageState extends ConsumerState<AgentSettingsPage> {
                           resetProviders(ref);
                           FileManager.saveAuthDetails(null);
                           FileManager.saveBool("autoLogin", false);
+                          FileManager.saveBool("registeredFynda", false);
                           context.router.goNamed(Pages.splash);
                         },
                         child: Container(

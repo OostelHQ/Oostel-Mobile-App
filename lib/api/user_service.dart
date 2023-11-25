@@ -2,21 +2,22 @@ import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'base.dart';
 
-
-Future<FyndaResponse> registerUser(Map<String, dynamic> map, {bool agent = false}) async {
+Future<FyndaResponse> registerUser(Map<String, dynamic> map,
+    {bool agent = false}) async {
   try {
     FormData formData = FormData.fromMap(map);
     Response response = await dio.post(
-      "/authenticateuser/register-${agent ? "agent" : "user"}", data: formData);
+        "/authenticateuser/register-${agent ? "agent" : "user"}",
+        data: formData);
 
-    if(response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
-      return FyndaResponse(message: response.data["message"], payload: null, success: true);
+      return FyndaResponse(
+          message: response.data["message"], payload: null, success: true);
     }
   } catch (e) {
     log("Register User Error: $e");
   }
-
 
   return const FyndaResponse(
     message: "An error occurred. Please try again.",
@@ -25,32 +26,35 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map, {bool agent = false
   );
 }
 
-
 Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
   try {
-    Response response = await dio.post(
-        "/authenticateuser/login-user", data: map);
+    Response response =
+        await dio.post("/authenticateuser/login-user", data: map);
 
-    if(response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
       token = data["data"]["token"];
 
       late User? user;
-      if(data["data"]["role"] == "Student") {
+      if (data["data"]["role"] == "Student") {
         String name = data["data"]["fullname"], email = data["data"]["email"];
         List<String> names = name.split(" ");
-        user = Student(dateJoined: DateTime(1960), firstName: names[0], lastName: names[1], email: email);
+        user = Student(
+            dateJoined: DateTime(1960),
+            firstName: names[0],
+            lastName: names[1],
+            email: email);
       } else {
         user = null;
       }
 
-      return FyndaResponse<User?>(message: data["message"], payload: user, success: true);
+      return FyndaResponse<User?>(
+          message: data["message"], payload: user, success: user != null);
     }
   } catch (e) {
     log("Login User Error: $e");
   }
-
 
   return const FyndaResponse(
     message: "An unknown error occurred. Please try again.",
@@ -59,19 +63,23 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
   );
 }
 
-
-Future<FyndaResponse> verifyOTP(Map<String, dynamic> map) async {
+Future<FyndaResponse> verifyEmailOTP(Map<String, dynamic> map) async {
   try {
     Response response = await dio.post(
-        "/authenticateuser/verify-otp-email", data: map);
+      "/authenticateuser/verify-otp-email",
+      data: map,
+      options: Options(
+        contentType: "application/json",
+      ),
+    );
 
-    if(response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+      return const FyndaResponse(
+          message: "Email Verified Successfully", payload: null, success: true);
     }
   } catch (e) {
     log("Verify OTP Error: $e");
   }
-
 
   return const FyndaResponse(
     message: "An error occurred. Please try again.",
@@ -80,19 +88,23 @@ Future<FyndaResponse> verifyOTP(Map<String, dynamic> map) async {
   );
 }
 
-
-Future<FyndaResponse> resetPassword(String email) async {
+Future<FyndaResponse> generateOTP(String email) async {
   try {
     Response response = await dio.post(
-        "/authenticateuser/Send-reset-password-otp", data: {"email": email});
+      "/authenticateuser/Send-reset-password-otp",
+      data: {"email": email},
+      options: Options(
+        contentType: "application/json",
+      ),
+    );
 
-    if(response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+      return const FyndaResponse(
+          message: "OTP Sent Successfully", payload: null, success: true);
     }
   } catch (e) {
-    log("Verify OTP Error: $e");
+    log("Send OTP Error: $e");
   }
-
 
   return const FyndaResponse(
     message: "An error occurred. Please try again.",
@@ -101,6 +113,27 @@ Future<FyndaResponse> resetPassword(String email) async {
   );
 }
 
+Future<FyndaResponse> resetPassword(Map<String, dynamic> map) async {
+  try {
+    Response response = await dio.post(
+      "/authenticateuser/reset-password",
+      data: map,
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+      return const FyndaResponse(
+          message: "Password Reset Successfully", payload: null, success: true);
+    }
+  } catch (e) {
+    log("Reset Password Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    success: false,
+  );
+}
 
 Future<FyndaResponse> createLandlordProfile(Map<String, dynamic> map) async {
   try {
@@ -190,7 +223,6 @@ Future<FyndaResponse> updateAgentProfile(Map<String, dynamic> map) async {
   );
 }
 
-
 Future<FyndaResponse> createStudentProfile(Map<String, dynamic> map) async {
   try {
     Response response = await dio.post(
@@ -235,16 +267,13 @@ Future<FyndaResponse> updateStudentProfile(Map<String, dynamic> map) async {
   );
 }
 
-
 Future<FyndaResponse> getLandlordById(String ID) async {
   try {
-    Response response = await dio.get(
-      "/user-profile/get-landlord-by-id",
-      options: configuration,
-      queryParameters: {
-        "landlordId": ID,
-      }
-    );
+    Response response = await dio.get("/user-profile/get-landlord-by-id",
+        options: configuration,
+        queryParameters: {
+          "landlordId": ID,
+        });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
@@ -262,13 +291,11 @@ Future<FyndaResponse> getLandlordById(String ID) async {
 
 Future<FyndaResponse> getAgentById(String ID) async {
   try {
-    Response response = await dio.get(
-        "/user-profile/get-agent-by-id",
+    Response response = await dio.get("/user-profile/get-agent-by-id",
         options: configuration,
         queryParameters: {
           "agentId": ID,
-        }
-    );
+        });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
@@ -286,13 +313,11 @@ Future<FyndaResponse> getAgentById(String ID) async {
 
 Future<FyndaResponse> getStudentById(String ID) async {
   try {
-    Response response = await dio.get(
-        "/user-profile/get-student-by-id",
+    Response response = await dio.get("/user-profile/get-student-by-id",
         options: configuration,
         queryParameters: {
           "studentId": ID,
-        }
-    );
+        });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
@@ -358,8 +383,7 @@ Future<FyndaResponse> updateProfilePicture(Map<String, dynamic> map) async {
     Response response = await dio.post(
         "/user-profile/upload-user-profile-picture",
         options: configuration,
-        data: formData
-    );
+        data: formData);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
@@ -378,9 +402,9 @@ Future<FyndaResponse> updateProfilePicture(Map<String, dynamic> map) async {
 Future<FyndaResponse> openToRoommate(Map<String, dynamic> map) async {
   try {
     Response response = await dio.post(
-        "/user-profile/open-to-roommate",
-        options: configuration,
-        data: map,
+      "/user-profile/open-to-roommate",
+      options: configuration,
+      data: map,
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
@@ -402,9 +426,7 @@ Future<FyndaResponse> profileViewCounts(String ID) async {
     Response response = await dio.post(
       "/user-profile/profile-views-count",
       options: configuration,
-      queryParameters: {
-        "userId":ID
-      },
+      queryParameters: {"userId": ID},
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {

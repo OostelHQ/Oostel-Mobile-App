@@ -10,20 +10,48 @@ import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
+class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final TextEditingController emailController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     super.dispose();
+  }
+
+  void navigate() {
+    ref.watch(otpOriginProvider.notifier).state = OtpOrigin.forgot;
+    context.router.pushReplacementNamed(Pages.accountVerification,
+        extra: emailController.text);
+  }
+
+  Future<void> sendOTP() async {
+    generateOTP(emailController.text).then((resp) {
+      if (!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        navigate();
+      }
+    });
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
   }
 
   @override
@@ -98,8 +126,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       SizedBox(height: 230.h),
                       GestureDetector(
                         onTap: () {
+                          emailController.text = emailController.text.trim();
                           if (emailController.text.isEmpty) return;
-                          context.router.pushNamed(Pages.accountVerification);
+                          sendOTP();
                         },
                         child: Container(
                           width: 414.w,
@@ -131,23 +160,72 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 }
 
-class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+class ResetPasswordPage extends ConsumerStatefulWidget {
+  final List<String> details;
+
+  const ResetPasswordPage({super.key, required this.details});
 
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+  ConsumerState<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   bool showPassword = false;
   bool showConfirmPassword = false;
 
+  late Map<String, dynamic> authDetails;
+
   @override
   void initState() {
     super.initState();
+    authDetails = {
+      "email": widget.details[0],
+      "otp": widget.details[1],
+      "password": "",
+      "confirmPassword": "",
+    };
+  }
+
+  void navigate() {
+    ref.watch(otpOriginProvider.notifier).state = OtpOrigin.none;
+    context.router.goNamed(Pages.login);
+  }
+
+  bool validate() {
+    unFocus();
+    FormState? currentState = formKey.currentState;
+    if (currentState != null) {
+      if (!currentState.validate()) return false;
+      currentState.save();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> reset() async {
+    resetPassword(authDetails).then((resp) {
+      if (!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        navigate();
+      }
+    });
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
   }
 
   @override
@@ -202,111 +280,110 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: SizedBox(
                   width: 414.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "New Password",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SpecialForm(
-                        controller: passwordController,
-                        width: 414.w,
-                        height: 50.h,
-                        obscure: !showPassword,
-                        suffix: AnimatedSwitcherTranslation.right(
-                          duration: const Duration(milliseconds: 500),
-                          child: !showPassword
-                              ? GestureDetector(
-                                  key: const ValueKey<bool>(false),
-                                  child: Icon(
-                                    Icons.visibility_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showPassword = true);
-                                  },
-                                )
-                              : GestureDetector(
-                                  key: const ValueKey<bool>(true),
-                                  child: Icon(
-                                    Icons.visibility_off_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showPassword = false);
-                                  },
-                                ),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "New Password",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
                         ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Password",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SpecialForm(
-                        controller: confirmController,
-                        width: 414.w,
-                        height: 50.h,
-                        obscure: !showConfirmPassword,
-                        suffix: AnimatedSwitcherTranslation.right(
-                          duration: const Duration(milliseconds: 500),
-                          child: !showConfirmPassword
-                              ? GestureDetector(
-                                  key: const ValueKey<bool>(false),
-                                  child: Icon(
-                                    Icons.visibility_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showConfirmPassword = true);
-                                  },
-                                )
-                              : GestureDetector(
-                                  key: const ValueKey<bool>(true),
-                                  child: Icon(
-                                    Icons.visibility_off_outlined,
-                                    size: 18.r,
-                                    color: Colors.grey,
-                                  ),
-                                  onTap: () {
-                                    setState(() => showConfirmPassword = false);
-                                  },
-                                ),
-                        ),
-                      ),
-                      SizedBox(height: 144.h),
-                      GestureDetector(
-                        onTap: () {
-                          if (passwordController.text.isEmpty ||
-                              confirmController.text.isEmpty) return;
-                          context.router.goNamed(Pages.login);
-                        },
-                        child: Container(
+                        SpecialForm(
+                          controller: passwordController,
                           width: 414.w,
                           height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                              color: (passwordController.text.isEmpty ||
-                                      confirmController.text.isEmpty)
-                                  ? appBlue.withOpacity(0.4)
-                                  : appBlue),
-                          child: Text(
-                            "Confirm",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                          obscure: !showPassword,
+                          onValidate: (value) {
+                            if (value!.trim().length < 6) {
+                              showError(
+                                  "Please use at least 6 characters for your password");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) =>
+                              setState(() => authDetails["password"] = val!),
+                          suffix: GestureDetector(
+                            onTap: () =>
+                                setState(() => showPassword = !showPassword),
+                            child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: Icon(
+                                showPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                key: ValueKey<bool>(showPassword),
+                                size: 18.r,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Confirm Password",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SpecialForm(
+                          controller: confirmController,
+                          width: 414.w,
+                          height: 50.h,
+                          obscure: !showConfirmPassword,
+                          onValidate: (value) {
+                            if (value!.trim() != passwordController.text.trim()) {
+                              showError("The passwords do not match.");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) => setState(
+                              () => authDetails["confirmPassword"] = val!),
+                          suffix: GestureDetector(
+                            onTap: () => setState(
+                                () => showConfirmPassword = !showConfirmPassword),
+                            child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: Icon(
+                                showConfirmPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                key: ValueKey<bool>(showConfirmPassword),
+                                size: 18.r,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 144.h),
+                        GestureDetector(
+                          onTap: () {
+                            if(!validate()) return;
+                            reset();
+                          },
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.r),
+                                color: (passwordController.text.isEmpty ||
+                                        confirmController.text.isEmpty)
+                                    ? appBlue.withOpacity(0.4)
+                                    : appBlue),
+                            child: Text(
+                              "Confirm",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -335,6 +412,8 @@ class _AccountVerificationPageState
     extends ConsumerState<AccountVerificationPage> {
   final List<TextStyle?> otpTextStyles = [];
 
+  String otp = "";
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -350,16 +429,42 @@ class _AccountVerificationPageState
       context.textTheme.displaySmall?.copyWith(color: color);
 
   void navigate() {
-    context.router.pushReplacementNamed(Pages.login);
+    if (ref.watch(otpOriginProvider) == OtpOrigin.register) {
+      ref.watch(otpOriginProvider.notifier).state = OtpOrigin.none;
+      context.router.goNamed(Pages.login);
+    } else if (ref.watch(otpOriginProvider) == OtpOrigin.forgot) {
+      context.router.pushReplacementNamed(Pages.resetPassword,
+          extra: [widget.email, otp]);
+    }
+  }
+
+  Future<void> sendOTP() async {
+    generateOTP(widget.email).then((resp) {
+      if (!mounted) return;
+      showError(resp.message);
+      Navigator.of(context).pop();
+    });
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
   }
 
   Future<void> verify(String verificationCode) async {
-    verifyOTP({"email": widget.email, "otp": verificationCode}).then((resp) {
+    verifyEmailOTP({"email": widget.email, "otp": verificationCode})
+        .then((resp) {
       if (!mounted) return;
       showError(resp.message);
       if (!resp.success) {
         Navigator.of(context).pop();
       } else {
+        setState(() => otp = verificationCode);
         navigate();
       }
     });
@@ -408,10 +513,11 @@ class _AccountVerificationPageState
                 height: 12.h,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32.w),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(children: [
+                padding: EdgeInsets.symmetric(horizontal: 32.w),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: [
                       TextSpan(
                         text:
                             "We've just sent you an email with a link to activate your email account ",
@@ -428,8 +534,10 @@ class _AccountVerificationPageState
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack75, fontWeight: FontWeight.w500),
                       )
-                    ]),
-                  )),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 46.h),
               OtpTextField(
                 numberOfFields: 4,
@@ -450,7 +558,7 @@ class _AccountVerificationPageState
               ),
               SizedBox(height: 48.h),
               GestureDetector(
-                onTap: () {},
+                onTap: sendOTP,
                 child: Text(
                   "Resend",
                   style: context.textTheme.bodyMedium!

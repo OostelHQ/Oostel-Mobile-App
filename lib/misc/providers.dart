@@ -9,6 +9,7 @@ import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/components/user.dart';
+import 'package:my_hostel/misc/constants.dart';
 
 final Student defaultStudent = Student(
   firstName: "John",
@@ -80,9 +81,6 @@ StateProvider((ref) => ref.watch(currentUserProvider).type == UserType.landlord)
 
 final StateProvider<bool> hasMessagesProvider = StateProvider((ref) => false);
 
-final StateProvider<bool> hasNotificationProvider =
-    StateProvider((ref) => false);
-
 final StateProvider<User> currentUserProvider =
     StateProvider((ref) => User(dateJoined: DateTime(1900)));
 
@@ -95,6 +93,9 @@ final StateProvider<bool> showCompleteProfileProvider = StateProvider((ref) => f
 void resetProviders(WidgetRef ref) {
   ref.invalidate(dashboardTabIndexProvider);
   ref.invalidate(showCompleteProfileProvider);
+  ref.invalidate(currentUserProvider);
+  ref.invalidate(otpOriginProvider);
+  ref.invalidate(hasMessagesProvider);
 }
 
 final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
@@ -4284,3 +4285,5 @@ final StateProvider<List<Conversation>> conversationsProvider = StateProvider(
     ),
   ],
 );
+
+final StateProvider<OtpOrigin> otpOriginProvider = StateProvider((ref) => OtpOrigin.none);

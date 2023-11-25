@@ -8,18 +8,18 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'constants.dart' show appBlue;
 
-void showError(String message) {
+void showError(String message, {Color background = appBlue, Color text = Colors.white}) {
   HapticFeedback.heavyImpact();
-  showToast(message);
+  showToast(message, background: background, text: text);
 }
 
-void showToast(String message) => Fluttertoast.showToast(
+void showToast(String message, {Color background = appBlue, Color text = Colors.white}) => Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.SNACKBAR,
       timeInSecForIosWeb: 2,
-      backgroundColor: appBlue,
-      textColor: Colors.white,
+      backgroundColor: background,
+      textColor: text,
       fontSize: 14.sp,
     );
 

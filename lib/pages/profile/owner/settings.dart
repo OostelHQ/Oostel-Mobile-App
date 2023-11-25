@@ -151,6 +151,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                         onTap: () {
                           resetProviders(ref);
                           FileManager.saveAuthDetails(null);
+                          FileManager.saveBool("registeredFynda", false);
                           FileManager.saveBool("autoLogin", false);
                           context.router.goNamed(Pages.splash);
                         },

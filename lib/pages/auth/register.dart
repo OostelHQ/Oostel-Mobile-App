@@ -52,7 +52,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       if (!currentState.validate()) return false;
 
       currentState.save();
-      authDetails["roletype"] = (ref.read(isAStudent)) ? "Student" : "LandLord";
+      authDetails["roletype"] = (ref.read(isAStudent)) ? "Student" :  "LandLord";
       return true;
     }
     return false;
@@ -60,6 +60,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   void navigate() {
     FileManager.saveBool("registeredFynda", true);
+    ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
     context.router.pushReplacementNamed(Pages.accountVerification, extra: authDetails["emailAddress"]);
   }
 

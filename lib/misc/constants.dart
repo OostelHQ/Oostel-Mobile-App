@@ -41,6 +41,12 @@ extension OostelExtension on BuildContext {
   GoRouter get router => GoRouter.of(this);
 }
 
+enum OtpOrigin {
+  none,
+  register,
+  forgot
+}
+
 class Pages
 {
   static const String splash = "splash";

@@ -76,7 +76,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
           if (auth != null && autoLogin != null && autoLogin) {
             loaderController.forward();
             loginUser(auth).then((response) {
-              showError(response.message);
+              showError(response.message, background: Colors.white, text: weirdBlack);
               loaderController.reverse().then((_) {
                 if (response.success) {
                   FileManager.saveBool("registeredFynda", true);

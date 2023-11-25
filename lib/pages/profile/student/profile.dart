@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,62 +75,67 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                             width: 100.r,
                             height: 100.r,
                             decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xFFE0E5EC),
-                                    blurRadius: 1.0,
-                                    spreadRadius: 2.0,
-                                  )
-                                ],
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFFE0E5EC),
+                                  blurRadius: 1.0,
+                                  spreadRadius: 2.0,
+                                )
+                              ],
                             ),
                             alignment: Alignment.center,
-                            child: student.image == "" ? CircleAvatar(
-                              radius: 47.5.r,
-                              backgroundColor: appBlue,
-                              child: Center(
-                                child: Text(
-                                  student.firstName.substring(0, 1),
-                                  style: context.textTheme.displaySmall!
-                                      .copyWith(color: Colors.white),
-                                ),
-                              ),
-                            ) : CachedNetworkImage(imageUrl: student.image,
-                              errorWidget: (context, url, error) => CircleAvatar(
-                                backgroundColor: weirdBlack20,
-                                radius: 47.5.r,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.person_outline_rounded,
-                                    color: appBlue,
-                                    size: 42.r,
-                                  ),
-                                ),
-                              ),
-                              progressIndicatorBuilder: (context, url, download) {
-                                return CircleAvatar(
-                                  radius: 47.5.r,
-                                  backgroundColor: weirdBlack50,
-                                );
-                              },
-                              imageBuilder: (context, provider) {
-                                return GestureDetector(
-                                  onTap: () => context.router.pushNamed(
-                                    Pages.viewMedia,
-                                    extra: ViewInfo(
-                                      current: 0,
-                                      type: DisplayType.network,
-                                      paths: [student.image],
-                                    ),
-                                  ),
-                                  child: CircleAvatar(
-                                    backgroundImage: provider,
+                            child: student.image == ""
+                                ? CircleAvatar(
                                     radius: 47.5.r,
+                                    backgroundColor: appBlue,
+                                    child: Center(
+                                      child: Text(
+                                        student.firstName.substring(0, 1),
+                                        style: context.textTheme.displaySmall!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: student.image,
+                                    errorWidget: (context, url, error) =>
+                                        CircleAvatar(
+                                      backgroundColor: weirdBlack20,
+                                      radius: 47.5.r,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.person_outline_rounded,
+                                          color: appBlue,
+                                          size: 42.r,
+                                        ),
+                                      ),
+                                    ),
+                                    progressIndicatorBuilder:
+                                        (context, url, download) {
+                                      return CircleAvatar(
+                                        radius: 47.5.r,
+                                        backgroundColor: weirdBlack50,
+                                      );
+                                    },
+                                    imageBuilder: (context, provider) {
+                                      return GestureDetector(
+                                        onTap: () => context.router.pushNamed(
+                                          Pages.viewMedia,
+                                          extra: ViewInfo(
+                                            current: 0,
+                                            type: DisplayType.network,
+                                            paths: [student.image],
+                                          ),
+                                        ),
+                                        child: CircleAvatar(
+                                          backgroundImage: provider,
+                                          radius: 47.5.r,
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
                           ),
                         ),
                         Positioned(
@@ -387,7 +393,58 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                       ],
                     ),
                     SizedBox(height: 15.h),
-                    BasicStudentInfo(student: student),
+                    if (student.hasCompletedProfile > 20)
+                      BasicStudentInfo(student: student),
+                    if (student.hasCompletedProfile <= 20)
+                      SizedBox(
+                        height: 450.r,
+                        width: 414.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 50.r),
+                            Image.asset(
+                              "assets/images/No Data.png",
+                              width: 150.r,
+                              height: 150.r,
+                              fit: BoxFit.cover,
+                            ),
+                            SizedBox(height: 50.r),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "Unlock the full experience! Your profile details are empty. ",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "Complete my profile",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: appBlue,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => context.router.pushNamed(
+                                            ref.watch(isAStudent)
+                                                ? Pages.editProfile
+                                                : ref.watch(isLandlord)
+                                                    ? Pages.editOwnerProfile
+                                                    : Pages.editAgentProfile,
+                                          ),
+                                  )
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
                     SizedBox(height: 50.h),
                   ],
                 ),

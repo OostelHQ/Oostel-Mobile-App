@@ -251,7 +251,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.resetPassword.path,
           name: Pages.resetPassword,
-          builder: (_, __) => const ResetPasswordPage(),
+          builder: (_, state) => ResetPasswordPage(details: state.extra as List<String>),
         ),
         GoRoute(
           path: Pages.studentDashboard.path,

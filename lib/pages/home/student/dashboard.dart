@@ -161,7 +161,7 @@ class _HomePageState extends ConsumerState<_HomePage>
       ),
     );
     if (ref.read(currentUserProvider).hasCompletedProfile < 100) {
-      Future.delayed(const Duration(milliseconds: 200),
+      Future.delayed(const Duration(seconds: 3),
           () => animationController.forward());
     }
   }
@@ -176,7 +176,7 @@ class _HomePageState extends ConsumerState<_HomePage>
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(currentUserProvider);
-    bool notifications = ref.watch(hasNotificationProvider);
+    bool notifications = ref.watch(newNotificationProvider);
 
     return Stack(
       children: [

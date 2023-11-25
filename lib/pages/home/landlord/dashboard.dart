@@ -180,7 +180,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(currentUserProvider);
-    bool notifications = ref.watch(hasNotificationProvider);
+    bool notifications = ref.watch(newNotificationProvider);
 
     return CustomScrollView(
       controller: controller,
