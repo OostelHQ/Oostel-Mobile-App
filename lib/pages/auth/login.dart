@@ -60,12 +60,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     ref.watch(hasInitializedProvider.notifier).state = true;
     ref.watch(currentUserProvider.notifier).state = user!;
-    context.router.pushReplacementNamed(
-      ref.read(isAStudent)
-          ? Pages.studentDashboard
-          : ref.read(isAgent) ? Pages.agentDashboard :
-      Pages.ownerDashboard,
-    );
+
+    String destination = ref.read(isAStudent)
+        ? Pages.studentDashboard
+        : ref.read(isAgent) ? Pages.agentDashboard :
+    Pages.ownerDashboard;
+
+    if(ref.read(isLandlord)) {
+      int value = ref.read(currentUserProvider).hasCompletedProfile;
+      if(value == 20) {
+        destination = Pages.createStepOne;
+      }
+    }
+
+    context.router.pushReplacementNamed(destination);
   }
 
   Future<void> login() async {

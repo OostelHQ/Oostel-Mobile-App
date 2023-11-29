@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
@@ -400,7 +401,7 @@ class AccountVerificationPage extends ConsumerStatefulWidget {
 
   const AccountVerificationPage({
     super.key,
-    this.email = "johndoe@mail.com",
+    this.email = "",
   });
 
   @override
@@ -431,6 +432,7 @@ class _AccountVerificationPageState
   void navigate() {
     if (ref.watch(otpOriginProvider) == OtpOrigin.register) {
       ref.watch(otpOriginProvider.notifier).state = OtpOrigin.none;
+      FileManager.saveBool("createdAccount", false);
       context.router.goNamed(Pages.login);
     } else if (ref.watch(otpOriginProvider) == OtpOrigin.forgot) {
       context.router.pushReplacementNamed(Pages.resetPassword,

@@ -15,7 +15,7 @@ import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
-
+import 'package:my_hostel/api/user_service.dart';
 import '../../chats/chats.dart';
 import '../student/explore.dart';
 
@@ -192,6 +192,7 @@ class _HomePageState extends ConsumerState<_HomePage> {
           centerTitle: true,
           title: GestureDetector(
             onTap: () => context.router.pushNamed(Pages.ownerProfile),
+            // onTap: () => context.router.pushNamed(Pages.createStepOne),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

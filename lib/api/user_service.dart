@@ -1,5 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
+import 'package:my_hostel/components/agent.dart';
+import 'package:my_hostel/components/landowner.dart';
 import 'base.dart';
 
 Future<FyndaResponse> registerUser(Map<String, dynamic> map,
@@ -32,21 +35,57 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         await dio.post("/authenticateuser/login-user", data: map);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      // log(response.data.toString());
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
       token = data["data"]["token"];
 
+      Map<String, dynamic>? userData = await _getCurrentUser();
+
       late User? user;
-      if (data["data"]["role"] == "Student") {
+      if (data["data"]["role"] == null || userData == null) {
+        user = null;
+      } else {
+        String role = data["data"]["role"];
         String name = data["data"]["fullname"], email = data["data"]["email"];
         List<String> names = name.split(" ");
-        user = Student(
-            dateJoined: DateTime(1960),
+        names.remove(" ");
+
+        String id = userData["userId"];
+        DateTime created = DateTime.parse(userData["createdAt"]);
+        String image = userData["profilePicture"] ?? "";
+
+        if (role == "Student") {
+          user = Student(
+            dateJoined: created,
+            image: image,
+            id: id,
             firstName: names[0],
             lastName: names[1],
-            email: email);
-      } else {
-        user = null;
+            email: email,
+          );
+        } else if (role == "LandLord") {
+          user = Landowner(
+            dateJoined: created,
+            dob: DateTime(1960),
+            firstName: names[0],
+            lastName: names[1],
+            email: email,
+            image: image,
+            id: id,
+          );
+        } else if (role == "Agent") {
+          user = Agent(
+            dateJoined: created,
+            dob: DateTime(1960),
+            firstName: names[0],
+            lastName: names[1],
+            email: email,
+            image: image,
+            id: id,
+          );
+        } else {
+          user = null;
+        }
       }
 
       return FyndaResponse<User?>(
@@ -135,6 +174,23 @@ Future<FyndaResponse> resetPassword(Map<String, dynamic> map) async {
   );
 }
 
+Future<Map<String, dynamic>?> _getCurrentUser() async {
+  try {
+    Response response = await dio.get(
+      "/authenticateuser/get-current-user",
+      options: configuration,
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+      return response.data["data"];
+    }
+  } catch (e) {
+    log("Current User Error: $e");
+  }
+
+  return null;
+}
+
 Future<FyndaResponse> createLandlordProfile(Map<String, dynamic> map) async {
   try {
     Response response = await dio.post(
@@ -157,7 +213,7 @@ Future<FyndaResponse> createLandlordProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map) async {
+Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.put(
       "/user-profile/update-landlord-profile",
@@ -166,6 +222,7 @@ Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map) async {
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
+
       log(response.data.toString());
     }
   } catch (e) {
@@ -177,6 +234,11 @@ Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map) async {
     payload: null,
     success: false,
   );
+}
+
+
+Future<void> refreshUser(WidgetRef ref) async {
+
 }
 
 Future<FyndaResponse> createAgentProfile(Map<String, dynamic> map) async {
@@ -267,19 +329,21 @@ Future<FyndaResponse> updateStudentProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> getLandlordById(String ID) async {
+Future<FyndaResponse> getLandlordById(String id) async {
   try {
-    Response response = await dio.get("/user-profile/get-landlord-by-id",
-        options: configuration,
-        queryParameters: {
-          "landlordId": ID,
-        });
+    Response response = await dio.get(
+      "/user-profile/get-landlord-by-id",
+      options: configuration,
+      queryParameters: {
+        "landlordId": id,
+      },
+    );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
     }
   } catch (e) {
-    log("Get Landlord By ID Error: $e");
+    log("Get Landlord By id Error: $e");
   }
 
   return const FyndaResponse(
@@ -289,19 +353,19 @@ Future<FyndaResponse> getLandlordById(String ID) async {
   );
 }
 
-Future<FyndaResponse> getAgentById(String ID) async {
+Future<FyndaResponse> getAgentById(String id) async {
   try {
     Response response = await dio.get("/user-profile/get-agent-by-id",
         options: configuration,
         queryParameters: {
-          "agentId": ID,
+          "agentId": id,
         });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
     }
   } catch (e) {
-    log("Get Agent By ID Error: $e");
+    log("Get Agent By id Error: $e");
   }
 
   return const FyndaResponse(
@@ -311,19 +375,19 @@ Future<FyndaResponse> getAgentById(String ID) async {
   );
 }
 
-Future<FyndaResponse> getStudentById(String ID) async {
+Future<FyndaResponse> getStudentById(String id) async {
   try {
     Response response = await dio.get("/user-profile/get-student-by-id",
         options: configuration,
         queryParameters: {
-          "studentId": ID,
+          "studentId": id,
         });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
     }
   } catch (e) {
-    log("Get Student By ID Error: $e");
+    log("Get Student By id Error: $e");
   }
 
   return const FyndaResponse(
@@ -377,16 +441,26 @@ Future<FyndaResponse> acceptInvite(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> updateProfilePicture(Map<String, dynamic> map) async {
-  FormData formData = FormData.fromMap(map);
+Future<FyndaResponse> updateProfilePicture(
+    {required String id, required String filePath}) async {
+  FormData formData = FormData();
+  formData.files
+      .addAll([MapEntry("file", await MultipartFile.fromFile(filePath))]);
+  formData.fields.add(MapEntry("userId", id));
+
   try {
-    Response response = await dio.post(
-        "/user-profile/upload-user-profile-picture",
-        options: configuration,
-        data: formData);
+    Response response = await dio.put(
+      "/user-profile/upload-user-profile-picture",
+      options: configuration,
+      data: formData,
+    );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      return const FyndaResponse(
+        message: "Profile Picture Updated",
+        payload: null,
+        success: true,
+      );
     }
   } catch (e) {
     log("Upload Profile Picture Error: $e");
@@ -421,12 +495,12 @@ Future<FyndaResponse> openToRoommate(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> profileViewCounts(String ID) async {
+Future<FyndaResponse> profileViewCounts(String id) async {
   try {
     Response response = await dio.post(
       "/user-profile/profile-views-count",
       options: configuration,
-      queryParameters: {"userId": ID},
+      queryParameters: {"userId": id},
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {

@@ -77,6 +77,12 @@ class Pages
   static const String ownerProfileSettings = 'owner-profile-settings';
   static const String editProfile = 'edit-profile';
   static const String editOwnerProfile = 'edit-owner-profile';
+
+  static const String createStepOne = 'create-owner-one';
+  static const String createStepTwo = 'create-owner-two';
+  static const String createStepThree = 'create-owner-three';
+  static const String createStepFour = 'create-owner-four';
+
   static const String changePassword = 'change-password';
   static const String notificationSettings = 'notification-settings';
   static const String about = 'about';

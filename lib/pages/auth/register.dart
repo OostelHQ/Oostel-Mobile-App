@@ -45,6 +45,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     super.dispose();
   }
 
+
   bool validate() {
     unFocus();
     FormState? currentState = formKey.currentState;
@@ -52,14 +53,16 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       if (!currentState.validate()) return false;
 
       currentState.save();
-      authDetails["roletype"] = (ref.read(isAStudent)) ? "Student" :  "LandLord";
+      authDetails["roletype"] = (ref.read(isAStudent)) ? "Student" : ref.read(isLandlord) ? "LandLord" : "Agent";
       return true;
     }
     return false;
   }
 
+
   void navigate() {
     FileManager.saveBool("registeredFynda", true);
+    FileManager.save("createdAccount", authDetails["emailAddress"]);
     ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
     context.router.pushReplacementNamed(Pages.accountVerification, extra: authDetails["emailAddress"]);
   }
@@ -335,7 +338,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           SizedBox(height: 60.h),
                         ],
                       ),
-                    )),
+                    ),
+                ),
               )
             ],
           ),

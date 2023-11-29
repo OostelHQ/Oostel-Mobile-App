@@ -71,9 +71,12 @@ class _SplashPageState extends ConsumerState<SplashPage>
         (_) async {
           bool? hasRegistered = await FileManager.loadBool("registeredFynda");
           bool? autoLogin = await FileManager.loadBool("autoLogin");
+          String? createdAccount = await FileManager.load("createdAccount");
           Map<String, String>? auth = await FileManager.loadAuthDetails();
 
-          if (auth != null && autoLogin != null && autoLogin) {
+          if(createdAccount != null && createdAccount.isNotEmpty) {
+            process(hasRegistered, autoLogin, createdAccount);
+          } else if (auth != null && autoLogin != null && autoLogin) {
             loaderController.forward();
             loginUser(auth).then((response) {
               showError(response.message, background: Colors.white, text: weirdBlack);
@@ -84,22 +87,26 @@ class _SplashPageState extends ConsumerState<SplashPage>
                   ref.watch(currentUserProvider.notifier).state =
                       response.payload!;
                 }
-                process(hasRegistered, autoLogin);
+                process(hasRegistered, autoLogin, createdAccount);
               });
             });
           } else {
-            process(hasRegistered, autoLogin);
+            process(hasRegistered, autoLogin, createdAccount);
           }
         },
       ),
     );
   }
 
-  void process(bool? hasRegistered, bool? autoLogin) =>
+  void process(bool? hasRegistered, bool? autoLogin, String? createdAccount) =>
       controller.reverse().then(
         (_) {
           String destination = "";
-          if (hasRegistered == null || !hasRegistered) {
+          if(createdAccount != null && createdAccount.isNotEmpty) {
+            destination = Pages.accountVerification;
+            ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
+          }
+          else if (hasRegistered == null || !hasRegistered) {
             destination = Pages.registrationType;
           } else if (ref.watch(hasInitializedProvider)) {
             destination = ref.watch(isAStudent)
@@ -113,7 +120,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
             destination = Pages.login;
           }
 
-          context.router.pushReplacementNamed(destination);
+          context.router.pushReplacementNamed(destination, extra: createdAccount);
         },
       );
 

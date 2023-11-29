@@ -6,9 +6,9 @@ export 'dart:developer' show log;
 final Dio dio = Dio(
   BaseOptions(
     baseUrl: "http://fyndaapp-001-site1.htempurl.com/api",
-    connectTimeout: const Duration(seconds: 30),
-    sendTimeout: const Duration(seconds: 60),
-    receiveTimeout: const Duration(seconds: 120),
+    connectTimeout: const Duration(seconds: 60),
+    sendTimeout: const Duration(seconds: 120),
+    receiveTimeout: const Duration(seconds: 180),
   ),
 );
 

@@ -34,6 +34,7 @@ import 'package:my_hostel/pages/profile/agent/settings.dart';
 import 'package:my_hostel/pages/profile/agent/wallet.dart';
 import 'package:my_hostel/pages/profile/help.dart';
 import 'package:my_hostel/pages/profile/owner/agents.dart';
+import 'package:my_hostel/pages/profile/owner/create_profile.dart';
 import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
 import 'package:my_hostel/pages/profile/owner/hostel_settings.dart';
 import 'package:my_hostel/pages/profile/owner/profile.dart';
@@ -166,6 +167,26 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.studentProfileSettings.path,
           name: Pages.studentProfileSettings,
           builder: (_, __) => const StudentProfileSettingsPage(),
+        ),
+        GoRoute(
+          path: Pages.createStepOne.path,
+          name: Pages.createStepOne,
+          builder: (_, __) => const CreateProfilePageOne(),
+        ),
+        GoRoute(
+          path: Pages.createStepTwo.path,
+          name: Pages.createStepTwo,
+          builder: (_, state) => const CreateProfilePageTwo(),
+        ),
+        GoRoute(
+          path: Pages.createStepThree.path,
+          name: Pages.createStepThree,
+          builder: (_, state) => const CreateProfilePageThree(),
+        ),
+        GoRoute(
+          path: Pages.createStepFour.path,
+          name: Pages.createStepFour,
+          builder: (_, state) => const CreateProfilePageFour(),
         ),
         GoRoute(
           path: Pages.ownerProfileSettings.path,

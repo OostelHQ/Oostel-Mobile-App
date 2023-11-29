@@ -301,7 +301,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         controller: denomination,
                         width: 414.w,
                         height: 50.h,
-                        hint: "What is the name of your church or mosque?",
+                        hint: "What is the name of your church?",
                       ),
                     if (religion != null && religion == "Christianity")
                       SizedBox(height: 16.h),

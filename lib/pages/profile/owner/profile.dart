@@ -424,141 +424,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       header: formatDateRaw(owner.dob),
                       text: "Date of Birth",
                     ),
-                    SizedBox(height: 24.h),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Hostel Information",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        Text(
-                          "Public to students",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Profile Blue Location.svg",
-                      header: allHostels.first.name,
-                      text: "Hostel name",
-                    ),
-                    SizedBox(height: 16.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Profile Blue Location.svg",
-                      header: allHostels.first.id,
-                      text: "Identification number",
-                    ),
-                    SizedBox(height: 16.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Profile Blue Location.svg",
-                      header: joinToAddress(allHostels.first.address),
-                      text: "Address",
-                    ),
-                    SizedBox(height: 24.h),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Face Capturing",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        Text(
-                          "Private to you",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.h),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8FBFF),
-                        borderRadius: BorderRadius.circular(4.r),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xFFE0E5EC),
-                            blurRadius: 6.0,
-                            spreadRadius: 1.0,
-                          )
-                        ],
-                      ),
-                      child: SizedBox(
-                        height: 70.h,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 10.w),
-                            Container(
-                              width: 50.r,
-                              height: 50.r,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                color: paleBlue,
-                                shape: BoxShape.circle,
-                              ),
-                              child: SvgPicture.asset(
-                                  "assets/images/Profile Face.svg"),
-                            ),
-                            SizedBox(width: 15.w),
-                            Text(
-                              owner.verified
-                                  ? "Successfully done"
-                                  : "Not verified",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(width: !owner.verified ? 100.w : 60.w),
-                            if (owner.verified)
-                              Container(
-                                width: 70.w,
-                                height: 25.h,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: paleBlue,
-                                  borderRadius: BorderRadius.circular(12.5.h),
-                                ),
-                                child: Text(
-                                  "Verified",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontSize: 13.sp,
-                                  ),
-                                ),
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
+
                     SizedBox(height: 48.h),
                   ],
                 ),
@@ -570,6 +436,131 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
     );
   }
 }
+
+//Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           "Hostel Information",
+//                           style: context.textTheme.bodyLarge!.copyWith(
+//                               fontWeight: FontWeight.w600, color: weirdBlack),
+//                         ),
+//                         Text(
+//                           "Public to students",
+//                           style: context.textTheme.bodyMedium!.copyWith(
+//                             color: weirdBlack50,
+//                             fontWeight: FontWeight.w500,
+//                           ),
+//                         )
+//                       ],
+//                     ),
+//                     SizedBox(height: 15.h),
+//                     ProfileInfoCard(
+//                       image: "assets/images/Profile Blue Location.svg",
+//                       header: allHostels.first.name,
+//                       text: "Hostel name",
+//                     ),
+//                     SizedBox(height: 16.h),
+//                     ProfileInfoCard(
+//                       image: "assets/images/Profile Blue Location.svg",
+//                       header: allHostels.first.id,
+//                       text: "Identification number",
+//                     ),
+//                     SizedBox(height: 16.h),
+//                     ProfileInfoCard(
+//                       image: "assets/images/Profile Blue Location.svg",
+//                       header: joinToAddress(allHostels.first.address),
+//                       text: "Address",
+//                     ),
+//                     SizedBox(height: 24.h),
+//                     ConstrainedBox(
+//                       constraints: BoxConstraints(
+//                         minWidth: 414.w,
+//                         minHeight: 1.h,
+//                         maxWidth: 414.w,
+//                         maxHeight: 1.h,
+//                       ),
+//                       child: const ColoredBox(color: Colors.black12),
+//                     ),
+//                     SizedBox(height: 20.h),
+//                     Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           "Face Capturing",
+//                           style: context.textTheme.bodyLarge!.copyWith(
+//                               fontWeight: FontWeight.w600, color: weirdBlack),
+//                         ),
+//                         Text(
+//                           "Private to you",
+//                           style: context.textTheme.bodyMedium!.copyWith(
+//                             color: weirdBlack50,
+//                             fontWeight: FontWeight.w500,
+//                           ),
+//                         )
+//                       ],
+//                     ),
+//                     SizedBox(height: 15.h),
+//                     Container(
+//                       decoration: BoxDecoration(
+//                         color: const Color(0xFFF8FBFF),
+//                         borderRadius: BorderRadius.circular(4.r),
+//                         boxShadow: const [
+//                           BoxShadow(
+//                             color: Color(0xFFE0E5EC),
+//                             blurRadius: 6.0,
+//                             spreadRadius: 1.0,
+//                           )
+//                         ],
+//                       ),
+//                       child: SizedBox(
+//                         height: 70.h,
+//                         child: Row(
+//                           crossAxisAlignment: CrossAxisAlignment.center,
+//                           children: [
+//                             SizedBox(width: 10.w),
+//                             Container(
+//                               width: 50.r,
+//                               height: 50.r,
+//                               alignment: Alignment.center,
+//                               decoration: const BoxDecoration(
+//                                 color: paleBlue,
+//                                 shape: BoxShape.circle,
+//                               ),
+//                               child: SvgPicture.asset(
+//                                   "assets/images/Profile Face.svg"),
+//                             ),
+//                             SizedBox(width: 15.w),
+//                             Text(
+//                               owner.verified
+//                                   ? "Successfully done"
+//                                   : "Not verified",
+//                               style: context.textTheme.bodyLarge!.copyWith(
+//                                   fontWeight: FontWeight.w600,
+//                                   color: weirdBlack),
+//                             ),
+//                             SizedBox(width: !owner.verified ? 100.w : 60.w),
+//                             if (owner.verified)
+//                               Container(
+//                                 width: 70.w,
+//                                 height: 25.h,
+//                                 alignment: Alignment.center,
+//                                 decoration: BoxDecoration(
+//                                   color: paleBlue,
+//                                   borderRadius: BorderRadius.circular(12.5.h),
+//                                 ),
+//                                 child: Text(
+//                                   "Verified",
+//                                   style: context.textTheme.bodyMedium!.copyWith(
+//                                     color: appBlue,
+//                                     fontSize: 13.sp,
+//                                   ),
+//                                 ),
+//                               )
+//                           ],
+//                         ),
+//                       ),
+//                     ),
 
 class AgentInvite extends StatefulWidget {
   const AgentInvite({super.key});

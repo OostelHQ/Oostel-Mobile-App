@@ -79,109 +79,109 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
   }
 
   void logout() => showModalBottomSheet(
-    context: context,
-    builder: (_) => SizedBox(
-      height: 450.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 55.h),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15.r),
-                        topRight: Radius.circular(15.r),
-                      ),
-                      child: Image.asset(
-                        "assets/images/Profile Logout.png",
-                        width: 135.r,
-                        height: 135.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Do you want to logout?",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    "Fynda wants to ensure that users are logging out intentionally.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 60.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+        context: context,
+        builder: (_) => SizedBox(
+          height: 450.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 180.w,
-                          height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: appBlue),
-                            borderRadius: BorderRadius.circular(5.r),
+                      SizedBox(height: 10.h),
+                      SvgPicture.asset("assets/images/Modal Line.svg"),
+                      SizedBox(height: 55.h),
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
                           ),
-                          child: Text(
-                            "No, cancel",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: appBlue,
-                            ),
+                          child: Image.asset(
+                            "assets/images/Profile Logout.png",
+                            width: 135.r,
+                            height: 135.h,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          resetProviders(ref);
-                          FileManager.saveAuthDetails(null);
-                          FileManager.saveBool("registeredFynda", false);
-                          FileManager.saveBool("autoLogin", false);
-                          context.router.goNamed(Pages.splash);
-                        },
-                        child: Container(
-                          width: 180.w,
-                          height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: appBlue,
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Text(
-                            "Yes, logout",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Do you want to logout?",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        "Fynda wants to ensure that users are logging out intentionally.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 60.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: appBlue),
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "No, cancel",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: appBlue,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () {
+                              resetProviders(ref);
+                              FileManager.saveAuthDetails(null);
+                              FileManager.saveBool("registeredFynda", false);
+                              FileManager.saveBool("autoLogin", false);
+                              context.router.goNamed(Pages.splash);
+                            },
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: appBlue,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "Yes, logout",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -230,51 +230,56 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                           ],
                         ),
                         alignment: Alignment.center,
-                        child: user.image == "" ? CircleAvatar(
-                          radius: 47.5.r,
-                          backgroundColor: appBlue,
-                          child: Center(
-                            child: Text(
-                              user.firstName.substring(0, 1),
-                              style: context.textTheme.displaySmall!
-                                  .copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ) : CachedNetworkImage(imageUrl: user.image,
-                          errorWidget: (context, url, error) => CircleAvatar(
-                            backgroundColor: weirdBlack20,
-                            radius: 47.5.r,
-                            child: Center(
-                              child: Icon(
-                                Icons.person_outline_rounded,
-                                color: appBlue,
-                                size: 42.r,
-                              ),
-                            ),
-                          ),
-                          progressIndicatorBuilder: (context, url, download) {
-                            return CircleAvatar(
-                              radius: 47.5.r,
-                              backgroundColor: weirdBlack50,
-                            );
-                          },
-                          imageBuilder: (context, provider) {
-                            return GestureDetector(
-                              onTap: () => context.router.pushNamed(
-                                Pages.viewMedia,
-                                extra: ViewInfo(
-                                  current: 0,
-                                  type: DisplayType.network,
-                                  paths: [user.image],
-                                ),
-                              ),
-                              child: CircleAvatar(
-                                backgroundImage: provider,
+                        child: user.image == ""
+                            ? CircleAvatar(
                                 radius: 47.5.r,
+                                backgroundColor: appBlue,
+                                child: Center(
+                                  child: Text(
+                                    user.firstName.substring(0, 1),
+                                    style: context.textTheme.displaySmall!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: user.image,
+                                errorWidget: (context, url, error) =>
+                                    CircleAvatar(
+                                  backgroundColor: weirdBlack20,
+                                  radius: 47.5.r,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.person_outline_rounded,
+                                      color: appBlue,
+                                      size: 42.r,
+                                    ),
+                                  ),
+                                ),
+                                progressIndicatorBuilder:
+                                    (context, url, download) {
+                                  return CircleAvatar(
+                                    radius: 47.5.r,
+                                    backgroundColor: weirdBlack50,
+                                  );
+                                },
+                                imageBuilder: (context, provider) {
+                                  return GestureDetector(
+                                    onTap: () => context.router.pushNamed(
+                                      Pages.viewMedia,
+                                      extra: ViewInfo(
+                                        current: 0,
+                                        type: DisplayType.network,
+                                        paths: [user.image],
+                                      ),
+                                    ),
+                                    child: CircleAvatar(
+                                      backgroundImage: provider,
+                                      radius: 47.5.r,
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ),
                   ],
@@ -285,7 +290,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverToBoxAdapter(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20.h),
                       Text(
@@ -325,7 +330,8 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                           Text(
                             "Nigeria",
                             style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack50, fontWeight: FontWeight.w500),
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(width: 15.w),
                           SvgPicture.asset(
@@ -338,7 +344,8 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                           Text(
                             "Joined ${formatDateRaw(user.dateJoined)}",
                             style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack50, fontWeight: FontWeight.w500),
+                                color: weirdBlack50,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -350,7 +357,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                               children: [
                                 TextSpan(
                                   text:
-                                  "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                                      "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
                                   style: context.textTheme.bodySmall!.copyWith(
                                       color: weirdBlack75,
                                       fontWeight: FontWeight.w600),
@@ -371,7 +378,7 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                               children: [
                                 TextSpan(
                                   text:
-                                  "${totalRooms < 10 ? "0" : ""}$totalRooms",
+                                      "${totalRooms < 10 ? "0" : ""}$totalRooms",
                                   style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack75,
                                     fontWeight: FontWeight.w600,
@@ -399,77 +406,78 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                         child: const ColoredBox(color: Colors.black12),
                       ),
                       SizedBox(height: 15.h),
-                    ]
-                ),
+                    ]),
               ),
             ),
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                    (_, index) => Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (index != links.length - 1) {
-                              context.router.pushNamed(links[index].route);
-                            } else {
-                              logout();
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8FBFF),
-                              borderRadius: BorderRadius.circular(4.r),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xFFE0E5EC),
-                                  blurRadius: 6.0,
-                                  spreadRadius: 1.0,
-                                )
-                              ],
-                            ),
-                            child: SizedBox(
-                              height: 50.h,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(links[index].image,
-                                            color: weirdBlack75),
-                                        SizedBox(width: 16.w),
-                                        Text(
-                                          links[index].name,
-                                          style: context.textTheme.bodyMedium!
-                                              .copyWith(
-                                            color: weirdBlack75,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                  (_, index) => Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (index != links.length - 1) {
+                            context.router.pushNamed(links[index].route);
+                          } else {
+                            logout();
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8FBFF),
+                            borderRadius: BorderRadius.circular(4.r),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0xFFE0E5EC),
+                                blurRadius: 6.0,
+                                spreadRadius: 1.0,
+                              )
+                            ],
+                          ),
+                          child: SizedBox(
+                            height: 50.h,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(links[index].image,
+                                          color: weirdBlack75),
+                                      SizedBox(width: 16.w),
+                                      Text(
+                                        links[index].name,
+                                        style: context.textTheme.bodyMedium!
+                                            .copyWith(
+                                          color: weirdBlack75,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                      ],
-                                    ),
-                                    Icon(Icons.chevron_right_rounded,
-                                        color: Colors.black54, size: 26.r),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                  Icon(Icons.chevron_right_rounded,
+                                      color: Colors.black54, size: 26.r),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16.h),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 16.h),
+                    ],
+                  ),
                   childCount: links.length,
                 ),
-              )
+              ),
             )
-          ]
-        )
+          ],
+        ),
       ),
     );
   }
@@ -516,10 +524,8 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                       index == 0
                           ? Pages.editOwnerProfile
                           : (index == 1)
-                              ? Pages.hostelSettings
-                              : (index == 2)
-                                  ? Pages.changePassword
-                                  : Pages.notificationSettings,
+                              ? Pages.changePassword
+                              : Pages.notificationSettings,
                     ),
                     child: Container(
                       decoration: BoxDecoration(
@@ -531,8 +537,7 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                               blurRadius: 6.0,
                               spreadRadius: 1.0,
                             )
-                          ]
-                      ),
+                          ]),
                       child: SizedBox(
                         height: 50.h,
                         child: Padding(
@@ -545,7 +550,7 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
-                                    "assets/images/Profile ${index == 0 ? "Profile" : (index == 1) ? "Hostel" : (index == 2) ? "Password" : "Notification"}.svg",
+                                    "assets/images/Profile ${index == 0 ? "Profile" : (index == 1) ? "Password" : "Notification"}.svg",
                                     color: weirdBlack75,
                                   ),
                                   SizedBox(width: 16.w),
@@ -553,10 +558,8 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                                     index == 0
                                         ? "Profile"
                                         : (index == 1
-                                            ? "Hostel"
-                                            : (index == 2)
-                                                ? "Password"
-                                                : "Notification"),
+                                            ? "Password"
+                                            : "Notification"),
                                     style:
                                         context.textTheme.bodyMedium!.copyWith(
                                       color: weirdBlack75,
@@ -574,7 +577,7 @@ class OwnerProfileSettingsPage extends StatelessWidget {
                     ),
                   ),
                   separatorBuilder: (_, __) => SizedBox(height: 16.h),
-                  itemCount: 4,
+                  itemCount: 3,
                 ),
               )
             ],
