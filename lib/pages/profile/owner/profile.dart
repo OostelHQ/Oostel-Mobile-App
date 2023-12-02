@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,59 +90,64 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                               ],
                             ),
                             alignment: Alignment.center,
-                            child: owner.image == "" ? CircleAvatar(
-                              radius: 47.5.r,
-                              backgroundColor: appBlue,
-                              child: Center(
-                                child: Text(
-                                  owner.firstName.substring(0, 1),
-                                  style: context.textTheme.displaySmall!
-                                      .copyWith(color: Colors.white),
-                                ),
-                              ),
-                            ) : CachedNetworkImage(imageUrl: owner.image,
-                              errorWidget: (context, url, error) => CircleAvatar(
-                                backgroundColor: weirdBlack20,
-                                radius: 47.5.r,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.person_outline_rounded,
-                                    color: appBlue,
-                                    size: 42.r,
-                                  ),
-                                ),
-                              ),
-                              progressIndicatorBuilder: (context, url, download) {
-                                return CircleAvatar(
-                                  radius: 47.5.r,
-                                  backgroundColor: weirdBlack50,
-                                );
-                              },
-                              imageBuilder: (context, provider) {
-                                return GestureDetector(
-                                  onTap: () => context.router.pushNamed(
-                                    Pages.viewMedia,
-                                    extra: ViewInfo(
-                                      current: 0,
-                                      type: DisplayType.network,
-                                      paths: [owner.image],
-                                    ),
-                                  ),
-                                  child: CircleAvatar(
-                                    backgroundImage: provider,
+                            child: owner.image == ""
+                                ? CircleAvatar(
                                     radius: 47.5.r,
+                                    backgroundColor: appBlue,
+                                    child: Center(
+                                      child: Text(
+                                        owner.firstName.substring(0, 1),
+                                        style: context.textTheme.displaySmall!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: owner.image,
+                                    errorWidget: (context, url, error) =>
+                                        CircleAvatar(
+                                      backgroundColor: weirdBlack20,
+                                      radius: 47.5.r,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.person_outline_rounded,
+                                          color: appBlue,
+                                          size: 42.r,
+                                        ),
+                                      ),
+                                    ),
+                                    progressIndicatorBuilder:
+                                        (context, url, download) {
+                                      return CircleAvatar(
+                                        radius: 47.5.r,
+                                        backgroundColor: weirdBlack50,
+                                      );
+                                    },
+                                    imageBuilder: (context, provider) {
+                                      return GestureDetector(
+                                        onTap: () => context.router.pushNamed(
+                                          Pages.viewMedia,
+                                          extra: ViewInfo(
+                                            current: 0,
+                                            type: DisplayType.network,
+                                            paths: [owner.image],
+                                          ),
+                                        ),
+                                        child: CircleAvatar(
+                                          backgroundImage: provider,
+                                          radius: 47.5.r,
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
                           ),
                         ),
                         Positioned(
                           right: 20.w,
                           bottom: 30.r,
                           child: GestureDetector(
-                            onTap: () =>
-                                context.router.pushNamed(Pages.editOwnerProfile),
+                            onTap: () => context.router
+                                .pushNamed(Pages.editOwnerProfile),
                             child: Container(
                               width: 40.r,
                               height: 40.r,
@@ -225,51 +231,51 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       ],
                     ),
                     SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack75,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              TextSpan(
-                                text: " Hostels",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack50,
-                                  fontWeight: FontWeight.w500,
+                      Row(
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 15.w),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${totalRooms < 10 ? "0" : ""}$totalRooms",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack75,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " Rooms",
-                                style: context.textTheme.bodySmall!.copyWith(
+                                TextSpan(
+                                  text: " Hostels",
+                                  style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )
-                      ],
-                    ),
+                          SizedBox(width: 15.w),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      "${totalRooms < 10 ? "0" : ""}$totalRooms",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " Rooms",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     SizedBox(height: 16.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -346,7 +352,8 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         Text(
                           "Analytics",
                           style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
+                              fontWeight: FontWeight.w600,
+                              color: weirdBlack),
                         ),
                         Text(
                           "Private to you",
@@ -367,7 +374,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                     ProfileInfoCard(
                       image: "assets/images/Search Appearance.svg",
                       header:
-                          "${owner.searchAppearances} hostel search appearances",
+                      "${owner.searchAppearances} hostel search appearances",
                       text: "How often you appear in search results",
                     ),
                     SizedBox(height: 28.h),
@@ -387,7 +394,8 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         Text(
                           "Personal Info",
                           style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
+                              fontWeight: FontWeight.w600,
+                              color: weirdBlack),
                         ),
                         Text(
                           "Private to you",
@@ -399,32 +407,80 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       ],
                     ),
                     SizedBox(height: 15.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Profile Blue Location.svg",
-                      header: owner.address,
-                      text: "Personal Address",
-                    ),
-                    SizedBox(height: 16.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Profile Religion.svg",
-                      header: owner.religion,
-                      text: "Religion",
-                    ),
-                    if (owner.religion == "Christianity")
-                      SizedBox(height: 16.h),
-                    if (owner.religion == "Christianity")
-                      ProfileInfoCard(
-                        image: "assets/images/Profile Church.svg",
-                        header: owner.denomination,
-                        text: "Denomination",
-                      ),
-                    SizedBox(height: 16.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Profile Age.svg",
-                      header: formatDateRaw(owner.dob),
-                      text: "Date of Birth",
-                    ),
+                    if (owner.hasCompletedProfile > 20)
+                      Column(children: [
 
+                        ProfileInfoCard(
+                          image: "assets/images/Profile Blue Location.svg",
+                          header: owner.address,
+                          text: "Personal Address",
+                        ),
+                        SizedBox(height: 16.h),
+                        ProfileInfoCard(
+                          image: "assets/images/Profile Religion.svg",
+                          header: owner.religion,
+                          text: "Religion",
+                        ),
+                        if (owner.religion == "Christianity")
+                          SizedBox(height: 16.h),
+                        if (owner.religion == "Christianity")
+                          ProfileInfoCard(
+                            image: "assets/images/Profile Church.svg",
+                            header: owner.denomination,
+                            text: "Denomination",
+                          ),
+                        SizedBox(height: 16.h),
+                        ProfileInfoCard(
+                          image: "assets/images/Profile Age.svg",
+                          header: formatDateRaw(owner.dob),
+                          text: "Date of Birth",
+                        ),
+                      ]),
+                    if (owner.hasCompletedProfile <= 20)
+                      SizedBox(
+                        height: 450.r,
+                        width: 414.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 50.r),
+                            Image.asset(
+                              "assets/images/No Data.png",
+                              width: 150.r,
+                              height: 150.r,
+                              fit: BoxFit.cover,
+                            ),
+                            SizedBox(height: 50.r),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "Unlock the full experience! Your profile details are empty. ",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "Complete my profile",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: appBlue,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => context.router
+                                          .pushNamed(Pages.editOwnerProfile),
+                                  )
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
                     SizedBox(height: 48.h),
                   ],
                 ),

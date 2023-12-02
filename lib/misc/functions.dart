@@ -25,6 +25,25 @@ void showToast(String message, {Color background = appBlue, Color text = Colors.
 
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
 
+void textChecker({required String text, required VoidCallback onAction}) {
+  if(text.length == 1 || text.isEmpty) {
+    onAction();
+  }
+}
+
+bool validateForm(GlobalKey<FormState> formKey) {
+  unFocus();
+  FormState? currentState = formKey.currentState;
+  if (currentState != null) {
+    if (!currentState.validate()) return false;
+
+    currentState.save();
+    return true;
+  }
+  return false;
+}
+
+
 String formatAmountInDouble(double price, {int digits = 0}) =>
     formatAmount(price.toStringAsFixed(digits));
 

@@ -140,6 +140,12 @@ class _MyHostelAppState extends State<MyHostelApp> {
               StepSix(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
+          path: Pages.stepSixHalf.path,
+          name: Pages.stepSixHalf,
+          builder: (_, state) =>
+              StepSixHalf(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
           path: Pages.stepSeven.path,
           name: Pages.stepSeven,
           builder: (_, state) =>

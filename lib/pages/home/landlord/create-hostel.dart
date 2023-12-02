@@ -1,52 +1,55 @@
 import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:my_hostel/api/file_manager.dart';
+import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
+import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
-import 'package:my_hostel/pages/other/gallery.dart';
 
-bool validate(GlobalKey<FormState> formKey) {
-  if (formKey.currentState == null) return false;
-  if (!formKey.currentState!.validate()) return false;
-  formKey.currentState?.save();
-  return true;
-}
+const int totalPages = 11;
 
-class StepOne extends StatefulWidget {
+class StepOne extends ConsumerStatefulWidget {
   const StepOne({super.key});
 
   @override
-  State<StepOne> createState() => _StepOneState();
+  ConsumerState<StepOne> createState() => _StepOneState();
 }
 
-class _StepOneState extends State<StepOne> {
+class _StepOneState extends ConsumerState<StepOne> {
   late Map<String, dynamic> info;
 
   @override
   void initState() {
     super.initState();
     info = {
-      "name": "",
-      "bedrooms": 0,
-      "bathrooms": 0,
-      "area": null,
-      "address": "###",
-      "price": 0.0,
-      "rules": [],
-      "category": "",
-      "totalRooms": null,
-      "description": "",
-      "roomsLeft": [],
-      "hostelFacilities": [],
-      "media": [],
+      "landlordId": ref.read(currentUserProvider).id,
+      "hostelDescription": "",
+      "hostelName": "",
+      "street": "",
+      "junction": "",
+      "state": "",
+      "country": "",
+      "RuleAndRegulation": [],
+      "priceBudgetRange": "",
+      "homeSize": 0.0,
+      "hostelCategory": 0,
+      "totalRoom": 0,
+      "rooms": [],
+      "FacilityName": [],
+      "medias": [],
+      "minPrice": 0.0,
+      "maxPrice": 0.0,
+      "isAnyRoomVacant": null,
       "roomPropertyIndex": null,
     };
   }
@@ -56,14 +59,14 @@ class _StepOneState extends State<StepOne> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.1,
+                value: 1 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -80,7 +83,8 @@ class _StepOneState extends State<StepOne> {
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() => info["category"] = ""),
+                onSelected: (result) =>
+                    setState(() => info["hostelCategory"] = 0),
               ),
             ),
             SizedBox(height: 18.h),
@@ -90,51 +94,55 @@ class _StepOneState extends State<StepOne> {
       ),
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "STEP 1",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: appBlue,
-                    ),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "STEP 1",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: appBlue,
                   ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    "Hostel Category",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  "Hostel Category",
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: weirdBlack,
                   ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    "Categorize your hostel listing to help potential tenants find the perfect accommodation "
-                    "that fits their needs and preferences.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack75,
-                    ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  "Categorize your hostel listing to help potential tenants find the perfect accommodation "
+                  "that fits their needs and preferences.",
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: weirdBlack75,
                   ),
-                  SizedBox(height: 44.h),
-                  Container(
+                ),
+                SizedBox(height: 44.h),
+                GestureDetector(
+                  onTap: () => setState(() => info["hostelCategory"] = 1),
+                  child: Container(
+                      width: 390.w,
                     decoration: BoxDecoration(
-                        color: const Color(0xFFF8FBFF),
-                        borderRadius: BorderRadius.circular(4.r),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xFFE0E5EC),
-                            blurRadius: 6.0,
-                            spreadRadius: 1.0,
-                          )
-                        ]),
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ],
+                    ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 10.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -166,10 +174,10 @@ class _StepOneState extends State<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["category"],
-                                      groupValue: "Self Contained",
-                                      onChanged: (value) => setState(() =>
-                                          info["category"] = "Self Contained"),
+                                      value: info["hostelCategory"],
+                                      groupValue: 1,
+                                      onChanged: (value) => setState(
+                                          () => info["hostelCategory"] = 1),
                                     )
                                   ],
                                 ),
@@ -187,21 +195,25 @@ class _StepOneState extends State<StepOne> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16.h),
-                  Container(
+                ),
+                SizedBox(height: 16.h),
+                GestureDetector(
+                  onTap: () => setState(() => info["hostelCategory"] = 2),
+                  child: Container(
                     decoration: BoxDecoration(
-                        color: const Color(0xFFF8FBFF),
-                        borderRadius: BorderRadius.circular(4.r),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xFFE0E5EC),
-                            blurRadius: 6.0,
-                            spreadRadius: 1.0,
-                          )
-                        ]),
+                      color: const Color(0xFFF8FBFF),
+                      borderRadius: BorderRadius.circular(4.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFFE0E5EC),
+                          blurRadius: 6.0,
+                          spreadRadius: 1.0,
+                        )
+                      ],
+                    ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 10.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -233,10 +245,10 @@ class _StepOneState extends State<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["category"],
-                                      groupValue: "One-Room",
+                                      value: info["hostelCategory"],
+                                      groupValue: 2,
                                       onChanged: (value) => setState(
-                                          () => info["category"] = "One-Room"),
+                                          () => info["hostelCategory"] = 2),
                                     )
                                   ],
                                 ),
@@ -254,8 +266,11 @@ class _StepOneState extends State<StepOne> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16.h),
-                  Container(
+                ),
+                SizedBox(height: 16.h),
+                GestureDetector(
+                  onTap: () => setState(() => info["hostelCategory"] = 3),
+                  child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FBFF),
                       borderRadius: BorderRadius.circular(4.r),
@@ -268,8 +283,8 @@ class _StepOneState extends State<StepOne> {
                       ],
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 10.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -301,10 +316,10 @@ class _StepOneState extends State<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["category"],
-                                      groupValue: "Face-to-Face",
-                                      onChanged: (value) => setState(() =>
-                                          info["category"] = "Face-to-Face"),
+                                      value: info["hostelCategory"],
+                                      groupValue: 3,
+                                      onChanged: (value) => setState(
+                                          () => info["hostelCategory"] = 3),
                                     )
                                   ],
                                 ),
@@ -322,8 +337,11 @@ class _StepOneState extends State<StepOne> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16.h),
-                  Container(
+                ),
+                SizedBox(height: 16.h),
+                GestureDetector(
+                  onTap: () => setState(() => info["hostelCategory"] = 4),
+                  child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FBFF),
                       borderRadius: BorderRadius.circular(4.r),
@@ -336,8 +354,8 @@ class _StepOneState extends State<StepOne> {
                       ],
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 10.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -369,10 +387,10 @@ class _StepOneState extends State<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["category"],
-                                      groupValue: "Flat",
+                                      value: info["hostelCategory"],
+                                      groupValue: 4,
                                       onChanged: (value) => setState(
-                                          () => info["category"] = "Flat"),
+                                          () => info["hostelCategory"] = 4),
                                     )
                                   ],
                                 ),
@@ -390,10 +408,12 @@ class _StepOneState extends State<StepOne> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50.h),
-                ],
-              ),
-            )),
+                ),
+                SizedBox(height: 50.h),
+              ],
+            ),
+          ),
+        ),
       ),
       bottomNavigationBar: Container(
         width: 414.w,
@@ -403,7 +423,7 @@ class _StepOneState extends State<StepOne> {
         child: Center(
           child: GestureDetector(
             onTap: () {
-              if (info["category"].isEmpty) return;
+              if (info["hostelCategory"] == 0) return;
               context.router.pushNamed(Pages.stepTwo, extra: info);
             },
             child: Container(
@@ -412,7 +432,7 @@ class _StepOneState extends State<StepOne> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.r),
-                color: info["category"].isEmpty
+                color: info["hostelCategory"] == 0
                     ? appBlue.withOpacity(0.4)
                     : appBlue,
               ),
@@ -457,20 +477,24 @@ class _StepTwoState extends State<StepTwo> {
   late TextEditingController description;
   late TextEditingController rooms;
   late TextEditingController area;
-
+  late TextEditingController minPrice, maxPrice;
   final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    name = TextEditingController(text: widget.info["name"]);
-    description = TextEditingController(text: widget.info["description"]);
-    rooms = TextEditingController(text: "${widget.info["totalRooms"] ?? ""}");
-    area = TextEditingController(text: "${widget.info["area"] ?? ""}");
+    name = TextEditingController(text: widget.info["hostelName"]);
+    description = TextEditingController(text: widget.info["hostelDescription"]);
+    rooms = TextEditingController(text: "${widget.info["totalRoom"] == 0 ? "" : widget.info["totalRoom"]}");
+    area = TextEditingController(text: "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
+    minPrice = TextEditingController(text: "${widget.info["minPrice"] == 0.0 ? "" : widget.info["minPrice"].toStringAsFixed(0)}");
+    maxPrice = TextEditingController(text: "${widget.info["maxPrice"] == 0.0 ? "" : widget.info["maxPrice"].toStringAsFixed(0)}");
   }
 
   @override
   void dispose() {
+    minPrice.dispose();
+    maxPrice.dispose();
     name.dispose();
     description.dispose();
     rooms.dispose();
@@ -478,25 +502,29 @@ class _StepTwoState extends State<StepTwo> {
     super.dispose();
   }
 
-  bool get isFilled =>
-      name.text.trim().isNotEmpty &&
-      description.text.trim().isNotEmpty &&
-      rooms.text.trim().isNotEmpty &&
-      area.text.trim().isNotEmpty;
+  bool get isFilled {
+    if(name.text.trim().isEmpty) return false;
+    if(description.text.trim().isEmpty) return false;
+    if(rooms.text.trim().isEmpty) return false;
+    if(area.text.trim().isEmpty) return false;
+    if(minPrice.text.trim().isEmpty) return false;
+    if(maxPrice.text.trim().isEmpty) return false;
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.2,
+                value: 2 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -518,11 +546,15 @@ class _StepTwoState extends State<StepTwo> {
                   description.clear();
                   rooms.clear();
                   area.clear();
+                  minPrice.clear();
+                  maxPrice.clear();
 
                   widget.info["name"] = "";
                   widget.info["description"] = "";
                   widget.info["area"] = "";
                   widget.info["totalRooms"] = "";
+                  widget.info["minPrice"] = 0;
+                  widget.info["maxPrice"] = 0;
                 }),
               ),
             ),
@@ -591,8 +623,11 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["name"] = val!,
-                    onChange: (val) => setState(() {}),
+                    onSave: (val) => widget.info["hostelName"] = val!,
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
@@ -615,8 +650,11 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["description"] = val!,
-                    onChange: (val) => setState(() {}),
+                    onSave: (val) => widget.info["hostelDescription"] = val!,
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
@@ -642,9 +680,11 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) =>
-                        widget.info["totalRooms"] = int.parse(val!),
-                    onChange: (val) => setState(() {}),
+                    onSave: (val) => widget.info["totalRoom"] = int.parse(val!),
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
@@ -670,10 +710,74 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["area"] = double.parse(val!),
-                    onChange: (val) => setState(() {}),
+                    onSave: (val) =>
+                        widget.info["homeSize"] = double.parse(val!),
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
                   ),
-                  SizedBox(height: 150.h),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Price Range",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SpecialForm(
+                        controller: minPrice,
+                        width: 170.w,
+                        height: 50.h,
+                        type: TextInputType.number,
+                        hint: "i.e 100 000",
+                        onValidate: (val) {
+                          if (val == null ||
+                              val!.trim().isEmpty ||
+                              double.tryParse(val!) == null) {
+                            showError(
+                                "Please enter a valid minimum price for your hostel.");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) =>
+                        widget.info["minPrice"] = double.parse(val!),
+                        onChange: (val) => textChecker(
+                          text: val,
+                          onAction: () => setState(() {}),
+                        ),
+                      ),
+                      SpecialForm(
+                        controller: maxPrice,
+                        width: 170.w,
+                        height: 50.h,
+                        type: TextInputType.number,
+                        hint: "i.e 500 000",
+                        onValidate: (val) {
+                          if (val == null ||
+                              val!.trim().isEmpty ||
+                              double.tryParse(val!) == null) {
+                            showError(
+                                "Please enter a valid maximum price for your hostel.");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) =>
+                        widget.info["maxPrice"] = double.parse(val!),
+                        onChange: (val) => textChecker(
+                          text: val,
+                          onAction: () => setState(() {}),
+                        ),
+                      ),
+                    ]
+                  ),
+                  SizedBox(height: 100.h),
                 ],
               ),
             ),
@@ -719,8 +823,7 @@ class _StepTwoState extends State<StepTwo> {
             ),
             GestureDetector(
               onTap: () {
-                if (!isFilled) return;
-                if (!validate(formKey)) return;
+                if (!validateForm(formKey)) return;
                 context.router.pushNamed(Pages.stepThree, extra: widget.info);
               },
               child: Container(
@@ -786,14 +889,10 @@ class _StepThreeState extends State<StepThree>
   void initState() {
     super.initState();
 
-    String address = widget.info["address"];
-
-    List<String> subs = address.split("#");
-
-    street = TextEditingController(text: subs[0]);
-    junction = TextEditingController(text: subs[1]);
-    state = TextEditingController(text: subs[2]);
-    country = TextEditingController(text: subs[3]);
+    street = TextEditingController(text: widget.info["street"]);
+    junction = TextEditingController(text: widget.info["junction"]);
+    state = TextEditingController(text: widget.info["state"]);
+    country = TextEditingController(text: widget.info["country"]);
 
     controller = AnimationController(
       vsync: this,
@@ -831,14 +930,14 @@ class _StepThreeState extends State<StepThree>
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.3,
+                value: 3 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -861,7 +960,10 @@ class _StepThreeState extends State<StepThree>
                   state.clear();
                   country.clear();
 
-                  widget.info["address"] = "###";
+                  widget.info["state"] = "";
+                  widget.info["street"] = "";
+                  widget.info["junction"] = "";
+                  widget.info["country"] = "";
                 }),
               ),
             ),
@@ -874,212 +976,225 @@ class _StepThreeState extends State<StepThree>
         child: Form(
           key: formKey,
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        "STEP 3",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: appBlue,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Center(
-                      child: Text(
-                        "Hostel Location",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Center(
-                      child: Text(
-                        "Specify your hostel's location and help tenants find your property "
-                        "easily and understand its surroundings.",
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 44.h),
-                    Text(
-                      "Street",
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      "STEP 3",
                       style: context.textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w500,
+                        color: appBlue,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Center(
+                    child: Text(
+                      "Hostel Location",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
                         color: weirdBlack,
                       ),
                     ),
-                    SpecialForm(
-                      controller: street,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Behind Abans Factory",
-                      onValidate: (val) {
-                        if (val == null || val!.trim().isEmpty) {
-                          showError("Please enter the street of your hostel.");
-                          return '';
-                        }
-                        return null;
-                      },
-                      onSave: (val) => widget.info["address"] =
-                          "${val!}#${junction.text}#${state.text}#${country.text}",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Junction",
+                  ),
+                  SizedBox(height: 12.h),
+                  Center(
+                    child: Text(
+                      "Specify your hostel's location and help tenants find your property "
+                      "easily and understand its surroundings.",
+                      textAlign: TextAlign.center,
                       style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack75,
                         fontWeight: FontWeight.w500,
-                        color: weirdBlack,
                       ),
                     ),
-                    SpecialForm(
-                      controller: junction,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Accord",
-                      onValidate: (val) {
-                        if (val == null || val!.trim().isEmpty) {
-                          showError(
-                              "Please enter the junction of your hostel.");
-                          return '';
-                        }
-                        return null;
-                      },
-                      onSave: (val) => widget.info["address"] =
-                          "${street.text}#${val!}#${state.text}#${country.text}",
+                  ),
+                  SizedBox(height: 44.h),
+                  Text(
+                    "Street",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack,
                     ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "State/Region",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: weirdBlack,
+                  ),
+                  SpecialForm(
+                    controller: street,
+                    width: 414.w,
+                    height: 50.h,
+                    hint: "i.e Behind Abans Factory",
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
+                    onValidate: (val) {
+                      if (val == null || val!.trim().isEmpty) {
+                        showError("Please enter the street of your hostel.");
+                        return '';
+                      }
+                      return null;
+                    },
+                    onSave: (val) => widget.info["street"] = val,
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Junction",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  SpecialForm(
+                    controller: junction,
+                    width: 414.w,
+                    height: 50.h,
+                    hint: "i.e Accord",
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
+                    onValidate: (val) {
+                      if (val == null || val!.trim().isEmpty) {
+                        showError("Please enter the junction of your hostel.");
+                        return '';
+                      }
+                      return null;
+                    },
+                    onSave: (val) => widget.info["junction"] = val,
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "State/Region",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  SpecialForm(
+                    controller: state,
+                    width: 414.w,
+                    height: 50.h,
+                    hint: "i.e Ogun State",
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
+                    onValidate: (val) {
+                      if (val == null || val!.trim().isEmpty) {
+                        showError("Please enter the state of your hostel.");
+                        return '';
+                      }
+                      return null;
+                    },
+                    onSave: (val) => widget.info["state"] = val,
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Country/Nation",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  SpecialForm(
+                    controller: country,
+                    width: 414.w,
+                    height: 50.h,
+                    hint: "i.e Nigeria",
+                    onChange: (val) => textChecker(
+                      text: val,
+                      onAction: () => setState(() {}),
+                    ),
+                    onValidate: (val) {
+                      if (val == null || val!.trim().isEmpty) {
+                        showError("Please enter the country of your hostel.");
+                        return '';
+                      }
+                      return null;
+                    },
+                    onSave: (val) => widget.info["country"] = val,
+                  ),
+                  SizedBox(height: 16.h),
+                  // Row(
+                  //   children: [
+                  //     Switch(
+                  //       value: share,
+                  //       onChanged: (value) {
+                  //         setState(() => share = !share);
+                  //         if (share) {
+                  //           controller.forward();
+                  //         } else {
+                  //           controller.reverse();
+                  //         }
+                  //       },
+                  //       activeColor: appBlue,
+                  //     ),
+                  //     Text(
+                  //       "Activate Google Maps to share your location",
+                  //       style: context.textTheme.bodySmall!.copyWith(
+                  //         fontWeight: FontWeight.w500,
+                  //         color: weirdBlack75,
+                  //         fontSize: 15.sp,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  SizedBox(height: 20.h),
+                  SizeTransition(
+                    sizeFactor: animation,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FBFF),
+                        borderRadius: BorderRadius.circular(4.r),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE0E5EC),
+                            blurRadius: 6.0,
+                            spreadRadius: 1.0,
+                          )
+                        ],
                       ),
-                    ),
-                    SpecialForm(
-                      controller: state,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Ogun State",
-                      onValidate: (val) {
-                        if (val == null || val!.trim().isEmpty) {
-                          showError("Please enter the street of your hostel.");
-                          return '';
-                        }
-                        return null;
-                      },
-                      onSave: (val) => widget.info["address"] =
-                          "${street.text}#${junction.text}#${val!}#${country.text}",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Country/Nation",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: weirdBlack,
-                      ),
-                    ),
-                    SpecialForm(
-                      controller: country,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Nigeria",
-                      onValidate: (val) {
-                        if (val == null || val!.trim().isEmpty) {
-                          showError("Please enter the street of your hostel.");
-                          return '';
-                        }
-                        return null;
-                      },
-                      onSave: (val) => widget.info["address"] =
-                          "${street.text}#${junction.text}#${state.text}#${val!}",
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Switch(
-                          value: share,
-                          onChanged: (value) {
-                            setState(() => share = !share);
-                            if (share) {
-                              controller.forward();
-                            } else {
-                              controller.reverse();
-                            }
-                          },
-                          activeColor: appBlue,
-                        ),
-                        Text(
-                          "Activate Google Maps to share your location",
-                          style: context.textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: weirdBlack75,
-                            fontSize: 15.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.h),
-                    SizeTransition(
-                      sizeFactor: animation,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: const Color(0xFFF8FBFF),
-                            borderRadius: BorderRadius.circular(4.r),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xFFE0E5EC),
-                                blurRadius: 6.0,
-                                spreadRadius: 1.0,
-                              )
-                            ]),
-                        child: SizedBox(
-                          height: 70.h,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(width: 10.w),
-                              Container(
-                                width: 50.r,
-                                height: 50.r,
-                                alignment: Alignment.center,
-                                decoration: const BoxDecoration(
-                                  color: paleBlue,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: SvgPicture.asset(
-                                    "assets/images/Profile Blue Location.svg"),
+                      child: SizedBox(
+                        height: 70.h,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 10.w),
+                            Container(
+                              width: 50.r,
+                              height: 50.r,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                color: paleBlue,
+                                shape: BoxShape.circle,
                               ),
-                              SizedBox(width: 15.w),
-                              SizedBox(
-                                width: 280.w,
-                                child: Text(
-                                  "https://meet.google.com/?hs=197&authuser=0",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: weirdBlack75,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              child: SvgPicture.asset(
+                                  "assets/images/Profile Blue Location.svg"),
+                            ),
+                            SizedBox(width: 15.w),
+                            SizedBox(
+                              width: 280.w,
+                              child: Text(
+                                "https://meet.google.com/?hs=197&authuser=0",
+                                overflow: TextOverflow.ellipsis,
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack75,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    SizedBox(height: 110.h),
-                  ],
-                ),
-              )),
+                  ),
+                  SizedBox(height: 110.h),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: Container(
@@ -1122,7 +1237,7 @@ class _StepThreeState extends State<StepThree>
             GestureDetector(
               onTap: () {
                 if (!isFilled) return;
-                if (!validate(formKey)) return;
+                if (!validateForm(formKey)) return;
                 context.router.pushNamed(Pages.stepFour, extra: widget.info);
               },
               child: Container(
@@ -1178,8 +1293,8 @@ class _StepFourState extends State<StepFour> {
   @override
   void initState() {
     super.initState();
-    rules = toStringList(widget.info["rules"]);
-    widget.info["rules"] = rules;
+    rules = toStringList(widget.info["RuleAndRegulation"]);
+    widget.info["RuleAndRegulation"] = rules;
   }
 
   @override
@@ -1193,14 +1308,14 @@ class _StepFourState extends State<StepFour> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.4,
+                value: 4 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -1457,9 +1572,9 @@ class _StepFiveState extends State<StepFive> {
 
   final List<String> names = [
     "Light",
-    "Tap Water",
-    "Well Water",
-    "Swimming Pool",
+    "Tap",
+    "Well",
+    "Pool",
     "Security"
   ];
 
@@ -1468,8 +1583,8 @@ class _StepFiveState extends State<StepFive> {
   @override
   void initState() {
     super.initState();
-    facilities = toStringList(widget.info["hostelFacilities"]);
-    widget.info["hostelFacilities"] = facilities;
+    facilities = toStringList(widget.info["FacilityName"]);
+    widget.info["FacilityName"] = facilities;
   }
 
   @override
@@ -1477,14 +1592,14 @@ class _StepFiveState extends State<StepFive> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.5,
+                value: 5 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -1723,275 +1838,152 @@ class StepSix extends StatefulWidget {
 }
 
 class _StepSixState extends State<StepSix> {
-  late List<Uint8List> media;
-  int page = 0;
+  late List<SingleFileResponse> media;
 
   @override
   void initState() {
     super.initState();
-    media = toDataList(widget.info["media"]);
-    widget.info["media"] = media;
+    media = toDataList(widget.info["medias"]);
+    widget.info["medias"] = media;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: CustomScrollView(slivers: [
-        SliverAppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          pinned: true,
-          title: Column(
-            children: [
-              SizedBox(height: 25.h),
-              SizedBox(
-                width: 414.w,
-                child: LinearProgressIndicator(
-                  value: 0.6,
-                  color: appBlue,
-                  minHeight: 1.5.h,
-                ),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              elevation: 0.0,
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              pinned: true,
+              title: Column(
+                children: [
+                  SizedBox(height: 25.h),
+                  SizedBox(
+                    width: 414.w,
+                    child: LinearProgressIndicator(
+                      value: 6 / totalPages,
+                      color: appBlue,
+                      minHeight: 1.5.h,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: PopupMenuButton<String>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem<String>(
+                          value: "Reset",
+                          child: Text(
+                            "Reset",
+                            style: context.textTheme.bodyMedium,
+                          ),
+                        )
+                      ],
+                      onSelected: (result) => setState(() => media.clear()),
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                ],
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: PopupMenuButton<String>(
-                  itemBuilder: (context) => [
-                    PopupMenuItem<String>(
-                      value: "Reset",
-                      child: Text(
-                        "Reset",
-                        style: context.textTheme.bodyMedium,
+              automaticallyImplyLeading: false,
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "STEP 6",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: appBlue,
                       ),
-                    )
-                  ],
-                  onSelected: (result) => setState(() => media.clear()),
-                ),
-              ),
-              SizedBox(height: 18.h),
-            ],
-          ),
-          automaticallyImplyLeading: false,
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "STEP 6",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: appBlue,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  page == 0 ? "Hostel Picture" : "Environment Picture",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: weirdBlack,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  page == 0
-                      ? "Upload a clear front view image of your hostel building "
-                          "to attract tenants with a welcoming facade"
-                      : "Capture the essence of your hostel environment in pictures. "
-                          "Showcase the surroundings to attract potential tenants.",
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: weirdBlack75,
-                  ),
-                ),
-                SizedBox(height: 44.h),
-                if (page == 0 || (page == 1 && media.length == 1))
-                  GestureDetector(
-                    onTap: () {
-                      if (page == 0) {
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      "Hostel Picture",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      "Upload a clear front view image of your hostel building "
+                      "to attract tenants with a welcoming facade",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 44.h),
+                    GestureDetector(
+                      onTap: () {
                         FileManager.single(type: FileType.image)
                             .then((response) async {
                           if (response == null) return;
-                          Uint8List data =
-                              await FileManager.convertSingleToData(
-                                  response.path);
-                          setState(() => media.add(data));
+                          setState(() => media.add(response));
                         });
-                      } else {
-                        FileManager.multiple(type: FileType.image)
-                            .then((response) async {
-                          if (response.isEmpty) return;
-                          List<String> paths =
-                              response.map((e) => e.path).toList();
-                          List<Uint8List> data =
-                              await FileManager.convertToData(paths);
-                          setState(() => media.addAll(data));
-                        });
-                      }
-                    },
-                    child: Container(
-                      width: 350.w,
-                      height: 270.h,
-                      padding: EdgeInsets.symmetric(horizontal: 25.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        color: (media.isEmpty && page == 0) ||
-                                (media.length == 1 && page == 1)
-                            ? paleBlue
-                            : null,
-                        image: (media.isEmpty && page == 0) ||
-                                (media.length == 1 && page == 1)
-                            ? null
-                            : DecorationImage(
-                                image: MemoryImage(media.first),
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                      child: (media.isEmpty && page == 0) ||
-                              (media.length == 1 && page == 1)
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/images/Hostel Image.svg",
-                                  width: 40.r,
-                                  height: 40.r,
+                      },
+                      child: Container(
+                        width: 350.w,
+                        height: 270.h,
+                        padding: EdgeInsets.symmetric(horizontal: 25.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: media.isEmpty ? paleBlue : null,
+                          image: media.isEmpty
+                              ? null
+                              : DecorationImage(
+                                  image: FileImage(File(media.first.path)),
+                                  fit: BoxFit.cover,
                                 ),
-                                SizedBox(height: 16.h),
-                                Text(
-                                  page == 0
-                                      ? "Upload a front-view picture of your hostel"
-                                      : "Upload the environment pictures of your hostel",
-                                  textAlign: TextAlign.center,
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: weirdBlack,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  "Maximum size allowed is 20MB of png and jpg format",
-                                  textAlign: TextAlign.center,
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: weirdBlack75,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              ],
-                            )
-                          : null,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-        if (page == 1 && media.length > 1)
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            sliver: SliverGrid.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10.r,
-                mainAxisSpacing: 10.r,
-                mainAxisExtent: 110.r,
-              ),
-              itemCount: media.length - 1,
-              itemBuilder: (_, index) => Stack(
-                children: [
-                  GestureDetector(
-                    onTap: () => context.router.pushNamed(
-                      Pages.viewMedia,
-                      extra: ViewInfo(
-                        bytes: media.sublist(1),
-                        type: DisplayType.memory,
-                        current: index,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5.r),
-                      child: Image.memory(
-                        media[index + 1],
-                        width: 110.r,
-                        height: 110.r,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 10.r,
-                    top: 5.r,
-                    child: GestureDetector(
-                      onTap: () => setState(() => media.removeAt(index + 1)),
-                      child:
-                          Icon(Boxicons.bx_x, color: Colors.white, size: 26.r),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 45.w),
-          sliver: SliverToBoxAdapter(
-              child: Column(children: [
-            SizedBox(height: 5.h),
-            if (page == 1)
-              Text(
-                "*Note that you must to upload minimum of 4 and above images before you can proceed.",
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: weirdBlack50,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            SizedBox(height: 30.h),
-            if (media.length > 1)
-              GestureDetector(
-                onTap: () {
-                  FileManager.multiple(type: FileType.image)
-                      .then((response) async {
-                    if (response.isEmpty) return;
-                    List<String> paths = response.map((e) => e.path).toList();
-                    List<Uint8List> data =
-                        await FileManager.convertToData(paths);
-                    setState(() => media.addAll(data));
-                  });
-                },
-                child: Container(
-                  width: 160.w,
-                  height: 50.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.r),
-                    color: paleBlue,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.add_circle_outline,
-                          color: appBlue, size: 16),
-                      SizedBox(width: 10.w),
-                      Text(
-                        "Add images",
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: appBlue,
-                          fontWeight: FontWeight.w600,
                         ),
-                      )
-                    ],
-                  ),
+                        child: media.isEmpty
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Image.svg",
+                                    width: 40.r,
+                                    height: 40.r,
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  Text(
+                                    "Upload a front-view picture of your hostel",
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    "Maximum size allowed is 2MB of png and jpg format",
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
+                                ],
+                              )
+                            : null,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            SizedBox(height: 200.h),
-          ])),
+            ),
+          ],
         ),
-      ])),
+      ),
       bottomNavigationBar: Container(
         width: 414.w,
         height: 90.h,
@@ -2002,13 +1994,7 @@ class _StepSixState extends State<StepSix> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () {
-                if (page == 1) {
-                  setState(() => page = 0);
-                } else {
-                  context.router.pop();
-                }
-              },
+              onTap: () => context.router.pop(),
               child: Container(
                 width: 170.w,
                 height: 50.h,
@@ -2037,23 +2023,12 @@ class _StepSixState extends State<StepSix> {
             ),
             GestureDetector(
               onTap: () {
-                if (page == 0) {
-                  if (media.isEmpty) {
-                    showError(
-                        "Please choose an image for your hostel front view");
-                    return;
-                  }
-
-                  setState(() => page = 1);
+                if (media.isEmpty) {
+                  showError(
+                      "Please choose an image for your hostel front view");
                   return;
                 }
-
-                if (media.length < 5) {
-                  showError("You need to select at least 4 images");
-                  return;
-                }
-
-                context.router.pushNamed(Pages.stepSeven, extra: widget.info);
+                context.router.pushNamed(Pages.stepSixHalf, extra: widget.info);
               },
               child: Container(
                 width: 170.w,
@@ -2088,6 +2063,422 @@ class _StepSixState extends State<StepSix> {
   }
 }
 
+class StepSixHalf extends StatefulWidget {
+  final Map<String, dynamic> info;
+
+  const StepSixHalf({
+    super.key,
+    required this.info,
+  });
+
+  @override
+  State<StepSixHalf> createState() => _StepSixHalfState();
+}
+
+class _StepSixHalfState extends State<StepSixHalf> {
+  late List<SingleFileResponse> media;
+  late Uint8List? videoData;
+  late int? videoDataIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    media = toDataList(widget.info["medias"]);
+    media = media.sublist(1);
+  }
+
+
+  void selectMedia() {
+    if(media.length == 4) {
+      showError("You cannot select more than 4 media");
+      return;
+    }
+
+    FileManager.multiple(
+        type: FileType.custom,
+        extensions: ["mp4", "jpg", "png", "jpeg"]).then(
+          (response) async {
+
+        String videoPath = "";
+        for(int i = 0; i < response.length; ++i) {
+          if(response[i].extension == "mp4") {
+            videoPath = response[i].path;
+          }
+        }
+
+        media.addAll(response);
+
+        if(videoPath.isNotEmpty) {
+          videoData = await VideoThumbnail.thumbnailData(
+            video: videoPath,
+            imageFormat: ImageFormat.JPEG,
+            maxWidth: 350,
+            maxHeight: 270,
+            quality: 75,
+          );
+
+          for(int i = 0; i < media.length; ++i) {
+            if(media[i].path == videoPath) {
+              videoDataIndex = i;
+            }
+          }
+        }
+
+        setState(() {});
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              elevation: 0.0,
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              pinned: true,
+              title: Column(
+                children: [
+                  SizedBox(height: 25.h),
+                  SizedBox(
+                    width: 414.w,
+                    child: LinearProgressIndicator(
+                      value: 7 / totalPages,
+                      color: appBlue,
+                      minHeight: 1.5.h,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: PopupMenuButton<String>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem<String>(
+                          value: "Reset",
+                          child: Text(
+                            "Reset",
+                            style: context.textTheme.bodyMedium,
+                          ),
+                        )
+                      ],
+                      onSelected: (result) => setState(() => media.clear()),
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                ],
+              ),
+              automaticallyImplyLeading: false,
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "STEP 7",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: appBlue,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      "Environment Picture",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      "Capture the essence of your hostel environment in pictures. "
+                      "Showcase the surroundings to attract potential tenants.",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: weirdBlack75,
+                      ),
+                    ),
+                    SizedBox(height: 44.h),
+                  ],
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverList.separated(
+                itemBuilder: (_, index) {
+                  if (index == media.length) {
+                    return Column(
+                      children: [
+                        if(media.isEmpty)
+                          GestureDetector(
+                            onTap: selectMedia,
+                            child: Container(
+                            width: 350.w,
+                            height: 270.h,
+                            padding: EdgeInsets.symmetric(horizontal: 25.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: media.isEmpty ? paleBlue : null,
+                              image: media.isEmpty
+                                  ? null
+                                  : DecorationImage(
+                                image: FileImage(File(media.first.path)),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: media.isEmpty
+                                ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/images/Hostel Image.svg",
+                                  width: 40.r,
+                                  height: 40.r,
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  "Upload a video (optional) or images of your hostel",
+                                  textAlign: TextAlign.center,
+                                  style:
+                                  context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  "Maximum size allowed is 2MB for images and 50MB for video",
+                                  textAlign: TextAlign.center,
+                                  style:
+                                  context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            )
+                                : null,
+                        ),
+                          ),
+                        SizedBox(height: media.isEmpty ? 32.h : 20.h),
+                        if(media.isNotEmpty)
+                        GestureDetector(
+                          onTap: selectMedia,
+                          child: Container(
+                            width: 160.w,
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.r),
+                              color: paleBlue,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.add_circle_outline,
+                                    color: appBlue, size: 16),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  "Add media",
+                                  textAlign: TextAlign.center,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: appBlue,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 32.h),
+                      ],
+                    );
+                  }
+
+                  return _SpecialContainer(
+                    onDelete: () => setState(() {
+                      media.removeAt(index);
+                      if(videoDataIndex != null && index == videoDataIndex) {
+                        videoDataIndex = null;
+                        videoData = null;
+                      }
+                    }),
+                    file: media[index],
+                  );
+                },
+                itemCount: media.length + 1,
+                separatorBuilder: (_, __) => SizedBox(height: 20.h),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        width: 414.w,
+        height: 90.h,
+        color: paleBlue,
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () => context.router.pop(),
+              child: Container(
+                width: 170.w,
+                height: 50.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.r),
+                  border: Border.all(color: appBlue),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.chevron_left_rounded,
+                        color: appBlue, size: 26.r),
+                    SizedBox(width: 5.w),
+                    Text(
+                      "Go back",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: appBlue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                int total = media.length;
+                int videos = 0;
+                for(var resp in media) {
+                  if(resp.extension == "mp4") {
+                    ++videos;
+                  }
+                }
+
+                if (total > 4) {
+                  showError("You need can only upload a maximum of 4 media");
+                  return;
+                }
+
+                if(videos > 1) {
+                  showError("You can only select 1 video");
+                  return;
+                }
+
+                SingleFileResponse first = widget.info["medias"].first;
+                widget.info["medias"].clear();
+                widget.info["medias"].add(first);
+                widget.info["medias"].addAll(media);
+                context.router.pushNamed(Pages.stepSeven, extra: widget.info);
+              },
+              child: Container(
+                width: 170.w,
+                height: 50.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.r),
+                  color: appBlue,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Next",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    Icon(Icons.chevron_right_rounded,
+                        color: Colors.white, size: 26.r)
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+class _SpecialContainer extends StatelessWidget {
+  final SingleFileResponse file;
+  final Uint8List? data;
+  final VoidCallback onDelete;
+
+  const _SpecialContainer({
+    super.key,
+    this.data,
+    required this.file,
+    required this.onDelete,
+  });
+
+  ImageProvider<Object> get provider {
+    if (data != null) {
+      return MemoryImage(data!);
+    }
+
+    return FileImage(File(file.path));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+          width: 390.w,
+          height: 270.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.r),
+            image: DecorationImage(
+              image: provider,
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Stack(
+            children: [
+              Container(
+                width: 390.w,
+                height: 270.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: Colors.black45,
+                ),
+                child: data != null ? Center(
+                  child: Icon(
+                    Icons.play_arrow_rounded,
+                    size: 48.r,
+                    color: Colors.white,
+                  ),
+                ) : null,
+              ),
+              Positioned(
+                top: 5.h,
+                right: 0,
+                child: IconButton(
+                  icon: const Icon(Boxicons.bx_x, color: Colors.white),
+                  iconSize: 28.r,
+                  onPressed: onDelete,
+                ),
+              )
+            ],
+          ),
+        );
+  }
+}
+
 class StepSeven extends StatefulWidget {
   final Map<String, dynamic> info;
 
@@ -2106,14 +2497,14 @@ class _StepSevenState extends State<StepSeven> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.7,
+                value: 8 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -2131,7 +2522,7 @@ class _StepSevenState extends State<StepSeven> {
                   )
                 ],
                 onSelected: (result) =>
-                    setState(() => widget.info["vacancy"] = null),
+                    setState(() => widget.info["isAnyRoomVacant"] = null),
               ),
             ),
             SizedBox(height: 18.h),
@@ -2147,7 +2538,7 @@ class _StepSevenState extends State<StepSeven> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "STEP 7",
+                  "STEP 8",
                   style: context.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: appBlue,
@@ -2198,8 +2589,8 @@ class _StepSevenState extends State<StepSeven> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(5.r),
-                          child: Image.memory(
-                            widget.info["media"].first,
+                          child: Image.file(
+                            File(widget.info["medias"].first.path),
                             width: 114.w,
                             height: 100.h,
                             fit: BoxFit.cover,
@@ -2224,10 +2615,10 @@ class _StepSevenState extends State<StepSeven> {
                                     ),
                                   ),
                                   Radio(
-                                    value: widget.info["vacancy"],
+                                    value: widget.info["isAnyRoomVacant"],
                                     groupValue: true,
-                                    onChanged: (value) => setState(
-                                        () => widget.info["vacancy"] = true),
+                                    onChanged: (value) => setState(() =>
+                                        widget.info["isAnyRoomVacant"] = true),
                                   )
                                 ],
                               ),
@@ -2267,8 +2658,8 @@ class _StepSevenState extends State<StepSeven> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(5.r),
-                          child: Image.memory(
-                            widget.info["media"].first,
+                          child: Image.file(
+                            File(widget.info["medias"].first.path),
                             width: 114.w,
                             height: 100.h,
                             fit: BoxFit.cover,
@@ -2292,10 +2683,10 @@ class _StepSevenState extends State<StepSeven> {
                                     ),
                                   ),
                                   Radio(
-                                    value: widget.info["vacancy"],
+                                    value: widget.info["isAnyRoomVacant"],
                                     groupValue: false,
-                                    onChanged: (value) => setState(
-                                        () => widget.info["vacancy"] = false),
+                                    onChanged: (value) => setState(() =>
+                                        widget.info["isAnyRoomVacant"] = false),
                                   )
                                 ],
                               ),
@@ -2358,13 +2749,13 @@ class _StepSevenState extends State<StepSeven> {
             ),
             GestureDetector(
               onTap: () {
-                if (widget.info["vacancy"] == null) {
+                if (widget.info["isAnyRoomVacant"] == null) {
                   showError("Please indicate if your hostel has vacancy");
                   return;
                 }
 
                 context.router.pushNamed(
-                  !(widget.info["vacancy"] as bool)
+                  !(widget.info["isAnyRoomVacant"] as bool)
                       ? Pages.stepTen
                       : Pages.stepEight,
                   extra: widget.info,
@@ -2376,7 +2767,7 @@ class _StepSevenState extends State<StepSeven> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.r),
-                  color: widget.info["vacancy"] == null
+                  color: widget.info["isAnyRoomVacant"] == null
                       ? appBlue.withOpacity(0.4)
                       : appBlue,
                 ),
@@ -2436,14 +2827,14 @@ class _StepEightState extends State<StepEight> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.8,
+                value: 9 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -2476,7 +2867,7 @@ class _StepEightState extends State<StepEight> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "STEP 8",
+                  "STEP 9",
                   style: context.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: appBlue,
@@ -2896,13 +3287,14 @@ class _StepNineState extends State<StepNine> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
           children: [
             SizedBox(height: 25.h),
             SizedBox(
               width: 414.w,
               child: LinearProgressIndicator(
-                value: 0.9,
+                value: 10 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
               ),
@@ -2940,7 +3332,7 @@ class _StepNineState extends State<StepNine> {
                     children: [
                       Center(
                         child: Text(
-                          "STEP 9",
+                          "STEP 10",
                           style: context.textTheme.bodyMedium!.copyWith(
                             fontWeight: FontWeight.w500,
                             color: appBlue,
@@ -3387,13 +3779,46 @@ class _StepNineState extends State<StepNine> {
   }
 }
 
-class StepTen extends StatelessWidget {
+class StepTen extends StatefulWidget {
   final Map<String, dynamic> info;
 
   const StepTen({
     super.key,
     required this.info,
   });
+
+  @override
+  State<StepTen> createState() => _StepTenState();
+}
+
+class _StepTenState extends State<StepTen> {
+
+  late List<int> totalProps;
+  late List<SingleFileResponse> media;
+  late List<String> facilities, rules;
+  late List<RoomInfo> rooms;
+  late int availableRooms, totalRooms;
+  late bool vacantRooms;
+
+  late String minBudget, maxBudget;
+
+  @override
+  void initState() {
+    super.initState();
+    rooms = toRoomList(widget.info["rooms"]);
+    totalProps = calculate(rooms);
+
+    media = toDataList(widget.info["medias"]);
+    facilities = toStringList(widget.info["FacilityName"]);
+    rules = toStringList(widget.info["RuleAndRegulation"]);
+
+    availableRooms = rooms.length;
+    totalRooms = widget.info["totalRoom"];
+    vacantRooms = widget.info["isAnyRoomVacant"];
+
+    minBudget = formatAmountInDouble(widget.info["minPrice"] * 0.001);
+    maxBudget = formatAmountInDouble(widget.info["maxPrice"] * 0.001);
+  }
 
   List<int> calculate(List<RoomInfo> rooms) {
     int baths = 0, kitchens = 0, toilets = 0;
@@ -3418,354 +3843,400 @@ class StepTen extends StatelessWidget {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<String> media = toStringList(info["media"]);
-    List<String> facilities = toStringList(info["hostelFacilities"]);
-    List<String> rules = toStringList(info["rules"]);
-    List<RoomInfo> rooms = toRoomList(info["roomsLeft"]);
-    int availableRooms = rooms.length;
-    int totalRooms = info["totalRooms"];
+  void navigate() =>
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _CreateHostelModal(vacancy: vacantRooms),
+      isDismissible: false,
+    ).then(
+          (resp) {
+        context.router.goNamed(Pages.ownerDashboard);
+      },
+    );
 
-    List<int> totalProps = calculate(rooms);
+  Future<void> create() async {
+    createHostel(widget.info)
+        .then((resp) {
+      if (!mounted) return;
+      if (!resp.success) {
+        showError(resp.message);
+        Navigator.of(context).pop();
+      } else {
+        navigate();
+      }
+    });
 
-    return Scaffold(
-      appBar: AppBar(
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: Column(
-          children: [
-            SizedBox(height: 25.h),
-            SizedBox(
-              width: 414.w,
-              child: LinearProgressIndicator(
-                value: 1.0,
-                color: appBlue,
-                minHeight: 1.5.h,
+        child: loader,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxScrolled) => [
+            SliverAppBar(
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              title: Column(
+                children: [
+                  SizedBox(height: 25.h),
+                  SizedBox(
+                    width: 414.w,
+                    child: LinearProgressIndicator(
+                      value: (vacantRooms ? 9 : 11) / totalPages,
+                      color: appBlue,
+                      minHeight: 1.5.h,
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                ],
+              ),
+              automaticallyImplyLeading: false,
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "STEP ${!vacantRooms ? "9" : "11"}",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: appBlue,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        "Preview",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        "Before going live, get a preview of your hostel details and ensure your "
+                            "listing is (are) ready to impress potential tenants.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: weirdBlack75,
+                        ),
+                      ),
+                      SizedBox(height: 44.h),
+                    ]
+                ),
               ),
             ),
-            SizedBox(height: 18.h),
           ],
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    "STEP 10",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: appBlue,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Center(
-                  child: Text(
-                    "Preview",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Center(
-                  child: Text(
-                    "Before going live, get a preview of your hostel details and ensure your "
-                    "listing is (are) ready to impress potential tenants.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack75,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 44.h),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FBFF),
-                    borderRadius: BorderRadius.circular(10.r),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFFE0E5EC),
-                        blurRadius: 6.0,
-                        spreadRadius: 1.0,
-                      )
-                    ],
-                  ),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Image.memory(
-                          info["image"],
-                          width: 414.w,
-                          height: 156.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 250.w,
-                            child: Text(
-                              info["name"],
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: weirdBlack,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 90.w,
-                            height: 25.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: infoRoomsLeftBackground,
-                              borderRadius: BorderRadius.circular(5.r),
-                            ),
-                            child: Text(
-                              "$availableRooms/$totalRooms rooms left",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: infoRoomsLeft,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.sp,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        joinToAddress(info["address"]),
-                        overflow: TextOverflow.ellipsis,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 8.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/images/Hostel Info Bed.svg",
-                                width: 15.r,
-                                height: 15.r,
-                                color: weirdBlack50,
-                              ),
-                              SizedBox(width: 5.w),
-                              Text(
-                                "$availableRooms",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/images/Hostel Info Bath.svg",
-                                width: 15.r,
-                                height: 15.r,
-                                color: weirdBlack50,
-                              ),
-                              SizedBox(width: 5.w),
-                              Text(
-                                "${totalProps[0]}",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/images/Toilet.svg",
-                                width: 15.r,
-                                height: 15.r,
-                                color: weirdBlack50,
-                              ),
-                              SizedBox(width: 5.w),
-                              Text(
-                                "${totalProps[1]}",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/images/Kitchen.svg",
-                                width: 15.r,
-                                height: 15.r,
-                                color: weirdBlack50,
-                              ),
-                              SizedBox(width: 5.w),
-                              Text(
-                                "${totalProps[2]}",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/images/Hostel Info Area.svg",
-                                width: 15.r,
-                                height: 15.r,
-                                color: weirdBlack50,
-                              ),
-                              SizedBox(width: 5.w),
-                              Text(
-                                "${(info["area"]).toStringAsFixed(0)} sqft",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.h),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text:
-                                  "${currency()} ${formatAmountInDouble(info["price"])}",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                color: appBlue,
-                                fontFamily: "Inter",
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "/year",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: appBlue,
-                                fontFamily: "Inter",
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: 414.w,
-                          minHeight: 1.h,
-                          maxWidth: 414.w,
-                          maxHeight: 1.h,
-                        ),
-                        child: const ColoredBox(color: Colors.black12),
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        "Description",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        info["description"],
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Rules & Regulations",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      Column(
+          body: Container(
+            width: 300.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FBFF),
+                borderRadius: BorderRadius.circular(10.r),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xFFE0E5EC),
+                    blurRadius: 6.0,
+                    spreadRadius: 1.0,
+                  )
+                ],
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
+              child: CustomScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                slivers: [
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(
-                          rules.length,
-                          (index) => Text(
-                            "${index + 1}. ${rules[index]}",
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Image.file(
+                              File(media.first.path),
+                              width: 414.w,
+                              height: 156.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 250.w,
+                                child: Text(
+                                  widget.info["hostelName"],
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: weirdBlack,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 90.w,
+                                height: 25.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: infoRoomsLeftBackground,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                ),
+                                child: Text(
+                                  "$availableRooms/$totalRooms rooms left",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: infoRoomsLeft,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13.sp,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            "${widget.info["street"]}, ${widget.info["junction"]}, ${widget.info["state"]}, ${widget.info["country"]}",
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 8.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Info Bed.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "$availableRooms",
+                                    style: context.textTheme.bodySmall!.copyWith(
+                                        color: weirdBlack50,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Info Bath.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${totalProps[0]}",
+                                    style: context.textTheme.bodySmall!.copyWith(
+                                        color: weirdBlack50,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Toilet.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${totalProps[1]}",
+                                    style: context.textTheme.bodySmall!.copyWith(
+                                        color: weirdBlack50,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Kitchen.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${totalProps[2]}",
+                                    style: context.textTheme.bodySmall!.copyWith(
+                                        color: weirdBlack50,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Info Area.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${(widget.info["homeSize"]).toStringAsFixed(0)} sqft",
+                                    style: context.textTheme.bodySmall!.copyWith(
+                                        color: weirdBlack50,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8.h),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                  "${currency()}${minBudget}k - ${currency()}${maxBudget}k",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    color: appBlue,
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "/year",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: appBlue,
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: 414.w,
+                              minHeight: 1.h,
+                              maxWidth: 414.w,
+                              maxHeight: 1.h,
+                            ),
+                            child: const ColoredBox(color: Colors.black12),
+                          ),
+                          SizedBox(height: 12.h),
+                          Text(
+                            "Description",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: weirdBlack,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            widget.info["hostelDescription"],
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack75,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Hostel Facilities",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      SizedBox(
-                        height: (facilities.length ~/ 4 +
-                                (facilities.length % 4 == 0 ? 0 : 1)) *
-                            110.r,
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4,
-                                  crossAxisSpacing: 5.r,
-                                  mainAxisSpacing: 5.r,
-                                  mainAxisExtent: 105.r),
-                          itemCount: facilities.length,
-                          itemBuilder: (_, index) => FacilityContainer(
-                            text: facilities[index],
+                          SizedBox(height: 16.h),
+                          Text(
+                            "Rules & Regulations",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: weirdBlack,
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 8.h),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(
+                              rules.length,
+                                  (index) => Text(
+                                "${index + 1}. ${rules[index]}",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack75,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
+                            "Hostel Facilities",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: weirdBlack,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                        ],
                       ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Available Rooms",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    sliver: SliverGrid.builder(
+                      gridDelegate:
+                      SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 5.r,
+                          mainAxisSpacing: 5.r,
+                          mainAxisExtent: 105.r),
+                      itemCount: facilities.length,
+                      itemBuilder: (_, index) => FacilityContainer(
+                        text: facilities[index],
                       ),
-                      SizedBox(height: 8.h),
-                      SizedBox(
-                        height: (rooms.length ~/ 2 +
-                                (rooms.length % 2 == 0 ? 0 : 1)) *
-                            210.h,
-                        child: GridView.builder(
+                    ),
+                  ),
+                  SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverToBoxAdapter(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 16.h),
+                                if(rooms.isNotEmpty)
+                                  Text(
+                                    "Available Rooms",
+                                    style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack,
+                                    ),
+                                  ),
+                                if(rooms.isNotEmpty)
+                                  SizedBox(height: 8.h),
+                              ]
+                          )
+                      )
+                  ),
+                  if(rooms.isNotEmpty)
+                    SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        sliver: SliverGrid.builder(
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                          SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 15.r,
                             mainAxisSpacing: 15.r,
@@ -3777,46 +4248,52 @@ class StepTen extends StatelessWidget {
                             isAsset: false,
                             onTap: () {},
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        "Gallery",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      SizedBox(
-                          height: (media.length ~/ 3 +
-                                  (media.length % 3 == 0 ? 0 : 1)) *
-                              110.r,
-                          child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 10.r,
-                              mainAxisSpacing: 10.r,
-                              mainAxisExtent: 110.r,
-                            ),
-                            itemCount: media.length,
-                            itemBuilder: (_, index) => ClipRRect(
-                              borderRadius: BorderRadius.circular(5.r),
-                              child: Image.file(
-                                File(media[index]),
-                                width: 110.r,
-                                height: 110.r,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )),
-                    ],
+                        )
+                    ),
+                  SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverToBoxAdapter(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if(rooms.isNotEmpty)
+                                  SizedBox(height: 16.h),
+                                Text(
+                                  "Gallery",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: weirdBlack,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                              ]
+                          )
+                      )
                   ),
-                ),
-                SizedBox(height: 80.h),
-              ],
-            ),
+                  SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverGrid.builder(
+                        gridDelegate:
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10.r,
+                          mainAxisSpacing: 10.r,
+                          mainAxisExtent: 110.r,
+                        ),
+                        itemCount: media.length,
+                        itemBuilder: (_, index) => ClipRRect(
+                          borderRadius: BorderRadius.circular(5.r),
+                          child: Image.file(
+                            File(media[index].path),
+                            width: 110.r,
+                            height: 110.r,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                  )
+                ],
+              )
           ),
         ),
       ),
@@ -3858,23 +4335,14 @@ class StepTen extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => const _CreateHostelModal(),
-                isDismissible: false,
-              ).then(
-                (resp) {
-                  if (resp == null || !resp!) return;
-                  context.router.goNamed(Pages.ownerDashboard);
-                },
-              ),
+              onTap: create,
               child: Container(
                 width: 170.w,
                 height: 50.h,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.r),
-                  color: rooms.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
+                  color: appBlue,
                 ),
                 child: Text(
                   "Launch",
@@ -3908,23 +4376,17 @@ List<RoomInfo> toRoomList(List<dynamic> list) {
   return result;
 }
 
-List<Uint8List> toDataList(List<dynamic> list) {
-  List<Uint8List> result = [];
+List<SingleFileResponse> toDataList(List<dynamic> list) {
+  List<SingleFileResponse> result = [];
   for (var element in list) {
-    result.add(element as Uint8List);
+    result.add(element as SingleFileResponse);
   }
   return result;
 }
 
-class _CreateHostelModal extends StatefulWidget {
-  const _CreateHostelModal({super.key});
-
-  @override
-  State<_CreateHostelModal> createState() => _CreateHostelModalState();
-}
-
-class _CreateHostelModalState extends State<_CreateHostelModal> {
-  bool created = false;
+class _CreateHostelModal extends StatelessWidget {
+  final bool vacancy;
+  const _CreateHostelModal({super.key, required this.vacancy});
 
   @override
   Widget build(BuildContext context) {
@@ -3949,7 +4411,7 @@ class _CreateHostelModalState extends State<_CreateHostelModal> {
                         topRight: Radius.circular(15.r),
                       ),
                       child: Image.asset(
-                        "assets/images/Hostel ${!created ? "Launch" : "Created"}.png",
+                        "assets/images/Hostel ${vacancy ? "Launch" : "Created"}.png",
                         width: 135.r,
                         height: 135.h,
                         fit: BoxFit.cover,
@@ -3958,7 +4420,7 @@ class _CreateHostelModalState extends State<_CreateHostelModal> {
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    "Hostel ${!created ? "Launched" : "Created"} Successfully",
+                    "Hostel ${vacancy ? "Launched" : "Created"} Successfully",
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: weirdBlack,
@@ -3966,11 +4428,11 @@ class _CreateHostelModalState extends State<_CreateHostelModal> {
                   ),
                   SizedBox(height: 12.h),
                   Text(
-                    !created
+                    vacancy
                         ? "Congratulations! Your hostel listing is now live and ready "
-                            "for tenant inquiries. Welcome guests to your property."
+                        "for tenant inquiries. Welcome guests to your property."
                         : "Great news! Your hostel is successfully created. Start attracting tenants by "
-                            "listing the vacancy rooms and managing your property effortlessly.",
+                        "listing the vacancy rooms and managing your property effortlessly.",
                     textAlign: TextAlign.center,
                     style: context.textTheme.bodyMedium!.copyWith(
                       color: weirdBlack50,
@@ -3980,13 +4442,7 @@ class _CreateHostelModalState extends State<_CreateHostelModal> {
                   SizedBox(height: 42.h),
                   Center(
                     child: GestureDetector(
-                      onTap: () {
-                        if (!created) {
-                          setState(() => created = true);
-                        } else {
-                          context.router.pop(true);
-                        }
-                      },
+                      onTap: () => context.router.pop(),
                       child: Container(
                         width: 414.w,
                         height: 50.h,
@@ -4014,3 +4470,4 @@ class _CreateHostelModalState extends State<_CreateHostelModal> {
     );
   }
 }
+

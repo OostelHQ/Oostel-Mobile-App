@@ -1793,7 +1793,7 @@ class FacilityContainer extends StatelessWidget {
             color: paleBlue,
           ),
           child: SvgPicture.asset(
-            "assets/images/$text${text == "Security" ? "-On" : ""}.svg",
+            "assets/images/$text-On.svg",
             width: 35.r,
             height: 35.r,
           ),

@@ -87,7 +87,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                   ref.watch(currentUserProvider.notifier).state =
                       response.payload!;
                 }
-                process(hasRegistered, autoLogin, createdAccount);
+                process(hasRegistered, autoLogin, createdAccount, loginSuccess: response.success);
               });
             });
           } else {
@@ -98,11 +98,22 @@ class _SplashPageState extends ConsumerState<SplashPage>
     );
   }
 
-  void process(bool? hasRegistered, bool? autoLogin, String? createdAccount) =>
+  void process(bool? hasRegistered, bool? autoLogin, String? createdAccount, {bool? loginSuccess}) =>
       controller.reverse().then(
         (_) {
           String destination = "";
-          if(createdAccount != null && createdAccount.isNotEmpty) {
+          if(loginSuccess != null && !loginSuccess) {
+            destination = Pages.login;
+          }
+
+          // else if(ref.read(isLandlord)) {
+          //   int value = ref.read(currentUserProvider).hasCompletedProfile;
+          //   if(value == 20) {
+          //     destination = Pages.createStepOne;
+          //   }
+          // }
+
+          else if(createdAccount != null && createdAccount.isNotEmpty) {
             destination = Pages.accountVerification;
             ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
           }

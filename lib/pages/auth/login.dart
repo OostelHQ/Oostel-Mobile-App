@@ -39,18 +39,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
-  bool validate() {
-    unFocus();
-    FormState? currentState = formKey.currentState;
-    if (currentState != null) {
-      if (!currentState.validate()) return false;
-
-      currentState.save();
-      return true;
-    }
-    return false;
-  }
-
   void navigate(User? user) {
     FileManager.saveBool("autoLogin", remember);
     FileManager.saveBool("registeredFynda", true);
@@ -66,12 +54,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         : ref.read(isAgent) ? Pages.agentDashboard :
     Pages.ownerDashboard;
 
-    if(ref.read(isLandlord)) {
-      int value = ref.read(currentUserProvider).hasCompletedProfile;
-      if(value == 20) {
-        destination = Pages.createStepOne;
-      }
-    }
+    // if(ref.read(isLandlord)) {
+    //   int value = ref.read(currentUserProvider).hasCompletedProfile;
+    //   if(value == 20) {
+    //     destination = Pages.createStepOne;
+    //   }
+    // }
 
     context.router.pushReplacementNamed(destination);
   }
@@ -154,6 +142,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           hintStyle: context.textTheme.bodyMedium!
                               .copyWith(color: fadedBorder),
                           hint: "example@example.com",
+                          onChange: (val) => textChecker(
+                            text: val,
+                            onAction: () => setState(() {}),
+                          ),
                           onSave: (val) =>
                               setState(() => authDetails["emailAddress"] = val!),
                           onValidate: (value) {
@@ -175,6 +167,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           width: 414.w,
                           height: 50.h,
                           obscure: !showPassword,
+                          onChange: (val) => textChecker(
+                            text: val,
+                            onAction: () => setState(() {}),
+                          ),
                           onValidate: (value) {
                             if (value!.trim().length < 6) {
                               showError(
@@ -238,7 +234,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         SizedBox(height: 140.h),
                         GestureDetector(
                           onTap: () {
-                            if(!validate()) return;
+                            if(!validateForm(formKey)) return;
                             login();
                           },
                           child: Container(

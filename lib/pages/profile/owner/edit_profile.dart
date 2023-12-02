@@ -26,8 +26,7 @@ class EditOwnerProfilePage extends ConsumerStatefulWidget {
 }
 
 class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
-  String? profileImage;
-  String? origin;
+  late String profileImage;
   String? gender;
   String? level;
   String? religion;
@@ -50,23 +49,23 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   void initState() {
     super.initState();
 
-    Landowner student = ref.read(currentUserProvider) as Landowner;
+    Landowner owner = ref.read(currentUserProvider) as Landowner;
 
-    email = TextEditingController(text: student.email);
-    fullName = TextEditingController(text: student.mergedNames);
-    number = TextEditingController(text: student.contact);
-    denomination = TextEditingController(text: student.denomination);
+    email = TextEditingController(text: owner.email);
+    fullName = TextEditingController(text: owner.mergedNames);
+    number = TextEditingController(text: owner.contact);
+    denomination = TextEditingController(text: owner.denomination);
 
-    profileImage = student.image;
+    profileImage = owner.image;
 
-    religion = student.religion.isEmpty ? null : student.religion;
-    gender = student.gender.isEmpty ? null : student.gender;
+    religion = owner.religion.isEmpty ? null : owner.religion;
+    gender = owner.gender.isEmpty ? null : owner.gender;
 
     street = TextEditingController();
     region = TextEditingController();
     country = TextEditingController();
 
-    pickedDate = student.dob;
+    pickedDate = (owner.dob == DateTime(1960)) ? null : owner.dob;
     hobby = TextEditingController(
       text: pickedDate == null
           ? ""
@@ -75,7 +74,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     );
 
     details = {
-      "userId": ref.read(currentUserProvider).id,
+      "userId": owner.id,
     };
   }
 
@@ -92,26 +91,19 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     super.dispose();
   }
 
-  bool validate() {
-    unFocus();
-    FormState? currentState = formKey.currentState;
-    if (currentState != null) {
-      if (!currentState.validate()) return false;
-
-      currentState.save();
-      return true;
-    }
-    return false;
-  }
-
   void navigate() {
-    refreshUser(ref);
-    context.router.pop();
+    refreshUser().then((val) {
+      if(val == null) {
+        showError("An error occurred. Please try again!");
+        return;
+      }
+      ref.watch(currentUserProvider.notifier).state = val;
+      context.router.pop();
+    });
   }
 
 
   Future<void> update() async {
-
     updateLandlordProfile(details, profilePictureFilePath: profileImage!.startsWith("https:") ? "" : profileImage!).then((resp) {
       if(!mounted) return;
       showError(resp.message);
@@ -158,10 +150,10 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
             children: [
               SizedBox(height: 50.h),
               Center(
-                child: profileImage != null
-                    ? profileImage!.startsWith("https:")
+                child: profileImage.isNotEmpty
+                    ? profileImage.startsWith("https:")
                         ? CachedNetworkImage(
-                            imageUrl: profileImage!,
+                            imageUrl: profileImage,
                             errorWidget: (context, url, error) => CircleAvatar(
                               backgroundColor: weirdBlack20,
                               radius: 75.r,
@@ -187,7 +179,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                             },
                           )
                         : CircleAvatar(
-                            backgroundImage: FileImage(File(profileImage!)),
+                            backgroundImage: FileImage(File(profileImage)),
                             radius: 75.r,
                           )
                     : Image.asset(
@@ -200,7 +192,10 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
               Center(
                 child: GestureDetector(
                   onTap: () => FileManager.single(type: FileType.image).then(
-                    (value) => setState(() => profileImage = value?.path),
+                    (value) {
+                      if(value == null) return;
+                      setState(() => profileImage = value.path);
+                    },
                   ),
                   child: Container(
                     width: 135.w,
@@ -271,7 +266,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                         height: 50.h,
                         hint: "example@example.com",
                         onValidate: (val) {
-                          if (val == null || val!.contains("@")) {
+                          if (val == null || !val!.contains("@")) {
                             showError("Please input a valid email address");
                             return '';
                           }
@@ -416,6 +411,16 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                           width: 414.w,
                           height: 50.h,
                           hint: "What is the name of your church?",
+                          onValidate: (val) {
+                            if(religion != null && religion != "Christianity") return null;
+
+                            if (val == null || val!.trim().isEmpty) {
+                              showError("Please enter your denomination");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) => details["denomination"] = val,
                         ),
                       if (religion != null && religion == "Christianity")
                         SizedBox(height: 16.h),
@@ -456,15 +461,10 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                       SizedBox(height: 50.h),
                       GestureDetector(
                         onTap: () {
-                          if(!validate()) return;
+                          if(!validateForm(formKey)) return;
 
                           if(gender == null) {
                             showError("Please choose a gender");
-                            return;
-                          }
-
-                          if(origin == null) {
-                            showError("Please choose a state of origin");
                             return;
                           }
 
@@ -480,6 +480,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
 
                           details["gender"] = gender;
                           details["dateOfBirth"] = pickedDate!.toIso8601String();
+                          details["religion"] = religion;
 
                           update();
                       },

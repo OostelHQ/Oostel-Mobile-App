@@ -30,151 +30,154 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
     List<Student> roommates = ref.watch(availableRoommatesProvider);
     List<String> roomTypes = ref.watch(roomTypesProvider);
 
-    return CustomScrollView(
-      slivers: [
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 25.h),
-                Text("Explore",
-                    style: context.textTheme.headlineSmall!
-                        .copyWith(fontWeight: FontWeight.w600)),
-                SizedBox(height: 8.h),
-                Text(
-                    "Explore the variety of options provided to select your choice.",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500)),
-                SizedBox(height: 12.h),
-                SpecialForm(
-                  controller: controller,
-                  height: 50.h,
-                  width: 414.w,
-                  hint: "Search here...",
-                  prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
-                  borderColor: Colors.transparent,
-                  fillColor: Colors.white,
-                  decoration: BoxDecoration(
-                      color: const Color(0xFFF8FBFF),
-                      borderRadius: BorderRadius.circular(4.r),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xFFE0E5EC),
-                          blurRadius: 6.0,
-                          spreadRadius: 1.0,
-                        )
-                      ]
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Hero(
-                      tag: "All Room Categories",
-                      child: Text("Categories",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack)),
-                    ),
-                    GestureDetector(
-                      onTap: () => context.pushNamed(Pages.viewRoomTypes),
-                      child: Text(
-                        "See All",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: appBlue, fontWeight: FontWeight.w500),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                SizedBox(
-                  height: 110.r,
-                  width: 414.w,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) => RoomTypeCard(index: index),
-                    separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                    itemCount: 5,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Available Hostels",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600, color: weirdBlack),
-                    ),
-                    GestureDetector(
-                      onTap: () => context.router
-                          .pushNamed(Pages.viewAvailable, extra: true),
-                      child: Text(
-                        "See All",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: appBlue, fontWeight: FontWeight.w500),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                SizedBox(
-                  height: 270.h,
-                  width: 414.w,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) => GestureDetector(
-                            onTap: () {},
-                            child: HostelExploreCard(
-                              info: hostels[index],
-                            ),
-                          ),
-                    separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                    itemCount: 4,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Available Roommates",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600, color: weirdBlack),
-                    ),
-                    GestureDetector(
-                      onTap: () => context.router
-                          .pushNamed(Pages.viewAvailable, extra: false),
-                      child: Text(
-                        "See All",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: appBlue, fontWeight: FontWeight.w500),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 12.h),
-              ],
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, index) => Column(
+    return RefreshIndicator(
+      onRefresh: () async {},
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StudentCard(info: roommates[index]),
-                  SizedBox(height: 10.h)
+                  SizedBox(height: 25.h),
+                  Text("Explore",
+                      style: context.textTheme.headlineSmall!
+                          .copyWith(fontWeight: FontWeight.w600)),
+                  SizedBox(height: 8.h),
+                  Text(
+                      "Explore the variety of options provided to select your choice.",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 12.h),
+                  SpecialForm(
+                    controller: controller,
+                    height: 50.h,
+                    width: 414.w,
+                    hint: "Search here...",
+                    prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
+                    borderColor: Colors.transparent,
+                    fillColor: Colors.white,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF8FBFF),
+                        borderRadius: BorderRadius.circular(4.r),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE0E5EC),
+                            blurRadius: 6.0,
+                            spreadRadius: 1.0,
+                          )
+                        ]
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Hero(
+                        tag: "All Room Categories",
+                        child: Text("Categories",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600, color: weirdBlack)),
+                      ),
+                      GestureDetector(
+                        onTap: () => context.pushNamed(Pages.viewRoomTypes),
+                        child: Text(
+                          "See All",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  SizedBox(
+                    height: 110.r,
+                    width: 414.w,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, index) => RoomTypeCard(index: index),
+                      separatorBuilder: (_, __) => SizedBox(width: 20.w),
+                      itemCount: 5,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Available Hostels",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      GestureDetector(
+                        onTap: () => context.router
+                            .pushNamed(Pages.viewAvailable, extra: true),
+                        child: Text(
+                          "See All",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  SizedBox(
+                    height: 270.h,
+                    width: 414.w,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, index) => GestureDetector(
+                              onTap: () {},
+                              child: HostelExploreCard(
+                                info: hostels[index],
+                              ),
+                            ),
+                      separatorBuilder: (_, __) => SizedBox(width: 20.w),
+                      itemCount: 4,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Available Roommates",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      GestureDetector(
+                        onTap: () => context.router
+                            .pushNamed(Pages.viewAvailable, extra: false),
+                        child: Text(
+                          "See All",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
                 ],
               ),
-              childCount: 4,
             ),
           ),
-        )
-      ],
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (_, index) => Column(
+                  children: [
+                    StudentCard(info: roommates[index]),
+                    SizedBox(height: 10.h)
+                  ],
+                ),
+                childCount: 4,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

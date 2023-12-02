@@ -430,13 +430,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                                       color: appBlue,
                                     ),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => context.router.pushNamed(
-                                            ref.watch(isAStudent)
-                                                ? Pages.editProfile
-                                                : ref.watch(isLandlord)
-                                                    ? Pages.editOwnerProfile
-                                                    : Pages.editAgentProfile,
-                                          ),
+                                      ..onTap = () => context.router.pushNamed(Pages.editProfile),
                                   )
                                 ],
                               ),

@@ -461,7 +461,7 @@ class _HomePageState extends ConsumerState<_HomePage>
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

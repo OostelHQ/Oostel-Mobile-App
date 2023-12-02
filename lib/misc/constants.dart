@@ -109,6 +109,7 @@ class Pages
   static const String stepFour = 'step-four';
   static const String stepFive = 'step-five';
   static const String stepSix = 'step-six';
+  static const String stepSixHalf = 'step-six-half';
   static const String stepSeven = 'step-seven';
   static const String stepEight = 'step-eight';
   static const String stepNine = 'step-nine';

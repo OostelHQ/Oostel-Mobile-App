@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
@@ -213,7 +215,8 @@ Future<FyndaResponse> createLandlordProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
+Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.put(
       "/user-profile/update-landlord-profile",
@@ -222,8 +225,17 @@ Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map, {String pr
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-
-      log(response.data.toString());
+      if (profilePictureFilePath.isNotEmpty) {
+        FyndaResponse resp = await updateProfilePicture(
+            id: map["userId"], filePath: profilePictureFilePath);
+        return resp;
+      } else {
+        return const FyndaResponse(
+          message: "Profile Updated",
+          payload: null,
+          success: true,
+        );
+      }
     }
   } catch (e) {
     log("Update Landlord Profile Error: $e");
@@ -236,9 +248,49 @@ Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map, {String pr
   );
 }
 
+Future<User?> refreshUser() async {
+  Map<String, dynamic>? userData = await _getCurrentUser();
 
-Future<void> refreshUser(WidgetRef ref) async {
+  log(userData.toString());
 
+  userData = null;
+
+  if (userData == null) {
+    return null;
+  } else {
+    String role = userData["roleCSV"];
+    String id = userData["userId"];
+    DateTime created = DateTime.parse(userData["createdAt"]);
+    String image = userData["profilePicture"] ?? "";
+
+    late User? user;
+
+    if (role == "Student") {
+      user = Student(
+        dateJoined: created,
+        image: image,
+        id: id,
+      );
+    } else if (role == "LandLord") {
+      user = Landowner(
+        dateJoined: created,
+        dob: DateTime(1960),
+        image: image,
+        id: id,
+      );
+    } else if (role == "Agent") {
+      user = Agent(
+        dateJoined: created,
+        dob: DateTime(1960),
+        image: image,
+        id: id,
+      );
+    } else {
+      user = null;
+    }
+
+    return user;
+  }
 }
 
 Future<FyndaResponse> createAgentProfile(Map<String, dynamic> map) async {
@@ -285,7 +337,9 @@ Future<FyndaResponse> updateAgentProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> createStudentProfile(Map<String, dynamic> map) async {
+Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
+  log("$map");
+
   try {
     Response response = await dio.post(
       "/user-profile/create-student-profile",
@@ -307,9 +361,17 @@ Future<FyndaResponse> createStudentProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> updateStudentProfile(Map<String, dynamic> map) async {
+Future<FyndaResponse> studentProfile(Map<String, dynamic> map, {String profilePictureFilePath = "", required int completionLevel}) async {
+  if(completionLevel <= 20) {
+    return _createStudentProfile(map, profilePictureFilePath: profilePictureFilePath);
+  } else {
+    return _updateStudentProfile(map, profilePictureFilePath: profilePictureFilePath);
+  }
+}
+
+Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
   try {
-    Response response = await dio.post(
+    Response response = await dio.put(
       "/user-profile/update-student-profile",
       options: configuration,
       data: map,

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +23,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController referralController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -33,11 +35,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     "password": "",
     "firstName": "",
     "lastName": "",
+    "referralCode": "",
     "roletype": "",
   };
 
   @override
   void dispose() {
+    referralController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     emailController.dispose();
@@ -45,31 +49,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     super.dispose();
   }
 
-
-  bool validate() {
-    unFocus();
-    FormState? currentState = formKey.currentState;
-    if (currentState != null) {
-      if (!currentState.validate()) return false;
-
-      currentState.save();
-      authDetails["roletype"] = (ref.read(isAStudent)) ? "Student" : ref.read(isLandlord) ? "LandLord" : "Agent";
-      return true;
-    }
-    return false;
-  }
-
-
   void navigate() {
     FileManager.saveBool("registeredFynda", true);
     FileManager.save("createdAccount", authDetails["emailAddress"]);
     ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
-    context.router.pushReplacementNamed(Pages.accountVerification, extra: authDetails["emailAddress"]);
+    context.router.pushReplacementNamed(Pages.accountVerification,
+        extra: authDetails["emailAddress"]);
   }
 
   Future<void> register() async {
     registerUser(authDetails).then((resp) {
-      if(!mounted) return;
+      if (!mounted) return;
       showError(resp.message);
       if (!resp.success) {
         Navigator.of(context).pop();
@@ -79,14 +69,25 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     });
 
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Dialog(
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          child: loader,
-        ),
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
     );
+  }
+
+  bool get isFilled {
+    if(!readTerms) return false;
+    if(firstNameController.text.trim().isEmpty) return false;
+    if(lastNameController.text.trim().isEmpty) return false;
+    if(passwordController.text.trim().isEmpty) return false;
+    if(emailController.text.trim().isEmpty) return false;
+
+    if(ref.read(isAgent) && referralController.text.trim().isEmpty) return false;
+    return true;
   }
 
   @override
@@ -125,220 +126,252 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: SizedBox(
-                    width: 414.w,
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "First Name",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: firstNameController,
-                            width: 414.w,
-                            height: 50.h,
-                            hintStyle: context.textTheme.bodyMedium!
-                                .copyWith(color: fadedBorder),
-                            hint: "Surname",
-                            onSave: (val) =>
-                                setState(() => authDetails["firstName"] = val!),
-                            onValidate: (value) {
-                              if (value!.trim().isEmpty) {
-                                showError("Please enter your surname");
-                                return '';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Last Name",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: lastNameController,
-                            width: 414.w,
-                            height: 50.h,
-                            hintStyle: context.textTheme.bodyMedium!
-                                .copyWith(color: fadedBorder),
-                            onValidate: (value) {
-                              if (value!.trim().isEmpty) {
-                                showError("Please enter your last name");
-                                return '';
-                              }
-                              return null;
-                            },
-                            hint: "Other Name",
-                            onSave: (val) =>
-                                setState(() => authDetails["lastName"] = val!),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Email Address",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: emailController,
-                            width: 414.w,
-                            height: 50.h,
-                            type: TextInputType.emailAddress,
-                            onValidate: (value) {
-                              if (value!.trim().isEmpty ||
-                                  !value!.contains("@")) {
-                                showError("Please enter a valid email address");
-                                return '';
-                              }
-                              return null;
-                            },
-                            hintStyle: context.textTheme.bodyMedium!
-                                .copyWith(color: fadedBorder),
-                            hint: "example@example.com",
-                            onSave: (val) => setState(
-                                () => authDetails["emailAddress"] = val!),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Password",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SpecialForm(
-                            controller: passwordController,
-                            width: 414.w,
-                            height: 50.h,
-                            obscure: !showPassword,
-                            onValidate: (value) {
-                              if (value!.trim().length < 6) {
-                                showError(
-                                    "Please use at least 6 characters for your password");
-                                return '';
-                              }
-                              return null;
-                            },
-                            onSave: (val) =>
-                                setState(() => authDetails["password"] = val!),
-                            suffix: GestureDetector(
-                              onTap: () =>
-                                  setState(() => showPassword = !showPassword),
-                              child: AnimatedSwitcherTranslation.right(
-                                duration: const Duration(milliseconds: 500),
-                                child: Icon(
-                                  showPassword
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  key: ValueKey<bool>(showPassword),
-                                  size: 18.r,
-                                  color: Colors.grey,
-                                ),
+                  width: 414.w,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "First Name",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SpecialForm(
+                          controller: firstNameController,
+                          width: 414.w,
+                          height: 50.h,
+                          hintStyle: context.textTheme.bodyMedium!
+                              .copyWith(color: fadedBorder),
+                          hint: "Surname",
+                          onSave: (val) =>
+                              setState(() => authDetails["firstName"] = val!),
+                          onChange: (val) => textChecker(text: val, onAction: () => setState(() {})),
+                          onValidate: (value) {
+                            if (value!.trim().isEmpty) {
+                              showError("Please enter your surname");
+                              return '';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Last Name",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SpecialForm(
+                          controller: lastNameController,
+                          width: 414.w,
+                          height: 50.h,
+                          hintStyle: context.textTheme.bodyMedium!
+                              .copyWith(color: fadedBorder),
+                          onChange: (val) => textChecker(text: val, onAction: () => setState(() {})),
+                          onValidate: (value) {
+                            if (value!.trim().isEmpty) {
+                              showError("Please enter your last name");
+                              return '';
+                            }
+                            return null;
+                          },
+                          hint: "Other Name",
+                          onSave: (val) =>
+                              setState(() => authDetails["lastName"] = val!),
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Email Address",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SpecialForm(
+                          controller: emailController,
+                          width: 414.w,
+                          height: 50.h,
+                          onChange: (val) => textChecker(text: val, onAction: () => setState(() {})),
+                          type: TextInputType.emailAddress,
+                          onValidate: (value) {
+                            if (value!.trim().isEmpty ||
+                                !value!.contains("@")) {
+                              showError("Please enter a valid email address");
+                              return '';
+                            }
+                            return null;
+                          },
+                          hintStyle: context.textTheme.bodyMedium!
+                              .copyWith(color: fadedBorder),
+                          hint: "example@example.com",
+                          onSave: (val) => setState(
+                              () => authDetails["emailAddress"] = val!),
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "Password",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                        SpecialForm(
+                          controller: passwordController,
+                          width: 414.w,
+                          height: 50.h,
+                          obscure: !showPassword,
+                          onChange: (val) => textChecker(text: val, onAction: () => setState(() {})),
+                          onValidate: (value) {
+                            if (value!.trim().length < 6) {
+                              showError(
+                                  "Please use at least 6 characters for your password");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) =>
+                              setState(() => authDetails["password"] = val!),
+                          suffix: GestureDetector(
+                            onTap: () =>
+                                setState(() => showPassword = !showPassword),
+                            child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: Icon(
+                                showPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                key: ValueKey<bool>(showPassword),
+                                size: 18.r,
+                                color: Colors.grey,
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Checkbox(
-                                value: readTerms,
-                                activeColor: appBlue,
-                                onChanged: (val) =>
-                                    setState(() => readTerms = !readTerms),
-                              ),
-                              Wrap(
+                        ),
+                        if (ref.read(isAgent)) SizedBox(height: 16.h),
+                        if (ref.read(isAgent))
+                          Text(
+                            "Referral Code",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        if (ref.read(isAgent))
+                          SpecialForm(
+                            controller: referralController,
+                            width: 414.w,
+                            height: 50.h,
+                            onChange: (val) => textChecker(text: val, onAction: () => setState(() {})),
+                            onValidate: (value) {
+                              if (!ref.read(isAgent)) return null;
+
+                              if (value!.trim().length != 6) {
+                                showError(
+                                    "Your referral code must be 6 digits");
+                                return '';
+                              }
+                              return null;
+                            },
+                            onSave: (val) {
+                              if (!ref.read(isAgent)) return;
+                              setState(
+                                  () => authDetails["referralCode"] = val!);
+                            },
+                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Checkbox(
+                              value: readTerms,
+                              activeColor: appBlue,
+                              onChanged: (val) =>
+                                  setState(() => readTerms = !readTerms),
+                            ),
+                            RichText(
+                              text: TextSpan(
                                 children: [
-                                  Text(
-                                    "I agree to Oostel's",
-                                    style: context.textTheme.bodyMedium!
+                                  TextSpan(
+                                    text: "I agree to Oostel's",
+                                    style: context.textTheme.bodySmall!
                                         .copyWith(
                                             color: weirdBlack75,
                                             fontWeight: FontWeight.w500),
                                   ),
-                                  GestureDetector(
-                                    onTap: () => context.router
-                                        .pushNamed(Pages.privacyPolicy),
-                                    child: Text(
-                                      " Privacy Policies",
-                                      style: context.textTheme.bodyMedium!
-                                          .copyWith(
-                                              color: appBlue,
-                                              fontWeight: FontWeight.w500),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 70.h),
-                          GestureDetector(
-                            onTap: () {
-                              if (!readTerms) {
-                                showError(
-                                    "Please read and accept Fynda's Privacy Policy to proceed");
-                                return;
-                              }
-
-                              if (!validate()) return;
-
-                              register();
-                            },
-                            child: Container(
-                              width: 414.w,
-                              height: 50.h,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4.r),
-                                  color: !readTerms ||
-                                          (emailController.text.isEmpty ||
-                                              passwordController.text.isEmpty ||
-                                              lastNameController.text.isEmpty ||
-                                              firstNameController.text.isEmpty)
-                                      ? appBlue.withOpacity(0.4)
-                                      : appBlue),
-                              child: Text(
-                                "Create Account",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 24.h),
-                          Center(
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              children: [
-                                Text(
-                                  "Already have an account?",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                GestureDetector(
-                                  onTap: () => context.router
-                                      .pushReplacementNamed(Pages.login),
-                                  child: Text(
-                                    " Login",
-                                    style: context.textTheme.bodyMedium!
+                                  TextSpan(
+                                    text: " Privacy Policies",
+                                    style: context.textTheme.bodySmall!
                                         .copyWith(
                                             color: appBlue,
                                             fontWeight: FontWeight.w500),
-                                  ),
-                                )
-                              ],
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => context.router
+                                          .pushNamed(Pages.privacyPolicy),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 70.h),
+                        GestureDetector(
+                          onTap: () {
+                            if (!readTerms) {
+                              showError(
+                                  "Please read and accept Fynda's Privacy Policy to proceed");
+                              return;
+                            }
+
+                            if (!validateForm(formKey)) return;
+
+                            authDetails["roletype"] = (ref.read(isAStudent))
+                                ? "Student"
+                                : ref.read(isLandlord)
+                                ? "LandLord"
+                                : "Agent";
+
+                            register();
+                          },
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.r),
+                                color: !isFilled
+                                    ? appBlue.withOpacity(0.4)
+                                    : appBlue),
+                            child: Text(
+                              "Create Account",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 60.h),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 24.h),
+                        Center(
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              Text(
+                                "Already have an account?",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              GestureDetector(
+                                onTap: () => context.router
+                                    .pushReplacementNamed(Pages.login),
+                                child: Text(
+                                  " Login",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: appBlue,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 60.h),
+                      ],
                     ),
+                  ),
                 ),
               )
             ],

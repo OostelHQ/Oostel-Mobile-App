@@ -48,6 +48,8 @@ dependencies:
   badges:
   photo_view:
   animated_text_kit:
+  get_thumbnail_video:
+  video_thumbnail_imageview:
 
 dev_dependencies:
   flutter_test:
