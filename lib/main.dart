@@ -419,6 +419,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
           useMaterial3: true,
           scheme: FlexScheme.tealM3,
           scaffoldBackground: const Color(0xFFFBFDFF),
+          appBarBackground: const Color(0xFFFBFDFF),
         ),
         themeMode: ThemeMode.light,
         routerConfig: _router,

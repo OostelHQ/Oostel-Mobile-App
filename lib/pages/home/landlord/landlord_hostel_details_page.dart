@@ -36,10 +36,9 @@ class _LandlordHostelInformationPageState
     tabController = TabController(length: 6, vsync: this);
     tabController.addListener(() {
       WidgetsBinding.instance.addPostFrameCallback(
-              (_) => setState(() => tabIndex = tabController.index));
+          (_) => setState(() => tabIndex = tabController.index));
     });
   }
-
 
   @override
   void dispose() {
@@ -55,9 +54,10 @@ class _LandlordHostelInformationPageState
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           WidgetsBinding.instance.addPostFrameCallback(
-                (_) => setState(
-                  () {
-                if ((tabIndex == 0 || tabIndex == 5) && scrollController.offset > 250.h) {
+            (_) => setState(
+              () {
+                if ((tabIndex == 0 || tabIndex == 5) &&
+                    scrollController.offset > 250.h) {
                   scrollController.jumpTo(250.h);
                 }
                 isCollapsed = scrollController.hasClients &&
@@ -75,8 +75,8 @@ class _LandlordHostelInformationPageState
                 opacity: isCollapsed ? 1 : 0,
                 child: Text(
                   widget.info.name,
-                  style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600, color: weirdBlack),
+                  style: context.textTheme.bodyLarge!
+                      .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
                 ),
               ),
               leading: isCollapsed
@@ -215,8 +215,7 @@ class _LandlordHostelInformationPageState
                         Text(
                           "${widget.info.bedrooms}",
                           style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50,
-                              fontWeight: FontWeight.w500),
+                              color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                         SizedBox(width: 10.w),
                         SvgPicture.asset(
@@ -229,8 +228,7 @@ class _LandlordHostelInformationPageState
                         Text(
                           "${widget.info.bathrooms}",
                           style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50,
-                              fontWeight: FontWeight.w500),
+                              color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                         SizedBox(width: 10.w),
                         SvgPicture.asset(
@@ -243,8 +241,7 @@ class _LandlordHostelInformationPageState
                         Text(
                           "${widget.info.area.toStringAsFixed(0)} sqft",
                           style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50,
-                              fontWeight: FontWeight.w500),
+                              color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -300,9 +297,8 @@ class _LandlordHostelInformationPageState
                   labelColor: appBlue,
                   labelStyle: context.textTheme.bodyMedium!
                       .copyWith(color: appBlue, fontWeight: FontWeight.w500),
-                  unselectedLabelStyle: context.textTheme.bodyMedium!
-                      .copyWith(
-                          color: weirdBlack50, fontWeight: FontWeight.w500),
+                  unselectedLabelStyle: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack50, fontWeight: FontWeight.w500),
                   isScrollable: true,
                   tabs: const [
                     Tab(text: "Analytics"),
@@ -782,112 +778,118 @@ class _RoomSectionState extends State<_RoomSection> {
 class _ShowRoomCard extends StatelessWidget {
   final RoomInfo room;
   final bool isAvailable;
+  final int daysLeft;
 
   const _ShowRoomCard({
     super.key,
+    this.daysLeft = 10,
     required this.room,
     required this.isAvailable,
   });
 
   void showActivationProcess(BuildContext context) => showModalBottomSheet(
-    context: context,
-    builder: (_) => SizedBox(
-      height: 450.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 55.h),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15.r),
-                        topRight: Radius.circular(15.r),
-                      ),
-                      child: Image.asset(
-                        "assets/images/Questions.png",
-                        width: 135.r,
-                        height: 135.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    isAvailable ? "Have you gotten a tenant?" : "Has your tenant left the room?",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    isAvailable ? "Considering deactivating a room due to tenant occupancy. Confirm your decision, and make your property listing accurate." : "Is your tenant vacating a room, and you'd like to reactivate it? Confirm to make your room available for new tenants.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 60.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+        context: context,
+        builder: (_) => SizedBox(
+          height: 450.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 180.w,
-                          height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: appBlue),
-                            borderRadius: BorderRadius.circular(5.r),
+                      SizedBox(height: 10.h),
+                      SvgPicture.asset("assets/images/Modal Line.svg"),
+                      SizedBox(height: 55.h),
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
                           ),
-                          child: Text(
-                            "No, cancel",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: appBlue,
-                            ),
+                          child: Image.asset(
+                            "assets/images/Questions.png",
+                            width: 135.r,
+                            height: 135.h,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 180.w,
-                          height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: appBlue,
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Text(
-                            "Yes, proceed",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                      SizedBox(height: 16.h),
+                      Text(
+                        isAvailable
+                            ? "Have you gotten a tenant?"
+                            : "Has your tenant left the room?",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        isAvailable
+                            ? "Considering deactivating a room due to tenant occupancy. Confirm your decision, and make your property listing accurate."
+                            : "Is your tenant vacating a room, and you'd like to reactivate it? Confirm to make your room available for new tenants.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 60.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: appBlue),
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "No, cancel",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: appBlue,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 180.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: appBlue,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "Yes, proceed",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
-  
+      );
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1015,48 +1017,32 @@ class _ShowRoomCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 32.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GestureDetector(
-                onTap: () => showActivationProcess(context),
-                child: Container(
-                  width: 160.w,
-                  height: 50.h,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: appBlue),
-                    borderRadius: BorderRadius.circular(5.r),
-                  ),
-                  child: Text(
+          GestureDetector(
+            onTap: () => showActivationProcess(context),
+            child: Container(
+              width: 414.w,
+              height: 50.h,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(color: appBlue),
+                borderRadius: BorderRadius.circular(5.r),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset("assets/images/Blue Edit.svg"),
+                  SizedBox(width: 10.w),
+                  Text(
                     "Edit",
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: appBlue,
                     ),
                   ),
-                ),
+                ],
               ),
-              GestureDetector(
-                onTap: () => showActivationProcess(context),
-                child: Container(
-                  width: 160.w,
-                  height: 50.h,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: appBlue,
-                    borderRadius: BorderRadius.circular(5.r),
-                  ),
-                  child: Text(
-                    isAvailable ? "De-activate" : "Activate",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           SizedBox(height: 16.h),
         ],
@@ -1064,7 +1050,6 @@ class _ShowRoomCard extends StatelessWidget {
     );
   }
 }
-
 
 class _CommentSection extends StatefulWidget {
   const _CommentSection({super.key});
@@ -1136,20 +1121,45 @@ class _CommentSectionState extends State<_CommentSection> {
             ),
           ),
         ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, index) => Column(
-                children: [
-                  CommentCard(comment: comments[index]),
-                  SizedBox(height: 20.h)
-                ],
+        comments.isEmpty
+            ? SliverFillRemaining(
+                child: SizedBox(
+                  height: 450.r,
+                  width: 414.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 50.r),
+                      Image.asset(
+                        "assets/images/No Data.png",
+                        width: 150.r,
+                        height: 150.r,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 50.r),
+                      Text(
+                        "There are no comments from the students yet.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                sliver: SliverList.separated(
+                  itemBuilder: (_, index) => CommentCard(
+                    comment: comments[index],
+                    isStudentSection: false,
+                  ),
+                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                  itemCount: comments.length,
+                ),
               ),
-              childCount: comments.length,
-            ),
-          ),
-        ),
       ],
     );
   }

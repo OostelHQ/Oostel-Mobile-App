@@ -637,20 +637,45 @@ class _CommentSectionState extends State<_CommentSection> {
             ),
           ),
         ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, index) => Column(
-                children: [
-                  CommentCard(comment: comments[index], isStudentSection: true),
-                  SizedBox(height: 20.h)
-                ],
+        comments.isEmpty
+            ? SliverFillRemaining(
+                child: SizedBox(
+                  height: 450.r,
+                  width: 414.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 50.r),
+                      Image.asset(
+                        "assets/images/No Data.png",
+                        width: 150.r,
+                        height: 150.r,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 50.r),
+                      Text(
+                        "There are no comments from the students yet.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                sliver: SliverList.separated(
+                  itemBuilder: (_, index) => CommentCard(
+                    comment: comments[index],
+                    isStudentSection: true,
+                  ),
+                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                  itemCount: comments.length,
+                ),
               ),
-              childCount: comments.length,
-            ),
-          ),
-        ),
       ],
     );
   }

@@ -13,6 +13,9 @@ const Color infoRoomsLeft = Color.fromRGBO(22, 152, 82, 1.0);
 const Color paleBlue = Color.fromRGBO(230, 237, 244, 1.0);
 const Color faintBlue = Color.fromRGBO(1, 15, 30, 0.06);
 
+const Color redDeadlineBackground = Color(0xFFFFD8D8);
+const Color yellowDeadlineBackground = Color(0xFFFAF3E5);
+
 const Color accentPurpleColor = Color(0xFF6A53A1);
 const Color primaryColor = Color(0xFF121212);
 const Color accentPinkColor = Color(0xFFF99BBD);

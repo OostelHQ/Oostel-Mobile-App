@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -18,6 +19,7 @@ import 'package:my_hostel/components/receipt_info.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -430,7 +432,8 @@ class Copyright extends StatelessWidget {
 }
 
 class ProfileNotification extends ConsumerStatefulWidget {
-  const ProfileNotification({super.key});
+  final VoidCallback onCancel;
+  const ProfileNotification({super.key, required this.onCancel});
 
   @override
   ConsumerState<ProfileNotification> createState() =>
@@ -440,7 +443,91 @@ class ProfileNotification extends ConsumerStatefulWidget {
 class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    User user = ref.watch(currentUserProvider);
+
+    return Container(
+      height: 140.h,
+      color: user.hasCompletedProfile < 100
+          ? incompleteBackground
+          : completeBackground,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                user.hasCompletedProfile < 100
+                    ? "Complete your Profile"
+                    : "Profile Completed!",
+                style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600, color: weirdBlack),
+              ),
+              GestureDetector(
+                onTap: widget.onCancel,
+                child: Icon(
+                  Boxicons.bx_x,
+                  color: weirdBlack,
+                  size: 26.r,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 15.h),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: user.hasCompletedProfile < 100
+                      ? "You are ${user.hasCompletedProfile}% done from unlocking the full potential of your account. "
+                      : "Congratulations! You have unlocked the full potential of your account. ",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500, color: weirdBlack75),
+                ),
+                if (user.hasCompletedProfile < 100)
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Click ",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: weirdBlack75,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "here",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: appBlue,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => context.router.pushNamed(
+                            ref.watch(isAStudent)
+                                ? Pages.editProfile
+                                : ref.watch(isLandlord)
+                                ? Pages.editOwnerProfile
+                                : Pages.editAgentProfile,
+                          ),
+                      )
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15.h),
+          LinearProgressIndicator(
+            color: user.hasCompletedProfile < 100
+                ? incompleteBar
+                : completeBar,
+            value: user.hasCompletedProfile * 0.01,
+            backgroundColor: incompleteFadedBar,
+            minHeight: 10.h,
+            borderRadius: BorderRadius.circular(5.r),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -1524,24 +1611,71 @@ class RoomTypeCard extends ConsumerWidget {
   }
 }
 
-class AvailableRoomCard extends StatelessWidget {
+class AvailableRoomCard extends StatefulWidget {
   final RoomInfo info;
   final bool isAsset;
   final bool available;
   final VoidCallback? onTap;
+  final DateTime? expiry;
 
   const AvailableRoomCard({
     super.key,
     this.available = false,
     this.isAsset = true,
     required this.info,
+    this.expiry,
     this.onTap,
   });
 
   @override
+  State<AvailableRoomCard> createState() => _AvailableRoomCardState();
+}
+
+class _AvailableRoomCardState extends State<AvailableRoomCard> {
+  late Color backgroundColor, textColor;
+  late String deadline;
+
+  bool timeUp = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // TODO: Properly test this deadline logic
+
+    DateTime expiry = DateTime(2024, 10, 25);
+    DateTime current = DateTime.now();
+
+    int delta = expiry.millisecondsSinceEpoch - current.millisecondsSinceEpoch;
+    if(delta < 0) {
+      timeUp = true;
+      return;
+    }
+
+    DateTime difference = DateTime.fromMillisecondsSinceEpoch(delta);
+    if(difference.year >= 1) {
+      deadline = "${difference.year} years left";
+      backgroundColor = infoRoomsLeftBackground;
+      textColor = infoRoomsLeft;
+    } else if(difference.year < 1 && (difference.month) > 4) {
+      deadline = "${difference.month} months left";
+      backgroundColor = infoRoomsLeftBackground;
+      textColor = infoRoomsLeft;
+    } else if(difference.month <= 4 && difference.month > 1) {
+      deadline = "${difference.month} months left";
+      backgroundColor = yellowDeadlineBackground;
+      textColor = pendingColor;
+    } else {
+      deadline = "${difference.day} days left";
+      backgroundColor = redDeadlineBackground;
+      textColor = failColor;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ??
+      onTap: widget.onTap ??
           () {
             showModalBottomSheet(
               context: context,
@@ -1569,24 +1703,22 @@ class AvailableRoomCard extends StatelessWidget {
                                   topLeft: Radius.circular(15.r),
                                   topRight: Radius.circular(15.r),
                                 ),
-                                child: isAsset
+                                child: widget.isAsset
                                     ? Image.asset(
-                                        info.media[0],
+                                        widget.info.media[0],
                                         width: 414.w,
                                         height: 175.h,
                                         fit: BoxFit.cover,
                                       )
-                                    : Image.file(
-                                        File(info.media[0]),
-                                        width: 414.w,
-                                        height: 175.h,
-                                        fit: BoxFit.cover,
-                                      ),
+                                    : CachedNetworkImage(
+                                  imageUrl: widget.info.media[0],
+
+                                ),
                               ),
                             ),
                             SizedBox(height: 16.h),
                             Text(
-                              info.name,
+                              widget.info.name,
                               style: context.textTheme.bodyLarge!.copyWith(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 22.sp,
@@ -1607,7 +1739,7 @@ class AvailableRoomCard extends StatelessWidget {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: formatAmountInDouble(info.price),
+                                    text: formatAmountInDouble(widget.info.price),
                                     style:
                                         context.textTheme.bodyMedium!.copyWith(
                                       color: appBlue,
@@ -1646,8 +1778,8 @@ class AvailableRoomCard extends StatelessWidget {
                           mainAxisExtent: 105.r,
                         ),
                         itemBuilder: (_, index) =>
-                            FacilityContainer(text: info.facilities[index]),
-                        itemCount: info.facilities.length,
+                            FacilityContainer(text: widget.info.facilities[index]),
+                        itemCount: widget.info.facilities.length,
                       ),
                       SliverToBoxAdapter(
                         child: Column(
@@ -1670,20 +1802,20 @@ class AvailableRoomCard extends StatelessWidget {
                             crossAxisSpacing: 10.r,
                             mainAxisSpacing: 10.r,
                             mainAxisExtent: 110.r),
-                        itemCount: info.media.length,
+                        itemCount: widget.info.media.length,
                         itemBuilder: (_, index) => GestureDetector(
                           onTap: () => context.router.pushNamed(
                             Pages.viewMedia,
                             extra: ViewInfo(
                               type: DisplayType.asset,
-                              paths: info.media,
+                              paths: widget.info.media,
                               current: index,
                             ),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5.r),
                             child: Image.asset(
-                              info.media[index],
+                              widget.info.media[index],
                               width: 110.r,
                               height: 110.r,
                               fit: BoxFit.cover,
@@ -1710,24 +1842,43 @@ class AvailableRoomCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10.r),
-                    topRight: Radius.circular(10.r),
+                CachedNetworkImage(imageUrl: widget.info.media[0],
+                  errorWidget: (context, url, error) => Container(
+                    width: 185.w,
+                    height: 140.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.r),
+                        topRight: Radius.circular(10.r),
+                      ),
+                      color: weirdBlack25,
+                    ),
                   ),
-                  child: isAsset
-                      ? Image.asset(
-                          info.media[0],
-                          fit: BoxFit.cover,
-                          width: 185.w,
-                          height: 140.h,
-                        )
-                      : Image.file(
-                          File(info.media[0]),
-                          fit: BoxFit.cover,
-                          width: 185.w,
-                          height: 140.h,
-                        ),
+                  progressIndicatorBuilder: (context, url, download) => Container(
+                    width: 185.w,
+                    height: 140.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.r),
+                        topRight: Radius.circular(10.r),
+                      ),
+                      color: weirdBlack25,
+                    ),
+                  ),
+                  imageBuilder: (context, provider) => Container(
+                    width: 185.w,
+                    height: 140.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.r),
+                        topRight: Radius.circular(10.r),
+                      ),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 8.h),
                 Padding(
@@ -1735,10 +1886,38 @@ class AvailableRoomCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        info.name,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: timeUp ? 170.w : 90.w,
+                            child: Text(
+                              widget.info.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600, color: weirdBlack),
+                            ),
+                          ),
+                          if(!timeUp)
+                          Container(
+                            width: 60.w,
+                            height: 25.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: backgroundColor,
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              "10 days left",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: textColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 8.h),
                       RichText(
@@ -1753,7 +1932,7 @@ class AvailableRoomCard extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: formatAmountInDouble(info.price),
+                              text: formatAmountInDouble(widget.info.price),
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: appBlue,
                                 fontFamily: "Inter",

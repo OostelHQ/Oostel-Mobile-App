@@ -3591,7 +3591,7 @@ class _StepNineState extends State<StepNine> {
                                 ),
                                 SizedBox(height: 8.h),
                                 Text(
-                                  "Maximum size allowed is 20MB of png and jpg format",
+                                  "Maximum size allowed is 2MB of png and jpg format",
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     color: weirdBlack75,
@@ -3946,7 +3946,8 @@ class _StepTenState extends State<StepTen> {
                         ),
                       ),
                       SizedBox(height: 44.h),
-                    ]),
+                    ],
+                ),
               ),
             ),
           ],
@@ -4241,7 +4242,7 @@ class _StepTenState extends State<StepTen> {
                                 ),
                               ),
                             if (rooms.isNotEmpty) SizedBox(height: 8.h),
-                          ]))),
+                          ],),),),
                   if (rooms.isNotEmpty)
                     SliverPadding(
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -4259,7 +4260,7 @@ class _StepTenState extends State<StepTen> {
                             isAsset: false,
                             onTap: () {},
                           ),
-                        )),
+                        ),),
                   SliverPadding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       sliver: SliverToBoxAdapter(
@@ -4275,7 +4276,7 @@ class _StepTenState extends State<StepTen> {
                               ),
                             ),
                             SizedBox(height: 8.h),
-                          ]))),
+                          ],),),),
                   SliverPadding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       sliver: SliverGrid.builder(
@@ -4295,9 +4296,9 @@ class _StepTenState extends State<StepTen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      ))
+                      ),)
                 ],
-              )),
+              ),),
         ),
       ),
       bottomNavigationBar: Container(
