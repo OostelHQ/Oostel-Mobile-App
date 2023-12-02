@@ -71,6 +71,11 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
         image: "assets/images/Privacy.svg",
       ),
       _Link(
+        name: "Agreements",
+        route: Pages.agreementSettings,
+        image: "assets/images/Agreement Settings.svg",
+      ),
+      _Link(
         name: "Logout",
         route: "",
         image: "assets/images/Logout.svg",
@@ -583,6 +588,325 @@ class OwnerProfileSettingsPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class OwnerAgreementSettingsPage extends StatelessWidget {
+  const OwnerAgreementSettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          iconSize: 26.r,
+          splashRadius: 0.01,
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => context.router.pop(),
+        ),
+        elevation: 0.0,
+        centerTitle: true,
+        title: Text(
+          "Agreements",
+          style: context.textTheme.bodyLarge!
+              .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            children: [
+              Text(
+                "Explore your settings to customize your preferences and enhance your interaction with our platform.",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  color: weirdBlack75,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 24.h),
+              Expanded(
+                child: ListView.separated(
+                  itemBuilder: (_, index) => GestureDetector(
+                    onTap: () => context.router.pushNamed(
+                      index == 0 ? Pages.ownerAgreement : Pages.tenantAgreement,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FBFF),
+                        borderRadius: BorderRadius.circular(4.r),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE0E5EC),
+                            blurRadius: 6.0,
+                            spreadRadius: 1.0,
+                          )
+                        ],
+                      ),
+                      child: SizedBox(
+                        height: 50.h,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/${index == 0 ? "View Profile" : "Agents"}.svg",
+                                    color: weirdBlack75,
+                                  ),
+                                  SizedBox(width: 16.w),
+                                  Text(
+                                    index == 0 ? "Landlord" : "Tenant",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack75,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Icon(Icons.chevron_right_rounded,
+                                  color: Colors.black54, size: 26.r),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  separatorBuilder: (_, __) => SizedBox(height: 16.h),
+                  itemCount: 2,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TenantAgreementPage extends StatelessWidget {
+  const TenantAgreementPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          iconSize: 26.r,
+          splashRadius: 0.01,
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => context.router.pop(),
+        ),
+        elevation: 0.0,
+        centerTitle: true,
+        title: Text(
+          "Tenant Agreement",
+          style: context.textTheme.bodyLarge!
+              .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+        ),
+      ),
+      body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SingleChildScrollView(
+                child: Column(
+                    children: [
+                      SizedBox(height: 12.h),
+                      Text(
+                        "Explore your settings to customize your preferences and enhance your interaction on our platform.",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: weirdBlack75,
+                        ),
+                      ),
+                      SizedBox(height: 44.h),
+                      Container(
+                        width: 414.w,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ],
+                        ),
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Introduction",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                color: weirdBlack,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              "PLEASE READ THE FOLLOWING AGREEMENT CAREFULLY BEFORE ACCEPTING AND MAKING HOUSE PAYMENTS.",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              loremIpsum,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 50.h),
+                      GestureDetector(
+                        onTap: () => context.router.pop(),
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: appBlue,
+                          ),
+                          child: Text(
+                            "Collapse",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
+                )
+            ),
+          )
+      ),
+    );
+  }
+}
+
+
+class OwnerAgreementPage extends StatelessWidget {
+  const OwnerAgreementPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          iconSize: 26.r,
+          splashRadius: 0.01,
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => context.router.pop(),
+        ),
+        elevation: 0.0,
+        centerTitle: true,
+        title: Text(
+          "Landlord Agreement",
+          style: context.textTheme.bodyLarge!
+              .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+        ),
+      ),
+      body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SingleChildScrollView(
+                child: Column(
+                    children: [
+                      SizedBox(height: 12.h),
+                      Text(
+                        "Explore your settings to customize your preferences and enhance your interaction on our platform.",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: weirdBlack75,
+                        ),
+                      ),
+                      SizedBox(height: 44.h),
+                      Container(
+                        width: 414.w,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ],
+                        ),
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Introduction",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                color: weirdBlack,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              "PLEASE READ THE FOLLOWING AGREEMENT CAREFULLY BEFORE ACCEPTING AND MAKING HOUSE PAYMENTS.",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              loremIpsum,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 50.h),
+                      GestureDetector(
+                        onTap: () => context.router.pop(),
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: appBlue,
+                          ),
+                          child: Text(
+                            "Collapse",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
+                )
+            ),
+          )
       ),
     );
   }

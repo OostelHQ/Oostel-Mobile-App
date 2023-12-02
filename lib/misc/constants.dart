@@ -122,6 +122,10 @@ class Pages
   static const String agentSettings = 'agent-settings';
   static const String agentProfile = 'agent-profile';
   static const String editAgentProfile = 'edit-agent-profile';
+
+  static const String ownerAgreement = 'owner-agreement';
+  static const String tenantAgreement = 'tenant-agreement';
+  static const String agreementSettings = 'tenant-agreement-settings';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

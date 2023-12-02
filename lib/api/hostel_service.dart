@@ -109,13 +109,14 @@ Future<FyndaResponse> updateHostel(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> getHostels(Map<String, dynamic> query) async {
+Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query) async {
   try {
     Response response = await dio.get("/hostel/get-all-hostels",
         options: configuration, queryParameters: query);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      //log(response.data.length.toString());
+      log(response.data[8].toString());
     }
   } catch (e) {
     log("Get Hostels Error: $e");
@@ -123,7 +124,7 @@ Future<FyndaResponse> getHostels(Map<String, dynamic> query) async {
 
   return const FyndaResponse(
     message: "An error occurred. Please try again.",
-    payload: null,
+    payload: [],
     success: false,
   );
 }

@@ -8,6 +8,7 @@ class Student extends User {
   final double amount;
   final String hobby;
   final String origin;
+  final String guardian;
   final String ageRange;
   final bool available;
 
@@ -26,6 +27,7 @@ class Student extends User {
     required DateTime dateJoined,
     this.level = 0,
     this.location = "",
+    this.guardian = "",
     this.amount = 0,
     this.available = false,
     this.ageRange = "",

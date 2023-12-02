@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -456,14 +457,15 @@ class HostelInfoCard extends ConsumerStatefulWidget {
 }
 
 class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.pushNamed(
-        Pages.hostelInfo,
-        extra: widget.info,
-      ).then((val) => setState(() {})),
+      onTap: () => context.router
+          .pushNamed(
+            Pages.hostelInfo,
+            extra: widget.info,
+          )
+          .then((val) => setState(() {})),
       child: SizedBox(
         height: 135.h,
         child: Center(
@@ -523,7 +525,8 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                 tag: "Hostel ID: ${widget.info.id} Liked",
                                 child: GestureDetector(
                                   onTap: () {
-                                    String id = ref.read(currentUserProvider).id;
+                                    String id =
+                                        ref.read(currentUserProvider).id;
                                     if (widget.info.likes.contains(id)) {
                                       widget.info.likes.remove(id);
                                     } else {
@@ -536,12 +539,14 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                     child: Icon(
                                       Icons.favorite_rounded,
                                       color: widget.info.likes.contains(
-                                          ref.read(currentUserProvider).id)
+                                              ref.read(currentUserProvider).id)
                                           ? Colors.red
                                           : weirdBlack20,
                                       size: 18,
-                                      key: ValueKey<bool>(widget.info.likes.contains(
-                                          ref.read(currentUserProvider).id)),
+                                      key: ValueKey<bool>(widget.info.likes
+                                          .contains(ref
+                                              .read(currentUserProvider)
+                                              .id)),
                                     ),
                                   ),
                                 ),
@@ -868,15 +873,15 @@ class HostelExploreCard extends ConsumerStatefulWidget {
 }
 
 class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.pushNamed(
-        Pages.hostelInfo,
-        extra: widget.info,
-      ).then((val) => setState(() {})),
+      onTap: () => context.router
+          .pushNamed(
+            Pages.hostelInfo,
+            extra: widget.info,
+          )
+          .then((val) => setState(() {})),
       child: SizedBox(
         height: 270.h,
         child: Center(
@@ -885,26 +890,47 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
             width: 180.w,
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             decoration: BoxDecoration(
-                color: const Color(0xFFF8FBFF),
-                borderRadius: BorderRadius.circular(4.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xFFE0E5EC),
-                    blurRadius: 6.0,
-                    spreadRadius: 1.0,
-                  )
-                ],
+              color: const Color(0xFFF8FBFF),
+              borderRadius: BorderRadius.circular(4.r),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0xFFE0E5EC),
+                  blurRadius: 6.0,
+                  spreadRadius: 1.0,
+                )
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Image.asset(
-                    widget.info.image,
+                CachedNetworkImage(
+                  imageUrl: widget.info.image,
+                  errorWidget: (context, url, error) => Container(
                     width: 180.w,
                     height: 125.h,
-                    fit: BoxFit.cover,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: weirdBlack25,
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, download) => Container(
+                    width: 180.w,
+                    height: 125.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: weirdBlack25,
+                    ),
+                  ),
+                  imageBuilder: (context, provider) => Container(
+                    width: 180.w,
+                    height: 125.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -935,13 +961,13 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                         duration: const Duration(milliseconds: 500),
                         child: Icon(
                           Icons.favorite_rounded,
-                          color: widget.info.likes.contains(
-                              ref.read(currentUserProvider).id)
+                          color: widget.info.likes
+                                  .contains(ref.read(currentUserProvider).id)
                               ? Colors.red
                               : weirdBlack25,
                           size: 18,
-                          key: ValueKey<bool>(widget.info.likes.contains(
-                              ref.read(currentUserProvider).id)),
+                          key: ValueKey<bool>(widget.info.likes
+                              .contains(ref.read(currentUserProvider).id)),
                         ),
                       ),
                     )
@@ -1063,7 +1089,8 @@ class CommentCard extends StatefulWidget {
   final Comment comment;
   final bool isStudentSection;
 
-  const CommentCard({super.key, required this.comment, this.isStudentSection = false});
+  const CommentCard(
+      {super.key, required this.comment, this.isStudentSection = false});
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -1134,21 +1161,22 @@ class _CommentCardState extends State<CommentCard>
                       starColor: accentYellowColor,
                       starOffColor: weirdBlack.withOpacity(0.1),
                     ),
-                    if(!widget.isStudentSection)
-                    GestureDetector(
-                      onTap: () {
-                        setState(() => expand = !expand);
-                        if(expand) {
-                          controller.forward();
-                        } else {
-                          controller.reverse();
-                        }
-                      },
+                    if (!widget.isStudentSection)
+                      GestureDetector(
+                        onTap: () {
+                          setState(() => expand = !expand);
+                          if (expand) {
+                            controller.forward();
+                          } else {
+                            controller.reverse();
+                          }
+                        },
                         child: Text(
-                      expand ? "Cancel" : "Reply",
-                      style: context.textTheme.bodyMedium!.copyWith(color: appBlue, fontWeight: FontWeight.w500),
-                    ),
-                    )
+                          expand ? "Cancel" : "Reply",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue, fontWeight: FontWeight.w500),
+                        ),
+                      )
                   ],
                 ),
                 SizedBox(height: 8.h),
@@ -1162,8 +1190,8 @@ class _CommentCardState extends State<CommentCard>
                   Text(
                     widget.comment.subtitle,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w500, color: weirdBlack),
+                    style: context.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500, color: weirdBlack),
                   ),
                 SizedBox(height: 8.h),
                 Text(
@@ -1176,34 +1204,32 @@ class _CommentCardState extends State<CommentCard>
               ],
             ),
           ),
-          if(!widget.isStudentSection)
-          SizeTransition(
-              sizeFactor: animation,
-              child: ColoredBox(
-                  color: paleBlue,
-                  child: SizedBox(
-                    height: 60.h,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SpecialForm(
-                            controller: commentController,
-                            width: 300.w,
-                            height: 45.h,
-                            hint: "Add your message...",
-                            suffix: const Icon(Icons.emoji_emotions_rounded, color: appBlue),
-                            fillColor: Colors.white,
-                            borderColor: Colors.transparent,
-                            radius: BorderRadius.circular(22.5.h),
-                          ),
-                          GestureDetector(
-                              child: Icon(Icons.send_rounded, color: appBlue, size: 26.r)
-                          ),
-                        ]
-                    ),
-                  )
-              )
-          ),
+          if (!widget.isStudentSection)
+            SizeTransition(
+                sizeFactor: animation,
+                child: ColoredBox(
+                    color: paleBlue,
+                    child: SizedBox(
+                      height: 60.h,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SpecialForm(
+                              controller: commentController,
+                              width: 300.w,
+                              height: 45.h,
+                              hint: "Add your message...",
+                              suffix: const Icon(Icons.emoji_emotions_rounded,
+                                  color: appBlue),
+                              fillColor: Colors.white,
+                              borderColor: Colors.transparent,
+                              radius: BorderRadius.circular(22.5.h),
+                            ),
+                            GestureDetector(
+                                child: Icon(Icons.send_rounded,
+                                    color: appBlue, size: 26.r)),
+                          ]),
+                    ))),
         ],
       ),
     );
@@ -1266,20 +1292,19 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                 children: [
                   SizedBox(height: 20.h),
                   RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(text: "0",
-                            style: context.textTheme.headlineLarge!
-                                .copyWith(fontWeight: FontWeight.bold)),
-                        TextSpan(
-                          text: "/5",
-                          style: context.textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )
-
-                  ),
+                      text: TextSpan(
+                    children: [
+                      TextSpan(
+                          text: "0",
+                          style: context.textTheme.headlineLarge!
+                              .copyWith(fontWeight: FontWeight.bold)),
+                      TextSpan(
+                        text: "/5",
+                        style: context.textTheme.bodyLarge!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )),
                   SizedBox(height: 15.h),
                   RatingStars(
                     value: 3.2,
@@ -1516,155 +1541,162 @@ class AvailableRoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ?? () {
-        showModalBottomSheet(
-          context: context,
-          elevation: 1.0,
-          builder: (_) => SizedBox(
-            width: 414.w,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10.h),
-                        Center(
-                          child:
-                              SvgPicture.asset("assets/images/Modal Line.svg"),
-                        ),
-                        SizedBox(height: 25.h),
-                        Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15.r),
-                              topRight: Radius.circular(15.r),
+      onTap: onTap ??
+          () {
+            showModalBottomSheet(
+              context: context,
+              elevation: 1.0,
+              builder: (_) => SizedBox(
+                width: 414.w,
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 10.h),
+                            Center(
+                              child: SvgPicture.asset(
+                                  "assets/images/Modal Line.svg"),
                             ),
-                            child: isAsset
-                                ? Image.asset(
-                                    info.media[0],
-                                    width: 414.w,
-                                    height: 175.h,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.file(
-                                    File(info.media[0]),
-                                    width: 414.w,
-                                    height: 175.h,
-                                    fit: BoxFit.cover,
+                            SizedBox(height: 25.h),
+                            Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15.r),
+                                  topRight: Radius.circular(15.r),
+                                ),
+                                child: isAsset
+                                    ? Image.asset(
+                                        info.media[0],
+                                        width: 414.w,
+                                        height: 175.h,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.file(
+                                        File(info.media[0]),
+                                        width: 414.w,
+                                        height: 175.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              info.name,
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 22.sp,
+                                color: weirdBlack,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: currency(),
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: appBlue,
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        Text(
-                          info.name,
-                          style: context.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 22.sp,
-                            color: weirdBlack,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: currency(),
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                  TextSpan(
+                                    text: formatAmountInDouble(info.price),
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: appBlue,
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "/year",
+                                    style:
+                                        context.textTheme.bodySmall!.copyWith(
+                                      color: appBlue,
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
+                                ],
                               ),
-                              TextSpan(
-                                text: formatAmountInDouble(info.price),
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              "Rooms Facilities",
+                              style: context.textTheme.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "/year",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        Text(
-                          "Rooms Facilities",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        SizedBox(height: 8.h),
-                      ],
-                    ),
-                  ),
-                  SliverGrid.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 5.r,
-                      mainAxisSpacing: 15.r,
-                      mainAxisExtent: 105.r,
-                    ),
-                    itemBuilder: (_, index) =>
-                        FacilityContainer(text: info.facilities[index]),
-                    itemCount: info.facilities.length,
-                  ),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 16.h),
-                        Text(
-                          "Gallery",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        SizedBox(height: 8.h),
-                      ],
-                    ),
-                  ),
-                  SliverGrid.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 10.r,
-                        mainAxisSpacing: 10.r,
-                        mainAxisExtent: 110.r),
-                    itemCount: info.media.length,
-                    itemBuilder: (_, index) => GestureDetector(
-                      onTap: () => context.router.pushNamed(
-                        Pages.viewMedia,
-                        extra: ViewInfo(
-                          type: DisplayType.asset,
-                          paths: info.media,
-                          current: index,
+                                  color: weirdBlack),
+                            ),
+                            SizedBox(height: 8.h),
+                          ],
                         ),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5.r),
-                        child: Image.asset(
-                          info.media[index],
-                          width: 110.r,
-                          height: 110.r,
-                          fit: BoxFit.cover,
+                      SliverGrid.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 5.r,
+                          mainAxisSpacing: 15.r,
+                          mainAxisExtent: 105.r,
+                        ),
+                        itemBuilder: (_, index) =>
+                            FacilityContainer(text: info.facilities[index]),
+                        itemCount: info.facilities.length,
+                      ),
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 16.h),
+                            Text(
+                              "Gallery",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack),
+                            ),
+                            SizedBox(height: 8.h),
+                          ],
                         ),
                       ),
-                    ),
+                      SliverGrid.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10.r,
+                            mainAxisSpacing: 10.r,
+                            mainAxisExtent: 110.r),
+                        itemCount: info.media.length,
+                        itemBuilder: (_, index) => GestureDetector(
+                          onTap: () => context.router.pushNamed(
+                            Pages.viewMedia,
+                            extra: ViewInfo(
+                              type: DisplayType.asset,
+                              paths: info.media,
+                              current: index,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5.r),
+                            child: Image.asset(
+                              info.media[index],
+                              width: 110.r,
+                              height: 110.r,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          },
       child: Container(
         width: 185.w,
         height: 205.h,
@@ -1683,17 +1715,19 @@ class AvailableRoomCard extends StatelessWidget {
                     topLeft: Radius.circular(10.r),
                     topRight: Radius.circular(10.r),
                   ),
-                  child: isAsset ? Image.asset(
-                    info.media[0],
-                    fit: BoxFit.cover,
-                    width: 185.w,
-                    height: 140.h,
-                  ) : Image.file(
-                    File(info.media[0]),
-                    fit: BoxFit.cover,
-                    width: 185.w,
-                    height: 140.h,
-                  ),
+                  child: isAsset
+                      ? Image.asset(
+                          info.media[0],
+                          fit: BoxFit.cover,
+                          width: 185.w,
+                          height: 140.h,
+                        )
+                      : Image.file(
+                          File(info.media[0]),
+                          fit: BoxFit.cover,
+                          width: 185.w,
+                          height: 140.h,
+                        ),
                 ),
                 SizedBox(height: 8.h),
                 Padding(
@@ -1932,7 +1966,8 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                   ),
                                   child: Text(
                                     "Cancel",
-                                    style: context.textTheme.bodyMedium!.copyWith(
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: appBlue,
                                     ),
@@ -1951,7 +1986,8 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                   ),
                                   child: Text(
                                     "Try again",
-                                    style: context.textTheme.bodyMedium!.copyWith(
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
@@ -1977,7 +2013,8 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                   ),
                                   child: Text(
                                     "Cancel",
-                                    style: context.textTheme.bodyMedium!.copyWith(
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: appBlue,
                                     ),
@@ -1985,7 +2022,8 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () => context.router.pushNamed(Pages.topUp),
+                                onTap: () =>
+                                    context.router.pushNamed(Pages.topUp),
                                 child: Container(
                                   width: 170.w,
                                   height: 50.h,
@@ -1996,7 +2034,8 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                   ),
                                   child: Text(
                                     "Top-up",
-                                    style: context.textTheme.bodyMedium!.copyWith(
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
@@ -2088,7 +2127,6 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -2151,8 +2189,8 @@ class ProfileInfoCard extends StatelessWidget {
                   child: Text(
                     header,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyLarge!
-                        .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
+                    style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600, color: weirdBlack),
                   ),
                 ),
                 Text(

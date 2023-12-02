@@ -215,6 +215,21 @@ class _MyHostelAppState extends State<MyHostelApp> {
           builder: (_, __) => const AboutPage(),
         ),
         GoRoute(
+          path: Pages.tenantAgreement.path,
+          name: Pages.tenantAgreement,
+          builder: (_, __) => const TenantAgreementPage(),
+        ),
+        GoRoute(
+          path: Pages.agreementSettings.path,
+          name: Pages.agreementSettings,
+          builder: (_, __) => const OwnerAgreementSettingsPage(),
+        ),
+        GoRoute(
+          path: Pages.ownerAgreement.path,
+          name: Pages.ownerAgreement,
+          builder: (_, __) => const OwnerAgreementPage(),
+        ),
+        GoRoute(
           path: Pages.inbox.path,
           name: Pages.inbox,
           builder: (_, state) => Inbox(otherID: state.extra as String),

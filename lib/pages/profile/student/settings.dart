@@ -65,6 +65,11 @@ class _SettingsPageState extends ConsumerState<StudentSettingsPage> {
         image: "assets/images/Privacy.svg",
       ),
       _Link(
+        name: "Agreements",
+        route: Pages.tenantAgreement,
+        image: "assets/images/Agreement Settings.svg",
+      ),
+      _Link(
         name: "Logout",
         route: "",
         image: "assets/images/Logout.svg",

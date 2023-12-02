@@ -47,6 +47,11 @@ class HostelInfo extends Equatable {
   @override
   List<Object?> get props => [id];
 
+  // List<double> get priceRange {
+  //   List<String> values = price.split(" ");
+  //   return [double.parse(values[0]), double.parse(values[2])];
+  // }
+
 
   RoomInfo roomAt(int index) {
     String id = roomsLeft[index];
@@ -64,23 +69,28 @@ class HostelInfo extends Equatable {
     return -1;
   }
 
-  factory HostelInfo.fromJson(Map<String, dynamic> map) => HostelInfo(
-        id: map["_id"],
-        name: map["name"],
-        image: map["image"],
-        bedrooms: map["bedrooms"],
-        bathrooms: map["bathrooms"],
-        area: map["area"],
-        price: map["price"],
-        totalRooms: map["totalRooms"],
-        address: map["address"],
-        category: map["category"],
-        roomsLeft: map["roomsLeft"],
-        description: map["description"],
-        rules: map["rules"],
-        likes: map["likes"],
-        hostelFacilities: map["hostelFacilities"],
-        media: map["media"],
-        owner: Landowner.fromJson(map["owner"]),
-      );
+  factory HostelInfo.fromJson(Map<String, dynamic> map) {
+    String street = map["street"], junction = map["junction"], state = map["state"], country = map["country"];
+
+
+    return HostelInfo(
+      id: map["hostelId"],
+      name: map["hostelName"],
+      image: map["image"] ?? "",
+      bedrooms: map["bedrooms"],
+      bathrooms: map["bathrooms"],
+      area: map["homeSize"],
+      price: map["price"],
+      totalRooms: map["totalRoom"],
+      address: "$street, $junction, $state, $country",
+      category: map["hostelCategory"],
+      roomsLeft: map["roomsLeft"],
+      description: map["hostelDescription"],
+      rules: map["rulesAndRegulation"],
+      likes: map["hostelLikesCount"],
+      hostelFacilities: map["hostelFacilities"],
+      media: map["media"] ?? [],
+      owner: map["userId"],
+    );
+  }
 }

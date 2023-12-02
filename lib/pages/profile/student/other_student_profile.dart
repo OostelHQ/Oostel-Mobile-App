@@ -198,6 +198,18 @@ class _OtherStudentProfilePageState extends State<OtherStudentProfilePage> {
                   ],
                 ),
                 SizedBox(height: 15.h),
+                ProfileInfoCard(
+                  image: "assets/images/Profile Phone.svg",
+                  header: widget.info.contact,
+                  text: "Phone Number",
+                ),
+                SizedBox(height: 15.h),
+                ProfileInfoCard(
+                  image: "assets/images/Profile Mail.svg",
+                  header: widget.info.email,
+                  text: "Email Address",
+                ),
+                SizedBox(height: 15.h),
                 BasicStudentInfo(student: widget.info),
                 SizedBox(height: 50.h),
               ],

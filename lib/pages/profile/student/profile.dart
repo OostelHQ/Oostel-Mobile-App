@@ -26,8 +26,12 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
     Student student = ref.watch(currentUserProvider) as Student;
     List<Receipt> receipts = ref.watch(receiptsProvider);
 
-    int acquiredHostels = ref.watch(acquiredHostelsProvider).length;
-    int acquiredRoommates = ref.watch(acquiredRoommatesProvider).length;
+    int acquiredHostels = ref
+        .watch(acquiredHostelsProvider)
+        .length;
+    int acquiredRoommates = ref
+        .watch(acquiredRoommatesProvider)
+        .length;
 
     return Scaffold(
       body: SafeArea(
@@ -88,54 +92,55 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                             alignment: Alignment.center,
                             child: student.image == ""
                                 ? CircleAvatar(
-                                    radius: 47.5.r,
-                                    backgroundColor: appBlue,
-                                    child: Center(
-                                      child: Text(
-                                        student.firstName.substring(0, 1),
-                                        style: context.textTheme.displaySmall!
-                                            .copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                  )
+                              radius: 47.5.r,
+                              backgroundColor: appBlue,
+                              child: Center(
+                                child: Text(
+                                  student.firstName.substring(0, 1),
+                                  style: context.textTheme.displaySmall!
+                                      .copyWith(color: Colors.white),
+                                ),
+                              ),
+                            )
                                 : CachedNetworkImage(
-                                    imageUrl: student.image,
-                                    errorWidget: (context, url, error) =>
-                                        CircleAvatar(
-                                      backgroundColor: weirdBlack20,
-                                      radius: 47.5.r,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.person_outline_rounded,
-                                          color: appBlue,
-                                          size: 42.r,
-                                        ),
+                              imageUrl: student.image,
+                              errorWidget: (context, url, error) =>
+                                  CircleAvatar(
+                                    backgroundColor: weirdBlack20,
+                                    radius: 47.5.r,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.person_outline_rounded,
+                                        color: appBlue,
+                                        size: 42.r,
                                       ),
                                     ),
-                                    progressIndicatorBuilder:
-                                        (context, url, download) {
-                                      return CircleAvatar(
-                                        radius: 47.5.r,
-                                        backgroundColor: weirdBlack50,
-                                      );
-                                    },
-                                    imageBuilder: (context, provider) {
-                                      return GestureDetector(
-                                        onTap: () => context.router.pushNamed(
-                                          Pages.viewMedia,
-                                          extra: ViewInfo(
-                                            current: 0,
-                                            type: DisplayType.network,
-                                            paths: [student.image],
-                                          ),
-                                        ),
-                                        child: CircleAvatar(
-                                          backgroundImage: provider,
-                                          radius: 47.5.r,
-                                        ),
-                                      );
-                                    },
                                   ),
+                              progressIndicatorBuilder:
+                                  (context, url, download) {
+                                return CircleAvatar(
+                                  radius: 47.5.r,
+                                  backgroundColor: weirdBlack50,
+                                );
+                              },
+                              imageBuilder: (context, provider) {
+                                return GestureDetector(
+                                  onTap: () =>
+                                      context.router.pushNamed(
+                                        Pages.viewMedia,
+                                        extra: ViewInfo(
+                                          current: 0,
+                                          type: DisplayType.network,
+                                          paths: [student.image],
+                                        ),
+                                      ),
+                                  child: CircleAvatar(
+                                    backgroundImage: provider,
+                                    radius: 47.5.r,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                         Positioned(
@@ -227,7 +232,9 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                             children: [
                               TextSpan(
                                 text:
-                                    "${acquiredHostels < 10 ? "0" : ""}$acquiredHostels",
+                                "${acquiredHostels < 10
+                                    ? "0"
+                                    : ""}$acquiredHostels",
                                 style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack75,
                                     fontWeight: FontWeight.w600),
@@ -248,7 +255,9 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                             children: [
                               TextSpan(
                                 text:
-                                    "${acquiredRoommates < 10 ? "0" : ""}$acquiredRoommates",
+                                "${acquiredRoommates < 10
+                                    ? "0"
+                                    : ""}$acquiredRoommates",
                                 style: context.textTheme.bodySmall!.copyWith(
                                   color: weirdBlack75,
                                   fontWeight: FontWeight.w600,
@@ -270,11 +279,12 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
-                          onTap: () => showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => const _RoommateActivation(),
-                          ),
+                          onTap: () =>
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (_) => const _RoommateActivation(),
+                              ),
                           child: Container(
                             width: 180.w,
                             height: 50.h,
@@ -394,7 +404,58 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                     ),
                     SizedBox(height: 15.h),
                     if (student.hasCompletedProfile > 20)
+                    Column(
+                      children: [
+                        ProfileInfoCard(
+                          image: "assets/images/Profile Phone.svg",
+                          header: student.contact,
+                          text: "Phone Number",
+                        ),
+                        SizedBox(height: 15.h),
+                      ]
+                    ),
+                    if (student.hasCompletedProfile > 20)
                       BasicStudentInfo(student: student),
+                    if (student.hasCompletedProfile > 20)
+                      Column(
+                          children: [
+                            SizedBox(height: 20.h),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minWidth: 414.w,
+                                minHeight: 1.h,
+                                maxWidth: 414.w,
+                                maxHeight: 1.h,
+                              ),
+                              child: const ColoredBox(color: Colors.black12),
+                            ),
+                            SizedBox(height: 20.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "About",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
+                                ),
+                                Text(
+                                  "Private to you",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 15.h),
+                            ProfileInfoCard(
+                              image: "assets/images/Profile Phone.svg",
+                              header: student.guardian,
+                              text: "Guardians Phone Number",
+                            ),
+                          ]
+                      ),
                     if (student.hasCompletedProfile <= 20)
                       SizedBox(
                         height: 450.r,
@@ -415,9 +476,9 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                                 children: [
                                   TextSpan(
                                     text:
-                                        "Unlock the full experience! Your profile details are empty. ",
+                                    "Unlock the full experience! Your profile details are empty. ",
                                     style:
-                                        context.textTheme.bodyMedium!.copyWith(
+                                    context.textTheme.bodyMedium!.copyWith(
                                       color: weirdBlack75,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -425,12 +486,14 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                                   TextSpan(
                                     text: "Complete my profile",
                                     style:
-                                        context.textTheme.bodyMedium!.copyWith(
+                                    context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: appBlue,
                                     ),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => context.router.pushNamed(Pages.editProfile),
+                                      ..onTap = () =>
+                                          context.router.pushNamed(
+                                              Pages.editProfile),
                                   )
                                 ],
                               ),
@@ -484,7 +547,9 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
     List<String> locations = ref.watch(locationProvider);
 
     return Padding(
-      padding: MediaQuery.of(context).viewInsets,
+      padding: MediaQuery
+          .of(context)
+          .viewInsets,
       child: SizedBox(
         height: 450.h,
         width: 414.w,
@@ -494,212 +559,213 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
             slivers: [
               !activated
                   ? SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 10.h),
-                          Center(
-                              child: SvgPicture.asset(
-                                  "assets/images/Modal Line.svg")),
-                          SizedBox(height: 25.h),
-                          Center(
-                            child: Text(
-                              "Activate Availability for Partnering",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: weirdBlack,
-                              ),
-                            ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    Center(
+                        child: SvgPicture.asset(
+                            "assets/images/Modal Line.svg")),
+                    SizedBox(height: 25.h),
+                    Center(
+                      child: Text(
+                        "Activate Availability for Partnering",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Center(
+                      child: Text(
+                        "Writing a comment helps your colleague to vividly understand the status of this hostel.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack50,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 32.h),
+                    Text(
+                      "Have you gotten a hostel?",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 8.h),
+                    ComboBox(
+                      hint: "Yes/No",
+                      value: gottenHostel,
+                      dropdownItems: const ["Yes", "No"],
+                      onChanged: (val) =>
+                          setState(() => gottenHostel = val),
+                      icon: const Icon(Boxicons.bxs_down_arrow),
+                      buttonWidth: 414.w,
+                      dropdownWidth: 370.w,
+                    ),
+                    SizedBox(height: 16.h),
+                    if (gottenHostel != null && gottenHostel == "Yes")
+                      Text(
+                        "Hostel Address",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    if (gottenHostel != null && gottenHostel == "Yes")
+                      SizedBox(height: 8.h),
+                    if (gottenHostel != null && gottenHostel == "Yes")
+                      SizedBox(
+                        height: 170.h,
+                        child: GridView.builder(
+                          gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisExtent: 40.h,
+                            mainAxisSpacing: 20.h,
+                            crossAxisSpacing: 20.w,
                           ),
-                          SizedBox(height: 12.h),
-                          Center(
-                            child: Text(
-                              "Writing a comment helps your colleague to vividly understand the status of this hostel.",
-                              textAlign: TextAlign.center,
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack50,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 32.h),
-                          Text(
-                            "Have you gotten a hostel?",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(height: 8.h),
-                          ComboBox(
-                            hint: "Yes/No",
-                            value: gottenHostel,
-                            dropdownItems: const ["Yes", "No"],
-                            onChanged: (val) =>
-                                setState(() => gottenHostel = val),
-                            icon: const Icon(Boxicons.bxs_down_arrow),
-                            buttonWidth: 414.w,
-                            dropdownWidth: 370.w,
-                          ),
-                          SizedBox(height: 16.h),
-                          if (gottenHostel != null && gottenHostel == "Yes")
-                            Text(
-                              "Hostel Address",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  color: weirdBlack75,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          if (gottenHostel != null && gottenHostel == "Yes")
-                            SizedBox(height: 8.h),
-                          if (gottenHostel != null && gottenHostel == "Yes")
-                            SizedBox(
-                              height: 170.h,
-                              child: GridView.builder(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  mainAxisExtent: 40.h,
-                                  mainAxisSpacing: 20.h,
-                                  crossAxisSpacing: 20.w,
-                                ),
-                                itemCount: locations.length,
-                                itemBuilder: (_, index) => GestureDetector(
-                                  onTap: () =>
-                                      setState(() => selectedLocation = index),
-                                  child: Container(
-                                    height: 40.h,
-                                    width: 105.w,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: selectedLocation != null &&
-                                                    selectedLocation == index
-                                                ? appBlue
-                                                : fadedBorder),
-                                        borderRadius:
-                                            BorderRadius.circular(5.r),
+                          itemCount: locations.length,
+                          itemBuilder: (_, index) =>
+                              GestureDetector(
+                                onTap: () =>
+                                    setState(() => selectedLocation = index),
+                                child: Container(
+                                  height: 40.h,
+                                  width: 105.w,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: selectedLocation != null &&
+                                              selectedLocation == index
+                                              ? appBlue
+                                              : fadedBorder),
+                                      borderRadius:
+                                      BorderRadius.circular(5.r),
+                                      color: selectedLocation != null &&
+                                          selectedLocation == index
+                                          ? paleBlue
+                                          : null),
+                                  child: Text(
+                                    locations[index],
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
                                         color: selectedLocation != null &&
-                                                selectedLocation == index
-                                            ? paleBlue
-                                            : null),
-                                    child: Text(
-                                      locations[index],
-                                      style: context.textTheme.bodyMedium!
-                                          .copyWith(
-                                              color: selectedLocation != null &&
-                                                      selectedLocation == index
-                                                  ? appBlue
-                                                  : weirdBlack50,
-                                              fontWeight: FontWeight.w500),
-                                    ),
+                                            selectedLocation == index
+                                            ? appBlue
+                                            : weirdBlack50,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
-                            ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Amount",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(height: 8.h),
-                          SpecialForm(
-                            controller: amount,
-                            width: 414.w,
-                            height: 50.h,
-                            hint: "00.00",
-                            type: TextInputType.number,
-                          ),
-                          SizedBox(height: 40.h),
-                          GestureDetector(
-                            onTap: () {
-                              if (!isFilled()) return;
-                              setState(() => activated = true);
-                            },
-                            child: Container(
-                              width: 414.w,
-                              height: 50.h,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: isFilled()
-                                    ? appBlue
-                                    : appBlue.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(5.r),
-                              ),
-                              child: Text(
-                                "Activate",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                        ],
+                        ),
                       ),
-                    )
-                  : SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 10.h),
-                          SvgPicture.asset("assets/images/Modal Line.svg"),
-                          SizedBox(height: 55.h),
-                          Center(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15.r),
-                                topRight: Radius.circular(15.r),
-                              ),
-                              child: Image.asset(
-                                "assets/images/Open To.png",
-                                width: 135.r,
-                                height: 135.h,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "Activated Successfully",
-                            style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: weirdBlack,
-                            ),
-                          ),
-                          SizedBox(height: 12.h),
-                          Text(
-                            "You're now open to collaborate with other students as your roommate",
-                            textAlign: TextAlign.center,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: weirdBlack50,
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Amount",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 8.h),
+                    SpecialForm(
+                      controller: amount,
+                      width: 414.w,
+                      height: 50.h,
+                      hint: "00.00",
+                      type: TextInputType.number,
+                    ),
+                    SizedBox(height: 40.h),
+                    GestureDetector(
+                      onTap: () {
+                        if (!isFilled()) return;
+                        setState(() => activated = true);
+                      },
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isFilled()
+                              ? appBlue
+                              : appBlue.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          "Activate",
+                          style: context.textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 50.h),
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 414.w,
-                              height: 50.h,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: isFilled()
-                                    ? appBlue
-                                    : appBlue.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(5.r),
-                              ),
-                              child: Text(
-                                "Ok, Thanks",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
+                              color: Colors.white),
+                        ),
                       ),
                     ),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              )
+                  : SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 10.h),
+                    SvgPicture.asset("assets/images/Modal Line.svg"),
+                    SizedBox(height: 55.h),
+                    Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.r),
+                          topRight: Radius.circular(15.r),
+                        ),
+                        child: Image.asset(
+                          "assets/images/Open To.png",
+                          width: 135.r,
+                          height: 135.h,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Activated Successfully",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: weirdBlack,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      "You're now open to collaborate with other students as your roommate",
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack50,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 50.h),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isFilled()
+                              ? appBlue
+                              : appBlue.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          "Ok, Thanks",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

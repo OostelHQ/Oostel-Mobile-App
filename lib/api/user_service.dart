@@ -337,7 +337,8 @@ Future<FyndaResponse> updateAgentProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
+Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = ""}) async {
   log("$map");
 
   try {
@@ -361,15 +362,19 @@ Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map, {String pr
   );
 }
 
-Future<FyndaResponse> studentProfile(Map<String, dynamic> map, {String profilePictureFilePath = "", required int completionLevel}) async {
-  if(completionLevel <= 20) {
-    return _createStudentProfile(map, profilePictureFilePath: profilePictureFilePath);
+Future<FyndaResponse> studentProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = "", required int completionLevel}) async {
+  if (completionLevel <= 20) {
+    return _createStudentProfile(map,
+        profilePictureFilePath: profilePictureFilePath);
   } else {
-    return _updateStudentProfile(map, profilePictureFilePath: profilePictureFilePath);
+    return _updateStudentProfile(map,
+        profilePictureFilePath: profilePictureFilePath);
   }
 }
 
-Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
+Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.put(
       "/user-profile/update-student-profile",
@@ -597,6 +602,14 @@ Future<FyndaResponse> likeStudentProfile(Map<String, dynamic> map) async {
   return const FyndaResponse(
     message: "An error occurred. Please try again.",
     payload: null,
+    success: false,
+  );
+}
+
+Future<FyndaResponse<List<Student>>> getAvailableRoommates() async {
+  return const FyndaResponse(
+    message: "An error occurred. Please try again",
+    payload: [],
     success: false,
   );
 }

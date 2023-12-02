@@ -128,7 +128,7 @@ class _StepOneState extends ConsumerState<StepOne> {
                 GestureDetector(
                   onTap: () => setState(() => info["hostelCategory"] = 1),
                   child: Container(
-                      width: 390.w,
+                    width: 390.w,
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FBFF),
                       borderRadius: BorderRadius.circular(4.r),
@@ -141,8 +141,8 @@ class _StepOneState extends ConsumerState<StepOne> {
                       ],
                     ),
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -212,8 +212,8 @@ class _StepOneState extends ConsumerState<StepOne> {
                       ],
                     ),
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -283,8 +283,8 @@ class _StepOneState extends ConsumerState<StepOne> {
                       ],
                     ),
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -354,8 +354,8 @@ class _StepOneState extends ConsumerState<StepOne> {
                       ],
                     ),
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -485,10 +485,18 @@ class _StepTwoState extends State<StepTwo> {
     super.initState();
     name = TextEditingController(text: widget.info["hostelName"]);
     description = TextEditingController(text: widget.info["hostelDescription"]);
-    rooms = TextEditingController(text: "${widget.info["totalRoom"] == 0 ? "" : widget.info["totalRoom"]}");
-    area = TextEditingController(text: "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
-    minPrice = TextEditingController(text: "${widget.info["minPrice"] == 0.0 ? "" : widget.info["minPrice"].toStringAsFixed(0)}");
-    maxPrice = TextEditingController(text: "${widget.info["maxPrice"] == 0.0 ? "" : widget.info["maxPrice"].toStringAsFixed(0)}");
+    rooms = TextEditingController(
+        text:
+            "${widget.info["totalRoom"] == 0 ? "" : widget.info["totalRoom"]}");
+    area = TextEditingController(
+        text:
+            "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
+    minPrice = TextEditingController(
+        text:
+            "${widget.info["minPrice"] == 0.0 ? "" : widget.info["minPrice"].toStringAsFixed(0)}");
+    maxPrice = TextEditingController(
+        text:
+            "${widget.info["maxPrice"] == 0.0 ? "" : widget.info["maxPrice"].toStringAsFixed(0)}");
   }
 
   @override
@@ -503,12 +511,12 @@ class _StepTwoState extends State<StepTwo> {
   }
 
   bool get isFilled {
-    if(name.text.trim().isEmpty) return false;
-    if(description.text.trim().isEmpty) return false;
-    if(rooms.text.trim().isEmpty) return false;
-    if(area.text.trim().isEmpty) return false;
-    if(minPrice.text.trim().isEmpty) return false;
-    if(maxPrice.text.trim().isEmpty) return false;
+    if (name.text.trim().isEmpty) return false;
+    if (description.text.trim().isEmpty) return false;
+    if (rooms.text.trim().isEmpty) return false;
+    if (area.text.trim().isEmpty) return false;
+    if (minPrice.text.trim().isEmpty) return false;
+    if (maxPrice.text.trim().isEmpty) return false;
     return true;
   }
 
@@ -726,57 +734,56 @@ class _StepTwoState extends State<StepTwo> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SpecialForm(
-                        controller: minPrice,
-                        width: 170.w,
-                        height: 50.h,
-                        type: TextInputType.number,
-                        hint: "i.e 100 000",
-                        onValidate: (val) {
-                          if (val == null ||
-                              val!.trim().isEmpty ||
-                              double.tryParse(val!) == null) {
-                            showError(
-                                "Please enter a valid minimum price for your hostel.");
-                            return '';
-                          }
-                          return null;
-                        },
-                        onSave: (val) =>
-                        widget.info["minPrice"] = double.parse(val!),
-                        onChange: (val) => textChecker(
-                          text: val,
-                          onAction: () => setState(() {}),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SpecialForm(
+                          controller: minPrice,
+                          width: 170.w,
+                          height: 50.h,
+                          type: TextInputType.number,
+                          hint: "i.e 100 000",
+                          onValidate: (val) {
+                            if (val == null ||
+                                val!.trim().isEmpty ||
+                                double.tryParse(val!) == null) {
+                              showError(
+                                  "Please enter a valid minimum price for your hostel.");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) =>
+                              widget.info["minPrice"] = double.parse(val!),
+                          onChange: (val) => textChecker(
+                            text: val,
+                            onAction: () => setState(() {}),
+                          ),
                         ),
-                      ),
-                      SpecialForm(
-                        controller: maxPrice,
-                        width: 170.w,
-                        height: 50.h,
-                        type: TextInputType.number,
-                        hint: "i.e 500 000",
-                        onValidate: (val) {
-                          if (val == null ||
-                              val!.trim().isEmpty ||
-                              double.tryParse(val!) == null) {
-                            showError(
-                                "Please enter a valid maximum price for your hostel.");
-                            return '';
-                          }
-                          return null;
-                        },
-                        onSave: (val) =>
-                        widget.info["maxPrice"] = double.parse(val!),
-                        onChange: (val) => textChecker(
-                          text: val,
-                          onAction: () => setState(() {}),
+                        SpecialForm(
+                          controller: maxPrice,
+                          width: 170.w,
+                          height: 50.h,
+                          type: TextInputType.number,
+                          hint: "i.e 500 000",
+                          onValidate: (val) {
+                            if (val == null ||
+                                val!.trim().isEmpty ||
+                                double.tryParse(val!) == null) {
+                              showError(
+                                  "Please enter a valid maximum price for your hostel.");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) =>
+                              widget.info["maxPrice"] = double.parse(val!),
+                          onChange: (val) => textChecker(
+                            text: val,
+                            onAction: () => setState(() {}),
+                          ),
                         ),
-                      ),
-                    ]
-                  ),
+                      ]),
                   SizedBox(height: 100.h),
                 ],
               ),
@@ -1457,7 +1464,18 @@ class _StepFourState extends State<StepFour> {
                     ),
                   ),
                 ),
-                SizedBox(height: 360.h),
+                SizedBox(height: 300.h),
+                GestureDetector(
+                    onTap: () =>
+                        context.router.pushNamed(Pages.tenantAgreement),
+                    child: Text("Tenant Agreement",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: appBlue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                    ),
+                ),
+                SizedBox(height: 60.h),
               ],
             ),
           ),
@@ -1570,13 +1588,7 @@ class _StepFiveState extends State<StepFive> {
     "assets/images/Security-On.svg",
   ];
 
-  final List<String> names = [
-    "Light",
-    "Tap",
-    "Well",
-    "Pool",
-    "Security"
-  ];
+  final List<String> names = ["Light", "Tap", "Well", "Pool", "Security"];
 
   late List<String> facilities;
 
@@ -2087,28 +2099,25 @@ class _StepSixHalfState extends State<StepSixHalf> {
     media = media.sublist(1);
   }
 
-
   void selectMedia() {
-    if(media.length == 4) {
+    if (media.length == 4) {
       showError("You cannot select more than 4 media");
       return;
     }
 
     FileManager.multiple(
-        type: FileType.custom,
-        extensions: ["mp4", "jpg", "png", "jpeg"]).then(
-          (response) async {
-
+        type: FileType.custom, extensions: ["mp4", "jpg", "png", "jpeg"]).then(
+      (response) async {
         String videoPath = "";
-        for(int i = 0; i < response.length; ++i) {
-          if(response[i].extension == "mp4") {
+        for (int i = 0; i < response.length; ++i) {
+          if (response[i].extension == "mp4") {
             videoPath = response[i].path;
           }
         }
 
         media.addAll(response);
 
-        if(videoPath.isNotEmpty) {
+        if (videoPath.isNotEmpty) {
           videoData = await VideoThumbnail.thumbnailData(
             video: videoPath,
             imageFormat: ImageFormat.JPEG,
@@ -2117,8 +2126,8 @@ class _StepSixHalfState extends State<StepSixHalf> {
             quality: 75,
           );
 
-          for(int i = 0; i < media.length; ++i) {
-            if(media[i].path == videoPath) {
+          for (int i = 0; i < media.length; ++i) {
+            if (media[i].path == videoPath) {
               videoDataIndex = i;
             }
           }
@@ -2213,88 +2222,92 @@ class _StepSixHalfState extends State<StepSixHalf> {
                   if (index == media.length) {
                     return Column(
                       children: [
-                        if(media.isEmpty)
+                        if (media.isEmpty)
                           GestureDetector(
                             onTap: selectMedia,
                             child: Container(
-                            width: 350.w,
-                            height: 270.h,
-                            padding: EdgeInsets.symmetric(horizontal: 25.w),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              color: media.isEmpty ? paleBlue : null,
-                              image: media.isEmpty
-                                  ? null
-                                  : DecorationImage(
-                                image: FileImage(File(media.first.path)),
-                                fit: BoxFit.cover,
+                              width: 350.w,
+                              height: 270.h,
+                              padding: EdgeInsets.symmetric(horizontal: 25.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                color: media.isEmpty ? paleBlue : null,
+                                image: media.isEmpty
+                                    ? null
+                                    : DecorationImage(
+                                        image:
+                                            FileImage(File(media.first.path)),
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
+                              child: media.isEmpty
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/images/Hostel Image.svg",
+                                          width: 40.r,
+                                          height: 40.r,
+                                        ),
+                                        SizedBox(height: 16.h),
+                                        Text(
+                                          "Upload a video (optional) or images of your hostel",
+                                          textAlign: TextAlign.center,
+                                          style: context.textTheme.bodyMedium!
+                                              .copyWith(
+                                            color: weirdBlack,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        Text(
+                                          "Maximum size allowed is 2MB for images and 50MB for video",
+                                          textAlign: TextAlign.center,
+                                          style: context.textTheme.bodyMedium!
+                                              .copyWith(
+                                            color: weirdBlack75,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : null,
                             ),
-                            child: media.isEmpty
-                                ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/images/Hostel Image.svg",
-                                  width: 40.r,
-                                  height: 40.r,
-                                ),
-                                SizedBox(height: 16.h),
-                                Text(
-                                  "Upload a video (optional) or images of your hostel",
-                                  textAlign: TextAlign.center,
-                                  style:
-                                  context.textTheme.bodyMedium!.copyWith(
-                                    color: weirdBlack,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  "Maximum size allowed is 2MB for images and 50MB for video",
-                                  textAlign: TextAlign.center,
-                                  style:
-                                  context.textTheme.bodyMedium!.copyWith(
-                                    color: weirdBlack75,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              ],
-                            )
-                                : null,
-                        ),
                           ),
                         SizedBox(height: media.isEmpty ? 32.h : 20.h),
-                        if(media.isNotEmpty)
-                        GestureDetector(
-                          onTap: selectMedia,
-                          child: Container(
-                            width: 160.w,
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.r),
-                              color: paleBlue,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.add_circle_outline,
-                                    color: appBlue, size: 16),
-                                SizedBox(width: 10.w),
-                                Text(
-                                  "Add media",
-                                  textAlign: TextAlign.center,
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )
-                              ],
+                        if (media.isNotEmpty)
+                          GestureDetector(
+                            onTap: selectMedia,
+                            child: Container(
+                              width: 160.w,
+                              height: 50.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.r),
+                                color: paleBlue,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.add_circle_outline,
+                                      color: appBlue, size: 16),
+                                  SizedBox(width: 10.w),
+                                  Text(
+                                    "Add media",
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: appBlue,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                         SizedBox(height: 32.h),
                       ],
                     );
@@ -2303,7 +2316,7 @@ class _StepSixHalfState extends State<StepSixHalf> {
                   return _SpecialContainer(
                     onDelete: () => setState(() {
                       media.removeAt(index);
-                      if(videoDataIndex != null && index == videoDataIndex) {
+                      if (videoDataIndex != null && index == videoDataIndex) {
                         videoDataIndex = null;
                         videoData = null;
                       }
@@ -2359,8 +2372,8 @@ class _StepSixHalfState extends State<StepSixHalf> {
               onTap: () {
                 int total = media.length;
                 int videos = 0;
-                for(var resp in media) {
-                  if(resp.extension == "mp4") {
+                for (var resp in media) {
+                  if (resp.extension == "mp4") {
                     ++videos;
                   }
                 }
@@ -2370,7 +2383,7 @@ class _StepSixHalfState extends State<StepSixHalf> {
                   return;
                 }
 
-                if(videos > 1) {
+                if (videos > 1) {
                   showError("You can only select 1 video");
                   return;
                 }
@@ -2412,7 +2425,6 @@ class _StepSixHalfState extends State<StepSixHalf> {
       ),
     );
   }
-
 }
 
 class _SpecialContainer extends StatelessWidget {
@@ -2438,44 +2450,46 @@ class _SpecialContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-          width: 390.w,
-          height: 270.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.r),
-            image: DecorationImage(
-              image: provider,
-              fit: BoxFit.cover,
+      width: 390.w,
+      height: 270.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        image: DecorationImage(
+          image: provider,
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Container(
+            width: 390.w,
+            height: 270.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.r),
+              color: Colors.black45,
             ),
+            child: data != null
+                ? Center(
+                    child: Icon(
+                      Icons.play_arrow_rounded,
+                      size: 48.r,
+                      color: Colors.white,
+                    ),
+                  )
+                : null,
           ),
-          child: Stack(
-            children: [
-              Container(
-                width: 390.w,
-                height: 270.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.r),
-                  color: Colors.black45,
-                ),
-                child: data != null ? Center(
-                  child: Icon(
-                    Icons.play_arrow_rounded,
-                    size: 48.r,
-                    color: Colors.white,
-                  ),
-                ) : null,
-              ),
-              Positioned(
-                top: 5.h,
-                right: 0,
-                child: IconButton(
-                  icon: const Icon(Boxicons.bx_x, color: Colors.white),
-                  iconSize: 28.r,
-                  onPressed: onDelete,
-                ),
-              )
-            ],
-          ),
-        );
+          Positioned(
+            top: 5.h,
+            right: 0,
+            child: IconButton(
+              icon: const Icon(Boxicons.bx_x, color: Colors.white),
+              iconSize: 28.r,
+              onPressed: onDelete,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -3792,7 +3806,6 @@ class StepTen extends StatefulWidget {
 }
 
 class _StepTenState extends State<StepTen> {
-
   late List<int> totalProps;
   late List<SingleFileResponse> media;
   late List<String> facilities, rules;
@@ -3843,20 +3856,18 @@ class _StepTenState extends State<StepTen> {
     ];
   }
 
-  void navigate() =>
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => _CreateHostelModal(vacancy: vacantRooms),
-      isDismissible: false,
-    ).then(
-          (resp) {
-        context.router.goNamed(Pages.ownerDashboard);
-      },
-    );
+  void navigate() => showModalBottomSheet(
+        context: context,
+        builder: (context) => _CreateHostelModal(vacancy: vacantRooms),
+        isDismissible: false,
+      ).then(
+        (resp) {
+          context.router.goNamed(Pages.ownerDashboard);
+        },
+      );
 
   Future<void> create() async {
-    createHostel(widget.info)
-        .then((resp) {
+    createHostel(widget.info).then((resp) {
       if (!mounted) return;
       if (!resp.success) {
         showError(resp.message);
@@ -3927,7 +3938,7 @@ class _StepTenState extends State<StepTen> {
                       SizedBox(height: 12.h),
                       Text(
                         "Before going live, get a preview of your hostel details and ensure your "
-                            "listing is (are) ready to impress potential tenants.",
+                        "listing is (are) ready to impress potential tenants.",
                         textAlign: TextAlign.center,
                         style: context.textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w500,
@@ -3935,13 +3946,12 @@ class _StepTenState extends State<StepTen> {
                         ),
                       ),
                       SizedBox(height: 44.h),
-                    ]
-                ),
+                    ]),
               ),
             ),
           ],
           body: Container(
-            width: 300.w,
+              width: 300.w,
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FBFF),
                 borderRadius: BorderRadius.circular(10.r),
@@ -4011,7 +4021,8 @@ class _StepTenState extends State<StepTen> {
                             "${widget.info["street"]}, ${widget.info["junction"]}, ${widget.info["state"]}, ${widget.info["country"]}",
                             overflow: TextOverflow.ellipsis,
                             style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack75, fontWeight: FontWeight.w500),
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8.h),
                           Row(
@@ -4030,9 +4041,10 @@ class _StepTenState extends State<StepTen> {
                                   SizedBox(width: 5.w),
                                   Text(
                                     "$availableRooms",
-                                    style: context.textTheme.bodySmall!.copyWith(
-                                        color: weirdBlack50,
-                                        fontWeight: FontWeight.w500),
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -4048,9 +4060,10 @@ class _StepTenState extends State<StepTen> {
                                   SizedBox(width: 5.w),
                                   Text(
                                     "${totalProps[0]}",
-                                    style: context.textTheme.bodySmall!.copyWith(
-                                        color: weirdBlack50,
-                                        fontWeight: FontWeight.w500),
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -4066,9 +4079,10 @@ class _StepTenState extends State<StepTen> {
                                   SizedBox(width: 5.w),
                                   Text(
                                     "${totalProps[1]}",
-                                    style: context.textTheme.bodySmall!.copyWith(
-                                        color: weirdBlack50,
-                                        fontWeight: FontWeight.w500),
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -4084,9 +4098,10 @@ class _StepTenState extends State<StepTen> {
                                   SizedBox(width: 5.w),
                                   Text(
                                     "${totalProps[2]}",
-                                    style: context.textTheme.bodySmall!.copyWith(
-                                        color: weirdBlack50,
-                                        fontWeight: FontWeight.w500),
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -4102,9 +4117,10 @@ class _StepTenState extends State<StepTen> {
                                   SizedBox(width: 5.w),
                                   Text(
                                     "${(widget.info["homeSize"]).toStringAsFixed(0)} sqft",
-                                    style: context.textTheme.bodySmall!.copyWith(
-                                        color: weirdBlack50,
-                                        fontWeight: FontWeight.w500),
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -4116,7 +4132,7 @@ class _StepTenState extends State<StepTen> {
                               children: [
                                 TextSpan(
                                   text:
-                                  "${currency()}${minBudget}k - ${currency()}${maxBudget}k",
+                                      "${currency()}${minBudget}k - ${currency()}${maxBudget}k",
                                   style: context.textTheme.bodyLarge!.copyWith(
                                     color: appBlue,
                                     fontFamily: "Inter",
@@ -4173,7 +4189,7 @@ class _StepTenState extends State<StepTen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: List.generate(
                               rules.length,
-                                  (index) => Text(
+                              (index) => Text(
                                 "${index + 1}. ${rules[index]}",
                                 style: context.textTheme.bodyMedium!.copyWith(
                                   color: weirdBlack75,
@@ -4198,8 +4214,7 @@ class _StepTenState extends State<StepTen> {
                   SliverPadding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     sliver: SliverGrid.builder(
-                      gridDelegate:
-                      SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                           crossAxisSpacing: 5.r,
                           mainAxisSpacing: 5.r,
@@ -4216,27 +4231,23 @@ class _StepTenState extends State<StepTen> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 16.h),
-                                if(rooms.isNotEmpty)
-                                  Text(
-                                    "Available Rooms",
-                                    style: context.textTheme.bodyLarge!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: weirdBlack,
-                                    ),
-                                  ),
-                                if(rooms.isNotEmpty)
-                                  SizedBox(height: 8.h),
-                              ]
-                          )
-                      )
-                  ),
-                  if(rooms.isNotEmpty)
+                            SizedBox(height: 16.h),
+                            if (rooms.isNotEmpty)
+                              Text(
+                                "Available Rooms",
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack,
+                                ),
+                              ),
+                            if (rooms.isNotEmpty) SizedBox(height: 8.h),
+                          ]))),
+                  if (rooms.isNotEmpty)
                     SliverPadding(
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         sliver: SliverGrid.builder(
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 15.r,
                             mainAxisSpacing: 15.r,
@@ -4248,33 +4259,27 @@ class _StepTenState extends State<StepTen> {
                             isAsset: false,
                             onTap: () {},
                           ),
-                        )
-                    ),
+                        )),
                   SliverPadding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       sliver: SliverToBoxAdapter(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if(rooms.isNotEmpty)
-                                  SizedBox(height: 16.h),
-                                Text(
-                                  "Gallery",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                              ]
-                          )
-                      )
-                  ),
+                            if (rooms.isNotEmpty) SizedBox(height: 16.h),
+                            Text(
+                              "Gallery",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: weirdBlack,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                          ]))),
                   SliverPadding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       sliver: SliverGrid.builder(
-                        gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 10.r,
                           mainAxisSpacing: 10.r,
@@ -4290,11 +4295,9 @@ class _StepTenState extends State<StepTen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      )
-                  )
+                      ))
                 ],
-              )
-          ),
+              )),
         ),
       ),
       bottomNavigationBar: Container(
@@ -4386,6 +4389,7 @@ List<SingleFileResponse> toDataList(List<dynamic> list) {
 
 class _CreateHostelModal extends StatelessWidget {
   final bool vacancy;
+
   const _CreateHostelModal({super.key, required this.vacancy});
 
   @override
@@ -4430,9 +4434,9 @@ class _CreateHostelModal extends StatelessWidget {
                   Text(
                     vacancy
                         ? "Congratulations! Your hostel listing is now live and ready "
-                        "for tenant inquiries. Welcome guests to your property."
+                            "for tenant inquiries. Welcome guests to your property."
                         : "Great news! Your hostel is successfully created. Start attracting tenants by "
-                        "listing the vacancy rooms and managing your property effortlessly.",
+                            "listing the vacancy rooms and managing your property effortlessly.",
                     textAlign: TextAlign.center,
                     style: context.textTheme.bodyMedium!.copyWith(
                       color: weirdBlack50,
@@ -4470,4 +4474,3 @@ class _CreateHostelModal extends StatelessWidget {
     );
   }
 }
-
