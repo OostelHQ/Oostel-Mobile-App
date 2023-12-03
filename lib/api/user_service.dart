@@ -8,7 +8,6 @@ import 'base.dart';
 Future<FyndaResponse> registerUser(Map<String, dynamic> map,
     {bool agent = false}) async {
   try {
-    print(map.toString());
     FormData formData = FormData.fromMap(map);
     Response response = await dio.post(
         "/authenticateuser/register-${agent ? "agent" : "user"}",
@@ -20,6 +19,7 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
           message: response.data["message"], payload: null, success: true);
     }
   } catch (e) {
+    print(e.toString());
     log("Register User Error: $e");
   }
 
