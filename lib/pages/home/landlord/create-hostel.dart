@@ -2433,7 +2433,6 @@ class _SpecialContainer extends StatelessWidget {
   final VoidCallback onDelete;
 
   const _SpecialContainer({
-    super.key,
     this.data,
     required this.file,
     required this.onDelete,
@@ -3070,7 +3069,7 @@ class _StepEightState extends State<StepEight> {
 }
 
 class _NoRoom extends StatelessWidget {
-  const _NoRoom({super.key});
+  const _NoRoom();
 
   @override
   Widget build(BuildContext context) {
@@ -3115,7 +3114,6 @@ class _CreateRoomCard extends StatelessWidget {
   final RoomInfo info;
 
   const _CreateRoomCard({
-    super.key,
     required this.info,
   });
 
@@ -4391,7 +4389,7 @@ List<SingleFileResponse> toDataList(List<dynamic> list) {
 class _CreateHostelModal extends StatelessWidget {
   final bool vacancy;
 
-  const _CreateHostelModal({super.key, required this.vacancy});
+  const _CreateHostelModal({required this.vacancy});
 
   @override
   Widget build(BuildContext context) {

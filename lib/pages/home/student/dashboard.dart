@@ -1,8 +1,6 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -131,7 +129,7 @@ class _StudentDashboardPageState extends ConsumerState<StudentDashboardPage> {
 }
 
 class _HomePage extends ConsumerStatefulWidget {
-  const _HomePage({super.key});
+  const _HomePage();
 
   @override
   ConsumerState<_HomePage> createState() => _HomePageState();

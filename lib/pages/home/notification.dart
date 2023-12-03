@@ -85,7 +85,6 @@ class _NotificationCard extends StatelessWidget {
   final VoidCallback onRemove;
 
   const _NotificationCard({
-    super.key,
     required this.data,
     required this.onRemove,
   });

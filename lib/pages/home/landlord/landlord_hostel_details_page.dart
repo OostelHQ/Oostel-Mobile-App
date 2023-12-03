@@ -362,7 +362,6 @@ class _AboutSection extends StatelessWidget {
   final HostelInfo info;
 
   const _AboutSection({
-    super.key,
     required this.info,
   });
 
@@ -522,7 +521,6 @@ class _RoomSection extends StatefulWidget {
   final HostelInfo info;
 
   const _RoomSection({
-    super.key,
     required this.info,
   });
 
@@ -778,10 +776,9 @@ class _RoomSectionState extends State<_RoomSection> {
 class _ShowRoomCard extends StatelessWidget {
   final RoomInfo room;
   final bool isAvailable;
-  final int daysLeft;
+  final int? daysLeft;
 
   const _ShowRoomCard({
-    super.key,
     this.daysLeft = 10,
     required this.room,
     required this.isAvailable,
@@ -1052,7 +1049,7 @@ class _ShowRoomCard extends StatelessWidget {
 }
 
 class _CommentSection extends StatefulWidget {
-  const _CommentSection({super.key});
+  const _CommentSection();
 
   @override
   State<_CommentSection> createState() => _CommentSectionState();

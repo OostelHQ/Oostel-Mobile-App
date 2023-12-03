@@ -119,7 +119,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            likes: [],
+            likes: const [],
             hostelFacilities: const [
               "Light",
               "Water",
@@ -254,7 +254,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            likes: [],
+            likes: const [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -400,7 +400,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            likes: [],
+            likes: const [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -546,7 +546,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             bathrooms: 1,
             area: 2500,
             price: 100000,
-            likes: [],
+            likes: const [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -690,7 +690,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             image: "assets/images/street.jpg",
             bedrooms: 1,
             bathrooms: 1,
-            likes: [],
+            likes: const [],
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -831,7 +831,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "6",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -977,7 +977,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "7",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -1123,7 +1123,7 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "8",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -1406,7 +1406,7 @@ final StateProvider<List<Student>> acquiredRoommatesProvider =
 final StateProvider<List<HostelInfo>> availableHostelsProvider =
     StateProvider((ref) => [
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "11",
             name: "Manchester Hostel Askj",
             image: "assets/images/street.jpg",
@@ -1552,7 +1552,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "12",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -1698,7 +1698,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "13",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -1844,7 +1844,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "14",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -1990,7 +1990,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "15",
             name: "Manchester Hostel Askj",
             image: "assets/images/street.jpg",
@@ -2136,7 +2136,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "16",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -2282,7 +2282,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "17",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -2428,7 +2428,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "18",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -2574,7 +2574,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "19",
             name: "Manchester Hostel Askj",
             image: "assets/images/street.jpg",
@@ -2720,7 +2720,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "20",
             name: "Liverpool Hostel",
             image: "assets/images/street.jpg",
@@ -2866,7 +2866,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "21",
             name: "Scotland",
             image: "assets/images/street.jpg",
@@ -3012,7 +3012,7 @@ final StateProvider<List<HostelInfo>> availableHostelsProvider =
             ),
           ),
           HostelInfo(
-            likes: [],
+            likes: const [],
             id: "22",
             name: "Grace Ville",
             image: "assets/images/street.jpg",
@@ -3163,7 +3163,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
   (ref) => [
     HostelInfo(
         id: "11",
-      likes: [],
+      likes: const [],
         name: "Manchester Hostel",
         image: "assets/images/street.jpg",
         bedrooms: 1,
@@ -3297,7 +3297,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         owner: defaultOwner,
     ),
     HostelInfo(
-        likes: [],
+        likes: const [],
         id: "12",
         name: "Liverpool Hostel",
         image: "assets/images/street.jpg",
@@ -3431,7 +3431,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         ],
         owner: defaultOwner),
     HostelInfo(
-        likes: [],
+        likes: const [],
         id: "13",
         name: "Scotland",
         image: "assets/images/street.jpg",
@@ -3565,7 +3565,7 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
         ],
         owner: defaultOwner),
     HostelInfo(
-        likes: [],
+        likes: const [],
         id: "14",
         name: "Grace Ville",
         image: "assets/images/street.jpg",

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -566,7 +565,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
 }
 
 class _CommentSection extends StatefulWidget {
-  const _CommentSection({super.key});
+  const _CommentSection();
 
   @override
   State<_CommentSection> createState() => _CommentSectionState();
@@ -685,7 +684,6 @@ class _RoomSection extends StatelessWidget {
   final HostelInfo info;
 
   const _RoomSection({
-    super.key,
     required this.info,
   });
 
@@ -878,7 +876,7 @@ class _RoomSection extends StatelessWidget {
 }
 
 class _WriteComment extends StatefulWidget {
-  const _WriteComment({super.key});
+  const _WriteComment();
 
   @override
   State<_WriteComment> createState() => _WriteCommentState();

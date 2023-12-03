@@ -2,25 +2,18 @@ import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/hostel_info.dart';
-import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
-import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/landlord_widgets.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
-import 'package:my_hostel/api/user_service.dart';
 import '../../chats/chats.dart';
-import '../student/explore.dart';
 
 class LandownerDashboardPage extends ConsumerStatefulWidget {
   const LandownerDashboardPage({super.key});
@@ -155,7 +148,7 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
 
 
 class _HomePage extends ConsumerStatefulWidget {
-  const _HomePage({super.key});
+  const _HomePage();
 
   @override
   ConsumerState<_HomePage> createState() => _HomePageState();

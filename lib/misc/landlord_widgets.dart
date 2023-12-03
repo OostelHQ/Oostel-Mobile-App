@@ -4,7 +4,6 @@ import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 
-import 'widgets.dart';
 
 class LandlordHostelCard extends StatelessWidget {
   final HostelInfo info;

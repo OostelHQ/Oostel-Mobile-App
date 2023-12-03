@@ -515,7 +515,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
 }
 
 class _RoommateActivation extends ConsumerStatefulWidget {
-  const _RoommateActivation({super.key});
+  const _RoommateActivation();
 
   @override
   ConsumerState<_RoommateActivation> createState() =>

@@ -1,14 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/agent.dart';
-import 'package:my_hostel/components/hostel_info.dart';
-import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/receipt_info.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/misc/functions.dart';
@@ -364,7 +359,7 @@ class _ProfilePageState extends ConsumerState<AgentProfilePage> {
 }
 
 class _AccountSwap extends StatefulWidget {
-  const _AccountSwap({super.key});
+  const _AccountSwap();
 
   @override
   State<_AccountSwap> createState() => _AccountSwapState();

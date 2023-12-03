@@ -354,7 +354,6 @@ class _PaymentModal extends StatelessWidget {
   final bool status;
 
   const _PaymentModal({
-    super.key,
     required this.status,
   });
 

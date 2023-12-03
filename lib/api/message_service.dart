@@ -1,4 +1,3 @@
-import 'package:my_hostel/components/user.dart';
 import 'base.dart';
 
 Future<FyndaResponse> getMessages(Map<String, dynamic> map) async {

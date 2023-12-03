@@ -1,6 +1,4 @@
-import 'dart:ffi';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/components/agent.dart';
@@ -10,6 +8,7 @@ import 'base.dart';
 Future<FyndaResponse> registerUser(Map<String, dynamic> map,
     {bool agent = false}) async {
   try {
+    print(map.toString());
     FormData formData = FormData.fromMap(map);
     Response response = await dio.post(
         "/authenticateuser/register-${agent ? "agent" : "user"}",

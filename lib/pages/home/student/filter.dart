@@ -177,7 +177,6 @@ class _HostelFilter extends ConsumerStatefulWidget {
   final TextEditingController maxController;
 
   const _HostelFilter({
-    super.key,
     required this.controllers,
     required this.animations,
     required this.areaController,
@@ -423,7 +422,6 @@ class _RoommateFilter extends ConsumerStatefulWidget {
   final TextEditingController maxController;
 
   const _RoommateFilter({
-    super.key,
     required this.controllers,
     required this.animations,
     required this.areaController,
