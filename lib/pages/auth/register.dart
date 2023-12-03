@@ -30,14 +30,23 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   bool showPassword = false;
   bool readTerms = false;
 
-  final Map<String, dynamic> authDetails = {
-    "emailAddress": "",
-    "password": "",
-    "firstName": "",
-    "lastName": "",
-    "referralCode": "",
-    "roletype": "",
-  };
+  late Map<String, dynamic> authDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    authDetails = {
+      "emailAddress": "",
+      "password": "",
+      "firstName": "",
+      "lastName": "",
+      "roletype": "",
+    };
+
+    if(ref.read(isAgent)) {
+      authDetails["referralCode"] = "";
+    }
+  }
 
   @override
   void dispose() {
