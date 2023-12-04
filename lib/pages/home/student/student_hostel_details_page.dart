@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,6 +72,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
         child: NestedScrollView(
           headerSliverBuilder: (context, isScrolled) => [
             SliverAppBar(
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
               title: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
                 opacity: isCollapsed ? 1 : 0,
