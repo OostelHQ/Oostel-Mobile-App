@@ -1,6 +1,4 @@
-import 'dart:ffi';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/components/agent.dart';
@@ -21,6 +19,7 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
           message: response.data["message"], payload: null, success: true);
     }
   } catch (e) {
+    print(e.toString());
     log("Register User Error: $e");
   }
 

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';

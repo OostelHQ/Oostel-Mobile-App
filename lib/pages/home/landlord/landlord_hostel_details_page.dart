@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -70,6 +71,7 @@ class _LandlordHostelInformationPageState
         child: NestedScrollView(
           headerSliverBuilder: (context, isScrolled) => [
             SliverAppBar(
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
               title: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
                 opacity: isCollapsed ? 1 : 0,
@@ -362,7 +364,6 @@ class _AboutSection extends StatelessWidget {
   final HostelInfo info;
 
   const _AboutSection({
-    super.key,
     required this.info,
   });
 
@@ -522,7 +523,6 @@ class _RoomSection extends StatefulWidget {
   final HostelInfo info;
 
   const _RoomSection({
-    super.key,
     required this.info,
   });
 
@@ -778,10 +778,9 @@ class _RoomSectionState extends State<_RoomSection> {
 class _ShowRoomCard extends StatelessWidget {
   final RoomInfo room;
   final bool isAvailable;
-  final int daysLeft;
+  final int? daysLeft;
 
   const _ShowRoomCard({
-    super.key,
     this.daysLeft = 10,
     required this.room,
     required this.isAvailable,
@@ -1052,7 +1051,7 @@ class _ShowRoomCard extends StatelessWidget {
 }
 
 class _CommentSection extends StatefulWidget {
-  const _CommentSection({super.key});
+  const _CommentSection();
 
   @override
   State<_CommentSection> createState() => _CommentSectionState();

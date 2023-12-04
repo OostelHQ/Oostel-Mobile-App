@@ -49,14 +49,13 @@ dependencies:
   photo_view:
   animated_text_kit:
   get_thumbnail_video:
-  video_thumbnail_imageview:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 flutter_native_splash:
   color: "#064997"

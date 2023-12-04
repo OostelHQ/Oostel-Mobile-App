@@ -1,5 +1,6 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/widgets.dart';
@@ -30,6 +31,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
           iconSize: 26.r,
           splashRadius: 0.01,
@@ -186,6 +188,7 @@ class _ProfileNotificationPageState extends State<ProfileNotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
           iconSize: 26.r,
           splashRadius: 0.01,

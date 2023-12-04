@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -104,7 +103,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
 
 
   Future<void> update() async {
-    updateLandlordProfile(details, profilePictureFilePath: profileImage!.startsWith("https:") ? "" : profileImage!).then((resp) {
+    updateLandlordProfile(details, profilePictureFilePath: profileImage.startsWith("https:") ? "" : profileImage).then((resp) {
       if(!mounted) return;
       showError(resp.message);
       if (!resp.success) {
@@ -129,6 +128,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
           iconSize: 26.r,
           splashRadius: 0.01,

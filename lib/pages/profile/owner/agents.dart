@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/agent.dart';
-import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
-import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/profile/owner/profile.dart';
 
@@ -24,6 +23,7 @@ class _AgentsPageState extends ConsumerState<AgentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
           iconSize: 26.r,
           splashRadius: 0.01,
@@ -117,7 +117,6 @@ class _AgentCard extends StatelessWidget {
   final AgentStatus status;
 
   const _AgentCard({
-    super.key,
     required this.agent,
     required this.status,
   });
@@ -265,6 +264,7 @@ class ViewAgentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
           iconSize: 26.r,
           splashRadius: 0.01,

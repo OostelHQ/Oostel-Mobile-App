@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,17 +7,14 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
-import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
-import 'package:my_hostel/pages/other/gallery.dart';
 
 bool validate(GlobalKey<FormState> formKey) {
   if (formKey.currentState == null) return false;
@@ -1147,7 +1143,7 @@ class _CreateProfilePageFourState extends State<CreateProfilePageFour> {
 }
 
 class _CreateAccountModal extends StatelessWidget {
-  const _CreateAccountModal({super.key});
+  const _CreateAccountModal();
 
   @override
   Widget build(BuildContext context) {

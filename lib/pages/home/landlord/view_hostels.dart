@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/misc/constants.dart';
-import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/landlord_widgets.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
@@ -37,6 +36,7 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0.0,
         leading: IconButton(
           iconSize: 26.r,

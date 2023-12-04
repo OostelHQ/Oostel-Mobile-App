@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:my_hostel/components/user.dart';
 
 class Student extends User {

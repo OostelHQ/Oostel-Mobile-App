@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +20,7 @@ class NotificationPage extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
               leading: IconButton(
                 iconSize: 26.r,
                 splashRadius: 0.01,
@@ -85,7 +87,6 @@ class _NotificationCard extends StatelessWidget {
   final VoidCallback onRemove;
 
   const _NotificationCard({
-    super.key,
     required this.data,
     required this.onRemove,
   });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/misc/constants.dart';
@@ -73,6 +74,7 @@ class _FilterPageState extends ConsumerState<FilterPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0.0,
         leading: IconButton(
           iconSize: 26.r,
@@ -177,7 +179,6 @@ class _HostelFilter extends ConsumerStatefulWidget {
   final TextEditingController maxController;
 
   const _HostelFilter({
-    super.key,
     required this.controllers,
     required this.animations,
     required this.areaController,
@@ -423,7 +424,6 @@ class _RoommateFilter extends ConsumerStatefulWidget {
   final TextEditingController maxController;
 
   const _RoommateFilter({
-    super.key,
     required this.controllers,
     required this.animations,
     required this.areaController,

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
-import 'package:my_hostel/misc/widgets.dart';
 
 class RegistrationTypePage extends ConsumerStatefulWidget {
   const RegistrationTypePage({super.key});
