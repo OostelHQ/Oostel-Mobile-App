@@ -37,16 +37,15 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         await dio.post("/authenticateuser/login-user", data: map);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      // log(response.data.toString());
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
       token = data["data"]["token"];
-
       Map<String, dynamic>? userData = await _getCurrentUser();
 
       late User? user;
       if (data["data"]["role"] == null || userData == null) {
         user = null;
       } else {
+        log(userData.toString());
         String role = data["data"]["role"];
         String name = data["data"]["fullname"], email = data["data"]["email"];
         List<String> names = name.split(" ");
@@ -202,7 +201,11 @@ Future<FyndaResponse> createLandlordProfile(Map<String, dynamic> map) async {
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      return const FyndaResponse(
+        message: "Profile Created Successfully",
+        payload: null,
+        success: true,
+      );
     }
   } catch (e) {
     log("Create Landlord Profile Error: $e");

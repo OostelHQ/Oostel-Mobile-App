@@ -54,12 +54,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         : ref.read(isAgent) ? Pages.agentDashboard :
     Pages.ownerDashboard;
 
-    // if(ref.read(isLandlord)) {
-    //   int value = ref.read(currentUserProvider).hasCompletedProfile;
-    //   if(value == 20) {
-    //     destination = Pages.createStepOne;
-    //   }
-    // }
+    if(ref.read(isLandlord)) {
+      int value = ref.read(currentUserProvider).hasCompletedProfile;
+      if(value == 20) {
+        destination = Pages.createStepOne;
+      }
+    }
 
     context.router.pushReplacementNamed(destination);
   }

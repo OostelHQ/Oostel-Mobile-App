@@ -47,6 +47,16 @@ class FileManager {
     return instance.getBool(key);
   }
 
+  static Future<void> saveInt(String key, int value) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    await instance.setInt(key, value);
+  }
+
+  static Future<int?> loadInt(String key) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    return instance.getInt(key);
+  }
+
   static Future<List<Uint8List>> loadToBytes(
       {FileType type = FileType.custom}) async {
     FilePickerResult? result =

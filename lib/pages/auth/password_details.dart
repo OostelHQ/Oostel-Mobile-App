@@ -432,7 +432,7 @@ class _AccountVerificationPageState
   void navigate() {
     if (ref.watch(otpOriginProvider) == OtpOrigin.register) {
       ref.watch(otpOriginProvider.notifier).state = OtpOrigin.none;
-      FileManager.saveBool("createdAccount", false);
+      FileManager.save("createdAccount", "");
       context.router.goNamed(Pages.login);
     } else if (ref.watch(otpOriginProvider) == OtpOrigin.forgot) {
       context.router.pushReplacementNamed(Pages.resetPassword,

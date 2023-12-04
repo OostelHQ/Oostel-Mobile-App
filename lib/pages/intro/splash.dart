@@ -106,12 +106,12 @@ class _SplashPageState extends ConsumerState<SplashPage>
             destination = Pages.login;
           }
 
-          // else if(ref.read(isLandlord)) {
-          //   int value = ref.read(currentUserProvider).hasCompletedProfile;
-          //   if(value == 20) {
-          //     destination = Pages.createStepOne;
-          //   }
-          // }
+          else if(ref.read(isLandlord)) {
+            int value = ref.read(currentUserProvider).hasCompletedProfile;
+            if(value == 20) {
+              destination = Pages.createStepOne;
+            }
+          }
 
           else if(createdAccount != null && createdAccount.isNotEmpty) {
             destination = Pages.accountVerification;
@@ -187,3 +187,4 @@ class _SplashPageState extends ConsumerState<SplashPage>
     );
   }
 }
+
