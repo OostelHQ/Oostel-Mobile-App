@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/student.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -80,12 +81,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
 
   void navigate() {
-    refreshUser().then((val) {
-      if(val == null) {
-        showError("An error occurred. Please try again!");
+    refreshUser(UserType.student).then((val) {
+      if(!val.success) {
+        showError(val.message);
         return;
       }
-      ref.watch(currentUserProvider.notifier).state = val;
+      ref.watch(currentUserProvider.notifier).state = val.payload!;
       context.router.pop();
     });
   }

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/landowner.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -52,7 +53,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
 
     email = TextEditingController(text: owner.email);
     fullName = TextEditingController(text: owner.mergedNames);
-    number = TextEditingController(text: owner.contact);
+    number = TextEditingController(text: owner.contact.substring(4));
     denomination = TextEditingController(text: owner.denomination);
 
     profileImage = owner.image;
@@ -60,9 +61,10 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     religion = owner.religion.isEmpty ? null : owner.religion;
     gender = owner.gender.isEmpty ? null : owner.gender;
 
-    street = TextEditingController();
-    region = TextEditingController();
-    country = TextEditingController();
+    List<String> address = owner.address.split(" ");
+    street = TextEditingController(text: address[0]);
+    region = TextEditingController(text: address[1]);
+    country = TextEditingController(text: address[2]);
 
     pickedDate = (owner.dob == DateTime(1960)) ? null : owner.dob;
     hobby = TextEditingController(
@@ -91,12 +93,12 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
   }
 
   void navigate() {
-    refreshUser().then((val) {
-      if(val == null) {
-        showError("An error occurred. Please try again!");
+    refreshUser(UserType.landlord).then((val) {
+      if(!val.success) {
+        showError(val.message);
         return;
       }
-      ref.watch(currentUserProvider.notifier).state = val;
+      ref.watch(currentUserProvider.notifier).state = val.payload!;
       context.router.pop();
     });
   }
