@@ -8,41 +8,64 @@ class Landowner extends User {
   final DateTime dob;
 
   const Landowner({
-    String id = "",
-    String image = "",
-    String firstName = "",
-    String lastName = "",
-    String gender = "",
-    String email = "",
-    String contact = "",
-    String religion = "",
-    String denomination = "",
-    int profileViews = 0,
-    int searchAppearances = 0,
-    required DateTime dateJoined,
+    super.id,
+    super.image,
+    super.firstName,
+    super.lastName,
+    super.gender,
+    super.email,
+    super.contact,
+    super.religion,
+    super.denomination,
+    super.profileViews,
+    super.searchAppearances,
+    required super.dateJoined,
     this.verified = false,
     this.ratings = 0.0,
     this.totalRated = 0,
     this.address = "",
     required this.dob,
   }) : super(
-          id: id,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          image: image,
-          contact: contact,
-          religion: religion,
           type: UserType.landlord,
-          gender: gender,
-          dateJoined: dateJoined,
-          profileViews: profileViews,
-          searchAppearances: searchAppearances,
-          denomination: denomination,
         );
 
   @override
   List<Object?> get props => [id];
+
+  @override
+  int get hasCompletedProfile {
+    int score = 20;
+
+    if(image.isNotEmpty) {
+      score += 10;
+    }
+
+    if(gender.isNotEmpty) {
+      score += 5;
+    }
+
+    if(contact.isNotEmpty ) {
+      score += 5;
+    }
+
+    if(religion.isNotEmpty) {
+      if(religion == "Christianity") {
+        if(denomination.isNotEmpty) {
+          score += 10;
+        }
+
+        score += 10;
+      } else {
+        score += 20;
+      }
+    }
+
+    if(address.isNotEmpty) {
+      score += 40;
+    }
+
+    return score;
+  }
 
 
   factory Landowner.fromJson(Map<String, dynamic> map) => Landowner(

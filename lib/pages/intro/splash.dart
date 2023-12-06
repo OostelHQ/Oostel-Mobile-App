@@ -60,78 +60,80 @@ class _SplashPageState extends ConsumerState<SplashPage>
 
     loadAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeIn,
-          reverseCurve: Curves.easeOut),
+        parent: controller,
+        curve: Curves.easeIn,
+        reverseCurve: Curves.easeOut,
+      ),
     );
 
     Future.delayed(
       const Duration(seconds: 1),
       () => controller.forward().then(
         (_) async {
-          bool? hasRegistered = await FileManager.loadBool("registeredFynda");
+          int? registerStep = await FileManager.loadInt("registerStep");
           bool? autoLogin = await FileManager.loadBool("autoLogin");
-          String? createdAccount = await FileManager.load("createdAccount");
+          String? registeredEmail = await FileManager.load("registrationEmail");
+
           Map<String, String>? auth = await FileManager.loadAuthDetails();
 
-          if(createdAccount != null && createdAccount.isNotEmpty) {
-            process(hasRegistered, autoLogin, createdAccount);
+          if (registerStep != null && registerStep != 0) {
+            ref.watch(registrationProcessProvider.notifier).state =
+                registerStep;
+            process(
+                registerStep: registerStep, registeredEmail: registeredEmail);
           } else if (auth != null && autoLogin != null && autoLogin) {
             loaderController.forward();
             loginUser(auth).then((response) {
-              showError(response.message, background: Colors.white, text: weirdBlack);
+              showError(response.message,
+                  background: Colors.white, text: weirdBlack);
               loaderController.reverse().then((_) {
                 if (response.success) {
-                  FileManager.saveBool("registeredFynda", true);
+                  FileManager.save("registrationEmail", "");
+                  FileManager.saveInt("registerStep", 0);
+                  ref.invalidate(registrationProcessProvider);
                   ref.watch(hasInitializedProvider.notifier).state = true;
                   ref.watch(currentUserProvider.notifier).state =
                       response.payload!;
                 }
-                process(hasRegistered, autoLogin, createdAccount, loginSuccess: response.success);
+
+                process(loginSuccess: response.success);
               });
             });
           } else {
-            process(hasRegistered, autoLogin, createdAccount);
+            process();
           }
         },
       ),
     );
   }
 
-  void process(bool? hasRegistered, bool? autoLogin, String? createdAccount, {bool? loginSuccess}) =>
+  void process(
+          {int? registerStep, String? registeredEmail, bool? loginSuccess}) =>
       controller.reverse().then(
         (_) {
-          String destination = "";
-          if(loginSuccess != null && !loginSuccess) {
-            destination = Pages.login;
-          }
-
-          else if(ref.read(isLandlord)) {
-            int value = ref.read(currentUserProvider).hasCompletedProfile;
-            if(value == 20) {
-              destination = Pages.createStepOne;
+          String destination = Pages.login;
+          if (loginSuccess != null && loginSuccess) {
+            if(ref.read(isLandlord)) {
+              int value = ref.read(currentUserProvider).hasCompletedProfile;
+              if (value == 20) {
+                destination = Pages.createStepOne;
+              } else {
+                destination = Pages.ownerDashboard;
+              }
+            } else if(ref.read(isAgent)) {
+              destination = Pages.agentDashboard;
+            } else {
+              destination = Pages.studentDashboard;
             }
-          }
-
-          else if(createdAccount != null && createdAccount.isNotEmpty) {
-            destination = Pages.accountVerification;
+          } else if (registeredEmail != null && registeredEmail.isNotEmpty && registerStep != null) {
+            destination = Pages.register;
             ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
-          }
-          else if (hasRegistered == null || !hasRegistered) {
+          } else if (registerStep == null && registeredEmail == null) {
             destination = Pages.registrationType;
-          } else if (ref.watch(hasInitializedProvider)) {
-            destination = ref.watch(isAStudent)
-                ? Pages.studentDashboard
-                : ref.watch(isLandlord)
-                    ? Pages.ownerDashboard
-                    : ref.watch(isAgent)
-                        ? Pages.agentDashboard
-                        : Pages.login;
-          } else if (autoLogin != null && !autoLogin) {
-            destination = Pages.login;
           }
 
-          context.router.pushReplacementNamed(destination, extra: createdAccount);
+          context.router
+              .pushReplacementNamed(destination, extra: registeredEmail);
         },
       );
 
@@ -187,4 +189,3 @@ class _SplashPageState extends ConsumerState<SplashPage>
     );
   }
 }
-

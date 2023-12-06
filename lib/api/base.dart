@@ -14,7 +14,7 @@ final Dio dio = Dio(
 
 String token = "";
 
-final Options configuration = Options(headers: {
+Options get configuration => Options(headers: {
   "Content-Type": "application/json",
   "Accept": "application/json",
   "Authorization": "Bearer $token"
