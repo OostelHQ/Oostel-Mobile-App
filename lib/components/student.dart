@@ -10,6 +10,7 @@ class Student extends User {
   final String guardian;
   final String ageRange;
   final bool available;
+  final String address;
 
   const Student({
     super.id,
@@ -32,6 +33,7 @@ class Student extends User {
     this.ageRange = "",
     this.hobby = "",
     this.origin = "",
+    this.address = ""
   }) : super(
     type: UserType.student,
   );
@@ -39,6 +41,42 @@ class Student extends User {
 
   @override
   List<Object?> get props => [id];
+
+
+  @override
+  int get hasCompletedProfile {
+    int score = 20;
+
+    if(image.isNotEmpty) {
+      score += 10;
+    }
+
+    if(gender.isNotEmpty) {
+      score += 5;
+    }
+
+    if(contact.isNotEmpty ) {
+      score += 5;
+    }
+
+    if(religion.isNotEmpty) {
+      if(religion == "Christianity") {
+        if(denomination.isNotEmpty) {
+          score += 10;
+        }
+
+        score += 10;
+      } else {
+        score += 20;
+      }
+    }
+
+    if(address.isNotEmpty) {
+      score += 40;
+    }
+
+    return score;
+  }
 
 
   factory Student.fromJson(Map<String, dynamic> map) =>
@@ -56,6 +94,7 @@ class Student extends User {
         hobby: map["hobby"],
         contact: map["contact"],
         origin: map["origin"],
+        address: map["address"],
         ageRange: map["ageRange"],
         religion: map["religion"],
         denomination: map["denomination"],

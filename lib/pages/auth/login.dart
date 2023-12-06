@@ -40,6 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void navigate(User? user) {
+    print("user $user");
     FileManager.saveBool("autoLogin", remember);
     FileManager.saveInt("registerStep", 0);
     if(remember) {
@@ -71,7 +72,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if(!mounted) return;
       showError(resp.message);
       if (!resp.success) {
-        Navigator.of(context).pop();
+        ref.watch(currentUserProvider.notifier).state = defaultStudent; //May change later
+        context.router.pushReplacementNamed(Pages.studentDashboard); // May change later
+        // Navigator.of(context).pop();
       } else {
         navigate(resp.payload);
       }

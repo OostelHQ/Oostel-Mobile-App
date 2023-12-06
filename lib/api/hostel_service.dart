@@ -116,6 +116,7 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       //log(response.data.length.toString());
       log(response.data[8].toString());
+      print(response.data.toString());
     }
   } catch (e) {
     log("Get Hostels Error: $e");

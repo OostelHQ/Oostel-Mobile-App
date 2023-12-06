@@ -18,7 +18,6 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
           message: response.data["message"], payload: null, success: true);
     }
   } catch (e) {
-    print(e.toString());
     log("Register User Error: $e");
   }
 
@@ -55,6 +54,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
           user = null;
         }
       }
+      print((user==null).toString());
 
       return FyndaResponse<User?>(
           message: data["message"], payload: user, success: user != null);
@@ -211,6 +211,7 @@ Future<Map<String, dynamic>?> _getCurrentUser() async {
     }
   } catch (e) {
     log("Current User Error: $e");
+    print("Current User Error: $e");
   }
 
   return null;
