@@ -44,7 +44,8 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
       } else {
         String role = data["data"]["role"];
         if (role == "Student") {
-          user = _parseStudentData(userData, data['data']['email'], data['data']['fullname']);
+          user = _parseStudentData(
+              userData, data['data']['email'], data['data']['fullname']);
         } else if (role == "LandLord") {
           user = _parseLandlordData(userData);
         } else if (role == "Agent") {
@@ -74,7 +75,9 @@ User _parseLandlordData(Map<String, dynamic> userData) {
 
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
-  DateTime dob = profile["dateOfBirth"] == null ? DateTime(1960) : DateTime.parse(profile['dateOfBirth']);
+  DateTime dob = profile["dateOfBirth"] == null
+      ? DateTime(1960)
+      : DateTime.parse(profile['dateOfBirth']);
 
   String contact = userData["userDto"]["phoneNumber"] ?? "";
   String religion = profile["religion"] ?? "";
@@ -83,7 +86,11 @@ User _parseLandlordData(Map<String, dynamic> userData) {
   String street = profile["street"] ?? "";
   String image = profile["pictureUrl"] ?? "";
   String email = userData["userDto"]["userName"];
+  String gender = profile["gender"] ?? "";
+  String denomination = profile["denomination"] ?? "";
   int count = (profile["profileViewCount"] as num).toInt();
+
+  log(userData.toString());
 
   return Landowner(
     firstName: profile["firstName"],
@@ -95,18 +102,19 @@ User _parseLandlordData(Map<String, dynamic> userData) {
     email: email,
     image: image,
     religion: religion,
+    gender: gender,
+    denomination: denomination,
     address: "$street $state $country",
     profileViews: count,
   );
 }
 
-
-User _parseStudentData(Map<String, dynamic> userData, String email, String fullName) {
+User _parseStudentData(
+    Map<String, dynamic> userData, String email, String fullName) {
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
   List<String> names = fullName.split(" ");
-
 
   return Student(
     firstName: names[0],
@@ -268,49 +276,29 @@ Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map,
   );
 }
 
-Future<User?> refreshUser() async {
+Future<FyndaResponse<User?>> refreshUser(UserType type,
+    {String fullName = "", String email = ""}) async {
   Map<String, dynamic>? userData = await _getCurrentUser();
 
-  log(userData.toString());
-
-  userData = null;
-
+  late User? user;
   if (userData == null) {
-    return null;
+    user = null;
   } else {
-    String role = userData["roleCSV"];
-    String id = userData["userId"];
-    DateTime created = DateTime.parse(userData["createdAt"]);
-    String image = userData["profilePicture"] ?? "";
-
-    late User? user;
-
-    if (role == "Student") {
-      user = Student(
-        dateJoined: created,
-        image: image,
-        id: id,
-      );
-    } else if (role == "LandLord") {
-      user = Landowner(
-        dateJoined: created,
-        dob: DateTime(1960),
-        image: image,
-        id: id,
-      );
-    } else if (role == "Agent") {
-      user = Agent(
-        dateJoined: created,
-        dob: DateTime(1960),
-        image: image,
-        id: id,
-      );
+    if (type == UserType.student) {
+      user = _parseStudentData(userData, email, fullName);
+    } else if (type == UserType.agent) {
+      user = _parseLandlordData(userData);
     } else {
       user = null;
     }
-
-    return user;
   }
+
+  return FyndaResponse(
+    message:
+        user == null ? "An error occurred when refreshing your profile" : "",
+    payload: user,
+    success: user != null,
+  );
 }
 
 Future<FyndaResponse> createAgentProfile(Map<String, dynamic> map) async {
