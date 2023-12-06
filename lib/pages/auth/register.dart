@@ -46,6 +46,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     if(ref.read(isAgent)) {
       authDetails["referralCode"] = "";
     }
+
+    Future.delayed(const Duration(milliseconds: 750), () {
+      if(ref.read(registrationProcessProvider) == 1) {
+        context.router.pushNamed(Pages.accountVerification);
+      }
+    });
   }
 
   @override
@@ -59,8 +65,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   void navigate() {
-    FileManager.saveBool("registeredFynda", true);
-    FileManager.save("createdAccount", authDetails["emailAddress"]);
+    FileManager.saveInt("registerStep", 1);
+    FileManager.save("registrationEmail", authDetails["emailAddress"]);
     ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
     context.router.pushReplacementNamed(Pages.accountVerification,
         extra: authDetails["emailAddress"]);

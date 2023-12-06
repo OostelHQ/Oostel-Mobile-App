@@ -41,11 +41,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void navigate(User? user) {
     FileManager.saveBool("autoLogin", remember);
-    FileManager.saveBool("registeredFynda", true);
+    FileManager.saveInt("registerStep", 0);
     if(remember) {
       FileManager.saveAuthDetails(authDetails);
     }
 
+    ref.invalidate(registrationProcessProvider);
     ref.watch(hasInitializedProvider.notifier).state = true;
     ref.watch(currentUserProvider.notifier).state = user!;
 

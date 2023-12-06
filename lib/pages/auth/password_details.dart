@@ -299,6 +299,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                           width: 414.w,
                           height: 50.h,
                           obscure: !showPassword,
+                          onChange: (val) => textChecker(text: val!, onAction: () => setState(() {})),
                           onValidate: (value) {
                             if (value!.trim().length < 6) {
                               showError(
@@ -336,6 +337,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                           width: 414.w,
                           height: 50.h,
                           obscure: !showConfirmPassword,
+                          onChange: (val) => textChecker(text: val!, onAction: () => setState(() {})),
                           onValidate: (value) {
                             if (value!.trim() != passwordController.text.trim()) {
                               showError("The passwords do not match.");
@@ -435,7 +437,8 @@ class _AccountVerificationPageState
   void navigate() {
     if (ref.watch(otpOriginProvider) == OtpOrigin.register) {
       ref.watch(otpOriginProvider.notifier).state = OtpOrigin.none;
-      FileManager.save("createdAccount", "");
+      ref.invalidate(registrationProcessProvider);
+      FileManager.save("registrationEmail", "");
       context.router.goNamed(Pages.login);
     } else if (ref.watch(otpOriginProvider) == OtpOrigin.forgot) {
       context.router.pushReplacementNamed(Pages.resetPassword,

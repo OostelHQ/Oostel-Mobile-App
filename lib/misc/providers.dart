@@ -4287,3 +4287,4 @@ final StateProvider<List<Conversation>> conversationsProvider = StateProvider(
 );
 
 final StateProvider<OtpOrigin> otpOriginProvider = StateProvider((ref) => OtpOrigin.none);
+final StateProvider<int> registrationProcessProvider = StateProvider((ref) => 0);
