@@ -78,7 +78,7 @@ class _ViewMediaState extends State<ViewMedia> {
                 itemCount: widget.info.type == DisplayType.memory
                     ? widget.info.bytes.length
                     : widget.info.paths.length,
-                loadingBuilder: (context, event) => const Center(child: loader),
+                loadingBuilder: (context, event) => const Center(child: blueLoader),
                 pageController: pageController,
                 backgroundDecoration: const BoxDecoration(color: Color(0xFFFBFDFF)),
               ),

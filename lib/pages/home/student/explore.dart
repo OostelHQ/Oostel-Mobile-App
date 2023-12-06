@@ -139,7 +139,9 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                         child: Text("Categories",
                             style: context.textTheme.bodyLarge!.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: weirdBlack)),
+                                color: weirdBlack,
+                            ),
+                        ),
                       ),
                       GestureDetector(
                         onTap: () => context.pushNamed(Pages.viewRoomTypes),
@@ -159,7 +161,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (_, index) => RoomTypeCard(index: index),
                       separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                      itemCount: 5,
+                      itemCount: 4,
                     ),
                   ),
                   SizedBox(height: 20.h),

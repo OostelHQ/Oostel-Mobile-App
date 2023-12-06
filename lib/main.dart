@@ -170,6 +170,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
               StepTen(info: state.extra as Map<String, dynamic>),
         ),
         GoRoute(
+          path: Pages.uploadHostel.path,
+          name: Pages.uploadHostel,
+          builder: (_, state) => UploadHostelPage(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
           path: Pages.studentProfileSettings.path,
           name: Pages.studentProfileSettings,
           builder: (_, __) => const StudentProfileSettingsPage(),

@@ -39,6 +39,8 @@ const Widget loader = SpinKitSpinningLines(
   size: 50,
 );
 
+const Widget blueLoader = SpinKitSpinningLines(color: appBlue, size: 50,);
+
 enum AcquireType { hostel, roommate }
 
 class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -1576,6 +1578,19 @@ class RoomTypeCard extends ConsumerWidget {
     required this.index,
   });
 
+  String get name {
+    if(index == 0) {
+      return "Self Con";
+    } else if(index == 1) {
+      return "One Room";
+    } else if(index == 2) {
+      return "Face2Face";
+    } else if(index == 3) {
+      return "Flat";
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
@@ -1596,8 +1611,11 @@ class RoomTypeCard extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10.r),
+              image: DecorationImage(
+                image: AssetImage("assets/images/$name.png"),
+                fit: BoxFit.cover,
+              )
             ),
-            child: Image.asset("assets/images/Categories.png"),
           ),
           Text(
             ref.read(roomTypesProvider)[index],

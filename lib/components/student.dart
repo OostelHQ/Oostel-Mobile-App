@@ -62,17 +62,41 @@ class Student extends User {
     if(religion.isNotEmpty) {
       if(religion == "Christianity") {
         if(denomination.isNotEmpty) {
-          score += 10;
+          score += 5;
         }
 
-        score += 10;
+        score += 5;
       } else {
-        score += 20;
+        score += 10;
       }
     }
 
+    if(level != 0) {
+      score += 5;
+    }
+
+    if(ageRange.isNotEmpty) {
+      score += 5;
+    }
+
     if(address.isNotEmpty) {
-      score += 40;
+      score += 10;
+    }
+
+    if(location.isNotEmpty) {
+      score += 10;
+    }
+
+    if(guardian.isNotEmpty) {
+      score += 5;
+    }
+    
+    if(origin.isNotEmpty) {
+      score += 5;
+    }
+
+    if(hobby.isNotEmpty) {
+      score += 10;
     }
 
     return score;

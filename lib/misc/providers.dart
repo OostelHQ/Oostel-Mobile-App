@@ -3921,8 +3921,7 @@ final StateProvider<List<String>> roomTypesProvider = StateProvider((ref) => [
       "Self Contained",
       "One-Room",
       "Face-To-Face",
-      "2 Bedrooms Flat",
-      "3 Bedrooms Flat",
+      "Flat",
     ]);
 
 final StateProvider<List<String>> locationProvider = StateProvider((ref) => [

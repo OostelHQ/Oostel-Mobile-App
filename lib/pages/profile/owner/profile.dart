@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/misc/constants.dart';
@@ -21,15 +22,32 @@ class OwnerProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
-  @override
-  Widget build(BuildContext context) {
-    Landowner owner = ref.watch(currentUserProvider) as Landowner;
+  bool getProfileAnalytics = false;
+  int totalRooms = 0;
 
-    List<HostelInfo> allHostels = ref.watch(ownerHostelsProvider);
-    int totalRooms = 0;
+  @override
+  void initState() {
+    super.initState();
+    getProfileAnalytics = true;
+    getAnalytics();
+    List<HostelInfo> allHostels = ref.read(ownerHostelsProvider);
     for (HostelInfo info in allHostels) {
       totalRooms += info.rooms.length;
     }
+  }
+
+  void getAnalytics() {
+    profileViewCounts(ref.read(currentUserProvider).id).then((resp) {
+      if (!mounted) return;
+
+      setState(() => getProfileAnalytics = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Landowner owner = ref.watch(currentUserProvider) as Landowner;
+    List<HostelInfo> allHostels = ref.watch(ownerHostelsProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -230,51 +248,51 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       ],
                     ),
                     SizedBox(height: 6.h),
-                      Row(
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text:
-                                      "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                TextSpan(
-                                  text: " Hostels",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 15.w),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text:
-                                      "${totalRooms < 10 ? "0" : ""}$totalRooms",
-                                  style: context.textTheme.bodySmall!.copyWith(
+                    Row(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                                style: context.textTheme.bodySmall!.copyWith(
                                     color: weirdBlack75,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              TextSpan(
+                                text: " Hostels",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: weirdBlack50,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                TextSpan(
-                                  text: " Rooms",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                      color: weirdBlack50,
-                                      fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 15.w),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    "${totalRooms < 10 ? "0" : ""}$totalRooms",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: weirdBlack75,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                              ),
+                              TextSpan(
+                                text: " Rooms",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                     SizedBox(height: 16.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -351,8 +369,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         Text(
                           "Analytics",
                           style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: weirdBlack),
+                              fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
                         Text(
                           "Private to you",
@@ -364,18 +381,24 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                       ],
                     ),
                     SizedBox(height: 15.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Blue Eye.svg",
-                      header: "${owner.profileViews} profile views",
-                      text: "Fellow colleagues viewed your profile",
-                    ),
-                    SizedBox(height: 15.h),
-                    ProfileInfoCard(
-                      image: "assets/images/Search Appearance.svg",
-                      header:
-                      "${owner.searchAppearances} hostel search appearances",
-                      text: "How often you appear in search results",
-                    ),
+                    getProfileAnalytics
+                        ? const Center(child: blueLoader)
+                        : Column(
+                            children: [
+                              ProfileInfoCard(
+                                image: "assets/images/Blue Eye.svg",
+                                header: "${owner.profileViews} profile views",
+                                text: "Fellow colleagues viewed your profile",
+                              ),
+                              SizedBox(height: 15.h),
+                              ProfileInfoCard(
+                                image: "assets/images/Search Appearance.svg",
+                                header:
+                                    "${owner.searchAppearances} hostel search appearances",
+                                text: "How often you appear in search results",
+                              ),
+                            ],
+                          ),
                     SizedBox(height: 28.h),
                     ConstrainedBox(
                       constraints: BoxConstraints(
@@ -393,8 +416,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                         Text(
                           "Personal Info",
                           style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: weirdBlack),
+                              fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
                         Text(
                           "Private to you",
@@ -408,7 +430,6 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                     SizedBox(height: 15.h),
                     if (owner.hasCompletedProfile > 20)
                       Column(children: [
-
                         ProfileInfoCard(
                           image: "assets/images/Profile Blue Location.svg",
                           header: owner.address,

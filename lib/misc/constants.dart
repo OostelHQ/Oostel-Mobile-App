@@ -117,6 +117,7 @@ class Pages
   static const String stepEight = 'step-eight';
   static const String stepNine = 'step-nine';
   static const String stepTen = 'step-ten';
+  static const String uploadHostel = 'upload-hostel';
 
   static const String agents = 'agents';
   static const String viewAgent = 'view-agent';

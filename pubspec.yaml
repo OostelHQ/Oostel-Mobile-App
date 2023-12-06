@@ -49,6 +49,9 @@ dependencies:
   photo_view:
   animated_text_kit:
   get_thumbnail_video:
+  signalr_flutter:
+
+
 
 dev_dependencies:
   flutter_test:

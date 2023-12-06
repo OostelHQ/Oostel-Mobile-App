@@ -410,7 +410,8 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                         child: const ColoredBox(color: Colors.black12),
                       ),
                       SizedBox(height: 15.h),
-                    ]),
+                    ],
+                ),
               ),
             ),
             SliverPadding(
@@ -794,6 +795,7 @@ class TenantAgreementPage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(height: 50.h),
                     ]
                 )
             ),
@@ -906,6 +908,7 @@ class OwnerAgreementPage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(height: 50.h),
                     ]
                 )
             ),
