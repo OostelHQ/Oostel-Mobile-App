@@ -124,11 +124,33 @@ User _parseLandlordData(Map<String, dynamic> userData) {
 }
 
 User _parseStudentData(
-    Map<String, dynamic> userData, String email, String fullName) {
+    Map<String, dynamic> userData, {String email = "", String fullName = ""}) {
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
   List<String> names = fullName.split(" ");
+
+  Map<String, dynamic>? profile = userData["studentProfile"];
+
+  if(profile != null){
+      String fullName = profile['fullName'];
+      String email = profile['email'];
+      String state = profile['stateOfOrigin'] ?? "";
+      bool isavailable = profile['isAvailable'] as bool;
+      String area = profile['area'] ?? "";
+      double roombudget = (profile['roomBudgetAmount'] as num).toInt();
+      String pictureurl = profile['pictureUrl'] ?? "";
+      int profileViewCount = (profile['profileViewCount'] as num).toInt();
+      String gender = profile['gender'] ?? "";
+      String country = profile['country'];
+      String schoolLevel = profile['schoolLevel'] ?? "";
+      String religion = profile['religion'] ?? "";
+      String denomination = profile['denomination'] ?? "";
+      String age = profile['age'] ?? "";
+      String hobby = profile['hobby'] ?? "";
+
+      return Student(dateJoined: created, ageRange: age, amount:  );
+  }
 
   return Student(
     firstName: names[0],
