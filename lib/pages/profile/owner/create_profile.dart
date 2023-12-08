@@ -910,14 +910,14 @@ class _CreateProfilePageThreeState
   }
 }
 
-class CreateProfilePageFour extends StatefulWidget {
+class CreateProfilePageFour extends ConsumerStatefulWidget {
   const CreateProfilePageFour({super.key});
 
   @override
-  State<CreateProfilePageFour> createState() => _CreateProfilePageFourState();
+  ConsumerState<CreateProfilePageFour> createState() => _CreateProfilePageFourState();
 }
 
-class _CreateProfilePageFourState extends State<CreateProfilePageFour> {
+class _CreateProfilePageFourState extends ConsumerState<CreateProfilePageFour> {
   late bool agree = false;
 
   @override
@@ -1045,7 +1045,7 @@ class _CreateProfilePageFourState extends State<CreateProfilePageFour> {
                                     color: appBlue,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  recognizer: TapGestureRecognizer()..onTap = () {},
+                                  recognizer: TapGestureRecognizer()..onTap = () => context.router.pushNamed(Pages.help),
                                 )
                               ],
                             ),
@@ -1101,13 +1101,7 @@ class _CreateProfilePageFourState extends State<CreateProfilePageFour> {
             GestureDetector(
               onTap: () {
                 if (!agree) return;
-
-                showModalBottomSheet(
-                  context: context,
-                  builder: (_) => const _CreateAccountModal(),
-                  isDismissible: true,
-                );
-                //create();
+                create();
               },
               child: Container(
                 width: 170.w,
@@ -1137,6 +1131,38 @@ class _CreateProfilePageFourState extends State<CreateProfilePageFour> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void create() {
+
+    void show() => showModalBottomSheet(
+      context: context,
+      builder: (_) => const _CreateAccountModal(),
+      isDismissible: true,
+    );
+
+    refreshUser(UserType.landlord).then((val) {
+      if(!mounted) return;
+
+      if(!val.success) {
+        showError(val.message);
+        Navigator.of(context).pop();
+        return;
+      } else {
+        show();
+      }
+    });
+
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
       ),
     );
   }

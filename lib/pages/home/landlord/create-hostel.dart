@@ -477,7 +477,6 @@ class _StepTwoState extends State<StepTwo> {
   late TextEditingController description;
   late TextEditingController rooms;
   late TextEditingController area;
-  late TextEditingController minPrice, maxPrice;
   final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
@@ -491,18 +490,10 @@ class _StepTwoState extends State<StepTwo> {
     area = TextEditingController(
         text:
             "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
-    minPrice = TextEditingController(
-        text:
-            "${widget.info["minPrice"] == 0.0 ? "" : widget.info["minPrice"].toStringAsFixed(0)}");
-    maxPrice = TextEditingController(
-        text:
-            "${widget.info["maxPrice"] == 0.0 ? "" : widget.info["maxPrice"].toStringAsFixed(0)}");
   }
 
   @override
   void dispose() {
-    minPrice.dispose();
-    maxPrice.dispose();
     name.dispose();
     description.dispose();
     rooms.dispose();
@@ -515,8 +506,6 @@ class _StepTwoState extends State<StepTwo> {
     if (description.text.trim().isEmpty) return false;
     if (rooms.text.trim().isEmpty) return false;
     if (area.text.trim().isEmpty) return false;
-    if (minPrice.text.trim().isEmpty) return false;
-    if (maxPrice.text.trim().isEmpty) return false;
     return true;
   }
 
@@ -554,15 +543,11 @@ class _StepTwoState extends State<StepTwo> {
                   description.clear();
                   rooms.clear();
                   area.clear();
-                  minPrice.clear();
-                  maxPrice.clear();
 
                   widget.info["name"] = "";
                   widget.info["description"] = "";
                   widget.info["area"] = "";
                   widget.info["totalRooms"] = "";
-                  widget.info["minPrice"] = 0;
-                  widget.info["maxPrice"] = 0;
                 }),
               ),
             ),
@@ -725,65 +710,6 @@ class _StepTwoState extends State<StepTwo> {
                       onAction: () => setState(() {}),
                     ),
                   ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Price Range",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SpecialForm(
-                          controller: minPrice,
-                          width: 170.w,
-                          height: 50.h,
-                          type: TextInputType.number,
-                          hint: "i.e 100 000",
-                          onValidate: (val) {
-                            if (val == null ||
-                                val!.trim().isEmpty ||
-                                double.tryParse(val!) == null) {
-                              showError(
-                                  "Please enter a valid minimum price for your hostel.");
-                              return '';
-                            }
-                            return null;
-                          },
-                          onSave: (val) =>
-                              widget.info["minPrice"] = double.parse(val!),
-                          onChange: (val) => textChecker(
-                            text: val,
-                            onAction: () => setState(() {}),
-                          ),
-                        ),
-                        SpecialForm(
-                          controller: maxPrice,
-                          width: 170.w,
-                          height: 50.h,
-                          type: TextInputType.number,
-                          hint: "i.e 500 000",
-                          onValidate: (val) {
-                            if (val == null ||
-                                val!.trim().isEmpty ||
-                                double.tryParse(val!) == null) {
-                              showError(
-                                  "Please enter a valid maximum price for your hostel.");
-                              return '';
-                            }
-                            return null;
-                          },
-                          onSave: (val) =>
-                              widget.info["maxPrice"] = double.parse(val!),
-                          onChange: (val) => textChecker(
-                            text: val,
-                            onAction: () => setState(() {}),
-                          ),
-                        ),
-                      ]),
                   SizedBox(height: 100.h),
                 ],
               ),
@@ -4614,3 +4540,509 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
     );
   }
 }
+
+
+//class StepTen extends StatelessWidget {
+//   final Map<String, dynamic> info;
+//
+//   const StepTen({
+//     super.key,
+//     required this.info,
+//   });
+//
+//   List<int> calculate(List<RoomInfo> rooms) {
+//     int baths = 0, kitchens = 0, toilets = 0;
+//
+//     for (RoomInfo info in rooms) {
+//       List<String> facilities = info.facilities;
+//       if (facilities.contains("Toilet")) {
+//         ++toilets;
+//       }
+//       if (facilities.contains("Kitchen")) {
+//         ++kitchens;
+//       }
+//       if (facilities.contains("Bathroom")) {
+//         ++baths;
+//       }
+//     }
+//
+//     return [
+//       baths,
+//       toilets,
+//       kitchens,
+//     ];
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     List<String> media = toStringList(info["media"]);
+//     List<String> facilities = toStringList(info["hostelFacilities"]);
+//     List<String> rules = toStringList(info["rules"]);
+//     List<RoomInfo> rooms = toRoomList(info["roomsLeft"]);
+//     int availableRooms = rooms.length;
+//     int totalRooms = info["totalRooms"];
+//
+//     List<int> totalProps = calculate(rooms);
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         elevation: 0.0,
+//         backgroundColor: Colors.transparent,
+//         title: Column(
+//           children: [
+//             SizedBox(height: 25.h),
+//             SizedBox(
+//               width: 414.w,
+//               child: LinearProgressIndicator(
+//                 value: 1.0,
+//                 color: appBlue,
+//                 minHeight: 1.5.h,
+//               ),
+//             ),
+//             SizedBox(height: 18.h),
+//           ],
+//         ),
+//         automaticallyImplyLeading: false,
+//       ),
+//       body: SafeArea(
+//         child: Padding(
+//           padding: EdgeInsets.symmetric(horizontal: 20.w),
+//           child: SingleChildScrollView(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Center(
+//                   child: Text(
+//                     "STEP 10",
+//                     style: context.textTheme.bodyMedium!.copyWith(
+//                       fontWeight: FontWeight.w500,
+//                       color: appBlue,
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 12.h),
+//                 Center(
+//                   child: Text(
+//                     "Preview",
+//                     style: context.textTheme.bodyLarge!.copyWith(
+//                       fontWeight: FontWeight.w600,
+//                       color: weirdBlack,
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 12.h),
+//                 Center(
+//                   child: Text(
+//                     "Before going live, get a preview of your hostel details and ensure your "
+//                     "listing is (are) ready to impress potential tenants.",
+//                     textAlign: TextAlign.center,
+//                     style: context.textTheme.bodyMedium!.copyWith(
+//                       fontWeight: FontWeight.w500,
+//                       color: weirdBlack75,
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 44.h),
+//                 Container(
+//                   decoration: BoxDecoration(
+//                     color: const Color(0xFFF8FBFF),
+//                     borderRadius: BorderRadius.circular(10.r),
+//                     boxShadow: const [
+//                       BoxShadow(
+//                         color: Color(0xFFE0E5EC),
+//                         blurRadius: 6.0,
+//                         spreadRadius: 1.0,
+//                       )
+//                     ],
+//                   ),
+//                   padding:
+//                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       ClipRRect(
+//                         borderRadius: BorderRadius.circular(8.r),
+//                         child: Image.memory(
+//                           info["image"],
+//                           width: 414.w,
+//                           height: 156.h,
+//                           fit: BoxFit.cover,
+//                         ),
+//                       ),
+//                       SizedBox(height: 12.h),
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//                         children: [
+//                           SizedBox(
+//                             width: 250.w,
+//                             child: Text(
+//                               info["name"],
+//                               style: context.textTheme.bodyLarge!.copyWith(
+//                                 fontWeight: FontWeight.w600,
+//                                 color: weirdBlack,
+//                               ),
+//                             ),
+//                           ),
+//                           Container(
+//                             width: 90.w,
+//                             height: 25.h,
+//                             alignment: Alignment.center,
+//                             decoration: BoxDecoration(
+//                               color: infoRoomsLeftBackground,
+//                               borderRadius: BorderRadius.circular(5.r),
+//                             ),
+//                             child: Text(
+//                               "$availableRooms/$totalRooms rooms left",
+//                               style: context.textTheme.bodyMedium!.copyWith(
+//                                 color: infoRoomsLeft,
+//                                 fontWeight: FontWeight.w500,
+//                                 fontSize: 13.sp,
+//                               ),
+//                             ),
+//                           )
+//                         ],
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       Text(
+//                         joinToAddress(info["address"]),
+//                         overflow: TextOverflow.ellipsis,
+//                         style: context.textTheme.bodyMedium!.copyWith(
+//                             color: weirdBlack75, fontWeight: FontWeight.w500),
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//                         children: [
+//                           Row(
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               SvgPicture.asset(
+//                                 "assets/images/Hostel Info Bed.svg",
+//                                 width: 15.r,
+//                                 height: 15.r,
+//                                 color: weirdBlack50,
+//                               ),
+//                               SizedBox(width: 5.w),
+//                               Text(
+//                                 "$availableRooms",
+//                                 style: context.textTheme.bodySmall!.copyWith(
+//                                     color: weirdBlack50,
+//                                     fontWeight: FontWeight.w500),
+//                               ),
+//                             ],
+//                           ),
+//                           Row(
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               SvgPicture.asset(
+//                                 "assets/images/Hostel Info Bath.svg",
+//                                 width: 15.r,
+//                                 height: 15.r,
+//                                 color: weirdBlack50,
+//                               ),
+//                               SizedBox(width: 5.w),
+//                               Text(
+//                                 "${totalProps[0]}",
+//                                 style: context.textTheme.bodySmall!.copyWith(
+//                                     color: weirdBlack50,
+//                                     fontWeight: FontWeight.w500),
+//                               ),
+//                             ],
+//                           ),
+//                           Row(
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               SvgPicture.asset(
+//                                 "assets/images/Toilet.svg",
+//                                 width: 15.r,
+//                                 height: 15.r,
+//                                 color: weirdBlack50,
+//                               ),
+//                               SizedBox(width: 5.w),
+//                               Text(
+//                                 "${totalProps[1]}",
+//                                 style: context.textTheme.bodySmall!.copyWith(
+//                                     color: weirdBlack50,
+//                                     fontWeight: FontWeight.w500),
+//                               ),
+//                             ],
+//                           ),
+//                           Row(
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               SvgPicture.asset(
+//                                 "assets/images/Kitchen.svg",
+//                                 width: 15.r,
+//                                 height: 15.r,
+//                                 color: weirdBlack50,
+//                               ),
+//                               SizedBox(width: 5.w),
+//                               Text(
+//                                 "${totalProps[2]}",
+//                                 style: context.textTheme.bodySmall!.copyWith(
+//                                     color: weirdBlack50,
+//                                     fontWeight: FontWeight.w500),
+//                               ),
+//                             ],
+//                           ),
+//                           Row(
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               SvgPicture.asset(
+//                                 "assets/images/Hostel Info Area.svg",
+//                                 width: 15.r,
+//                                 height: 15.r,
+//                                 color: weirdBlack50,
+//                               ),
+//                               SizedBox(width: 5.w),
+//                               Text(
+//                                 "${(info["area"]).toStringAsFixed(0)} sqft",
+//                                 style: context.textTheme.bodySmall!.copyWith(
+//                                     color: weirdBlack50,
+//                                     fontWeight: FontWeight.w500),
+//                               ),
+//                             ],
+//                           ),
+//                         ],
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       RichText(
+//                         text: TextSpan(
+//                           children: [
+//                             TextSpan(
+//                               text:
+//                                   "${currency()} ${formatAmountInDouble(info["price"])}",
+//                               style: context.textTheme.bodyLarge!.copyWith(
+//                                 color: appBlue,
+//                                 fontFamily: "Inter",
+//                                 fontWeight: FontWeight.w600,
+//                               ),
+//                             ),
+//                             TextSpan(
+//                               text: "/year",
+//                               style: context.textTheme.bodyMedium!.copyWith(
+//                                 color: appBlue,
+//                                 fontFamily: "Inter",
+//                                 fontWeight: FontWeight.w500,
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                       ),
+//                       SizedBox(height: 16.h),
+//                       ConstrainedBox(
+//                         constraints: BoxConstraints(
+//                           minWidth: 414.w,
+//                           minHeight: 1.h,
+//                           maxWidth: 414.w,
+//                           maxHeight: 1.h,
+//                         ),
+//                         child: const ColoredBox(color: Colors.black12),
+//                       ),
+//                       SizedBox(height: 12.h),
+//                       Text(
+//                         "Description",
+//                         style: context.textTheme.bodyLarge!.copyWith(
+//                           fontWeight: FontWeight.w600,
+//                           color: weirdBlack,
+//                         ),
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       Text(
+//                         info["description"],
+//                         style: context.textTheme.bodyMedium!.copyWith(
+//                           color: weirdBlack75,
+//                           fontWeight: FontWeight.w500,
+//                         ),
+//                       ),
+//                       SizedBox(height: 16.h),
+//                       Text(
+//                         "Rules & Regulations",
+//                         style: context.textTheme.bodyLarge!.copyWith(
+//                           fontWeight: FontWeight.w600,
+//                           color: weirdBlack,
+//                         ),
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: List.generate(
+//                           rules.length,
+//                           (index) => Text(
+//                             "${index + 1}. ${rules[index]}",
+//                             style: context.textTheme.bodyMedium!.copyWith(
+//                               color: weirdBlack75,
+//                               fontWeight: FontWeight.w500,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       SizedBox(height: 16.h),
+//                       Text(
+//                         "Hostel Facilities",
+//                         style: context.textTheme.bodyLarge!.copyWith(
+//                           fontWeight: FontWeight.w600,
+//                           color: weirdBlack,
+//                         ),
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       SizedBox(
+//                         height: (facilities.length ~/ 4 +
+//                                 (facilities.length % 4 == 0 ? 0 : 1)) *
+//                             110.r,
+//                         child: GridView.builder(
+//                           gridDelegate:
+//                               SliverGridDelegateWithFixedCrossAxisCount(
+//                                   crossAxisCount: 4,
+//                                   crossAxisSpacing: 5.r,
+//                                   mainAxisSpacing: 5.r,
+//                                   mainAxisExtent: 105.r),
+//                           itemCount: facilities.length,
+//                           itemBuilder: (_, index) => FacilityContainer(
+//                             text: facilities[index],
+//                           ),
+//                         ),
+//                       ),
+//                       SizedBox(height: 16.h),
+//                       Text(
+//                         "Available Rooms",
+//                         style: context.textTheme.bodyLarge!.copyWith(
+//                           fontWeight: FontWeight.w600,
+//                           color: weirdBlack,
+//                         ),
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       SizedBox(
+//                         height: (rooms.length ~/ 2 +
+//                                 (rooms.length % 2 == 0 ? 0 : 1)) *
+//                             210.h,
+//                         child: GridView.builder(
+//                           gridDelegate:
+//                               SliverGridDelegateWithFixedCrossAxisCount(
+//                             crossAxisCount: 2,
+//                             crossAxisSpacing: 15.r,
+//                             mainAxisSpacing: 15.r,
+//                             mainAxisExtent: 205.h,
+//                           ),
+//                           itemCount: rooms.length,
+//                           itemBuilder: (_, index) => AvailableRoomCard(
+//                             info: rooms[index],
+//                             isAsset: false,
+//                             onTap: () {},
+//                           ),
+//                         ),
+//                       ),
+//                       SizedBox(height: 16.h),
+//                       Text(
+//                         "Gallery",
+//                         style: context.textTheme.bodyLarge!.copyWith(
+//                           fontWeight: FontWeight.w600,
+//                           color: weirdBlack,
+//                         ),
+//                       ),
+//                       SizedBox(height: 8.h),
+//                       SizedBox(
+//                           height: (media.length ~/ 3 +
+//                                   (media.length % 3 == 0 ? 0 : 1)) *
+//                               110.r,
+//                           child: GridView.builder(
+//                             gridDelegate:
+//                                 SliverGridDelegateWithFixedCrossAxisCount(
+//                               crossAxisCount: 3,
+//                               crossAxisSpacing: 10.r,
+//                               mainAxisSpacing: 10.r,
+//                               mainAxisExtent: 110.r,
+//                             ),
+//                             itemCount: media.length,
+//                             itemBuilder: (_, index) => ClipRRect(
+//                               borderRadius: BorderRadius.circular(5.r),
+//                               child: Image.file(
+//                                 File(media[index]),
+//                                 width: 110.r,
+//                                 height: 110.r,
+//                                 fit: BoxFit.cover,
+//                               ),
+//                             ),
+//                           )),
+//                     ],
+//                   ),
+//                 ),
+//                 SizedBox(height: 80.h),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//       bottomNavigationBar: Container(
+//         width: 414.w,
+//         height: 90.h,
+//         color: paleBlue,
+//         padding: EdgeInsets.symmetric(horizontal: 20.w),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             GestureDetector(
+//               onTap: () => context.router.pop(),
+//               child: Container(
+//                 width: 170.w,
+//                 height: 50.h,
+//                 alignment: Alignment.center,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(4.r),
+//                   border: Border.all(color: appBlue),
+//                 ),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     Icon(Icons.chevron_left_rounded,
+//                         color: appBlue, size: 26.r),
+//                     SizedBox(width: 5.w),
+//                     Text(
+//                       "Go back",
+//                       style: context.textTheme.bodyMedium!.copyWith(
+//                         fontWeight: FontWeight.w600,
+//                         color: appBlue,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//             GestureDetector(
+//               onTap: () => showModalBottomSheet(
+//                 context: context,
+//                 builder: (context) => const _CreateHostelModal(),
+//                 isDismissible: false,
+//               ).then(
+//                 (resp) {
+//                   if (resp == null || !resp!) return;
+//                   context.router.goNamed(Pages.ownerDashboard);
+//                 },
+//               ),
+//               child: Container(
+//                 width: 170.w,
+//                 height: 50.h,
+//                 alignment: Alignment.center,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(4.r),
+//                   color: rooms.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
+//                 ),
+//                 child: Text(
+//                   "Launch",
+//                   style: context.textTheme.bodyMedium!.copyWith(
+//                     fontWeight: FontWeight.w600,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

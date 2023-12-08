@@ -35,6 +35,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
+      log("Data: $data");
       token = data["data"]["token"];
       Map<String, dynamic>? userData = await _getCurrentUser();
 
@@ -43,6 +44,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         user = null;
       } else {
         String role = data["data"]["role"];
+        log("UserData: $userData");
         if (role == "Student") {
           user = _parseStudentData(
               userData, data['data']['email'], data['data']['fullname']);
@@ -54,10 +56,12 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
           user = null;
         }
       }
-      print((user==null).toString());
 
       return FyndaResponse<User?>(
-          message: data["message"], payload: user, success: user != null);
+        message: data["message"],
+        payload: user,
+        success: user != null,
+      );
     }
   } catch (e) {
     log("Login User Error: $e");
@@ -71,42 +75,52 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
 }
 
 User _parseLandlordData(Map<String, dynamic> userData) {
-  Map<String, dynamic> profile = userData["landlordProfile"];
+  Map<String, dynamic>? profile = userData["landlordProfile"];
 
+  String email = userData["userDto"]["userName"];
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
-  DateTime dob = profile["dateOfBirth"] == null
-      ? DateTime(1960)
-      : DateTime.parse(profile['dateOfBirth']);
-
   String contact = userData["userDto"]["phoneNumber"] ?? "";
-  String religion = profile["religion"] ?? "";
-  String state = profile["state"] ?? "";
-  String country = profile["country"] ?? "";
-  String street = profile["street"] ?? "";
-  String image = profile["pictureUrl"] ?? "";
-  String email = userData["userDto"]["userName"];
-  String gender = profile["gender"] ?? "";
-  String denomination = profile["denomination"] ?? "";
-  int count = (profile["profileViewCount"] as num).toInt();
 
-  log(userData.toString());
+  if(profile != null) {
+    DateTime dob = profile["dateOfBirth"] == null
+        ? DateTime(1960)
+        : DateTime.parse(profile['dateOfBirth']);
+    String religion = profile["religion"] ?? "";
+    String state = profile["state"] ?? "";
+    String country = profile["country"] ?? "";
+    String street = profile["street"] ?? "";
+    String image = profile["pictureUrl"] ?? "";
+
+    String gender = profile["gender"] ?? "";
+    String denomination = profile["denomination"] ?? "";
+    int count = (profile["profileViewCount"] as num).toInt();
+
+    return Landowner(
+      firstName: profile["firstName"],
+      lastName: profile['lastName'],
+      id: id,
+      dateJoined: created,
+      dob: dob,
+      contact: contact,
+      email: email,
+      image: image,
+      religion: religion,
+      gender: gender,
+      denomination: denomination,
+      address: "$street#$state#$country",
+      profileViews: count,
+    );
+  }
 
   return Landowner(
-    firstName: profile["firstName"],
-    lastName: profile['lastName'],
-    id: id,
-    dateJoined: created,
-    dob: dob,
-    contact: contact,
     email: email,
-    image: image,
-    religion: religion,
-    gender: gender,
-    denomination: denomination,
-    address: "$street $state $country",
-    profileViews: count,
+    id: id,
+    dob: DateTime(1960),
+    dateJoined: created,
+    contact: contact,
   );
+
 }
 
 User _parseStudentData(

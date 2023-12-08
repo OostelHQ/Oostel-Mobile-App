@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/misc/functions.dart';
@@ -22,26 +23,16 @@ class OwnerProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
-  bool getProfileAnalytics = false;
+  bool refresh = false;
   int totalRooms = 0;
 
   @override
   void initState() {
     super.initState();
-    getProfileAnalytics = true;
-    getAnalytics();
     List<HostelInfo> allHostels = ref.read(ownerHostelsProvider);
     for (HostelInfo info in allHostels) {
       totalRooms += info.rooms.length;
     }
-  }
-
-  void getAnalytics() {
-    profileViewCounts(ref.read(currentUserProvider).id).then((resp) {
-      if (!mounted) return;
-
-      setState(() => getProfileAnalytics = false);
-    });
   }
 
   @override
@@ -51,463 +42,497 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
 
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              systemOverlayStyle: SystemUiOverlayStyle.dark,
-              leading: IconButton(
-                iconSize: 26.r,
-                splashRadius: 0.01,
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () => context.router.pop(),
-              ),
-              elevation: 0.0,
-              pinned: true,
-              centerTitle: true,
-              title: Text(
-                "Profile",
-                style: context.textTheme.bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 150.h,
-                    child: Stack(
-                      children: [
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: 100.h,
-                            minWidth: 414.w,
-                            maxHeight: 100.h,
-                            maxWidth: 414.w,
+        child: refresh
+            ? const Center(child: blueLoader)
+            : RefreshIndicator(
+                onRefresh: () async {
+                  setState(() => refresh = true);
+                  refreshUser(UserType.landlord).then((val) {
+                    if (!val.success) {
+                      showError(val.message);
+                    } else {
+                      ref.watch(currentUserProvider.notifier).state =
+                          val.payload!;
+                    }
+                    setState(() => refresh = false);
+                  });
+                },
+                child: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      systemOverlayStyle: SystemUiOverlayStyle.dark,
+                      leading: IconButton(
+                        iconSize: 26.r,
+                        splashRadius: 0.01,
+                        icon: const Icon(Icons.chevron_left),
+                        onPressed: () => context.router.pop(),
+                      ),
+                      elevation: 0.0,
+                      pinned: true,
+                      centerTitle: true,
+                      title: Text(
+                        "Profile",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 150.h,
+                            child: Stack(
+                              children: [
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minHeight: 100.h,
+                                    minWidth: 414.w,
+                                    maxHeight: 100.h,
+                                    maxWidth: 414.w,
+                                  ),
+                                  child: const ColoredBox(
+                                    color: paleBlue,
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 20.w,
+                                  bottom: 10.r,
+                                  child: Container(
+                                    width: 100.r,
+                                    height: 100.r,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0xFFE0E5EC),
+                                          blurRadius: 1.0,
+                                          spreadRadius: 2.0,
+                                        )
+                                      ],
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: owner.image == ""
+                                        ? CircleAvatar(
+                                            radius: 47.5.r,
+                                            backgroundColor: appBlue,
+                                            child: Center(
+                                              child: Text(
+                                                owner.firstName.substring(0, 1),
+                                                style: context
+                                                    .textTheme.displaySmall!
+                                                    .copyWith(
+                                                        color: Colors.white),
+                                              ),
+                                            ),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: owner.image,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    CircleAvatar(
+                                              backgroundColor: weirdBlack20,
+                                              radius: 47.5.r,
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.person_outline_rounded,
+                                                  color: appBlue,
+                                                  size: 42.r,
+                                                ),
+                                              ),
+                                            ),
+                                            progressIndicatorBuilder:
+                                                (context, url, download) {
+                                              return CircleAvatar(
+                                                radius: 47.5.r,
+                                                backgroundColor: weirdBlack50,
+                                              );
+                                            },
+                                            imageBuilder: (context, provider) {
+                                              return GestureDetector(
+                                                onTap: () =>
+                                                    context.router.pushNamed(
+                                                  Pages.viewMedia,
+                                                  extra: ViewInfo(
+                                                    current: 0,
+                                                    type: DisplayType.network,
+                                                    paths: [owner.image],
+                                                  ),
+                                                ),
+                                                child: CircleAvatar(
+                                                  backgroundImage: provider,
+                                                  radius: 47.5.r,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20.w,
+                                  bottom: 30.r,
+                                  child: GestureDetector(
+                                    onTap: () => context.router
+                                        .pushNamed(Pages.editOwnerProfile),
+                                    child: Container(
+                                      width: 40.r,
+                                      height: 40.r,
+                                      alignment: Alignment.center,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        "assets/images/Edit.svg",
+                                        width: 20.r,
+                                        height: 20.r,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: const ColoredBox(
-                            color: paleBlue,
-                          ),
-                        ),
-                        Positioned(
-                          left: 20.w,
-                          bottom: 10.r,
-                          child: Container(
-                            width: 100.r,
-                            height: 100.r,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFFE0E5EC),
-                                  blurRadius: 1.0,
-                                  spreadRadius: 2.0,
+                        ],
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              owner.mergedNames,
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                color: weirdBlack,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 22.sp,
+                              ),
+                            ),
+                            Text(
+                              owner.email,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              owner.contact,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/images/Roomate Info Location.svg",
+                                  width: 15.r,
+                                  height: 15.r,
+                                  color: weirdBlack50,
+                                ),
+                                SizedBox(width: 5.w),
+                                Text(
+                                  "Nigeria",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(width: 15.w),
+                                SvgPicture.asset(
+                                  "assets/images/Calender.svg",
+                                  width: 15.r,
+                                  height: 15.r,
+                                  color: weirdBlack50,
+                                ),
+                                SizedBox(width: 5.w),
+                                Text(
+                                  "Joined ${formatDateRaw(owner.dateJoined)}",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: weirdBlack50,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6.h),
+                            Row(
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
+                                        style: context.textTheme.bodySmall!
+                                            .copyWith(
+                                                color: weirdBlack75,
+                                                fontWeight: FontWeight.w600),
+                                      ),
+                                      TextSpan(
+                                        text: " Hostels",
+                                        style: context.textTheme.bodySmall!
+                                            .copyWith(
+                                          color: weirdBlack50,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 15.w),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "${totalRooms < 10 ? "0" : ""}$totalRooms",
+                                        style: context.textTheme.bodySmall!
+                                            .copyWith(
+                                          color: weirdBlack75,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: " Rooms",
+                                        style: context.textTheme.bodySmall!
+                                            .copyWith(
+                                                color: weirdBlack50,
+                                                fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
-                            alignment: Alignment.center,
-                            child: owner.image == ""
-                                ? CircleAvatar(
-                                    radius: 47.5.r,
-                                    backgroundColor: appBlue,
-                                    child: Center(
-                                      child: Text(
-                                        owner.firstName.substring(0, 1),
-                                        style: context.textTheme.displaySmall!
-                                            .copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                  )
-                                : CachedNetworkImage(
-                                    imageUrl: owner.image,
-                                    errorWidget: (context, url, error) =>
-                                        CircleAvatar(
-                                      backgroundColor: weirdBlack20,
-                                      radius: 47.5.r,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.person_outline_rounded,
-                                          color: appBlue,
-                                          size: 42.r,
-                                        ),
-                                      ),
-                                    ),
-                                    progressIndicatorBuilder:
-                                        (context, url, download) {
-                                      return CircleAvatar(
-                                        radius: 47.5.r,
-                                        backgroundColor: weirdBlack50,
-                                      );
-                                    },
-                                    imageBuilder: (context, provider) {
-                                      return GestureDetector(
-                                        onTap: () => context.router.pushNamed(
-                                          Pages.viewMedia,
-                                          extra: ViewInfo(
-                                            current: 0,
-                                            type: DisplayType.network,
-                                            paths: [owner.image],
-                                          ),
-                                        ),
-                                        child: CircleAvatar(
-                                          backgroundImage: provider,
-                                          radius: 47.5.r,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                          ),
-                        ),
-                        Positioned(
-                          right: 20.w,
-                          bottom: 30.r,
-                          child: GestureDetector(
-                            onTap: () => context.router
-                                .pushNamed(Pages.editOwnerProfile),
-                            child: Container(
-                              width: 40.r,
-                              height: 40.r,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: SvgPicture.asset(
-                                "assets/images/Edit.svg",
-                                width: 20.r,
-                                height: 20.r,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      owner.mergedNames,
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: weirdBlack,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 22.sp,
-                      ),
-                    ),
-                    Text(
-                      owner.email,
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      owner.contact,
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/Roomate Info Location.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "Nigeria",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(width: 15.w),
-                        SvgPicture.asset(
-                          "assets/images/Calender.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "Joined ${formatDateRaw(owner.dateJoined)}",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${allHostels.length < 10 ? "0" : ""}${allHostels.length}",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack75,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              TextSpan(
-                                text: " Hostels",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack50,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 15.w),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${totalRooms < 10 ? "0" : ""}$totalRooms",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack75,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " Rooms",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                    color: weirdBlack50,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        GestureDetector(
-                          onTap: () => showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => const AgentInvite(),
-                          ),
-                          child: Container(
-                            width: 180.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: appBlue,
-                              borderRadius: BorderRadius.circular(5.r),
-                            ),
-                            child: Text(
-                              "Invite Agent",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            width: 180.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(5.r),
-                              border: Border.all(color: appBlue, width: 1.5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            SizedBox(height: 16.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Icon(
-                                  Icons.share_rounded,
-                                  color: appBlue,
-                                  size: 20.r,
+                                GestureDetector(
+                                  onTap: () => showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (_) => const AgentInvite(),
+                                  ),
+                                  child: Container(
+                                    width: 180.w,
+                                    height: 50.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: appBlue,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    child: Text(
+                                      "Invite Agent",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white),
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(width: 10.w),
-                                Text(
-                                  "Share",
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: appBlue),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 180.w,
+                                    height: 50.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                      border: Border.all(
+                                          color: appBlue, width: 1.5),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.share_rounded,
+                                          color: appBlue,
+                                          size: 20.r,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        Text(
+                                          "Share",
+                                          style: context.textTheme.bodyMedium!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: appBlue),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 32.h),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Analytics",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        Text(
-                          "Private to you",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.h),
-                    getProfileAnalytics
-                        ? const Center(child: blueLoader)
-                        : Column(
-                            children: [
-                              ProfileInfoCard(
-                                image: "assets/images/Blue Eye.svg",
-                                header: "${owner.profileViews} profile views",
-                                text: "Fellow colleagues viewed your profile",
+                            SizedBox(height: 32.h),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minWidth: 414.w,
+                                minHeight: 1.h,
+                                maxWidth: 414.w,
+                                maxHeight: 1.h,
                               ),
-                              SizedBox(height: 15.h),
-                              ProfileInfoCard(
-                                image: "assets/images/Search Appearance.svg",
-                                header:
-                                    "${owner.searchAppearances} hostel search appearances",
-                                text: "How often you appear in search results",
-                              ),
-                            ],
-                          ),
-                    SizedBox(height: 28.h),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Personal Info",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600, color: weirdBlack),
-                        ),
-                        Text(
-                          "Private to you",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.h),
-                    if (owner.hasCompletedProfile > 20)
-                      Column(children: [
-                        ProfileInfoCard(
-                          image: "assets/images/Profile Blue Location.svg",
-                          header: owner.address,
-                          text: "Personal Address",
-                        ),
-                        SizedBox(height: 16.h),
-                        ProfileInfoCard(
-                          image: "assets/images/Profile Religion.svg",
-                          header: owner.religion,
-                          text: "Religion",
-                        ),
-                        if (owner.religion == "Christianity")
-                          SizedBox(height: 16.h),
-                        if (owner.religion == "Christianity")
-                          ProfileInfoCard(
-                            image: "assets/images/Profile Church.svg",
-                            header: owner.denomination,
-                            text: "Denomination",
-                          ),
-                        SizedBox(height: 16.h),
-                        ProfileInfoCard(
-                          image: "assets/images/Profile Age.svg",
-                          header: formatDateRaw(owner.dob),
-                          text: "Date of Birth",
-                        ),
-                      ]),
-                    if (owner.hasCompletedProfile <= 20)
-                      SizedBox(
-                        height: 450.r,
-                        width: 414.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 50.r),
-                            Image.asset(
-                              "assets/images/No Data.png",
-                              width: 150.r,
-                              height: 150.r,
-                              fit: BoxFit.cover,
+                              child: const ColoredBox(color: Colors.black12),
                             ),
-                            SizedBox(height: 50.r),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        "Unlock the full experience! Your profile details are empty. ",
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            SizedBox(height: 20.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Analytics",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
+                                ),
+                                Text(
+                                  "Private to you",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  TextSpan(
-                                    text: "Complete my profile",
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: appBlue,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () => context.router
-                                          .pushNamed(Pages.editOwnerProfile),
-                                  )
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
+                                )
+                              ],
                             ),
+                            SizedBox(height: 15.h),
+                            Column(
+                              children: [
+                                ProfileInfoCard(
+                                  image: "assets/images/Blue Eye.svg",
+                                  header: "${owner.profileViews} profile views",
+                                  text: "Fellow colleagues viewed your profile",
+                                ),
+                                SizedBox(height: 15.h),
+                                ProfileInfoCard(
+                                  image: "assets/images/Search Appearance.svg",
+                                  header:
+                                      "${owner.searchAppearances} hostel search appearances",
+                                  text:
+                                      "How often you appear in search results",
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 28.h),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minWidth: 414.w,
+                                minHeight: 1.h,
+                                maxWidth: 414.w,
+                                maxHeight: 1.h,
+                              ),
+                              child: const ColoredBox(color: Colors.black12),
+                            ),
+                            SizedBox(height: 20.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Personal Info",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
+                                ),
+                                Text(
+                                  "Private to you",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 15.h),
+                            if (owner.hasCompletedProfile > 20)
+                              Column(children: [
+                                ProfileInfoCard(
+                                  image:
+                                      "assets/images/Profile Blue Location.svg",
+                                  header: owner.address,
+                                  text: "Personal Address",
+                                ),
+                                SizedBox(height: 16.h),
+                                ProfileInfoCard(
+                                  image: "assets/images/Profile Religion.svg",
+                                  header: owner.religion,
+                                  text: "Religion",
+                                ),
+                                if (owner.religion == "Christianity")
+                                  SizedBox(height: 16.h),
+                                if (owner.religion == "Christianity")
+                                  ProfileInfoCard(
+                                    image: "assets/images/Profile Church.svg",
+                                    header: owner.denomination,
+                                    text: "Denomination",
+                                  ),
+                                SizedBox(height: 16.h),
+                                ProfileInfoCard(
+                                  image: "assets/images/Profile Age.svg",
+                                  header: formatDateRaw(owner.dob),
+                                  text: "Date of Birth",
+                                ),
+                              ]),
+                            if (owner.hasCompletedProfile <= 20)
+                              SizedBox(
+                                height: 450.r,
+                                width: 414.w,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: 50.r),
+                                    Image.asset(
+                                      "assets/images/No Data.png",
+                                      width: 150.r,
+                                      height: 150.r,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(height: 50.r),
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                "Unlock the full experience! Your profile details are empty. ",
+                                            style: context.textTheme.bodyMedium!
+                                                .copyWith(
+                                              color: weirdBlack75,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: "Complete my profile",
+                                            style: context.textTheme.bodyMedium!
+                                                .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: appBlue,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () => context.router
+                                                  .pushNamed(
+                                                      Pages.editOwnerProfile),
+                                          )
+                                        ],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            SizedBox(height: 48.h),
                           ],
                         ),
                       ),
-                    SizedBox(height: 48.h),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

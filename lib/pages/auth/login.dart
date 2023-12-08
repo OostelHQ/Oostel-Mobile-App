@@ -40,7 +40,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void navigate(User? user) {
-    print("user $user");
     FileManager.saveBool("autoLogin", remember);
     FileManager.saveInt("registerStep", 0);
     if(remember) {
@@ -58,7 +57,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     if(ref.read(isLandlord)) {
       int value = ref.read(currentUserProvider).hasCompletedProfile;
-      if(value == 20) {
+      if(value <= 20) {
         destination = Pages.createStepOne;
       }
     }
@@ -72,9 +71,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if(!mounted) return;
       showError(resp.message);
       if (!resp.success) {
-        ref.watch(currentUserProvider.notifier).state = defaultStudent; //May change later
-        context.router.pushReplacementNamed(Pages.studentDashboard); // May change later
-        // Navigator.of(context).pop();
+        Navigator.of(context).pop();
       } else {
         navigate(resp.payload);
       }
