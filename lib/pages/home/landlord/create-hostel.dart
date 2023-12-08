@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
@@ -1391,13 +1392,16 @@ class _StepFourState extends State<StepFour> {
                   ),
                 ),
                 SizedBox(height: 300.h),
-                GestureDetector(
-                  onTap: () => context.router.pushNamed(Pages.tenantAgreement),
-                  child: Text(
-                    "Tenant Agreement",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: appBlue,
-                      fontWeight: FontWeight.w600,
+                Center(
+                  child: GestureDetector(
+                    onTap: () =>
+                        context.router.pushNamed(Pages.tenantAgreement),
+                    child: Text(
+                      "Tenant Agreement",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: appBlue,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -2748,13 +2752,13 @@ class StepEight extends StatefulWidget {
 }
 
 class _StepEightState extends State<StepEight> {
-  late List<RoomInfo> rooms;
+  late List<Map<String, dynamic>> rooms;
 
   @override
   void initState() {
     super.initState();
-    rooms = toRoomList(widget.info["roomsLeft"]);
-    widget.info["roomsLeft"] = rooms;
+    rooms = toRoomList(widget.info["rooms"]);
+    widget.info["rooms"] = rooms;
   }
 
   bool exists(int index) => index < rooms.length;
@@ -2891,7 +2895,7 @@ class _StepEightState extends State<StepEight> {
                                       (value) => setState(
                                         () {
                                           if (value == null) return;
-                                          rooms.add(value as RoomInfo);
+                                          rooms.add(value as Map<String, dynamic>);
                                         },
                                       ),
                                     );
@@ -3037,7 +3041,7 @@ class _NoRoom extends StatelessWidget {
 }
 
 class _CreateRoomCard extends StatelessWidget {
-  final RoomInfo info;
+  final Map<String, dynamic> info;
 
   const _CreateRoomCard({
     required this.info,
@@ -3068,7 +3072,7 @@ class _CreateRoomCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
                     child: Image.file(
-                      File(info.media[0]),
+                      File(info["media"][0].path),
                       width: 414.w,
                       height: 156.h,
                       fit: BoxFit.cover,
@@ -3098,7 +3102,7 @@ class _CreateRoomCard extends StatelessWidget {
               ),
               SizedBox(height: 6.h),
               Text(
-                info.name,
+                info["name"],
                 style: context.textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: weirdBlack,
@@ -3117,7 +3121,7 @@ class _CreateRoomCard extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "${currency()} ${formatAmountInDouble(info.price)}",
+                      text: "${currency()} ${formatAmountInDouble(info["price"])}",
                       style: context.textTheme.bodyLarge!.copyWith(
                         color: appBlue,
                         fontFamily: "Inter",
@@ -3187,7 +3191,7 @@ class _StepNineState extends State<StepNine> {
   ];
 
   late List<String> facilities;
-  late List<String> media;
+  late List<SingleFileResponse> media;
 
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -3195,21 +3199,21 @@ class _StepNineState extends State<StepNine> {
   void initState() {
     super.initState();
 
-    RoomInfo? room;
+    Map<String, dynamic>? room;
 
     if (widget.index != null) {
-      List<RoomInfo> rooms = toRoomList(widget.info["roomsLeft"]);
-      widget.info["roomsLeft"] = rooms;
+      List<Map<String, dynamic>> rooms = toRoomList(widget.info["rooms"]);
+      widget.info["rooms"] = rooms;
       room = rooms[widget.index!];
-      facilities = room.facilities;
-      media = room.media;
+      facilities = room["facilities"];
+      media = room["media"];
     } else {
       facilities = [];
       media = [];
     }
 
-    name = TextEditingController(text: room?.name);
-    price = TextEditingController(text: room?.price.toStringAsFixed(0));
+    name = TextEditingController(text: room?["name"] ?? "");
+    price = TextEditingController(text: room?["price"] == null ? "" : room?["price"].toStringAsFixed(0));
   }
 
   @override
@@ -3540,7 +3544,7 @@ class _StepNineState extends State<StepNine> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(5.r),
                               child: Image.file(
-                                File(media[index]),
+                                File(media[index].path),
                                 width: 110.r,
                                 height: 110.r,
                                 fit: BoxFit.cover,
@@ -3584,12 +3588,7 @@ class _StepNineState extends State<StepNine> {
                             onTap: () =>
                                 FileManager.multiple(type: FileType.image)
                                     .then((response) async {
-                              if (response.isEmpty) return;
-
-                              for (var resp in response) {
-                                media.add(resp.path);
-                              }
-
+                              media.addAll(response);
                               setState(() {});
                             }),
                             child: Container(
@@ -3675,12 +3674,12 @@ class _StepNineState extends State<StepNine> {
                   return;
                 }
 
-                RoomInfo info = RoomInfo(
-                  name: name.text.trim(),
-                  price: double.parse(price.text.trim()),
-                  facilities: facilities,
-                  media: media,
-                );
+                Map<String, dynamic> info = {
+                  "name": name.text.trim(),
+                  "price": double.parse(price.text.trim()),
+                  "facilities": facilities,
+                  "media": media,
+                };
 
                 context.router.pop(info);
               },
@@ -3733,7 +3732,7 @@ class _StepTenState extends State<StepTen> {
   late List<int> totalProps;
   late List<SingleFileResponse> media;
   late List<String> facilities, rules;
-  late List<RoomInfo> rooms;
+  late List<Map<String, dynamic>> rooms;
   late int availableRooms, totalRooms;
   late bool vacantRooms;
 
@@ -3743,7 +3742,8 @@ class _StepTenState extends State<StepTen> {
   void initState() {
     super.initState();
     rooms = toRoomList(widget.info["rooms"]);
-    totalProps = calculate(rooms);
+    //totalProps = calculate(rooms);
+    totalProps = [0, 0, 0];
 
     media = toDataList(widget.info["medias"]);
     facilities = toStringList(widget.info["FacilityName"]);
@@ -3753,8 +3753,8 @@ class _StepTenState extends State<StepTen> {
     totalRooms = widget.info["totalRoom"];
     vacantRooms = widget.info["isAnyRoomVacant"];
 
-    minBudget = formatAmountInDouble(widget.info["minPrice"] * 0.001);
-    maxBudget = formatAmountInDouble(widget.info["maxPrice"] * 0.001);
+    minBudget = "";
+    maxBudget = "";
   }
 
   List<int> calculate(List<RoomInfo> rooms) {
@@ -3931,7 +3931,7 @@ class _StepTenState extends State<StepTen> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          "${widget.info["street"]}, ${widget.info["junction"]}, ${widget.info["state"]}, ${widget.info["country"]}",
+                          "${widget.info["street"].trim()}, ${widget.info["junction"].trim()}, ${widget.info["state"].trim()}, ${widget.info["country"]}",
                           overflow: TextOverflow.ellipsis,
                           style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack75, fontWeight: FontWeight.w500),
@@ -4034,29 +4034,30 @@ class _StepTenState extends State<StepTen> {
                           ],
                         ),
                         SizedBox(height: 8.h),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${currency()}${minBudget}k - ${currency()}${maxBudget}k",
-                                style: context.textTheme.bodyLarge!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w600,
+                        if (minBudget.isNotEmpty && maxBudget.isNotEmpty)
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      "${currency()}${minBudget}k - ${currency()}${maxBudget}k",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    color: appBlue,
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              TextSpan(
-                                text: "/year",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
+                                TextSpan(
+                                  text: "/year",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: appBlue,
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
                         SizedBox(height: 16.h),
                         ConstrainedBox(
                           constraints: BoxConstraints(
@@ -4163,11 +4164,12 @@ class _StepTenState extends State<StepTen> {
                         mainAxisExtent: 205.h,
                       ),
                       itemCount: rooms.length,
-                      itemBuilder: (_, index) => AvailableRoomCard(
-                        info: rooms[index],
-                        isAsset: false,
-                        onTap: () {},
-                      ),
+                      // itemBuilder: (_, index) => AvailableRoomCard(
+                      //   info: rooms[index],
+                      //   isAsset: false,
+                      //   onTap: () {},
+                      // ),
+                      itemBuilder: (_, index) => const SizedBox(),
                     ),
                   ),
                 SliverPadding(
@@ -4286,12 +4288,12 @@ List<String> toStringList(List<dynamic> list) {
   return result;
 }
 
-List<RoomInfo> toRoomList(List<dynamic> list) {
-  List<RoomInfo> result = [];
-  for (var element in list) {
-    result.add(element as RoomInfo);
+List<Map<String, dynamic>> toRoomList(List<dynamic> data) {
+  List<Map<String, dynamic>> response = [];
+  for(dynamic element in data) {
+    response.add(element as Map<String, dynamic>);
   }
-  return result;
+  return response;
 }
 
 List<SingleFileResponse> toDataList(List<dynamic> list) {
@@ -4400,9 +4402,27 @@ class UploadHostelPage extends StatefulWidget {
 }
 
 class _UploadHostelPageState extends State<UploadHostelPage> {
-  int progress = 20;
-  String message = "Creating your hostel";
+  int progress = 0;
   bool hasError = false;
+  int totalTasks = 0;
+  String message = "";
+
+  late List<dynamic> rooms;
+
+  @override
+  void initState() {
+    super.initState();
+    bool vacantRooms = widget.info["isAnyRoomVacant"];
+    rooms = widget.info["rooms"];
+    message = "Creating your hostel";
+    if(!vacantRooms) {
+      totalTasks = 1;
+    } else {
+      totalTasks = rooms.length + 1;
+    }
+
+    upload();
+  }
 
   void upload() async {
     createHostel(widget.info).then((resp) {
@@ -4411,10 +4431,23 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         showError(resp.message);
         Navigator.of(context).pop();
       } else {
-        context.router.pop(true);
+        if(totalTasks == 1) {
+          setState(() => progress = 100);
+          context.router.pop(true);
+          return;
+        }
+        // else {
+        //   uploadRooms();
+        // }
       }
     });
   }
+
+  // void uploadRooms() async {
+  //   for(int i = 0; i < rooms.length; ++i) {
+  //     FyndaResponse response = await createRoomForHostel(rooms[i] as Map<String, dynamic>);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -4448,99 +4481,102 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if(!hasError)
-                    SizedBox(
-                      width: 20.r,
-                      height: 20.r,
-                      child: const CircularProgressIndicator(
-                          color: appBlue, strokeWidth: 3),
-                    ),
-                    if(!hasError)
-                    SizedBox(width: 10.w),
+                    if (!hasError)
+                      SizedBox(
+                        width: 20.r,
+                        height: 20.r,
+                        child: const CircularProgressIndicator(
+                            color: appBlue, strokeWidth: 3),
+                      ),
+                    if (!hasError) SizedBox(width: 10.w),
                     Text(
-                      hasError ? "An error occurred while creating your hostel" : message,
+                      hasError
+                          ? "An error occurred while creating your hostel"
+                          : message,
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: appBlue,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ]),
+                  ],
+              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: hasError ? Container(
-        width: 414.w,
-        height: 90.h,
-        color: paleBlue,
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () => context.router.pop(),
-              child: Container(
-                width: 170.w,
-                height: 50.h,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.r),
-                  border: Border.all(color: appBlue),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.chevron_left_rounded,
-                        color: appBlue, size: 26.r),
-                    SizedBox(width: 5.w),
-                    Text(
-                      "Go back",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
+      bottomNavigationBar: hasError
+          ? Container(
+              width: 414.w,
+              height: 90.h,
+              color: paleBlue,
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => context.router.pop(),
+                    child: Container(
+                      width: 170.w,
+                      height: 50.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4.r),
+                        border: Border.all(color: appBlue),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.chevron_left_rounded,
+                              color: appBlue, size: 26.r),
+                          SizedBox(width: 5.w),
+                          Text(
+                            "Go back",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: appBlue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      width: 170.w,
+                      height: 50.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4.r),
                         color: appBlue,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: 170.w,
-                height: 50.h,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.r),
-                  color: appBlue,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Retry",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Retry",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 5.w),
+                          Icon(Boxicons.bx_redo,
+                              color: Colors.white, size: 26.r),
+                        ],
                       ),
                     ),
-                    SizedBox(width: 5.w),
-                    Icon(Boxicons.bx_redo,
-                        color: Colors.white, size: 26.r),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ) : null,
+            )
+          : null,
     );
   }
 }
-
 
 //class StepTen extends StatelessWidget {
 //   final Map<String, dynamic> info;

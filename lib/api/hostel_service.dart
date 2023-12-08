@@ -151,9 +151,26 @@ Future<FyndaResponse> getHostel(String id) async {
   );
 }
 
-Future<FyndaResponse> createRoomForHostel(Map<String, dynamic> map) async {
+Future<FyndaResponse> createRoomForHostel(
+    {required String userID, required String hostelID, required Map<String, dynamic> map}) async {
+  FormData formData = FormData();
+  formData.fields.add(MapEntry("userId", userID));
+  formData.fields.add(MapEntry("hostelId", hostelID));
+  formData.fields.add(MapEntry("roomNumber", map["name"]));
+  formData.fields.add(MapEntry("price", map["price"].toStringAsFixed(0)));
+  for (String facility in map["facilities"]) {
+    formData.fields.addAll([MapEntry("roomFacilities", facility)]);
+  }
+  formData.fields.add(const MapEntry("isRented", "true"));
+  List<SingleFileResponse> medias = map["medias"];
+  for (SingleFileResponse response in medias) {
+    formData.files.addAll([
+      MapEntry("files", await MultipartFile.fromFile(response.path))
+    ]);
+  }
+
+
   try {
-    FormData formData = FormData.fromMap(map);
     Response response = await dio.post(
       "/hostel/create-room-for-hostel",
       data: formData,
