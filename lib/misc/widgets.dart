@@ -838,173 +838,168 @@ class _StudentCardState extends State<StudentCard> {
             Pages.otherStudent,
             extra: widget.info,
           ),
-      child: SizedBox(
-        height: 135.h,
-        child: Center(
-          child: Container(
-            width: 400.w,
-            decoration: BoxDecoration(
-                color: const Color(0xFFF8FBFF),
-                borderRadius: BorderRadius.circular(4.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xFFE0E5EC),
-                    blurRadius: 6.0,
-                    spreadRadius: 1.0,
-                  )
-                ],
-            ),
-            child: SizedBox(
-              height: 120.h,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                child: Row(
+      child: Container(
+        width: 400.w,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FBFF),
+          borderRadius: BorderRadius.circular(4.r),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0xFFE0E5EC),
+              blurRadius: 6.0,
+              spreadRadius: 1.0,
+            )
+          ],
+        ),
+        child: SizedBox(
+          height: 120.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(widget.info.image),
+                  radius: 35.w,
+                ),
+                SizedBox(width: 10.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage(widget.info.image),
-                      radius: 35.w,
+                    SizedBox(
+                      width: 270.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.info.mergedNames,
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: weirdBlack),
+                          ),
+                          GestureDetector(
+                            onTap: () => setState(() => liked = !liked),
+                            child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: Icon(
+                                Icons.favorite_rounded,
+                                color: liked ? Colors.red : weirdBlack25,
+                                size: 18,
+                                key: ValueKey<bool>(liked),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 10.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(height: 17.5.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: 270.w,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                widget.info.mergedNames,
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: weirdBlack),
-                              ),
-                              GestureDetector(
-                                onTap: () => setState(() => liked = !liked),
-                                child: AnimatedSwitcherTranslation.right(
-                                  duration: const Duration(milliseconds: 500),
-                                  child: Icon(
-                                    Icons.favorite_rounded,
-                                    color: liked ? Colors.red : weirdBlack25,
-                                    size: 18,
-                                    key: ValueKey<bool>(liked),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+                        SvgPicture.asset(
+                          "assets/images/Roomate Info Person.svg",
+                          width: 15.r,
+                          height: 15.r,
+                          color: weirdBlack50,
                         ),
-                        SizedBox(height: 17.5.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/Roomate Info Person.svg",
-                              width: 15.r,
-                              height: 15.r,
+                        SizedBox(width: 5.w),
+                        Text(
+                          widget.info.gender,
+                          style: context.textTheme.bodySmall!.copyWith(
                               color: weirdBlack50,
-                            ),
-                            SizedBox(width: 5.w),
-                            Text(
-                              widget.info.gender,
-                              style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack50,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(width: 12.w),
-                            SvgPicture.asset(
-                              "assets/images/Roomate Info Level.svg",
-                              width: 15.r,
-                              height: 15.r,
-                              color: weirdBlack50,
-                            ),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "${widget.info.level} level",
-                              style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack50,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(width: 12.w),
-                            SvgPicture.asset(
-                              "assets/images/Roomate Info Location.svg",
-                              width: 15.r,
-                              height: 15.r,
-                              color: weirdBlack50,
-                            ),
-                            SizedBox(width: 5.w),
-                            Text(
-                              widget.info.location,
-                              style: context.textTheme.bodySmall!.copyWith(
-                                  color: weirdBlack50,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
+                              fontWeight: FontWeight.w500),
                         ),
-                        SizedBox(height: 17.5.h),
-                        SizedBox(
-                          width: 270.w,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                      "${currency()} ${formatAmountInDouble(
-                                          widget.info.amount)}",
-                                      style:
-                                      context.textTheme.bodySmall!.copyWith(
-                                        color: appBlue,
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "/year",
-                                      style:
-                                      context.textTheme.bodySmall!.copyWith(
-                                        color: appBlue,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: "Inter",
-                                        fontSize: 12.sp,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 85.w,
-                                height: 25.h,
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 5.w, vertical: 2.h),
-                                decoration: BoxDecoration(
-                                  color: infoRoomsLeftBackground,
-                                  borderRadius: BorderRadius.circular(5.r),
-                                ),
-                                child: Text(
-                                  widget.info.available
-                                      ? "Available"
-                                      : "Unavailable",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                      color: infoRoomsLeft,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
+                        SizedBox(width: 12.w),
+                        SvgPicture.asset(
+                          "assets/images/Roomate Info Level.svg",
+                          width: 15.r,
+                          height: 15.r,
+                          color: weirdBlack50,
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          "${widget.info.level} level",
+                          style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(width: 12.w),
+                        SvgPicture.asset(
+                          "assets/images/Roomate Info Location.svg",
+                          width: 15.r,
+                          height: 15.r,
+                          color: weirdBlack50,
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          widget.info.location,
+                          style: context.textTheme.bodySmall!.copyWith(
+                              color: weirdBlack50,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ],
                     ),
+                    SizedBox(height: 17.5.h),
+                    SizedBox(
+                      width: 270.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                  "${currency()} ${formatAmountInDouble(
+                                      widget.info.amount)}",
+                                  style:
+                                  context.textTheme.bodySmall!.copyWith(
+                                    color: appBlue,
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "/year",
+                                  style:
+                                  context.textTheme.bodySmall!.copyWith(
+                                    color: appBlue,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Inter",
+                                    fontSize: 12.sp,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: 85.w,
+                            height: 25.h,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w, vertical: 2.h),
+                            decoration: BoxDecoration(
+                              color: infoRoomsLeftBackground,
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              widget.info.available
+                                  ? "Available"
+                                  : "Unavailable",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                  color: infoRoomsLeft,
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              ),
+              ],
             ),
           ),
         ),

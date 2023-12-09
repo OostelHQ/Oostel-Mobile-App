@@ -84,7 +84,6 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
 
 
   void refresh() {
-    getHostel("1fe339d4-27ba-4c9d-aec0-f87388ea41c2");
     refreshHostel();
     refreshRoommates();
   }
@@ -309,7 +308,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverList.separated(
-                separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                separatorBuilder: (_, __) => SizedBox(height: 16.h),
                 itemBuilder: (_, index) => AnimationConfiguration.staggeredList(
                   position: index,
                   duration: const Duration(milliseconds: 750),

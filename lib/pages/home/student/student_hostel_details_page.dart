@@ -149,24 +149,25 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                             fit: StackFit.expand,
                             children: [
                               Hero(
-                                tag:
-                                    "Hostel ID: ${widget.info.id} image",
+                                tag: "Hostel ID: ${widget.info.id} image",
                                 flightShuttleBuilder: flightShuttleBuilder,
                                 child: CachedNetworkImage(
-                                  imageUrl: widget.info.media.isEmpty ? "" : widget.info.media.first,
+                                  imageUrl: widget.info.media.isEmpty
+                                      ? ""
+                                      : widget.info.media.first,
                                   errorWidget: (context, url, error) =>
                                       Container(
                                     width: 414.w,
                                     height: 470.h,
                                     color: weirdBlack50,
-                                    alignment: Alignment.center,
-                                    child: loader,
                                   ),
                                   progressIndicatorBuilder:
                                       (context, url, download) => Container(
                                     width: 414.w,
                                     height: 470.h,
                                     color: weirdBlack50,
+                                    alignment: Alignment.center,
+                                    child: loader,
                                   ),
                                   imageBuilder: (context, provider) =>
                                       Container(
@@ -203,7 +204,8 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                 right: 30.w,
                                 child: GestureDetector(
                                   onTap: () {
-                                    String id = ref.read(currentUserProvider).id;
+                                    String id =
+                                        ref.read(currentUserProvider).id;
                                     // if (widget.info.likes.contains(id)) {
                                     //   widget.info.likes.remove(id);
                                     // } else {
@@ -587,17 +589,17 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                                     width: 140.w,
                                                     child: Text(
                                                       owner!.address,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       style: context
                                                           .textTheme.bodySmall!
                                                           .copyWith(
                                                         color: weirdBlack50,
                                                         fontWeight:
-                                                        FontWeight.w500,
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
-                                                  
                                                 ],
                                               ),
                                               Text(
@@ -1069,18 +1071,34 @@ class _RoomSection extends StatelessWidget {
               onTap: () => context.router.pushNamed(
                 Pages.viewMedia,
                 extra: ViewInfo(
-                  type: DisplayType.asset,
+                  type: DisplayType.network,
                   paths: info.media,
                   current: index,
                 ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.r),
-                child: Image.asset(
-                  info.media[index],
+              child: CachedNetworkImage(
+                imageUrl: info.media[index],
+                errorWidget: (context, url, error) => Container(
                   width: 110.r,
                   height: 110.r,
-                  fit: BoxFit.cover,
+                  color: weirdBlack50,
+                ),
+                progressIndicatorBuilder: (context, url, download) => Container(
+                  width: 110.r,
+                  height: 110.r,
+                  color: weirdBlack50,
+                  alignment: Alignment.center,
+                  child: loader,
+                ),
+                imageBuilder: (context, provider) => Container(
+                  width: 110.r,
+                  height: 110.r,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: provider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             ),

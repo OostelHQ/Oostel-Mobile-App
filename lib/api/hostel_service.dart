@@ -124,9 +124,11 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
       for(var element in list) {
         List<String> rules = toStringList(element["rulesAndRegulation"] as List<dynamic>);
         List<String> facilities = toStringList(element["hostelFacilities"] as List<dynamic>);
+        List<String> media = toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
 
         element["rulesAndRegulation"] = rules;
         element["hostelFacilities"] = facilities;
+        element["media"] = media;
 
         HostelInfo info = HostelInfo.fromJson(element as Map<String, dynamic>);
         hostels.add(info);
