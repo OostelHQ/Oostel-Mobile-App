@@ -91,12 +91,19 @@ final StateProvider<bool> newNotificationProvider = StateProvider((ref) => false
 final StateProvider<bool> showCompleteProfileProvider = StateProvider((ref) => false);
 
 void resetProviders(WidgetRef ref) {
+  ref.invalidate(availableHostelsProvider);
+  ref.invalidate(availableRoommatesProvider);
   ref.invalidate(dashboardTabIndexProvider);
   ref.invalidate(showCompleteProfileProvider);
   ref.invalidate(currentUserProvider);
   ref.invalidate(otpOriginProvider);
   ref.invalidate(hasMessagesProvider);
 }
+
+
+final StateProvider<List<HostelInfo>> filteredExploreHostelsProvider = StateProvider((ref) => []);
+final StateProvider<List<Student>> filteredExploreRoommatesProvider = StateProvider((ref) => []);
+
 
 final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
     StateProvider((ref) => [

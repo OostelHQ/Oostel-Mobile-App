@@ -46,8 +46,8 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         String role = data["data"]["role"];
         log("UserData: $userData");
         if (role == "Student") {
-          user = _parseStudentData(
-              userData, email: data['data']['email'], fullName: data['data']['fullname']);
+          user = _parseStudentData(userData,
+              email: data['data']['email'], fullName: data['data']['fullname']);
         } else if (role == "LandLord") {
           user = _parseLandlordData(userData);
         } else if (role == "Agent") {
@@ -74,7 +74,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
   );
 }
 
-User _parseLandlordData(Map<String, dynamic> userData) {
+Landowner _parseLandlordData(Map<String, dynamic> userData) {
   Map<String, dynamic>? profile = userData["landlordProfile"];
 
   String email = userData["userDto"]["userName"];
@@ -122,7 +122,7 @@ User _parseLandlordData(Map<String, dynamic> userData) {
   );
 }
 
-User _parseStudentData(Map<String, dynamic> userData,
+Student _parseStudentData(Map<String, dynamic> userData,
     {String email = "", String fullName = ""}) {
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
@@ -458,7 +458,7 @@ Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map,
   );
 }
 
-Future<FyndaResponse> getLandlordById(String id) async {
+Future<FyndaResponse<User?>> getLandlordById(String id) async {
   try {
     Response response = await dio.get(
       "/user-profile/get-landlord-by-id",
@@ -469,7 +469,13 @@ Future<FyndaResponse> getLandlordById(String id) async {
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      Landowner owner =
+          _parseLandlordData(response.data["data"] as Map<String, dynamic>);
+      return FyndaResponse(
+        message: "Success",
+        payload: owner,
+        success: true,
+      );
     }
   } catch (e) {
     log("Get Landlord By id Error: $e");

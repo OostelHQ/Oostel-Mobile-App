@@ -1,4 +1,5 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -63,6 +64,22 @@ class _StudentDashboardPageState extends ConsumerState<StudentDashboardPage> {
           children: stack,
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //     onPressed: () {
+      //       AwesomeNotifications().createNotification(
+      //         content: NotificationContent(
+      //           id: 1,
+      //           channelKey: "basic_channel",
+      //           title: "Testing",
+      //           body: "Local Notifications are working. Yay!",
+      //           category: NotificationCategory.Message,
+      //           backgroundColor: appBlue,
+      //           wakeUpScreen: true,
+      //         ),
+      //       );
+      //     },
+      //     child: const Icon(Icons.notification_add_rounded),
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (newIndex) =>
@@ -160,8 +177,8 @@ class _HomePageState extends ConsumerState<_HomePage>
       ),
     );
     if (ref.read(currentUserProvider).hasCompletedProfile < 100) {
-      Future.delayed(const Duration(seconds: 3),
-          () => animationController.forward());
+      Future.delayed(
+          const Duration(seconds: 3), () => animationController.forward());
     }
   }
 
@@ -377,7 +394,8 @@ class _HomePageState extends ConsumerState<_HomePage>
           right: 0,
           child: SizeTransition(
             sizeFactor: animation,
-            child: ProfileNotification(onCancel: () => animationController.reverse()),
+            child: ProfileNotification(
+                onCancel: () => animationController.reverse()),
           ),
         ),
       ],

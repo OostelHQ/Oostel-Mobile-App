@@ -3670,18 +3670,20 @@ class _StepNineState extends State<StepNine> {
             ),
             GestureDetector(
               onTap: () {
-                if (name.text.trim().isEmpty ||
-                    price.text.trim().isEmpty ||
-                    facilities.isEmpty ||
-                    media.isEmpty) {
+                if(!validateForm(formKey)) return;
+
+                if(duration == null) {
+                  showError("Please choose a duration");
                   return;
                 }
+
 
                 Map<String, dynamic> info = {
                   "name": name.text.trim(),
                   "price": double.parse(price.text.trim()),
                   "facilities": facilities,
                   "media": media,
+                  "duration": duration,
                 };
 
                 context.router.pop(info);

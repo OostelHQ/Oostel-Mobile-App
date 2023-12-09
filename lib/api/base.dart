@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 export 'package:dio/dio.dart';
 
+import 'package:signalr_flutter/signalr_flutter.dart';
+
 export 'dart:developer' show log;
+
+const String baseUrl = "http://fyndaapp-001-site1.htempurl.com/api";
 
 final Dio dio = Dio(
   BaseOptions(
-    baseUrl: "http://fyndaapp-001-site1.htempurl.com/api",
+    baseUrl: baseUrl,
     connectTimeout: const Duration(seconds: 60),
     sendTimeout: const Duration(seconds: 120),
     receiveTimeout: const Duration(seconds: 180),

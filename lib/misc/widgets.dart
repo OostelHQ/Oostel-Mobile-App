@@ -70,10 +70,11 @@ class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class WidgetHeaderDelegate extends SliverPersistentHeaderDelegate {
-  WidgetHeaderDelegate({required this.widget, this.height = 1.0});
+  WidgetHeaderDelegate({required this.widget, this.height = 1.0, this.color = Colors.white});
 
   final Widget widget;
   final double height;
+  final Color color;
 
   @override
   double get minExtent => height;
@@ -86,7 +87,7 @@ class WidgetHeaderDelegate extends SliverPersistentHeaderDelegate {
       bool overlapsContent) =>
       Container(
         height: height,
-        color: Colors.white,
+        color: color,
         child: widget,
       );
 
@@ -1068,7 +1069,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CachedNetworkImage(
-                  imageUrl: widget.info.media.first,
+                  imageUrl: widget.info.media.isEmpty ? "" : widget.info.media.first,
                   errorWidget: (context, url, error) =>
                       Container(
                         width: 180.w,
@@ -1169,33 +1170,33 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                       height: 15.r,
                       color: weirdBlack50,
                     ),
-                    SizedBox(width: 5.w),
+                    SizedBox(width: 4.w),
                     Text(
                       "$bedrooms",
                       style: context.textTheme.bodySmall!.copyWith(
                           color: weirdBlack50, fontWeight: FontWeight.w500),
                     ),
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 8.w),
                     SvgPicture.asset(
                       "assets/images/Hostel Info Bath.svg",
                       width: 15.r,
                       height: 15.r,
                       color: weirdBlack50,
                     ),
-                    SizedBox(width: 5.w),
+                    SizedBox(width: 4.w),
                     Text(
                       "$bathroom",
                       style: context.textTheme.bodySmall!.copyWith(
                           color: weirdBlack50, fontWeight: FontWeight.w500),
                     ),
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 8.w),
                     SvgPicture.asset(
                       "assets/images/Hostel Info Area.svg",
                       width: 15.r,
                       height: 15.r,
                       color: weirdBlack25,
                     ),
-                    SizedBox(width: 5.w),
+                    SizedBox(width: 4.w),
                     Text(
                       "${widget.info.area.toStringAsFixed(0)} sqft",
                       style: context.textTheme.bodySmall!.copyWith(

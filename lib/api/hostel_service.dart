@@ -175,18 +175,19 @@ Future<FyndaResponse> getHostel(String id) async {
 Future<FyndaResponse> createRoomForHostel(
     {required String userID, required String hostelID, required Map<String, dynamic> map}) async {
   FormData formData = FormData();
-  formData.fields.add(MapEntry("userId", userID));
-  formData.fields.add(MapEntry("hostelId", hostelID));
-  formData.fields.add(MapEntry("roomNumber", map["name"]));
-  formData.fields.add(MapEntry("price", map["price"].toStringAsFixed(0)));
+  formData.fields.add(MapEntry("UserId", userID));
+  formData.fields.add(MapEntry("HostelId", hostelID));
+  formData.fields.add(MapEntry("RoomNumber", map["name"]));
+  formData.fields.add(MapEntry("Duration", map["duration"]));
+  formData.fields.add(MapEntry("Price", map["price"].toStringAsFixed(0)));
   for (String facility in map["facilities"]) {
-    formData.fields.addAll([MapEntry("roomFacilities", facility)]);
+    formData.fields.addAll([MapEntry("RoomFacilities", facility)]);
   }
   formData.fields.add(const MapEntry("isRented", "true"));
   List<SingleFileResponse> medias = map["medias"];
   for (SingleFileResponse response in medias) {
     formData.files.addAll([
-      MapEntry("files", await MultipartFile.fromFile(response.path))
+      MapEntry("Files", await MultipartFile.fromFile(response.path))
     ]);
   }
 
@@ -199,7 +200,11 @@ Future<FyndaResponse> createRoomForHostel(
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      return const FyndaResponse(
+        message: "Success",
+        payload: null,
+        success: true,
+      );
     }
   } catch (e) {
     log("Create Room Error: $e");

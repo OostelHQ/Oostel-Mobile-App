@@ -65,7 +65,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
 
       setState(() {
         fetching = false;
-        owner = resp.payload;
+        owner = resp.payload as Landowner?;
       });
     });
   }
@@ -150,10 +150,10 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                             children: [
                               Hero(
                                 tag:
-                                    "Hostel ID: ${widget.info.id} Image: ${widget.info.media.first}",
+                                    "Hostel ID: ${widget.info.id} image",
                                 flightShuttleBuilder: flightShuttleBuilder,
                                 child: CachedNetworkImage(
-                                  imageUrl: widget.info.media.first,
+                                  imageUrl: widget.info.media.isEmpty ? "" : widget.info.media.first,
                                   errorWidget: (context, url, error) =>
                                       Container(
                                     width: 414.w,
@@ -583,16 +583,21 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                                     color: weirdBlack20,
                                                   ),
                                                   SizedBox(width: 5.w),
-                                                  Text(
-                                                    owner!.address,
-                                                    style: context
-                                                        .textTheme.bodySmall!
-                                                        .copyWith(
-                                                      color: weirdBlack50,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                  SizedBox(
+                                                    width: 140.w,
+                                                    child: Text(
+                                                      owner!.address,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: context
+                                                          .textTheme.bodySmall!
+                                                          .copyWith(
+                                                        color: weirdBlack50,
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                      ),
                                                     ),
                                                   ),
+                                                  
                                                 ],
                                               ),
                                               Text(

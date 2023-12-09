@@ -1,14 +1,32 @@
+import 'package:signalr_flutter/signalr_flutter.dart';
+
 import 'base.dart';
 
-Future<FyndaResponse> getMessages(Map<String, dynamic> map) async {
-  try {
-    Response response =
-        await dio.get("/message/get-user-message", queryParameters: map, options: configuration);
+Future<FyndaResponse> getMessages() async {
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      return FyndaResponse(
-          message: response.data["message"], payload: null, success: true);
-    }
+
+  final SignalR socket = SignalR("http://fyndaapp-001-site1.htempurl.com/hubs", "/message",
+      hubMethods: ["POST"],
+      statusChangeCallback: (status) {},
+      hubCallback: (methodName, message) {
+          log(methodName);
+          log(message);
+      }
+  );
+
+
+
+
+  try {
+    socket.connect();
+
+    // Response response = await dio.get("/message/get-user-message",
+    //     queryParameters: map, options: configuration);
+    //
+    // if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    //   return FyndaResponse(
+    //       message: response.data["message"], payload: null, success: true);
+    // }
   } catch (e) {
     log("Get Messages Error: $e");
   }
@@ -22,8 +40,8 @@ Future<FyndaResponse> getMessages(Map<String, dynamic> map) async {
 
 Future<FyndaResponse> deleteMessage(String ID) async {
   try {
-    Response response = await dio
-        .delete("/message/delete-message", queryParameters: {"messageId": ID}, options: configuration);
+    Response response = await dio.delete("/message/delete-message",
+        queryParameters: {"messageId": ID}, options: configuration);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       return FyndaResponse(
@@ -39,3 +57,4 @@ Future<FyndaResponse> deleteMessage(String ID) async {
     success: false,
   );
 }
+
