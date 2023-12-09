@@ -35,7 +35,6 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
-      log("Data: $data");
       token = data["data"]["token"];
       Map<String, dynamic>? userData = await _getCurrentUser();
 
@@ -44,7 +43,6 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         user = null;
       } else {
         String role = data["data"]["role"];
-        log("UserData: $userData");
         if (role == "Student") {
           user = _parseStudentData(userData,
               email: data['data']['email'], fullName: data['data']['fullname']);
@@ -260,12 +258,10 @@ Future<Map<String, dynamic>?> _getCurrentUser() async {
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      //log(response.data["data"].toString());
       return response.data["data"];
     }
   } catch (e) {
     log("Current User Error: $e");
-    print("Current User Error: $e");
   }
 
   return null;
@@ -401,7 +397,6 @@ Future<FyndaResponse> updateAgentProfile(Map<String, dynamic> map) async {
 
 Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
     {String profilePictureFilePath = ""}) async {
-  log("$map");
 
   try {
     Response response = await dio.post(

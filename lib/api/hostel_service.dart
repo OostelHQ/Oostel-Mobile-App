@@ -2,6 +2,7 @@
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/misc/functions.dart';
 import 'base.dart';
 
 export 'base.dart';
@@ -116,9 +117,6 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
         options: configuration, queryParameters: query);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-
-      log(response.data.toString());
-
       List<dynamic> list = response.data as List<dynamic>;
       List<HostelInfo> hostels = [];
       for(var element in list) {
@@ -130,6 +128,9 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
         element["hostelFacilities"] = facilities;
         element["media"] = media;
 
+        List<RoomInfo> rooms =  _parseRoomData(element["rooms"] ?? []);
+        element["rooms"] = rooms;
+        
         HostelInfo info = HostelInfo.fromJson(element as Map<String, dynamic>);
         hostels.add(info);
       }
@@ -309,10 +310,11 @@ Future<FyndaResponse> likeHostel(Map<String, dynamic> map) async {
 }
 
 
-List<String> toStringList(List<dynamic> data) {
-  List<String> result = [];
+List<RoomInfo> _parseRoomData(List<dynamic> data) {
+  List<RoomInfo> rooms = [];
   for(var element in data) {
-    result.add(element as String);
+    RoomInfo info = RoomInfo.fromJson(element as Map<String, dynamic>);
+    rooms.add(info);
   }
-  return result;
+  return rooms;
 }

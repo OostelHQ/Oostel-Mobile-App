@@ -179,6 +179,14 @@ List<int> calculate(List<RoomInfo> rooms) {
   ];
 }
 
+List<String> toStringList(List<dynamic> data) {
+  List<String> result = [];
+  for(var element in data) {
+    result.add(element as String);
+  }
+  return result;
+}
+
 
 Future<void> launchSocialMediaUrl(String url) async {
   if(url.isEmpty) return;

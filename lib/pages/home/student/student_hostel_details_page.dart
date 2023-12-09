@@ -17,6 +17,8 @@ import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
 
+import 'dart:developer';
+
 class HostelInformationPage extends ConsumerStatefulWidget {
   final HostelInfo info;
 
@@ -626,6 +628,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                         const _CommentSection(),
                       ],
                     ),
+
                   ),
                 ),
       bottomNavigationBar: fetching
@@ -789,6 +792,8 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
     );
   }
 }
+
+
 
 class _CommentSection extends StatefulWidget {
   const _CommentSection();
@@ -989,7 +994,7 @@ class _RoomSection extends StatelessWidget {
               mainAxisSpacing: 15.r,
               mainAxisExtent: 205.h,
             ),
-            itemCount: info.roomsLeft.length,
+            itemCount: info.rooms.length,
             itemBuilder: (_, index) =>
                 AvailableRoomCard(info: info.rooms[index]),
           ),

@@ -85,6 +85,7 @@ class HostelInfo extends Equatable {
         hostelFacilities: map["hostelFacilities"],
         media: map["media"] ?? [],
         owner: map["userId"],
+        rooms: map["rooms"],
         vacantRooms: map["isAnyRoomVacant"]);
   }
 }

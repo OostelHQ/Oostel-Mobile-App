@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:my_hostel/misc/functions.dart';
 
 class RoomInfo extends Equatable {
   final String id;
@@ -7,9 +8,13 @@ class RoomInfo extends Equatable {
   final List<String> facilities;
   final List<String> media;
   final double price;
+  final String duration;
+  final bool isRented;
 
   const RoomInfo({
     this.id = "",
+    this.isRented = true,
+    this.duration = "",
     this.facilities = const [],
     this.media = const [],
     this.price = 0.0,
@@ -19,19 +24,27 @@ class RoomInfo extends Equatable {
   @override
   List<Object?> get props => [id];
 
-  RoomInfo.fromJson(Map<String, dynamic> map)
-      : name = map["name"],
-        price = map["price"],
-        id = map["_id"],
-        facilities = map["facilities"],
-        media = map["media"];
+  factory RoomInfo.fromJson(Map<String, dynamic> map) {
+    List<String> facilities = toStringList(map["roomFacilities"]);
+    List<String> media = toStringList(map["roomPictures"]);
+
+    return RoomInfo(
+        name: map["roomNumber"],
+        price: (map["price"] as num).toDouble() ,
+        id: map["id"],
+        duration: map["duration"],
+        isRented: map["isRented"] as bool,
+        facilities: facilities,
+        media: media,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "_id": id,
         "name": name,
         "price": price,
         "facilities": facilities,
-        "media": media,
+        "roomPictures": media,
       };
 }
 

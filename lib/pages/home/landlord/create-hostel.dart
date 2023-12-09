@@ -4282,13 +4282,6 @@ class _StepTenState extends State<StepTen> {
   }
 }
 
-List<String> toStringList(List<dynamic> list) {
-  List<String> result = [];
-  for (var element in list) {
-    result.add(element as String);
-  }
-  return result;
-}
 
 List<Map<String, dynamic>> toRoomList(List<dynamic> data) {
   List<Map<String, dynamic>> response = [];
