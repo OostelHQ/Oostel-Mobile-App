@@ -2895,7 +2895,8 @@ class _StepEightState extends State<StepEight> {
                                       (value) => setState(
                                         () {
                                           if (value == null) return;
-                                          rooms.add(value as Map<String, dynamic>);
+                                          rooms.add(
+                                              value as Map<String, dynamic>);
                                         },
                                       ),
                                     );
@@ -3121,7 +3122,8 @@ class _CreateRoomCard extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "${currency()} ${formatAmountInDouble(info["price"])}",
+                      text:
+                          "${currency()} ${formatAmountInDouble(info["price"])}",
                       style: context.textTheme.bodyLarge!.copyWith(
                         color: appBlue,
                         fontFamily: "Inter",
@@ -3213,7 +3215,8 @@ class _StepNineState extends State<StepNine> {
     }
 
     name = TextEditingController(text: room?["name"] ?? "");
-    price = TextEditingController(text: room?["price"] == null ? "" : room?["price"].toStringAsFixed(0));
+    price = TextEditingController(
+        text: room?["price"] == null ? "" : room?["price"].toStringAsFixed(0));
   }
 
   @override
@@ -4290,7 +4293,7 @@ List<String> toStringList(List<dynamic> list) {
 
 List<Map<String, dynamic>> toRoomList(List<dynamic> data) {
   List<Map<String, dynamic>> response = [];
-  for(dynamic element in data) {
+  for (dynamic element in data) {
     response.add(element as Map<String, dynamic>);
   }
   return response;
@@ -4402,9 +4405,8 @@ class UploadHostelPage extends StatefulWidget {
 }
 
 class _UploadHostelPageState extends State<UploadHostelPage> {
-  int progress = 0;
   bool hasError = false;
-  int totalTasks = 0;
+  int progress = 0, total = 0;
   String message = "";
 
   late List<dynamic> rooms;
@@ -4415,10 +4417,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
     bool vacantRooms = widget.info["isAnyRoomVacant"];
     rooms = widget.info["rooms"];
     message = "Creating your hostel";
-    if(!vacantRooms) {
-      totalTasks = 1;
+    if (!vacantRooms) {
+      total = 1;
     } else {
-      totalTasks = rooms.length + 1;
+      total = rooms.length + 1;
     }
 
     upload();
@@ -4431,23 +4433,30 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         showError(resp.message);
         Navigator.of(context).pop();
       } else {
-        if(totalTasks == 1) {
-          setState(() => progress = 100);
+        if (total == 1) {
           context.router.pop(true);
           return;
+        } else {
+          uploadRooms();
         }
-        // else {
-        //   uploadRooms();
-        // }
       }
     });
   }
 
-  // void uploadRooms() async {
-  //   for(int i = 0; i < rooms.length; ++i) {
-  //     FyndaResponse response = await createRoomForHostel(rooms[i] as Map<String, dynamic>);
-  //   }
-  // }
+  void uploadRooms() async {
+    for (int i = progress; i < rooms.length; ++i) {
+      FyndaResponse response = await createRoomForHostel(
+        userID: widget.info["landlordId"],
+        hostelID: "",
+        map: rooms[i],
+      );
+
+      setState(() {
+        hasError = !response.success;
+        progress++;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -4459,46 +4468,49 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "$progress%",
+                "${(progress / total) * 100}%",
                 style: context.textTheme.bodyMedium!.copyWith(
                   color: appBlue,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               SizedBox(height: 5.h),
-              SizedBox(
-                width: 250.w,
-                child: LinearProgressIndicator(
-                  value: progress * 0.01,
-                  color: appBlue,
-                  backgroundColor: paleBlue,
-                  minHeight: 10.h,
-                  borderRadius: BorderRadius.circular(5.h),
+              if (!hasError)
+                SizedBox(
+                  width: 250.w,
+                  child: LinearProgressIndicator(
+                    value: progress / total,
+                    color: appBlue,
+                    backgroundColor: paleBlue,
+                    minHeight: 10.h,
+                    borderRadius: BorderRadius.circular(5.h),
+                  ),
                 ),
-              ),
+              if (hasError)
+                Center(child: SvgPicture.asset("assets/images/Error.svg")),
               SizedBox(height: 15.h),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (!hasError)
-                      SizedBox(
-                        width: 20.r,
-                        height: 20.r,
-                        child: const CircularProgressIndicator(
-                            color: appBlue, strokeWidth: 3),
-                      ),
-                    if (!hasError) SizedBox(width: 10.w),
-                    Text(
-                      hasError
-                          ? "An error occurred while creating your hostel"
-                          : message,
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: appBlue,
-                        fontWeight: FontWeight.w600,
-                      ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (!hasError)
+                    SizedBox(
+                      width: 20.r,
+                      height: 20.r,
+                      child: const CircularProgressIndicator(
+                          color: appBlue, strokeWidth: 3),
                     ),
-                  ],
+                  if (!hasError) SizedBox(width: 10.w),
+                  Text(
+                    hasError
+                        ? "An error occurred while creating your hostel"
+                        : message,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: appBlue,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

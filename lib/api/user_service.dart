@@ -47,7 +47,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         log("UserData: $userData");
         if (role == "Student") {
           user = _parseStudentData(
-              userData, data['data']['email'], data['data']['fullname']);
+              userData, email: data['data']['email'], fullName: data['data']['fullname']);
         } else if (role == "LandLord") {
           user = _parseLandlordData(userData);
         } else if (role == "Agent") {
@@ -82,7 +82,7 @@ User _parseLandlordData(Map<String, dynamic> userData) {
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
 
-  if(profile != null) {
+  if (profile != null) {
     DateTime dob = profile["dateOfBirth"] == null
         ? DateTime(1960)
         : DateTime.parse(profile['dateOfBirth']);
@@ -120,38 +120,56 @@ User _parseLandlordData(Map<String, dynamic> userData) {
     dateJoined: created,
     contact: contact,
   );
-
 }
 
-User _parseStudentData(
-    Map<String, dynamic> userData, {String email = "", String fullName = ""}) {
+User _parseStudentData(Map<String, dynamic> userData,
+    {String email = "", String fullName = ""}) {
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
-  List<String> names = fullName.split(" ");
 
   Map<String, dynamic>? profile = userData["studentProfile"];
 
-  if(profile != null){
-      String fullName = profile['fullName'];
-      String email = profile['email'];
-      String state = profile['stateOfOrigin'] ?? "";
-      bool isavailable = profile['isAvailable'] as bool;
-      String area = profile['area'] ?? "";
-      double roombudget = (profile['roomBudgetAmount'] as num).toInt();
-      String pictureurl = profile['pictureUrl'] ?? "";
-      int profileViewCount = (profile['profileViewCount'] as num).toInt();
-      String gender = profile['gender'] ?? "";
-      String country = profile['country'];
-      String schoolLevel = profile['schoolLevel'] ?? "";
-      String religion = profile['religion'] ?? "";
-      String denomination = profile['denomination'] ?? "";
-      String age = profile['age'] ?? "";
-      String hobby = profile['hobby'] ?? "";
+  if (profile != null) {
+    String fullName = profile['fullName'];
+    String email = profile['email'];
+    String state = profile['stateOfOrigin'] ?? "";
+    bool isAvailable = profile['isAvailable'] as bool;
+    String area = profile['area'] ?? "";
+    double roomBudget = (profile['roomBudgetAmount'] as num).toDouble();
+    String pictureUrl = profile['pictureUrl'] ?? "";
+    int profileViewCount = (profile['profileViewCount'] as num).toInt();
+    String gender = profile['gender'] ?? "";
+    String country = profile['country'];
+    String schoolLevel = profile['schoolLevel'] ?? "";
+    String religion = profile['religion'] ?? "";
+    String denomination = profile['denomination'] ?? "";
+    String age = profile['age'] ?? "";
+    String hobby = profile['hobby'] ?? "";
+    List<String> names = fullName.split(" ");
 
-      return Student(dateJoined: created, ageRange: age, amount:  );
+    return Student(
+      dateJoined: created,
+      firstName: names[0],
+      lastName: names[1],
+      denomination: denomination,
+      id: id,
+      available: isAvailable,
+      gender: gender,
+      religion: religion,
+      image: pictureUrl,
+      hobby: hobby,
+      level: int.parse(schoolLevel),
+      contact: contact,
+      origin: state,
+      profileViews: profileViewCount,
+      ageRange: age,
+      amount: roomBudget,
+      email: email,
+    );
   }
 
+  List<String> names = fullName.split(" ");
   return Student(
     firstName: names[0],
     lastName: names[1],
@@ -321,7 +339,7 @@ Future<FyndaResponse<User?>> refreshUser(UserType type,
     user = null;
   } else {
     if (type == UserType.student) {
-      user = _parseStudentData(userData, email, fullName);
+      user = _parseStudentData(userData);
     } else if (type == UserType.agent) {
       user = _parseLandlordData(userData);
     } else {

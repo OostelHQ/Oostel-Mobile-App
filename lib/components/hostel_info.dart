@@ -20,8 +20,8 @@ class HostelInfo extends Equatable {
   final List<String> media;
   final List<String> likes;
   final String category;
-
-  final Landowner owner;
+  final bool vacantRooms;
+  final String owner;
 
   const HostelInfo({
     this.id = "",
@@ -34,6 +34,7 @@ class HostelInfo extends Equatable {
     this.totalRooms = 0,
     this.area = 0.0,
     this.price = 0.0,
+    this.vacantRooms = false,
     this.rooms = const [],
     this.roomsLeft = const [],
     required this.owner,
@@ -52,45 +53,47 @@ class HostelInfo extends Equatable {
   //   return [double.parse(values[0]), double.parse(values[2])];
   // }
 
-
   RoomInfo roomAt(int index) {
     String id = roomsLeft[index];
     return rooms.firstWhere((room) => room.id == id, orElse: () => noRoom);
   }
 
   bool isAvailable(RoomInfo info) => roomsLeft.contains(info.id);
+
   bool isAvailableIndex(int index) => roomsLeft.contains(rooms[index].id);
 
   int indexAt(int index) {
     String id = roomsLeft[index];
-    for(int i = 0; i < rooms.length; ++i) {
-      if(rooms[i].id == id) return i;
+    for (int i = 0; i < rooms.length; ++i) {
+      if (rooms[i].id == id) return i;
     }
     return -1;
   }
 
   factory HostelInfo.fromJson(Map<String, dynamic> map) {
-    String street = map["street"], junction = map["junction"], state = map["state"], country = map["country"];
-
+    String street = map["street"] ?? "",
+        junction = map["junction"] ?? "",
+        state = map["state"] ?? "",
+        country = map["country"] ?? "";
 
     return HostelInfo(
-      id: map["hostelId"],
-      name: map["hostelName"],
-      image: map["image"] ?? "",
-      bedrooms: map["bedrooms"],
-      bathrooms: map["bathrooms"],
-      area: map["homeSize"],
-      price: map["price"],
-      totalRooms: map["totalRoom"],
-      address: "$street, $junction, $state, $country",
-      category: map["hostelCategory"],
-      roomsLeft: map["roomsLeft"],
-      description: map["hostelDescription"],
-      rules: map["rulesAndRegulation"],
-      likes: map["hostelLikesCount"],
-      hostelFacilities: map["hostelFacilities"],
-      media: map["media"] ?? [],
-      owner: map["userId"],
-    );
+        id: map["hostelId"],
+        name: map["hostelName"],
+        image: map["image"] ?? "",
+        bedrooms: map["bedrooms"] ?? 0,
+        bathrooms: map["bathrooms"] ?? 0,
+        area: map["homeSize"],
+        price: map["price"] ?? 0.0,
+        totalRooms: map["totalRoom"] ?? 0,
+        address: "$street, $junction, $state, $country",
+        category: map["hostelCategory"] ?? "Flat",
+        roomsLeft: map["roomsLeft"] ?? [],
+        description: map["hostelDescription"],
+        rules: map["rulesAndRegulation"],
+        likes: map["hostelLikesCount"] ?? 0,
+        hostelFacilities: map["hostelFacilities"],
+        media: map["media"] ?? [],
+        owner: map["userId"],
+        vacantRooms: map["isAnyRoomVacant"]);
   }
 }

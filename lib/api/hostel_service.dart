@@ -4,6 +4,8 @@ import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'base.dart';
 
+export 'base.dart';
+
 List<RoomInfo> _toRoomList(List<dynamic> list) {
   List<RoomInfo> result = [];
   for (var element in list) {
@@ -58,8 +60,8 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
     formData.fields
         .add(MapEntry("hostelCategory", map["hostelCategory"].toString()));
     formData.fields.add(MapEntry("totalRoom", map["totalRoom"].toString()));
-    formData.fields
-        .add(MapEntry("isAnyRoomVacant", map["isAnyRoomVacant"].toString()));
+    formData.fields.add(MapEntry("isAnyRoomVacant", map["isAnyRoomVacant"].toString()));
+    // formData.fields.add(MapEntry("isAnyRoomVacant", "true"));
 
     Response response = await dio.post(
       "/hostel/create-hostel",
@@ -114,9 +116,28 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
         options: configuration, queryParameters: query);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      //log(response.data.length.toString());
-      log(response.data[8].toString());
-      print(response.data.toString());
+
+      log(response.data.toString());
+
+      List<dynamic> list = response.data as List<dynamic>;
+      List<HostelInfo> hostels = [];
+      for(var element in list) {
+        List<String> rules = toStringList(element["rulesAndRegulation"] as List<dynamic>);
+        List<String> facilities = toStringList(element["hostelFacilities"] as List<dynamic>);
+
+        element["rulesAndRegulation"] = rules;
+        element["hostelFacilities"] = facilities;
+
+        HostelInfo info = HostelInfo.fromJson(element as Map<String, dynamic>);
+        hostels.add(info);
+      }
+
+      return FyndaResponse(
+        message: "Success",
+        payload: hostels,
+        success: true,
+      );
+
     }
   } catch (e) {
     log("Get Hostels Error: $e");
@@ -278,4 +299,13 @@ Future<FyndaResponse> likeHostel(Map<String, dynamic> map) async {
     payload: null,
     success: false,
   );
+}
+
+
+List<String> toStringList(List<dynamic> data) {
+  List<String> result = [];
+  for(var element in data) {
+    result.add(element as String);
+  }
+  return result;
 }

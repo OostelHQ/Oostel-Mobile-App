@@ -1,4 +1,4 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -6,8 +6,10 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/comment.dart';
 import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
@@ -30,8 +32,11 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
   final ScrollController scrollController = ScrollController();
   late TabController tabController;
 
+  bool fetching = false;
   bool isCollapsed = false;
   int tabIndex = 0;
+
+  Landowner? owner;
 
   @override
   void initState() {
@@ -40,6 +45,23 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
     tabController.addListener(() {
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => setState(() => tabIndex = tabController.index));
+    });
+
+    fetching = true;
+
+    getOwner();
+  }
+
+  void getOwner() {
+    getLandlordById(widget.info.owner).then((resp) {
+      if (!resp.success) {
+        showError(resp.message);
+      }
+
+      setState(() {
+        fetching = false;
+        owner = resp.payload;
+      });
     });
   }
 
@@ -53,515 +75,674 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => setState(
-              () {
-                if (tabIndex == 0 && scrollController.offset > 250.h) {
-                  scrollController.jumpTo(250.h);
-                }
-                isCollapsed = scrollController.hasClients &&
-                    scrollController.offset > 450.h;
-              },
-            ),
-          );
-
-          return true;
-        },
-        child: NestedScrollView(
-          headerSliverBuilder: (context, isScrolled) => [
-            SliverAppBar(
-              systemOverlayStyle: SystemUiOverlayStyle.dark,
-              title: AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: isCollapsed ? 1 : 0,
-                child: Text(
-                  widget.info.name,
-                  style: context.textTheme.bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
-                ),
-              ),
-              leading: isCollapsed
-                  ? IconButton(
-                      onPressed: () => context.router.pop(),
-                      iconSize: 26.r,
-                      splashRadius: 20.r,
-                      icon: const Icon(Icons.chevron_left_rounded),
-                    )
-                  : null,
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              elevation: 0.0,
-              expandedHeight: 470.h,
-              pinned: true,
-              collapsedHeight: kToolbarHeight,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Hero(
-                      tag:
-                          "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
-                      flightShuttleBuilder: flightShuttleBuilder,
-                      child: Image.asset(
-                        widget.info.image,
-                        width: 414.w,
-                        height: 470.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      top: 80.h,
-                      left: 30.w,
-                      child: GestureDetector(
-                        onTap: () => context.router.pop(),
-                        child: Container(
-                          width: 40.r,
-                          height: 40.r,
-                          decoration: BoxDecoration(
-                            color: Colors.black45,
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Icon(Icons.chevron_left_rounded,
-                              color: Colors.white, size: 26.r),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 80.h,
-                      right: 30.w,
-                      child: GestureDetector(
-                        onTap: () {
-                          String id = ref.read(currentUserProvider).id;
-                          if (widget.info.likes.contains(id)) {
-                            widget.info.likes.remove(id);
-                          } else {
-                            widget.info.likes.add(id);
+      body: fetching
+          ? const Center(child: blueLoader)
+          : (!fetching && owner == null)
+              ? Center(
+                  child: Column(
+                    children: [],
+                  ),
+                )
+              : NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => setState(
+                        () {
+                          if (tabIndex == 0 &&
+                              scrollController.offset > 250.h) {
+                            scrollController.jumpTo(250.h);
                           }
-                          setState(() {});
+                          isCollapsed = scrollController.hasClients &&
+                              scrollController.offset > 450.h;
                         },
-                        child: Container(
-                          width: 40.r,
-                          height: 40.r,
-                          decoration: BoxDecoration(
-                            color: Colors.black45,
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Hero(
-                            tag: "Hostel ID: ${widget.info.id} Liked",
-                            flightShuttleBuilder: flightShuttleBuilder,
-                            child: Icon(
-                              Icons.favorite_rounded,
-                              color: widget.info.likes.contains(
-                                      ref.read(currentUserProvider).id)
-                                  ? Colors.red
-                                  : Colors.white,
-                              size: 26.r,
-                            ),
-                          ),
-                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 15.h),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 280.w,
-                          child: Hero(
-                            tag:
-                                "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
-                            flightShuttleBuilder: flightShuttleBuilder,
-                            child: Text(
-                              widget.info.name,
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: weirdBlack,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 85.w,
-                          height: 25.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: infoRoomsLeftBackground,
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
+                    );
+
+                    return true;
+                  },
+                  child: NestedScrollView(
+                    headerSliverBuilder: (context, isScrolled) => [
+                      SliverAppBar(
+                        systemOverlayStyle: SystemUiOverlayStyle.dark,
+                        title: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 200),
+                          opacity: isCollapsed ? 1 : 0,
                           child: Text(
-                            "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: infoRoomsLeft,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13.sp,
-                            ),
+                            widget.info.name,
+                            style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.h),
-                    Text(
-                      joinToAddress(widget.info.address),
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(height: 8.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/Hostel Info Bed.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
                         ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "${widget.info.bedrooms}",
-                          style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(width: 10.w),
-                        SvgPicture.asset(
-                          "assets/images/Hostel Info Bath.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "${widget.info.bathrooms}",
-                          style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(width: 10.w),
-                        SvgPicture.asset(
-                          "assets/images/Hostel Info Area.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack20,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "${widget.info.area.toStringAsFixed(0)} sqft",
-                          style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RichText(
-                          text: TextSpan(
+                        leading: isCollapsed
+                            ? IconButton(
+                                onPressed: () => context.router.pop(),
+                                iconSize: 26.r,
+                                splashRadius: 20.r,
+                                icon: const Icon(Icons.chevron_left_rounded),
+                              )
+                            : null,
+                        automaticallyImplyLeading: false,
+                        centerTitle: true,
+                        elevation: 0.0,
+                        expandedHeight: 470.h,
+                        pinned: true,
+                        collapsedHeight: kToolbarHeight,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Stack(
+                            fit: StackFit.expand,
                             children: [
-                              TextSpan(
-                                text:
-                                    "${currency()} ${formatAmountInDouble(widget.info.price)}",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w600,
+                              Hero(
+                                tag:
+                                    "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                                flightShuttleBuilder: flightShuttleBuilder,
+                                child: Image.asset(
+                                  widget.info.image,
+                                  width: 414.w,
+                                  height: 470.h,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              TextSpan(
-                                text: "/year",
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: appBlue,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w500,
+                              Positioned(
+                                top: 80.h,
+                                left: 30.w,
+                                child: GestureDetector(
+                                  onTap: () => context.router.pop(),
+                                  child: Container(
+                                    width: 40.r,
+                                    height: 40.r,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black45,
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    child: Icon(Icons.chevron_left_rounded,
+                                        color: Colors.white, size: 26.r),
+                                  ),
                                 ),
-                              )
+                              ),
+                              Positioned(
+                                top: 80.h,
+                                right: 30.w,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    String id =
+                                        ref.read(currentUserProvider).id;
+                                    if (widget.info.likes.contains(id)) {
+                                      widget.info.likes.remove(id);
+                                    } else {
+                                      widget.info.likes.add(id);
+                                    }
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    width: 40.r,
+                                    height: 40.r,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black45,
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    child: Hero(
+                                      tag: "Hostel ID: ${widget.info.id} Liked",
+                                      flightShuttleBuilder:
+                                          flightShuttleBuilder,
+                                      child: Icon(
+                                        Icons.favorite_rounded,
+                                        color: widget.info.likes.contains(ref
+                                                .read(currentUserProvider)
+                                                .id)
+                                            ? Colors.red
+                                            : Colors.white,
+                                        size: 26.r,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(22.5.r),
-                          child: Image.asset(
-                            "assets/images/funaab logo.png",
-                            width: 50.r,
-                            height: 50.r,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
-              ),
-            ),
-            SliverPersistentHeader(
-              delegate: TabHeaderDelegate(
-                color: const Color(0xFFFBFDFF),
-                tabBar: TabBar(
-                  indicatorColor: appBlue,
-                  labelColor: appBlue,
-                  labelStyle: context.textTheme.bodyMedium!
-                      .copyWith(color: appBlue, fontWeight: FontWeight.w500),
-                  unselectedLabelStyle: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50, fontWeight: FontWeight.w500),
-                  controller: tabController,
-                  tabs: const [
-                    Tab(text: "Landlord"),
-                    Tab(text: "Details"),
-                    Tab(text: "Comments")
-                  ],
-                ),
-              ),
-              pinned: true,
-            )
-          ],
-          controller: scrollController,
-          body: TabBarView(
-            controller: tabController,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 30.h),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                AssetImage(widget.info.owner.image),
-                            radius: 32.r,
-                          ),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            height: 85.h,
-                            width: 300.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 200.w,
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(height: 15.h),
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 280.w,
+                                    child: Hero(
+                                      tag:
+                                          "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                                      flightShuttleBuilder:
+                                          flightShuttleBuilder,
                                       child: Text(
-                                        "${widget.info.owner.firstName} ${widget.info.owner.lastName}",
-                                        style: context.textTheme.bodyMedium!
+                                        widget.info.name,
+                                        style: context.textTheme.bodyLarge!
                                             .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: weirdBlack),
+                                          fontWeight: FontWeight.w600,
+                                          color: weirdBlack,
+                                        ),
                                       ),
                                     ),
-                                    if (widget.info.owner.verified)
-                                      Container(
-                                        width: 70.w,
-                                        height: 25.h,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: paleBlue,
-                                          borderRadius:
-                                              BorderRadius.circular(12.5.h),
-                                        ),
-                                        child: Text(
-                                          "Verified",
+                                  ),
+                                  Container(
+                                    width: 85.w,
+                                    height: 25.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: infoRoomsLeftBackground,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    child: Text(
+                                      "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                        color: infoRoomsLeft,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13.sp,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 15.h),
+                              Text(
+                                joinToAddress(widget.info.address),
+                                overflow: TextOverflow.ellipsis,
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                    color: weirdBlack75,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              SizedBox(height: 8.h),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Info Bed.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${widget.info.bedrooms}",
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Info Bath.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack50,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${widget.info.bathrooms}",
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  SvgPicture.asset(
+                                    "assets/images/Hostel Info Area.svg",
+                                    width: 15.r,
+                                    height: 15.r,
+                                    color: weirdBlack20,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "${widget.info.area.toStringAsFixed(0)} sqft",
+                                    style: context.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: weirdBlack50,
+                                            fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12.h),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              "${currency()} ${formatAmountInDouble(widget.info.price)}",
                                           style: context.textTheme.bodyMedium!
                                               .copyWith(
                                             color: appBlue,
-                                            fontSize: 13.sp,
+                                            fontFamily: "Inter",
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                      )
-                                  ],
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      widget.info.owner.contact,
-                                      style: context.textTheme.bodyMedium!
-                                          .copyWith(
-                                              color: weirdBlack75,
-                                              fontWeight: FontWeight.w500),
+                                        TextSpan(
+                                          text: "/year",
+                                          style: context.textTheme.bodySmall!
+                                              .copyWith(
+                                            color: appBlue,
+                                            fontFamily: "Inter",
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 110.w,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          RatingStars(
-                                            value: widget.info.owner.ratings,
-                                            starBuilder: (_, color) => Icon(
-                                              Boxicons.bxs_star,
-                                              color: color,
-                                              size: 14.r,
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(22.5.r),
+                                    child: Image.asset(
+                                      "assets/images/funaab logo.png",
+                                      width: 50.r,
+                                      height: 50.r,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20.h),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SliverPersistentHeader(
+                        delegate: TabHeaderDelegate(
+                          color: const Color(0xFFFBFDFF),
+                          tabBar: TabBar(
+                            indicatorColor: appBlue,
+                            labelColor: appBlue,
+                            labelStyle: context.textTheme.bodyMedium!.copyWith(
+                                color: appBlue, fontWeight: FontWeight.w500),
+                            unselectedLabelStyle: context.textTheme.bodyMedium!
+                                .copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500),
+                            controller: tabController,
+                            tabs: const [
+                              Tab(text: "Landlord"),
+                              Tab(text: "Details"),
+                              Tab(text: "Comments")
+                            ],
+                          ),
+                        ),
+                        pinned: true,
+                      )
+                    ],
+                    controller: scrollController,
+                    body: TabBarView(
+                      controller: tabController,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 30.h),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: owner!.image,
+                                      errorWidget: (context, url, error) =>
+                                          CircleAvatar(
+                                        backgroundColor: weirdBlack20,
+                                        radius: 32.r,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person_outline_rounded,
+                                            color: appBlue,
+                                            size: 24.r,
+                                          ),
+                                        ),
+                                      ),
+                                      progressIndicatorBuilder:
+                                          (context, url, download) {
+                                        return CircleAvatar(
+                                          radius: 32.r,
+                                          backgroundColor: weirdBlack50,
+                                        );
+                                      },
+                                      imageBuilder: (context, provider) {
+                                        return GestureDetector(
+                                          onTap: () => context.router.pushNamed(
+                                            Pages.viewMedia,
+                                            extra: ViewInfo(
+                                              current: 0,
+                                              type: DisplayType.network,
+                                              paths: [owner!.image],
                                             ),
-                                            valueLabelVisibility: false,
-                                            starCount: 4,
-                                            starSize: 14.r,
-                                            starSpacing: 5.w,
-                                            starColor: Colors.orange,
                                           ),
-                                          Text(
-                                            "(${widget.info.owner.totalRated})",
-                                            style: context.textTheme.bodySmall!
-                                                .copyWith(color: weirdBlack50),
+                                          child: CircleAvatar(
+                                            backgroundImage: provider,
+                                            radius: 32.r,
                                           ),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    SizedBox(
+                                      height: 85.h,
+                                      width: 300.w,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: 200.w,
+                                                child: Text(
+                                                  owner!.mergedNames,
+                                                  style: context
+                                                      .textTheme.bodyMedium!
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: weirdBlack),
+                                                ),
+                                              ),
+                                              if (owner!.verified)
+                                                Container(
+                                                  width: 70.w,
+                                                  height: 25.h,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: paleBlue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.5.h),
+                                                  ),
+                                                  child: Text(
+                                                    "Verified",
+                                                    style: context
+                                                        .textTheme.bodyMedium!
+                                                        .copyWith(
+                                                      color: appBlue,
+                                                      fontSize: 13.sp,
+                                                    ),
+                                                  ),
+                                                )
+                                            ],
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                owner!.contact,
+                                                style: context
+                                                    .textTheme.bodyMedium!
+                                                    .copyWith(
+                                                        color: weirdBlack75,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                              SizedBox(
+                                                width: 110.w,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    RatingStars(
+                                                      value: owner!.ratings,
+                                                      starBuilder: (_, color) =>
+                                                          Icon(
+                                                        Boxicons.bxs_star,
+                                                        color: color,
+                                                        size: 14.r,
+                                                      ),
+                                                      valueLabelVisibility:
+                                                          false,
+                                                      starCount: 4,
+                                                      starSize: 14.r,
+                                                      starSpacing: 5.w,
+                                                      starColor: Colors.orange,
+                                                    ),
+                                                    Text(
+                                                      "(${owner!.totalRated})",
+                                                      style: context
+                                                          .textTheme.bodySmall!
+                                                          .copyWith(
+                                                              color:
+                                                                  weirdBlack50),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/images/Roomate Info Location.svg",
+                                                    width: 15.r,
+                                                    height: 15.r,
+                                                    color: weirdBlack20,
+                                                  ),
+                                                  SizedBox(width: 5.w),
+                                                  Text(
+                                                    owner!.address,
+                                                    style: context
+                                                        .textTheme.bodySmall!
+                                                        .copyWith(
+                                                            color: weirdBlack50,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                "Registered since ${owner!.dateJoined.year}",
+                                                style: context
+                                                    .textTheme.bodySmall!
+                                                    .copyWith(
+                                                        color: weirdBlack50,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              ],
+                            ),
+                          ),
+                        ),
+                        _RoomSection(info: widget.info),
+                        const _CommentSection(),
+                      ],
+                    ),
+                  ),
+                ),
+      bottomNavigationBar: fetching
+          ? null
+          : tabIndex != 1
+              ? Container(
+                  width: 414.w,
+                  height: 90.h,
+                  color: paleBlue,
+                  child: (!fetching && owner == null)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () => context.router.pop(),
+                              child: Container(
+                                width: 170.w,
+                                height: 50.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  border: Border.all(color: appBlue),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/images/Roomate Info Location.svg",
-                                          width: 15.r,
-                                          height: 15.r,
-                                          color: weirdBlack20,
-                                        ),
-                                        SizedBox(width: 5.w),
-                                        Text(
-                                          widget.info.owner.address,
-                                          style: context.textTheme.bodySmall!
-                                              .copyWith(
-                                                  color: weirdBlack50,
-                                                  fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
+                                    Icon(Icons.chevron_left_rounded,
+                                        color: appBlue, size: 26.r),
+                                    SizedBox(width: 5.w),
                                     Text(
-                                      "Registered since ${widget.info.owner.dateJoined.year}",
-                                      style: context.textTheme.bodySmall!
+                                      "Go back",
+                                      style: context.textTheme.bodyMedium!
                                           .copyWith(
-                                              color: weirdBlack50,
-                                              fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.w600,
+                                        color: appBlue,
+                                      ),
                                     ),
                                   ],
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() => fetching = true);
+                                getOwner();
+                              },
+                              child: Container(
+                                width: 170.w,
+                                height: 50.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  color: appBlue,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Retry",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(width: 5.w),
+                                    Icon(Boxicons.bx_redo,
+                                        color: Colors.white, size: 26.r),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : tabIndex == 2
+                          ? Container(
+                              width: 414.w,
+                              height: 90.h,
+                              color: paleBlue,
+                              alignment: Alignment.center,
+                              child: GestureDetector(
+                                onTap: () => showModalBottomSheet(
+                                  context: context,
+                                  builder: (_) => const _WriteComment(),
+                                  isScrollControlled: true,
+                                ),
+                                child: Container(
+                                  width: 380.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: appBlue,
+                                    borderRadius: BorderRadius.circular(5.r),
+                                  ),
+                                  child: Text(
+                                    "Give Comment",
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 170.w,
+                                    height: 50.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                      border: Border.all(
+                                          color: appBlue, width: 1.5),
+                                    ),
+                                    child: Text(
+                                      "Start a chat",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: appBlue),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => showModalBottomSheet(
+                                    context: context,
+                                    isDismissible: true,
+                                    builder: (_) =>
+                                        HostelInfoModal(info: widget.info),
+                                  ),
+                                  child: Container(
+                                    width: 170.w,
+                                    height: 50.h,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: appBlue,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    child: Text(
+                                      "Pay",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white),
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              _RoomSection(info: widget.info),
-              const _CommentSection(),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: tabIndex != 1
-          ? Container(
-              width: 414.w,
-              height: 90.h,
-              color: paleBlue,
-              child: tabIndex == 2
-                  ? Container(
-                      width: 414.w,
-                      height: 90.h,
-                      color: paleBlue,
-                      alignment: Alignment.center,
-                      child: GestureDetector(
-                        onTap: () => showModalBottomSheet(
-                          context: context,
-                          builder: (_) => const _WriteComment(),
-                          isScrollControlled: true,
-                        ),
-                        child: Container(
-                          width: 380.w,
-                          height: 50.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: appBlue,
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Text(
-                            "Give Comment",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            width: 170.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(5.r),
-                              border: Border.all(color: appBlue, width: 1.5),
-                            ),
-                            child: Text(
-                              "Start a chat",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w500, color: appBlue),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => showModalBottomSheet(
-                            context: context,
-                            isDismissible: true,
-                            builder: (_) => HostelInfoModal(info: widget.info),
-                          ),
-                          child: Container(
-                            width: 170.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: appBlue,
-                              borderRadius: BorderRadius.circular(5.r),
-                            ),
-                            child: Text(
-                              "Pay",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-            )
-          : const SizedBox(),
+                )
+              : null,
     );
   }
 }

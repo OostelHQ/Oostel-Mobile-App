@@ -34,7 +34,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
     dummyHostels = List.generate(
       4,
       (index) => HostelInfo(
-        owner: defaultOwner,
+        owner: defaultOwner.id,
         name: "Dummy Hostel",
         bathrooms: 1,
         bedrooms: 3,

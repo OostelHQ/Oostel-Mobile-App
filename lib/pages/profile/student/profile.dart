@@ -28,17 +28,9 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
   @override
   void initState() {
     super.initState();
-    getProfileAnalytics = true;
-    getAnalytics();
+
   }
 
-  void getAnalytics() {
-    profileViewCounts(ref.read(currentUserProvider).id).then((resp) {
-      if(!mounted) return;
-
-      setState(() => getProfileAnalytics = false);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -370,10 +362,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                         )
                       ],
                     ),
-                    SizedBox(height: 15.h),
-                    getProfileAnalytics
-                        ? const Center(child: blueLoader)
-                        : Column(children: [
+                    SizedBox(height: 15.h),Column(children: [
                             ProfileInfoCard(
                               image: "assets/images/Blue Eye.svg",
                               header: "${student.profileViews} profile views",
