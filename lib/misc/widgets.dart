@@ -1,4 +1,3 @@
-
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -39,7 +38,10 @@ const Widget loader = SpinKitSpinningLines(
   size: 50,
 );
 
-const Widget blueLoader = SpinKitSpinningLines(color: appBlue, size: 50,);
+const Widget blueLoader = SpinKitSpinningLines(
+  color: appBlue,
+  size: 50,
+);
 
 enum AcquireType { hostel, roommate }
 
@@ -56,8 +58,8 @@ class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => tabBar.preferredSize.height;
 
   @override
-  Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) =>
       Container(
         color: color ?? Colors.white,
         child: tabBar,
@@ -80,8 +82,8 @@ class WidgetHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => height;
 
   @override
-  Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) =>
       Container(
         height: height,
         color: Colors.white,
@@ -102,15 +104,16 @@ class CustomGrouper extends TextInputFormatter {
   });
 
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
+      TextEditingValue newValue) {
     String text = newValue.text;
 
     if (by != null && text.length == by!) {
       return newValue;
     }
 
-    String rest = "", firstGroup = "";
+    String rest = "",
+        firstGroup = "";
 
     if (by != null) {
       firstGroup = text.substring(0, by);
@@ -343,7 +346,8 @@ class ComboBox extends StatelessWidget {
         value: value,
         items: dropdownItems
             .map(
-              (String item) => DropdownMenuItem<String>(
+              (String item) =>
+              DropdownMenuItem<String>(
                 value: item,
                 child: Container(
                   alignment: valueAlignment,
@@ -356,7 +360,7 @@ class ComboBox extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+        )
             .toList(),
         onChanged: onChanged,
         selectedItemBuilder: selectedItemBuilder,
@@ -369,10 +373,10 @@ class ComboBox extends StatelessWidget {
           decoration: (noDecoration)
               ? null
               : buttonDecoration ??
-                  BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.r),
-                    border: Border.all(color: fadedBorder),
-                  ),
+              BoxDecoration(
+                borderRadius: BorderRadius.circular(4.r),
+                border: Border.all(color: fadedBorder),
+              ),
           elevation: buttonElevation,
         ),
         iconStyleData: IconStyleData(
@@ -424,7 +428,9 @@ class Copyright extends StatelessWidget {
         Icon(Icons.copyright, color: Colors.grey, size: 16.r),
         SizedBox(width: 3.w),
         Text(
-          "${DateTime.now().year}. Fynda. All rights reserved",
+          "${DateTime
+              .now()
+              .year}. Fynda. All rights reserved",
           style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack50),
         ),
       ],
@@ -434,6 +440,7 @@ class Copyright extends StatelessWidget {
 
 class ProfileNotification extends ConsumerStatefulWidget {
   final VoidCallback onCancel;
+
   const ProfileNotification({super.key, required this.onCancel});
 
   @override
@@ -462,8 +469,8 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
                 user.hasCompletedProfile < 100
                     ? "Complete your Profile"
                     : "Profile Completed!",
-                style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600, color: weirdBlack),
+                style: context.textTheme.bodyLarge!
+                    .copyWith(fontWeight: FontWeight.w600, color: weirdBlack),
               ),
               GestureDetector(
                 onTap: widget.onCancel,
@@ -481,7 +488,8 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
               children: [
                 TextSpan(
                   text: user.hasCompletedProfile < 100
-                      ? "You are ${user.hasCompletedProfile}% done from unlocking the full potential of your account. "
+                      ? "You are ${user
+                      .hasCompletedProfile}% done from unlocking the full potential of your account. "
                       : "Congratulations! You have unlocked the full potential of your account. ",
                   style: context.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500, color: weirdBlack75),
@@ -503,13 +511,14 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
                           color: appBlue,
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => context.router.pushNamed(
-                            ref.watch(isAStudent)
-                                ? Pages.editProfile
-                                : ref.watch(isLandlord)
-                                ? Pages.editOwnerProfile
-                                : Pages.editAgentProfile,
-                          ),
+                          ..onTap = () =>
+                              context.router.pushNamed(
+                                ref.watch(isAStudent)
+                                    ? Pages.editProfile
+                                    : ref.watch(isLandlord)
+                                    ? Pages.editOwnerProfile
+                                    : Pages.editAgentProfile,
+                              ),
                       )
                     ],
                   ),
@@ -518,9 +527,7 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
           ),
           SizedBox(height: 15.h),
           LinearProgressIndicator(
-            color: user.hasCompletedProfile < 100
-                ? incompleteBar
-                : completeBar,
+            color: user.hasCompletedProfile < 100 ? incompleteBar : completeBar,
             value: user.hasCompletedProfile * 0.01,
             backgroundColor: incompleteFadedBar,
             minHeight: 10.h,
@@ -545,15 +552,27 @@ class HostelInfoCard extends ConsumerStatefulWidget {
 }
 
 class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
+  late int bedrooms, bathrooms;
+
+  @override
+  void initState() {
+    super.initState();
+    List<int> props = calculate(widget.info.rooms);
+    bathrooms = props[0];
+    bedrooms = widget.info.rooms.length;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router
-          .pushNamed(
+      onTap: () =>
+          context.router
+              .pushNamed(
             Pages.hostelInfo,
             extra: widget.info,
           )
-          .then((val) => setState(() {})),
+              .then((val) => setState(() {})),
       child: SizedBox(
         height: 135.h,
         child: Center(
@@ -580,13 +599,45 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                       borderRadius: BorderRadius.circular(10.r),
                       child: Hero(
                         tag:
-                            "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
-                        child: Image.asset(
-                          widget.info.image,
-                          height: 100.h,
-                          width: 125.w,
-                          fit: BoxFit.cover,
+                        "Hostel ID: ${widget.info.id} Image: ${widget.info
+                            .media.first}",
+                        child: CachedNetworkImage(
+                          imageUrl: widget.info.media.first,
+                          errorWidget: (context, url, error) =>
+                              Container(
+                                height: 100.h,
+                                width: 125.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: weirdBlack25,
+                                ),
+                              ),
+                          progressIndicatorBuilder: (context, url, download) =>
+                              Container(
+                                height: 100.h,
+                                width: 125.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: weirdBlack25,
+                                ),
+                                alignment: Alignment.center,
+                                  child: loader
+                              ),
+                          imageBuilder: (context, provider) =>
+                              Container(
+                                height: 100.h,
+                                width: 125.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  image: DecorationImage(
+                                    image: provider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                         ),
+
+
                       ),
                     ),
                     SizedBox(width: 15.w),
@@ -601,7 +652,8 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                             children: [
                               Hero(
                                 tag:
-                                    "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                                "Hostel ID: ${widget.info.id} Name: ${widget
+                                    .info.name}",
                                 child: Text(
                                   widget.info.name,
                                   style: context.textTheme.bodyMedium!.copyWith(
@@ -614,27 +666,32 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                 child: GestureDetector(
                                   onTap: () {
                                     String id =
-                                        ref.read(currentUserProvider).id;
-                                    if (widget.info.likes.contains(id)) {
-                                      widget.info.likes.remove(id);
-                                    } else {
-                                      widget.info.likes.add(id);
-                                    }
+                                        ref
+                                            .read(currentUserProvider)
+                                            .id;
+                                    // if (widget.info.likes.contains(id)) {
+                                    //   widget.info.likes.remove(id);
+                                    // } else {
+                                    //   widget.info.likes.add(id);
+                                    // }
                                     setState(() {});
                                   },
                                   child: AnimatedSwitcherTranslation.right(
                                     duration: const Duration(milliseconds: 500),
                                     child: Icon(
                                       Icons.favorite_rounded,
-                                      color: widget.info.likes.contains(
-                                              ref.read(currentUserProvider).id)
-                                          ? Colors.red
-                                          : weirdBlack20,
+                                      // color: widget.info.likes.contains(
+                                      //     ref
+                                      //         .read(currentUserProvider)
+                                      //         .id)
+                                      //     ? Colors.red
+                                      //     : weirdBlack20,
                                       size: 18,
-                                      key: ValueKey<bool>(widget.info.likes
-                                          .contains(ref
-                                              .read(currentUserProvider)
-                                              .id)),
+                                      // key: ValueKey<bool>(widget.info.likes
+                                      //     .contains(ref
+                                      //     .read(currentUserProvider)
+                                      //     .id),
+                                      // ),
                                     ),
                                   ),
                                 ),
@@ -655,7 +712,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                             ),
                             SizedBox(width: 5.w),
                             Text(
-                              "${widget.info.bedrooms}",
+                              "$bedrooms",
                               style: context.textTheme.bodySmall!.copyWith(
                                   color: weirdBlack50,
                                   fontWeight: FontWeight.w500),
@@ -668,7 +725,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                 color: weirdBlack50),
                             SizedBox(width: 5.w),
                             Text(
-                              "${widget.info.bathrooms}",
+                              "$bathrooms",
                               style: context.textTheme.bodySmall!.copyWith(
                                   color: weirdBlack50,
                                   fontWeight: FontWeight.w500),
@@ -700,9 +757,10 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          "${currency()} ${formatAmountInDouble(widget.info.price)}",
+                                      "${currency()} ${formatAmountInDouble(
+                                          widget.info.price)}",
                                       style:
-                                          context.textTheme.bodySmall!.copyWith(
+                                      context.textTheme.bodySmall!.copyWith(
                                         color: appBlue,
                                         fontFamily: "Inter",
                                         fontWeight: FontWeight.w600,
@@ -711,7 +769,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                     TextSpan(
                                       text: "/year",
                                       style:
-                                          context.textTheme.bodySmall!.copyWith(
+                                      context.textTheme.bodySmall!.copyWith(
                                         color: appBlue,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: "Inter",
@@ -730,7 +788,10 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                   borderRadius: BorderRadius.circular(5.r),
                                 ),
                                 child: Text(
-                                  "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                                  "${widget.info.roomsLeft.length} room${widget
+                                      .info.roomsLeft.length == 1
+                                      ? ""
+                                      : "s"} left",
                                   style: context.textTheme.bodyMedium!.copyWith(
                                       color: infoRoomsLeft,
                                       fontSize: 13.sp,
@@ -771,10 +832,11 @@ class _StudentCardState extends State<StudentCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.pushNamed(
-        Pages.otherStudent,
-        extra: widget.info,
-      ),
+      onTap: () =>
+          context.router.pushNamed(
+            Pages.otherStudent,
+            extra: widget.info,
+          ),
       child: SizedBox(
         height: 135.h,
         child: Center(
@@ -789,7 +851,8 @@ class _StudentCardState extends State<StudentCard> {
                     blurRadius: 6.0,
                     spreadRadius: 1.0,
                   )
-                ]),
+                ],
+            ),
             child: SizedBox(
               height: 120.h,
               child: Padding(
@@ -891,9 +954,10 @@ class _StudentCardState extends State<StudentCard> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          "${currency()} ${formatAmountInDouble(widget.info.amount)}",
+                                      "${currency()} ${formatAmountInDouble(
+                                          widget.info.amount)}",
                                       style:
-                                          context.textTheme.bodySmall!.copyWith(
+                                      context.textTheme.bodySmall!.copyWith(
                                         color: appBlue,
                                         fontFamily: "Inter",
                                         fontWeight: FontWeight.w600,
@@ -902,7 +966,7 @@ class _StudentCardState extends State<StudentCard> {
                                     TextSpan(
                                       text: "/year",
                                       style:
-                                          context.textTheme.bodySmall!.copyWith(
+                                      context.textTheme.bodySmall!.copyWith(
                                         color: appBlue,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: "Inter",
@@ -961,15 +1025,27 @@ class HostelExploreCard extends ConsumerStatefulWidget {
 }
 
 class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
+
+  late int bathroom, bedrooms;
+
+  @override
+  void initState() {
+    super.initState();
+    List<int> props = calculate(widget.info.rooms);
+    bathroom = props[0];
+    bedrooms = widget.info.rooms.length;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router
-          .pushNamed(
+      onTap: () =>
+          context.router
+              .pushNamed(
             Pages.hostelInfo,
             extra: widget.info,
           )
-          .then((val) => setState(() {})),
+              .then((val) => setState(() {})),
       child: SizedBox(
         height: 270.h,
         child: Center(
@@ -992,34 +1068,39 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CachedNetworkImage(
-                  imageUrl: widget.info.image,
-                  errorWidget: (context, url, error) => Container(
-                    width: 180.w,
-                    height: 125.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  progressIndicatorBuilder: (context, url, download) => Container(
-                    width: 180.w,
-                    height: 125.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  imageBuilder: (context, provider) => Container(
-                    width: 180.w,
-                    height: 125.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      image: DecorationImage(
-                        image: provider,
-                        fit: BoxFit.cover,
+                  imageUrl: widget.info.media.first,
+                  errorWidget: (context, url, error) =>
+                      Container(
+                        width: 180.w,
+                        height: 125.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: weirdBlack25,
+                        ),
                       ),
-                    ),
-                  ),
+                  progressIndicatorBuilder: (context, url, download) =>
+                      Container(
+                        width: 180.w,
+                        height: 125.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: weirdBlack25,
+                        ),
+                          alignment: Alignment.center,
+                          child: loader
+                      ),
+                  imageBuilder: (context, provider) =>
+                      Container(
+                        width: 180.w,
+                        height: 125.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          image: DecorationImage(
+                            image: provider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                 ),
                 SizedBox(height: 8.h),
                 Row(
@@ -1037,25 +1118,32 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        String id = ref.read(currentUserProvider).id;
-                        if (widget.info.likes.contains(id)) {
-                          widget.info.likes.remove(id);
-                        } else {
-                          widget.info.likes.add(id);
-                        }
+                        String id = ref
+                            .read(currentUserProvider)
+                            .id;
+                        // if (widget.info.likes.contains(id)) {
+                        //   widget.info.likes.remove(id);
+                        // } else {
+                        //   widget.info.likes.add(id);
+                        // }
                         setState(() {});
                       },
                       child: AnimatedSwitcherTranslation.right(
                         duration: const Duration(milliseconds: 500),
                         child: Icon(
                           Icons.favorite_rounded,
-                          color: widget.info.likes
-                                  .contains(ref.read(currentUserProvider).id)
-                              ? Colors.red
-                              : weirdBlack25,
+
+                          // color: widget.info.likes
+                          //     .contains(ref
+                          //     .read(currentUserProvider)
+                          //     .id)
+                          //     ? Colors.red
+                          //     : weirdBlack25,
                           size: 18,
-                          key: ValueKey<bool>(widget.info.likes
-                              .contains(ref.read(currentUserProvider).id)),
+                          // key: ValueKey<bool>(widget.info.likes
+                          //     .contains(ref
+                          //     .read(currentUserProvider)
+                          //     .id)),
                         ),
                       ),
                     )
@@ -1083,7 +1171,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     SizedBox(width: 5.w),
                     Text(
-                      "${widget.info.bedrooms}",
+                      "$bedrooms",
                       style: context.textTheme.bodySmall!.copyWith(
                           color: weirdBlack50, fontWeight: FontWeight.w500),
                     ),
@@ -1096,7 +1184,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     SizedBox(width: 5.w),
                     Text(
-                      "${widget.info.bathrooms}",
+                      "$bathroom",
                       style: context.textTheme.bodySmall!.copyWith(
                           color: weirdBlack50, fontWeight: FontWeight.w500),
                     ),
@@ -1125,7 +1213,8 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                         children: [
                           TextSpan(
                             text:
-                                "${currency()} ${formatAmountInDouble(widget.info.price / 1000)}k",
+                            "${currency()} ${formatAmountInDouble(
+                                widget.info.price / 1000)}k",
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
@@ -1154,7 +1243,8 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                         borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(
-                        "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                        "${widget.info.roomsLeft.length} room${widget.info
+                            .roomsLeft.length == 1 ? "" : "s"} left",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: infoRoomsLeft,
                           fontWeight: FontWeight.w500,
@@ -1237,11 +1327,12 @@ class _CommentCardState extends State<CommentCard>
                   children: [
                     RatingStars(
                       value: widget.comment.ratings,
-                      starBuilder: (_, color) => Icon(
-                        Boxicons.bxs_star,
-                        color: color,
-                        size: 18.r,
-                      ),
+                      starBuilder: (_, color) =>
+                          Icon(
+                            Boxicons.bxs_star,
+                            color: color,
+                            size: 18.r,
+                          ),
                       valueLabelVisibility: false,
                       starCount: 5,
                       starSize: 18.r,
@@ -1283,8 +1374,9 @@ class _CommentCardState extends State<CommentCard>
                   ),
                 SizedBox(height: 8.h),
                 Text(
-                    "${formatDate(DateFormat("dd/MM/yyyy").format(widget.comment.postTime), shorten: true)} "
-                    "by ${widget.comment.postedBy.mergedNames}",
+                    "${formatDate(DateFormat("dd/MM/yyyy").format(
+                        widget.comment.postTime), shorten: true)} "
+                        "by ${widget.comment.postedBy.mergedNames}",
                     style: context.textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w500,
                         color: weirdBlack.withOpacity(0.4))),
@@ -1324,8 +1416,7 @@ class _CommentCardState extends State<CommentCard>
   }
 }
 
-Widget flightShuttleBuilder(
-    BuildContext context,
+Widget flightShuttleBuilder(BuildContext context,
     Animation<double> animation,
     HeroFlightDirection direction,
     BuildContext fromContext,
@@ -1381,26 +1472,27 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                   SizedBox(height: 20.h),
                   RichText(
                       text: TextSpan(
-                    children: [
-                      TextSpan(
-                          text: "0",
-                          style: context.textTheme.headlineLarge!
-                              .copyWith(fontWeight: FontWeight.bold)),
-                      TextSpan(
-                        text: "/5",
-                        style: context.textTheme.bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  )),
+                        children: [
+                          TextSpan(
+                              text: "0",
+                              style: context.textTheme.headlineLarge!
+                                  .copyWith(fontWeight: FontWeight.bold)),
+                          TextSpan(
+                            text: "/5",
+                            style: context.textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      )),
                   SizedBox(height: 15.h),
                   RatingStars(
                     value: 3.2,
-                    starBuilder: (_, color) => Icon(
-                      Boxicons.bxs_star,
-                      color: color,
-                      size: 14.r,
-                    ),
+                    starBuilder: (_, color) =>
+                        Icon(
+                          Boxicons.bxs_star,
+                          color: color,
+                          size: 14.r,
+                        ),
                     valueLabelVisibility: false,
                     starCount: 5,
                     starSize: 14.r,
@@ -1421,37 +1513,38 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: List.generate(
                   5,
-                  (index) => Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("${5 - index}",
-                          style: context.textTheme.bodySmall!
-                              .copyWith(fontWeight: FontWeight.w500)),
-                      SizedBox(width: 5.w),
-                      Icon(
-                        Boxicons.bxs_star,
-                        color: weirdBlack.withOpacity(0.1),
-                        size: 14.r,
+                      (index) =>
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("${5 - index}",
+                              style: context.textTheme.bodySmall!
+                                  .copyWith(fontWeight: FontWeight.w500)),
+                          SizedBox(width: 5.w),
+                          Icon(
+                            Boxicons.bxs_star,
+                            color: weirdBlack.withOpacity(0.1),
+                            size: 14.r,
+                          ),
+                          SizedBox(width: 5.w),
+                          Text(
+                            "(0)",
+                            style: context.textTheme.bodySmall!
+                                .copyWith(fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(width: 15.w),
+                          SizedBox(
+                            width: 90.w,
+                            child: LinearProgressIndicator(
+                              value: 0.3,
+                              minHeight: 8.h,
+                              borderRadius: BorderRadius.circular(5.h),
+                              color: accentYellowColor,
+                              backgroundColor: weirdBlack.withOpacity(0.1),
+                            ),
+                          )
+                        ],
                       ),
-                      SizedBox(width: 5.w),
-                      Text(
-                        "(0)",
-                        style: context.textTheme.bodySmall!
-                            .copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(width: 15.w),
-                      SizedBox(
-                        width: 90.w,
-                        child: LinearProgressIndicator(
-                          value: 0.3,
-                          minHeight: 8.h,
-                          borderRadius: BorderRadius.circular(5.h),
-                          color: accentYellowColor,
-                          backgroundColor: weirdBlack.withOpacity(0.1),
-                        ),
-                      )
-                    ],
-                  ),
                 ),
               ),
             )
@@ -1509,7 +1602,7 @@ class _HomeSwitcherState extends State<HomeSwitcher> {
               key: ValueKey<bool>(type == AcquireType.hostel),
               decoration: BoxDecoration(
                 color:
-                    type == AcquireType.hostel ? appBlue : Colors.transparent,
+                type == AcquireType.hostel ? appBlue : Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5.r),
                   bottomLeft: Radius.circular(5.r),
@@ -1545,7 +1638,7 @@ class _HomeSwitcherState extends State<HomeSwitcher> {
               key: ValueKey<bool>(type == AcquireType.roommate),
               decoration: BoxDecoration(
                 color:
-                    type == AcquireType.roommate ? appBlue : Colors.transparent,
+                type == AcquireType.roommate ? appBlue : Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(5.r),
                   bottomRight: Radius.circular(5.r),
@@ -1579,13 +1672,13 @@ class RoomTypeCard extends ConsumerWidget {
   });
 
   String get name {
-    if(index == 0) {
+    if (index == 0) {
       return "Self Con";
-    } else if(index == 1) {
+    } else if (index == 1) {
       return "One Room";
-    } else if(index == 2) {
+    } else if (index == 2) {
       return "Face2Face";
-    } else if(index == 3) {
+    } else if (index == 3) {
       return "Flat";
     }
     return "";
@@ -1609,13 +1702,12 @@ class RoomTypeCard extends ConsumerWidget {
             width: 90.w,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.r),
-              image: DecorationImage(
-                image: AssetImage("assets/images/$name.png"),
-                fit: BoxFit.cover,
-              )
-            ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+                image: DecorationImage(
+                  image: AssetImage("assets/images/$name.png"),
+                  fit: BoxFit.cover,
+                )),
           ),
           Text(
             ref.read(roomTypesProvider)[index],
@@ -1629,8 +1721,8 @@ class RoomTypeCard extends ConsumerWidget {
 }
 
 class AvailableRoomCard extends StatefulWidget {
-  final RoomInfo info;
-  final bool isAsset;
+  final RoomInfo? info;
+  final Map<String, dynamic>? infoData;
   final bool available;
   final VoidCallback? onTap;
   final DateTime? expiry;
@@ -1638,8 +1730,8 @@ class AvailableRoomCard extends StatefulWidget {
   const AvailableRoomCard({
     super.key,
     this.available = false,
-    this.isAsset = true,
-    required this.info,
+    this.info,
+    this.infoData,
     this.expiry,
     this.onTap,
   });
@@ -1654,9 +1746,16 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
 
   bool timeUp = false;
 
+  bool isData = false;
+
   @override
   void initState() {
     super.initState();
+
+    if (widget.info == null && widget.infoData != null) {
+      isData = true;
+      return;
+    }
 
     // TODO: Properly test this deadline logic
 
@@ -1664,21 +1763,21 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
     DateTime current = DateTime.now();
 
     int delta = expiry.millisecondsSinceEpoch - current.millisecondsSinceEpoch;
-    if(delta < 0) {
+    if (delta < 0) {
       timeUp = true;
       return;
     }
 
     DateTime difference = DateTime.fromMillisecondsSinceEpoch(delta);
-    if(difference.year >= 1) {
+    if (difference.year >= 1) {
       deadline = "${difference.year} years left";
       backgroundColor = infoRoomsLeftBackground;
       textColor = infoRoomsLeft;
-    } else if(difference.year < 1 && (difference.month) > 4) {
+    } else if (difference.year < 1 && (difference.month) > 4) {
       deadline = "${difference.month} months left";
       backgroundColor = infoRoomsLeftBackground;
       textColor = infoRoomsLeft;
-    } else if(difference.month <= 4 && difference.month > 1) {
+    } else if (difference.month <= 4 && difference.month > 1) {
       deadline = "${difference.month} months left";
       backgroundColor = yellowDeadlineBackground;
       textColor = pendingColor;
@@ -1693,157 +1792,213 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap ??
-          () {
+              () {
             showModalBottomSheet(
               context: context,
               elevation: 1.0,
-              builder: (_) => SizedBox(
-                width: 414.w,
-                child: Padding(
-                  padding:
+              builder: (_) =>
+                  SizedBox(
+                    width: 414.w,
+                    child: Padding(
+                      padding:
                       EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 10.h),
-                            Center(
-                              child: SvgPicture.asset(
-                                  "assets/images/Modal Line.svg"),
-                            ),
-                            SizedBox(height: 25.h),
-                            Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15.r),
-                                  topRight: Radius.circular(15.r),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 10.h),
+                                Center(
+                                  child: SvgPicture.asset(
+                                      "assets/images/Modal Line.svg"),
                                 ),
-                                child: widget.isAsset
-                                    ? Image.asset(
-                                        widget.info.media[0],
-                                        width: 414.w,
-                                        height: 175.h,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : CachedNetworkImage(
-                                  imageUrl: widget.info.media[0],
-
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              widget.info.name,
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 22.sp,
-                                color: weirdBlack,
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: currency(),
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w600,
+                                SizedBox(height: 25.h),
+                                Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15.r),
+                                      topRight: Radius.circular(15.r),
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.info!.media.first,
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                            width: 414.w,
+                                            height: 175.h,
+                                            color: weirdBlack50,
+                                            alignment: Alignment.center,
+                                            child: loader,
+                                          ),
+                                      progressIndicatorBuilder:
+                                          (context, url, download) =>
+                                          Container(
+                                            width: 414.w,
+                                            height: 175.h,
+                                            color: weirdBlack50,
+                                          ),
+                                      imageBuilder: (context, provider) =>
+                                          Container(
+                                            width: 414.w,
+                                            height: 175.h,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: provider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
                                     ),
                                   ),
-                                  TextSpan(
-                                    text: formatAmountInDouble(widget.info.price),
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  isData
+                                      ? widget.infoData!["name"]
+                                      : widget.info!.name,
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22.sp,
+                                    color: weirdBlack,
                                   ),
-                                  TextSpan(
-                                    text: "/year",
-                                    style:
+                                ),
+                                SizedBox(height: 16.h),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: currency(),
+                                        style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                          color: appBlue,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: formatAmountInDouble(isData
+                                            ? widget.infoData!["price"]
+                                            : widget.info!.price),
+                                        style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                          color: appBlue,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "/year",
+                                        style:
                                         context.textTheme.bodySmall!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Rooms Facilities",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                          ],
-                        ),
-                      ),
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 5.r,
-                          mainAxisSpacing: 15.r,
-                          mainAxisExtent: 105.r,
-                        ),
-                        itemBuilder: (_, index) =>
-                            FacilityContainer(text: widget.info.facilities[index]),
-                        itemCount: widget.info.facilities.length,
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Gallery",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                          ],
-                        ),
-                      ),
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10.r,
-                            mainAxisSpacing: 10.r,
-                            mainAxisExtent: 110.r),
-                        itemCount: widget.info.media.length,
-                        itemBuilder: (_, index) => GestureDetector(
-                          onTap: () => context.router.pushNamed(
-                            Pages.viewMedia,
-                            extra: ViewInfo(
-                              type: DisplayType.asset,
-                              paths: widget.info.media,
-                              current: index,
+                                          color: appBlue,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  "Rooms Facilities",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
+                                ),
+                                SizedBox(height: 8.h),
+                              ],
                             ),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5.r),
-                            child: Image.asset(
-                              widget.info.media[index],
-                              width: 110.r,
-                              height: 110.r,
-                              fit: BoxFit.cover,
+                          SliverGrid.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: 5.r,
+                              mainAxisSpacing: 15.r,
+                              mainAxisExtent: 105.r,
+                            ),
+                            itemBuilder: (_, index) =>
+                                FacilityContainer(
+                                    text: widget.info!.facilities[index]),
+                            itemCount: widget.info!.facilities.length,
+                          ),
+                          SliverToBoxAdapter(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 16.h),
+                                Text(
+                                  "Gallery",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
+                                ),
+                                SizedBox(height: 8.h),
+                              ],
                             ),
                           ),
-                        ),
+                          SliverGrid.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 10.r,
+                                mainAxisSpacing: 10.r,
+                                mainAxisExtent: 110.r),
+                            itemCount: widget.info!.media.length,
+                            itemBuilder: (_, index) =>
+                                GestureDetector(
+                                  onTap: () =>
+                                      context.router.pushNamed(
+                                        Pages.viewMedia,
+                                        extra: ViewInfo(
+                                          type: DisplayType.network,
+                                          paths: widget.info!.media,
+                                          current: index,
+                                        ),
+                                      ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.info!.media.first,
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                          width: 110.r,
+                                          height: 110.r,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                5.r),
+                                            color: weirdBlack50,
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: loader,
+                                        ),
+                                    progressIndicatorBuilder:
+                                        (context, url, download) =>
+                                        Container(
+                                          width: 110.r,
+                                          height: 110.r,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                5.r),
+                                            color: weirdBlack50,
+                                          ),
+                                        ),
+                                    imageBuilder: (context, provider) =>
+                                        Container(
+                                          width: 110.r,
+                                          height: 110.r,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                5.r),
+                                            image: DecorationImage(
+                                              image: provider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                  ),
+                                ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
             );
           },
       child: Container(
@@ -1859,43 +2014,47 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CachedNetworkImage(imageUrl: widget.info.media[0],
-                  errorWidget: (context, url, error) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
+                CachedNetworkImage(
+                  imageUrl: widget.info!.media.first,
+                  errorWidget: (context, url, error) =>
+                      Container(
+                        width: 185.w,
+                        height: 140.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.r),
+                            topRight: Radius.circular(10.r),
+                          ),
+                          color: weirdBlack25,
+                        ),
                       ),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  progressIndicatorBuilder: (context, url, download) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
+                  progressIndicatorBuilder: (context, url, download) =>
+                      Container(
+                        width: 185.w,
+                        height: 140.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.r),
+                            topRight: Radius.circular(10.r),
+                          ),
+                          color: weirdBlack25,
+                        ),
                       ),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  imageBuilder: (context, provider) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
+                  imageBuilder: (context, provider) =>
+                      Container(
+                        width: 185.w,
+                        height: 140.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.r),
+                            topRight: Radius.circular(10.r),
+                          ),
+                          image: DecorationImage(
+                            image: provider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      image: DecorationImage(
-                        image: provider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
                 ),
                 SizedBox(height: 8.h),
                 Padding(
@@ -1910,30 +2069,31 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           SizedBox(
                             width: timeUp ? 170.w : 90.w,
                             child: Text(
-                              widget.info.name,
+                              widget.info!.name,
                               overflow: TextOverflow.ellipsis,
                               style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600, color: weirdBlack),
+                                  fontWeight: FontWeight.w600,
+                                  color: weirdBlack),
                             ),
                           ),
-                          if(!timeUp)
-                          Container(
-                            width: 60.w,
-                            height: 25.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: backgroundColor,
-                              borderRadius: BorderRadius.circular(5.r),
-                            ),
-                            child: Text(
-                              "10 days left",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                color: textColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.sp,
+                          if (!timeUp)
+                            Container(
+                              width: 60.w,
+                              height: 25.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: Text(
+                                "10 days left",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: textColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13.sp,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                       SizedBox(height: 8.h),
@@ -1949,7 +2109,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                               ),
                             ),
                             TextSpan(
-                              text: formatAmountInDouble(widget.info.price),
+                              text: formatAmountInDouble(widget.info!.price),
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: appBlue,
                                 fontFamily: "Inter",
@@ -2067,7 +2227,7 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
     } else if (status) {
       title = "Hostel Pay Successful";
       message =
-          "Congratulations, you have successfully purchased a hostel for yourself.";
+      "Congratulations, you have successfully purchased a hostel for yourself.";
       image = "assets/images/Hostel Pay Success.png";
     } else {
       title = "Hostel Pay Failed";
@@ -2087,236 +2247,103 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
           slivers: [
             selected
                 ? SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 10.h),
-                        SvgPicture.asset("assets/images/Modal Line.svg"),
-                        SizedBox(height: 55.h),
-                        Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15.r),
-                              topRight: Radius.circular(15.r),
-                            ),
-                            child: Image.asset(
-                              image,
-                              width: 135.r,
-                              height: 135.h,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        Text(
-                          title,
-                          style: context.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: weirdBlack,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          message,
-                          textAlign: TextAlign.center,
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 42.h),
-                        if (hasEnough && status)
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              width: 414.w,
-                              height: 50.h,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.r),
-                                color: appBlue,
-                              ),
-                              child: Text(
-                                "Ok, thanks",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        if (hasEnough && !status)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).pop(),
-                                child: Container(
-                                  width: 170.w,
-                                  height: 50.h,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    border: Border.all(color: appBlue),
-                                  ),
-                                  child: Text(
-                                    "Cancel",
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: appBlue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 170.w,
-                                  height: 50.h,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    color: appBlue,
-                                  ),
-                                  child: Text(
-                                    "Try again",
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        if (!hasEnough)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).pop(),
-                                child: Container(
-                                  width: 170.w,
-                                  height: 50.h,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    border: Border.all(color: appBlue),
-                                  ),
-                                  child: Text(
-                                    "Cancel",
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: appBlue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () =>
-                                    context.router.pushNamed(Pages.topUp),
-                                child: Container(
-                                  width: 170.w,
-                                  height: 50.h,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    color: appBlue,
-                                  ),
-                                  child: Text(
-                                    "Top-up",
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10.h),
+                  SvgPicture.asset("assets/images/Modal Line.svg"),
+                  SizedBox(height: 55.h),
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.r),
+                        topRight: Radius.circular(15.r),
+                      ),
+                      child: Image.asset(
+                        image,
+                        width: 135.r,
+                        height: 135.h,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  )
-                : SliverToBoxAdapter(
-                    child: Column(
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    title,
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack50,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 42.h),
+                  if (hasEnough && status)
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: 414.w,
+                        height: 50.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.r),
+                          color: appBlue,
+                        ),
+                        child: Text(
+                          "Ok, thanks",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (hasEnough && !status)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 10.h),
-                        SvgPicture.asset("assets/images/Modal Line.svg"),
-                        SizedBox(height: 25.h),
-                        Text(
-                          "Choose your room",
-                          style: context.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: weirdBlack,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          "Select the room of your choice from the available rooms below",
-                          textAlign: TextAlign.center,
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack50,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        Wrap(
-                          spacing: 10.w,
-                          runSpacing: 10.w,
-                          children: List.generate(
-                            widget.info.roomsLeft.length,
-                            (index) => GestureDetector(
-                              onTap: () => setState(() => selectedRoom = index),
-                              child: Container(
-                                width: 85.w,
-                                height: 40.h,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: selectedRoom != null &&
-                                              selectedRoom == index
-                                          ? appBlue
-                                          : fadedBorder,
-                                    ),
-                                    borderRadius: BorderRadius.circular(5.r),
-                                    color: selectedRoom != null &&
-                                            selectedRoom == index
-                                        ? paleBlue
-                                        : null),
-                                child: Text(
-                                  widget.info.rooms[index].name,
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                      color: selectedRoom != null &&
-                                              selectedRoom == index
-                                          ? appBlue
-                                          : weirdBlack50,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 42.h),
                         GestureDetector(
-                          onTap: () => setState(() => selected = true),
+                          onTap: () => Navigator.of(context).pop(),
                           child: Container(
-                            width: 414.w,
+                            width: 170.w,
                             height: 50.h,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: appBlue,
-                              borderRadius: BorderRadius.circular(5.r),
+                              borderRadius: BorderRadius.circular(4.r),
+                              border: Border.all(color: appBlue),
                             ),
                             child: Text(
-                              "Pay ${currency()}${formatAmountInDouble(widget.info.price)}",
-                              style: context.textTheme.bodyMedium!.copyWith(
+                              "Cancel",
+                              style:
+                              context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: appBlue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            width: 170.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                              color: appBlue,
+                            ),
+                            child: Text(
+                              "Try again",
+                              style:
+                              context.textTheme.bodyMedium!.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
@@ -2325,7 +2352,142 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                         ),
                       ],
                     ),
+                  if (!hasEnough)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            width: 170.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                              border: Border.all(color: appBlue),
+                            ),
+                            child: Text(
+                              "Cancel",
+                              style:
+                              context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: appBlue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              context.router.pushNamed(Pages.topUp),
+                          child: Container(
+                            width: 170.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                              color: appBlue,
+                            ),
+                            child: Text(
+                              "Top-up",
+                              style:
+                              context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            )
+                : SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10.h),
+                  SvgPicture.asset("assets/images/Modal Line.svg"),
+                  SizedBox(height: 25.h),
+                  Text(
+                    "Choose your room",
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: weirdBlack,
+                    ),
                   ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    "Select the room of your choice from the available rooms below",
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack50,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Wrap(
+                    spacing: 10.w,
+                    runSpacing: 10.w,
+                    children: List.generate(
+                      widget.info.roomsLeft.length,
+                          (index) =>
+                          GestureDetector(
+                            onTap: () => setState(() => selectedRoom = index),
+                            child: Container(
+                              width: 85.w,
+                              height: 40.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: selectedRoom != null &&
+                                        selectedRoom == index
+                                        ? appBlue
+                                        : fadedBorder,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  color: selectedRoom != null &&
+                                      selectedRoom == index
+                                      ? paleBlue
+                                      : null),
+                              child: Text(
+                                widget.info.rooms[index].name,
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                    color: selectedRoom != null &&
+                                        selectedRoom == index
+                                        ? appBlue
+                                        : weirdBlack50,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  SizedBox(height: 42.h),
+                  GestureDetector(
+                    onTap: () => setState(() => selected = true),
+                    child: Container(
+                      width: 414.w,
+                      height: 50.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: appBlue,
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: Text(
+                        "Pay ${currency()}${formatAmountInDouble(widget.info
+                            .price)}",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -2628,13 +2790,14 @@ class WalletSlider extends ConsumerStatefulWidget {
 }
 
 class _WalletSliderState extends ConsumerState<WalletSlider> {
-  bool showBalance = true, showExpenses = true;
+  bool showBalance = true,
+      showExpenses = true;
 
   double scrollValue = 0.0;
 
   String amount(int index) {
     double amount =
-        (index == 0) ? ref.read(walletProvider) : ref.read(expensesProvider);
+    (index == 0) ? ref.read(walletProvider) : ref.read(expensesProvider);
     return "${currency()}${formatAmount(amount.toStringAsFixed(0))}";
   }
 
@@ -2653,7 +2816,8 @@ class _WalletSliderState extends ConsumerState<WalletSlider> {
         NotificationListener<ScrollNotification>(
           onNotification: (notification) {
             WidgetsBinding.instance.addPostFrameCallback(
-                (_) => setState(() => scrollValue = controller.offset / 162.0));
+                    (_) =>
+                    setState(() => scrollValue = controller.offset / 162.0));
             return true;
           },
           child: SizedBox(
@@ -2662,81 +2826,87 @@ class _WalletSliderState extends ConsumerState<WalletSlider> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               controller: controller,
-              itemBuilder: (_, index) => Container(
-                width: 270.w,
-                height: 145.h,
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.r),
-                  color: index == 0 ? appBlue : const Color(0xFF116BAE),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 15.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+              itemBuilder: (_, index) =>
+                  Container(
+                    width: 270.w,
+                    height: 145.h,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.r),
+                      color: index == 0 ? appBlue : const Color(0xFF116BAE),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        SizedBox(height: 15.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Total ${index == 0 ? "Balance" : "Expenses"}",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () =>
+                                  setState(
+                                        () {
+                                      if (index == 0) {
+                                        showBalance = !showBalance;
+                                      } else {
+                                        showExpenses = !showExpenses;
+                                      }
+                                    },
+                                  ),
+                              child: AnimatedSwitcherZoom.zoomIn(
+                                duration: const Duration(milliseconds: 500),
+                                child: SvgPicture.asset(
+                                  "assets/images/Eye ${((index == 0)
+                                      ? showBalance
+                                      : showExpenses)
+                                      ? "Hidden"
+                                      : "Visible"}.svg",
+                                  key: ValueKey<bool>(
+                                    ((index == 0) ? showBalance : showExpenses),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 25.h),
+                        AnimatedSwitcherTranslation.top(
+                          duration: const Duration(milliseconds: 500),
+                          child: Text(
+                            ((index == 0) ? showBalance : showExpenses)
+                                ? amount(index)
+                                : "********",
+                            key: ValueKey<bool>(
+                                ((index == 0) ? showBalance : showExpenses)),
+                            style: context.textTheme.headlineMedium!.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontFamily: "Inter",
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
                         Text(
-                          "Total ${index == 0 ? "Balance" : "Expenses"}",
-                          style: context.textTheme.bodyLarge!.copyWith(
+                          index == 0
+                              ? "Available funds in wallet"
+                              : "Amount spent on acquires",
+                          style: context.textTheme.bodySmall!.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () => setState(
-                            () {
-                              if (index == 0) {
-                                showBalance = !showBalance;
-                              } else {
-                                showExpenses = !showExpenses;
-                              }
-                            },
-                          ),
-                          child: AnimatedSwitcherZoom.zoomIn(
-                            duration: const Duration(milliseconds: 500),
-                            child: SvgPicture.asset(
-                              "assets/images/Eye ${((index == 0) ? showBalance : showExpenses) ? "Hidden" : "Visible"}.svg",
-                              key: ValueKey<bool>(
-                                ((index == 0) ? showBalance : showExpenses),
-                              ),
-                            ),
-                          ),
-                        )
                       ],
                     ),
-                    SizedBox(height: 25.h),
-                    AnimatedSwitcherTranslation.top(
-                      duration: const Duration(milliseconds: 500),
-                      child: Text(
-                        ((index == 0) ? showBalance : showExpenses)
-                            ? amount(index)
-                            : "********",
-                        key: ValueKey<bool>(
-                            ((index == 0) ? showBalance : showExpenses)),
-                        style: context.textTheme.headlineMedium!.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontFamily: "Inter",
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      index == 0
-                          ? "Available funds in wallet"
-                          : "Amount spent on acquires",
-                      style: context.textTheme.bodySmall!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
               separatorBuilder: (_, __) => SizedBox(width: 20.w),
               itemCount: 2,
             ),
@@ -2752,7 +2922,7 @@ class _WalletSliderState extends ConsumerState<WalletSlider> {
               width: 10.r,
               decoration: BoxDecoration(
                   color:
-                      Color.lerp(appBlue, const Color(0xFFD9EAFF), scrollValue),
+                  Color.lerp(appBlue, const Color(0xFFD9EAFF), scrollValue),
                   shape: BoxShape.circle),
             ),
             SizedBox(width: 10.w),
@@ -2761,7 +2931,7 @@ class _WalletSliderState extends ConsumerState<WalletSlider> {
               width: 10.r,
               decoration: BoxDecoration(
                   color:
-                      Color.lerp(const Color(0xFFD9EAFF), appBlue, scrollValue),
+                  Color.lerp(const Color(0xFFD9EAFF), appBlue, scrollValue),
                   shape: BoxShape.circle),
             ),
           ],
@@ -2782,10 +2952,11 @@ class TransactionContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.pushNamed(
-        Pages.transactionDetails,
-        extra: transaction,
-      ),
+      onTap: () =>
+          context.router.pushNamed(
+            Pages.transactionDetails,
+            extra: transaction,
+          ),
       child: Container(
         width: 414.w,
         decoration: BoxDecoration(
@@ -2831,9 +3002,11 @@ class TransactionContainer extends StatelessWidget {
                               fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
                         Text(
-                          "${transaction.type == TransactionType.credit ? "+" : "-"}"
-                          "${currency()}"
-                          "${formatAmountInDouble(transaction.amount)}",
+                          "${transaction.type == TransactionType.credit
+                              ? "+"
+                              : "-"}"
+                              "${currency()}"
+                              "${formatAmountInDouble(transaction.amount)}",
                           style: context.textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
@@ -2854,12 +3027,12 @@ class TransactionContainer extends StatelessWidget {
                           fromStatus(transaction.status),
                           style: context.textTheme.bodyMedium!.copyWith(
                             color:
-                                transaction.status == TransactionStatus.success
-                                    ? successColor
-                                    : (transaction.status ==
-                                            TransactionStatus.failed
-                                        ? failColor
-                                        : pendingColor),
+                            transaction.status == TransactionStatus.success
+                                ? successColor
+                                : (transaction.status ==
+                                TransactionStatus.failed
+                                ? failColor
+                                : pendingColor),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -2884,7 +3057,8 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
     required this.transaction,
   });
 
-  Widget rent(BuildContext context) => Column(
+  Widget rent(BuildContext context) =>
+      Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2959,7 +3133,8 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
         ],
       );
 
-  Widget topUp(BuildContext context) => Column(
+  Widget topUp(BuildContext context) =>
+      Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3116,9 +3291,11 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
                               fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
                         Text(
-                          "${transaction.type == TransactionType.credit ? "+" : "-"}"
-                          "${currency()}"
-                          "${formatAmountInDouble(transaction.amount)}",
+                          "${transaction.type == TransactionType.credit
+                              ? "+"
+                              : "-"}"
+                              "${currency()}"
+                              "${formatAmountInDouble(transaction.amount)}",
                           style: context.textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w600, color: weirdBlack),
                         ),
@@ -3139,12 +3316,12 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
                           fromStatus(transaction.status),
                           style: context.textTheme.bodyMedium!.copyWith(
                               color: transaction.status ==
-                                      TransactionStatus.success
+                                  TransactionStatus.success
                                   ? successColor
                                   : (transaction.status ==
-                                          TransactionStatus.failed
-                                      ? failColor
-                                      : pendingColor),
+                                  TransactionStatus.failed
+                                  ? failColor
+                                  : pendingColor),
                               fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -3170,8 +3347,8 @@ class StudentTransactionDetailsContainer extends StatelessWidget {
             child: transaction.purpose == "Hostel Payment"
                 ? rent(context)
                 : (transaction.purpose == "Top-up Wallet")
-                    ? topUp(context)
-                    : const SizedBox(),
+                ? topUp(context)
+                : const SizedBox(),
           ),
           SizedBox(height: 24.h),
         ],
@@ -3188,7 +3365,8 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
     required this.transaction,
   });
 
-  Widget rent(BuildContext context) => Column(
+  Widget rent(BuildContext context) =>
+      Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3280,7 +3458,8 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
         ],
       );
 
-  Widget topUp(BuildContext context) => Column(
+  Widget topUp(BuildContext context) =>
+      Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3611,9 +3790,11 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
                                 fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
                           Text(
-                            "${transaction.type == TransactionType.credit ? "+" : "-"}"
-                            "${currency()}"
-                            "${formatAmountInDouble(transaction.amount)}",
+                            "${transaction.type == TransactionType.credit
+                                ? "+"
+                                : "-"}"
+                                "${currency()}"
+                                "${formatAmountInDouble(transaction.amount)}",
                             style: context.textTheme.bodyLarge!.copyWith(
                                 fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
@@ -3633,12 +3814,12 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
                           fromStatus(transaction.status),
                           style: context.textTheme.bodyMedium!.copyWith(
                               color: transaction.status ==
-                                      TransactionStatus.success
+                                  TransactionStatus.success
                                   ? successColor
                                   : (transaction.status ==
-                                          TransactionStatus.failed
-                                      ? failColor
-                                      : pendingColor),
+                                  TransactionStatus.failed
+                                  ? failColor
+                                  : pendingColor),
                               fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -3664,8 +3845,8 @@ class OwnerTransactionDetailsContainer extends StatelessWidget {
             child: transaction.purpose == "Money Received"
                 ? rent(context)
                 : (transaction.purpose == "Withdrawal")
-                    ? topUp(context)
-                    : const SizedBox(),
+                ? topUp(context)
+                : const SizedBox(),
           ),
           SizedBox(height: 24.h),
         ],

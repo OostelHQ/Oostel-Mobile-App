@@ -103,9 +103,6 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
           HostelInfo(
             id: "1",
             name: "Manchester Hostel",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -119,7 +116,6 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
               "Nam utcurs usipsum dolor sit amet.",
               "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet."
             ],
-            likes: const [],
             hostelFacilities: const [
               "Light",
               "Water",
@@ -237,12 +233,8 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
           HostelInfo(
             id: "2",
             name: "Liverpool Hostel",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
-            likes: const [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -371,12 +363,8 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
           HostelInfo(
             id: "3",
             name: "Scotland",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
-            likes: const [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -505,12 +493,8 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
           HostelInfo(
             id: "4",
             name: "Grace Ville",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
-            likes: const [],
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
             description:
                 "Lorem ipsum dolor sit amet, consectetur. Nam utcurs usipsum dolor sit amet. "
@@ -639,10 +623,6 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
           HostelInfo(
             id: "5",
             name: "Manchester Hostel Askj",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
-            likes: const [],
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -771,12 +751,8 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             owner: defaultOwner.id,
           ),
           HostelInfo(
-            likes: const [],
             id: "6",
             name: "Liverpool Hostel",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -905,12 +881,8 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             owner: defaultOwner.id,
           ),
           HostelInfo(
-            likes: const [],
             id: "7",
             name: "Scotland",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -1039,12 +1011,8 @@ final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
             owner: defaultOwner.id,
           ),
           HostelInfo(
-            likes: const [],
             id: "8",
             name: "Grace Ville",
-            image: "assets/images/street.jpg",
-            bedrooms: 1,
-            bathrooms: 1,
             area: 2500,
             price: 100000,
             address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -1187,11 +1155,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
   (ref) => [
     HostelInfo(
         id: "11",
-      likes: const [],
+      likes: 0,
         name: "Manchester Hostel",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
         area: 2500,
         price: 100000,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -1321,12 +1286,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       owner: defaultOwner.id,
     ),
     HostelInfo(
-        likes: const [],
         id: "12",
         name: "Liverpool Hostel",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
         area: 2500,
         price: 100000,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -1456,12 +1417,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       owner: defaultOwner.id,
         ),
     HostelInfo(
-        likes: const [],
         id: "13",
         name: "Scotland",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
         area: 2500,
         price: 100000,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",
@@ -1591,12 +1548,8 @@ final StateProvider<List<HostelInfo>> ownerHostelsProvider = StateProvider(
       owner: defaultOwner.id,
     ),
     HostelInfo(
-        likes: const [],
         id: "14",
         name: "Grace Ville",
-        image: "assets/images/street.jpg",
-        bedrooms: 1,
-        bathrooms: 1,
         area: 2500,
         price: 100000,
         address: "21, Shale Close#Harmony Estate#Ogun State#Nigeria",

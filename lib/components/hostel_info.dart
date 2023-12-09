@@ -6,9 +6,6 @@ class HostelInfo extends Equatable {
   final String id;
   final String name;
   final String address;
-  final String image;
-  final int bedrooms;
-  final int bathrooms;
   final double area;
   final double price;
   final String description;
@@ -18,7 +15,7 @@ class HostelInfo extends Equatable {
   final int totalRooms;
   final List<String> roomsLeft;
   final List<String> media;
-  final List<String> likes;
+  final int likes;
   final String category;
   final bool vacantRooms;
   final String owner;
@@ -27,10 +24,7 @@ class HostelInfo extends Equatable {
     this.id = "",
     this.name = "",
     this.category = "",
-    this.image = "",
     this.address = "",
-    this.bedrooms = 0,
-    this.bathrooms = 0,
     this.totalRooms = 0,
     this.area = 0.0,
     this.price = 0.0,
@@ -40,7 +34,7 @@ class HostelInfo extends Equatable {
     required this.owner,
     this.description = "",
     this.rules = const [],
-    this.likes = const [],
+    this.likes = 0,
     this.hostelFacilities = const [],
     this.media = const [],
   });
@@ -79,9 +73,6 @@ class HostelInfo extends Equatable {
     return HostelInfo(
         id: map["hostelId"],
         name: map["hostelName"],
-        image: map["image"] ?? "",
-        bedrooms: map["bedrooms"] ?? 0,
-        bathrooms: map["bathrooms"] ?? 0,
         area: map["homeSize"],
         price: map["price"] ?? 0.0,
         totalRooms: map["totalRoom"] ?? 0,

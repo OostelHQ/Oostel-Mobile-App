@@ -38,6 +38,8 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
 
   Landowner? owner;
 
+  late int bathroom, bedrooms;
+
   @override
   void initState() {
     super.initState();
@@ -47,8 +49,11 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
           (_) => setState(() => tabIndex = tabController.index));
     });
 
-    fetching = true;
+    List<int> props = calculate(widget.info.rooms);
+    bathroom = props[0];
+    bedrooms = widget.info.rooms.length;
 
+    fetching = true;
     getOwner();
   }
 
@@ -80,7 +85,19 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
           : (!fetching && owner == null)
               ? Center(
                   child: Column(
-                    children: [],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/images/Error.svg"),
+                      SizedBox(height: 20.h),
+                      Text(
+                        "An error occurred. Please try again",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
                   ),
                 )
               : NotificationListener<ScrollNotification>(
@@ -133,13 +150,35 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                             children: [
                               Hero(
                                 tag:
-                                    "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                                    "Hostel ID: ${widget.info.id} Image: ${widget.info.media.first}",
                                 flightShuttleBuilder: flightShuttleBuilder,
-                                child: Image.asset(
-                                  widget.info.image,
-                                  width: 414.w,
-                                  height: 470.h,
-                                  fit: BoxFit.cover,
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.info.media.first,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    width: 414.w,
+                                    height: 470.h,
+                                    color: weirdBlack50,
+                                    alignment: Alignment.center,
+                                    child: loader,
+                                  ),
+                                  progressIndicatorBuilder:
+                                      (context, url, download) => Container(
+                                    width: 414.w,
+                                    height: 470.h,
+                                    color: weirdBlack50,
+                                  ),
+                                  imageBuilder: (context, provider) =>
+                                      Container(
+                                    width: 414.w,
+                                    height: 470.h,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: provider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -164,13 +203,12 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                 right: 30.w,
                                 child: GestureDetector(
                                   onTap: () {
-                                    String id =
-                                        ref.read(currentUserProvider).id;
-                                    if (widget.info.likes.contains(id)) {
-                                      widget.info.likes.remove(id);
-                                    } else {
-                                      widget.info.likes.add(id);
-                                    }
+                                    String id = ref.read(currentUserProvider).id;
+                                    // if (widget.info.likes.contains(id)) {
+                                    //   widget.info.likes.remove(id);
+                                    // } else {
+                                    //   widget.info.likes.add(id);
+                                    // }
                                     setState(() {});
                                   },
                                   child: Container(
@@ -186,11 +224,11 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                           flightShuttleBuilder,
                                       child: Icon(
                                         Icons.favorite_rounded,
-                                        color: widget.info.likes.contains(ref
-                                                .read(currentUserProvider)
-                                                .id)
-                                            ? Colors.red
-                                            : Colors.white,
+                                        // color: widget.info.likes.contains(ref
+                                        //         .read(currentUserProvider)
+                                        //         .id)
+                                        //     ? Colors.red
+                                        //     : Colors.white,
                                         size: 26.r,
                                       ),
                                     ),
@@ -273,7 +311,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                   ),
                                   SizedBox(width: 5.w),
                                   Text(
-                                    "${widget.info.bedrooms}",
+                                    "$bedrooms",
                                     style: context.textTheme.bodySmall!
                                         .copyWith(
                                             color: weirdBlack50,
@@ -288,7 +326,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                   ),
                                   SizedBox(width: 5.w),
                                   Text(
-                                    "${widget.info.bathrooms}",
+                                    "$bathroom",
                                     style: context.textTheme.bodySmall!
                                         .copyWith(
                                             color: weirdBlack50,
@@ -550,10 +588,9 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                                     style: context
                                                         .textTheme.bodySmall!
                                                         .copyWith(
-                                                            color: weirdBlack50,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500,
+                                                      color: weirdBlack50,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
                                                   ),
                                                 ],
@@ -563,9 +600,8 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                                 style: context
                                                     .textTheme.bodySmall!
                                                     .copyWith(
-                                                        color: weirdBlack50,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                  color: weirdBlack50,
+                                                  fontWeight: FontWeight.w500,
                                                 ),
                                               ),
                                             ],

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,8 @@ class _LandlordHostelInformationPageState
   bool isCollapsed = false;
   int tabIndex = 0;
 
+  late int bathroom, bedrooms;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +42,11 @@ class _LandlordHostelInformationPageState
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => setState(() => tabIndex = tabController.index));
     });
+
+
+    List<int> props = calculate(widget.info.rooms);
+    bathroom = props[0];
+    bedrooms = widget.info.rooms.length;
   }
 
   @override
@@ -101,13 +109,33 @@ class _LandlordHostelInformationPageState
                   children: [
                     Hero(
                       tag:
-                          "Hostel ID: ${widget.info.id} Image: ${widget.info.image}",
+                          "Hostel ID: ${widget.info.id} Image: ${widget.info.media.first}",
                       flightShuttleBuilder: flightShuttleBuilder,
-                      child: Image.asset(
-                        widget.info.image,
-                        width: 414.w,
-                        height: 470.h,
-                        fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.info.media.first,
+                        errorWidget: (context, url, error) => Container(
+                          width: 414.w,
+                          height: 470.h,
+                          color: weirdBlack50,
+                          alignment: Alignment.center,
+                          child: loader,
+                        ),
+                        progressIndicatorBuilder: (context, url, download) =>
+                            Container(
+                          width: 414.w,
+                          height: 470.h,
+                          color: weirdBlack50,
+                        ),
+                        imageBuilder: (context, provider) => Container(
+                          width: 414.w,
+                          height: 470.h,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: provider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -215,7 +243,7 @@ class _LandlordHostelInformationPageState
                         ),
                         SizedBox(width: 5.w),
                         Text(
-                          "${widget.info.bedrooms}",
+                          "$bedrooms",
                           style: context.textTheme.bodySmall!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),
@@ -228,7 +256,7 @@ class _LandlordHostelInformationPageState
                         ),
                         SizedBox(width: 5.w),
                         Text(
-                          "${widget.info.bathrooms}",
+                          "$bathroom",
                           style: context.textTheme.bodySmall!.copyWith(
                               color: weirdBlack50, fontWeight: FontWeight.w500),
                         ),

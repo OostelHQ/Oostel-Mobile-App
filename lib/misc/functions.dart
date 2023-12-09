@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_hostel/components/room_details.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'constants.dart' show appBlue;
@@ -153,6 +154,31 @@ String joinToAddress(String address) {
   //return "${subs[0]}, ${subs[1]}, ${subs[2]}, ${subs[3]}";
   return "";
 }
+
+
+List<int> calculate(List<RoomInfo> rooms) {
+  int baths = 0, kitchens = 0, toilets = 0;
+
+  for (RoomInfo info in rooms) {
+    List<String> facilities = info.facilities;
+    if (facilities.contains("Toilet")) {
+      ++toilets;
+    }
+    if (facilities.contains("Kitchen")) {
+      ++kitchens;
+    }
+    if (facilities.contains("Bathroom")) {
+      ++baths;
+    }
+  }
+
+  return [
+    baths,
+    toilets,
+    kitchens,
+  ];
+}
+
 
 Future<void> launchSocialMediaUrl(String url) async {
   if(url.isEmpty) return;

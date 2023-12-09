@@ -36,8 +36,6 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
       (index) => HostelInfo(
         owner: defaultOwner.id,
         name: "Dummy Hostel",
-        bathrooms: 1,
-        bedrooms: 3,
         area: 2034.55,
         price: 109808.0,
       ),

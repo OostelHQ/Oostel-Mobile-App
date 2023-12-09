@@ -3745,8 +3745,7 @@ class _StepTenState extends State<StepTen> {
   void initState() {
     super.initState();
     rooms = toRoomList(widget.info["rooms"]);
-    //totalProps = calculate(rooms);
-    totalProps = [0, 0, 0];
+    totalProps = calculate(rooms);
 
     media = toDataList(widget.info["medias"]);
     facilities = toStringList(widget.info["FacilityName"]);
@@ -3760,11 +3759,11 @@ class _StepTenState extends State<StepTen> {
     maxBudget = "";
   }
 
-  List<int> calculate(List<RoomInfo> rooms) {
+  List<int> calculate(List<Map<String, dynamic>> rooms) {
     int baths = 0, kitchens = 0, toilets = 0;
 
-    for (RoomInfo info in rooms) {
-      List<String> facilities = info.facilities;
+    for (Map<String, dynamic> info in rooms) {
+      List<String> facilities = info["facilities"];
       if (facilities.contains("Toilet")) {
         ++toilets;
       }
@@ -4167,12 +4166,10 @@ class _StepTenState extends State<StepTen> {
                         mainAxisExtent: 205.h,
                       ),
                       itemCount: rooms.length,
-                      // itemBuilder: (_, index) => AvailableRoomCard(
-                      //   info: rooms[index],
-                      //   isAsset: false,
-                      //   onTap: () {},
-                      // ),
-                      itemBuilder: (_, index) => const SizedBox(),
+                      itemBuilder: (_, index) => AvailableRoomCard(
+                        infoData: rooms[index],
+                        onTap: () {},
+                      ),
                     ),
                   ),
                 SliverPadding(
@@ -4434,7 +4431,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         Navigator.of(context).pop();
       } else {
         if (total == 1) {
-          context.router.pop(true);
+          exit();
           return;
         } else {
           uploadRooms();
@@ -4442,6 +4439,8 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
       }
     });
   }
+
+  void exit() => context.router.pop(true);
 
   void uploadRooms() async {
     for (int i = progress; i < rooms.length; ++i) {
@@ -4455,6 +4454,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         hasError = !response.success;
         progress++;
       });
+
+      if(progress == total) {
+        exit();
+      }
     }
   }
 
@@ -4506,7 +4509,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                         ? "An error occurred while creating your hostel"
                         : message,
                     style: context.textTheme.bodyMedium!.copyWith(
-                      color: appBlue,
+                      color: hasError ? weirdBlack : appBlue,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
