@@ -178,6 +178,7 @@ Student _parseStudentData(Map<String, dynamic> userData,
     String denomination = profile['denomination'] ?? "";
     String age = profile['age'] ?? "";
     String hobby = profile['hobby'] ?? "";
+    String guardian = profile["guardianPhoneNumber"] ?? "";
     List<String> names = fullName.split(" ");
 
     return Student(
@@ -186,6 +187,7 @@ Student _parseStudentData(Map<String, dynamic> userData,
       lastName: names[1],
       denomination: denomination,
       id: id,
+      guardian: "0${guardian.substring(3)}",
       available: isAvailable,
       gender: gender,
       religion: religion,
