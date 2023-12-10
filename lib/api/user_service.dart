@@ -13,7 +13,6 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
         data: formData);
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
       return FyndaResponse(
           message: response.data["message"], payload: null, success: true);
     }
@@ -47,7 +46,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
           user = _parseStudentData(userData,
               email: data['data']['email'], fullName: data['data']['fullname']);
         } else if (role == "LandLord") {
-          user = _parseLandlordData(userData);
+          user = parseLandlordData(userData);
         } else if (role == "Agent") {
           user = null;
         } else {
@@ -72,8 +71,37 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
   );
 }
 
-Landowner _parseLandlordData(Map<String, dynamic> userData) {
+Landowner parseLandlordData(Map<String, dynamic> userData,
+    {bool fromHostel = false}) {
   Map<String, dynamic>? profile = userData["landlordProfile"];
+
+
+  if (fromHostel && profile != null) {
+
+    String id = profile["landlordId"];
+    DateTime created = DateTime.parse(profile["registerdOn"]);
+    String name = profile["fullName"];
+    String image = profile["profilePicture"];
+    String location = profile["location"];
+    bool verified = profile["isVerified"];
+    String contact = profile["phoneNumber"] ?? "";
+
+    List<String> names = name.split(" ");
+
+    return Landowner(
+      dateJoined: created,
+      dob: DateTime(1960),
+      id: id,
+      firstName: names[0],
+      lastName: names[1],
+      image: image,
+      contact: contact,
+      verified: verified,
+      address: location,
+    );
+  }
+
+
 
   String email = userData["userDto"]["userName"];
   String id = userData["userDto"]["userId"];
@@ -111,6 +139,8 @@ Landowner _parseLandlordData(Map<String, dynamic> userData) {
     );
   }
 
+
+
   return Landowner(
     email: email,
     id: id,
@@ -122,6 +152,10 @@ Landowner _parseLandlordData(Map<String, dynamic> userData) {
 
 Student _parseStudentData(Map<String, dynamic> userData,
     {String email = "", String fullName = ""}) {
+
+  log(userData.toString());
+
+
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
@@ -337,7 +371,7 @@ Future<FyndaResponse<User?>> refreshUser(UserType type,
     if (type == UserType.student) {
       user = _parseStudentData(userData);
     } else if (type == UserType.agent) {
-      user = _parseLandlordData(userData);
+      user = parseLandlordData(userData);
     } else {
       user = null;
     }
@@ -398,6 +432,8 @@ Future<FyndaResponse> updateAgentProfile(Map<String, dynamic> map) async {
 Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
     {String profilePictureFilePath = ""}) async {
 
+  log(map.toString());
+
   try {
     Response response = await dio.post(
       "/user-profile/create-student-profile",
@@ -406,7 +442,11 @@ Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      return const FyndaResponse(
+        message: "Success",
+        payload: null,
+        success: true,
+      );
     }
   } catch (e) {
     log("Create Student Profile Error: $e");
@@ -440,7 +480,11 @@ Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map,
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      return const FyndaResponse(
+        message: "Success",
+        payload: null,
+        success: true,
+      );
     }
   } catch (e) {
     log("Update Student Profile Error: $e");
@@ -465,7 +509,7 @@ Future<FyndaResponse<User?>> getLandlordById(String id) async {
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       Landowner owner =
-          _parseLandlordData(response.data["data"] as Map<String, dynamic>);
+          parseLandlordData(response.data["data"] as Map<String, dynamic>);
       return FyndaResponse(
         message: "Success",
         payload: owner,

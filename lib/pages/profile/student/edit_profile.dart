@@ -36,6 +36,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   late TextEditingController number;
   late TextEditingController denomination;
   late TextEditingController hobby;
+  late TextEditingController guardian;
 
   late Map<String, dynamic> details;
 
@@ -53,6 +54,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         text: student.contact.isEmpty ? "" : student.contact.substring(1));
     denomination = TextEditingController(text: student.denomination);
     hobby = TextEditingController(text: student.hobby);
+    guardian = TextEditingController(text: student.guardian.isEmpty ? "" : student.guardian.substring(1));
 
     profileImage = student.image;
     level = student.level == 0 ? null : "${student.level}";
@@ -235,7 +237,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         height: 50.h,
                         hint: "Full Name",
                         onValidate: (val) {
-                          if (val == null || val!.trim().isEmpty) {
+                          val = val?.trim();
+                          if (val == null || val.isEmpty) {
                             showError("Please enter your full name.");
                             return '';
                           }
@@ -259,6 +262,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         height: 50.h,
                         hint: "example@example.com",
                         onValidate: (val) {
+                          val = val.trim();
                           if (val == null || !val!.contains("@")) {
                             showError("Please input a valid email address");
                             return '';
@@ -357,6 +361,42 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       ),
                       SizedBox(height: 16.h),
                       Text(
+                        "Guardian Phone Number",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: guardian,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "080 1234 5678",
+                        prefix: SizedBox(
+                          height: 50.h,
+                          width: 30.w,
+                          child: Center(
+                            child: Text(
+                              "+234",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack50,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        type: TextInputType.number,
+                        onValidate: (val) {
+                          if (val == null || val!.trim().isEmpty ) {
+                            showError("Please input the phone number of your guardian");
+                            return '';
+                          } else if(val.length != 10) {
+                            showError("Please input a valid phone number");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => details["guardianPhoneNumber"] = "+234$val",
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
                         "Religion",
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack75, fontWeight: FontWeight.w500),
@@ -425,7 +465,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         height: 50.h,
                         hint: "What do you like doing?",
                         onValidate: (val) {
-                          if (val == null || val!.trim().isEmpty) {
+                          val = val?.trim();
+
+                          if (val == null || val.isEmpty) {
                             showError("Please enter your hobby");
                             return '';
                           }

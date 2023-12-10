@@ -77,7 +77,7 @@ class HostelInfo extends Equatable {
         price: map["price"] ?? 0.0,
         totalRooms: map["totalRoom"] ?? 0,
         address: "$street, $junction, $state, $country",
-        category: map["hostelCategory"] ?? "Flat",
+        category: map["hostelCategory"],
         roomsLeft: map["roomsLeft"] ?? [],
         description: map["hostelDescription"],
         rules: map["rulesAndRegulation"],
@@ -85,7 +85,8 @@ class HostelInfo extends Equatable {
         hostelFacilities: map["hostelFacilities"],
         media: map["media"] ?? [],
         owner: map["userId"],
-        rooms: map["rooms"],
-        vacantRooms: map["isAnyRoomVacant"]);
+        rooms: map["rooms"] ?? [],
+        vacantRooms: map["isAnyRoomVacant"],
+    );
   }
 }

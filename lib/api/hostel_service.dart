@@ -1,5 +1,6 @@
-
 import 'package:my_hostel/api/file_manager.dart';
+import 'package:my_hostel/api/user_service.dart';
+import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/misc/functions.dart';
@@ -61,7 +62,8 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
     formData.fields
         .add(MapEntry("hostelCategory", map["hostelCategory"].toString()));
     formData.fields.add(MapEntry("totalRoom", map["totalRoom"].toString()));
-    formData.fields.add(MapEntry("isAnyRoomVacant", map["isAnyRoomVacant"].toString()));
+    formData.fields
+        .add(MapEntry("isAnyRoomVacant", map["isAnyRoomVacant"].toString()));
     // formData.fields.add(MapEntry("isAnyRoomVacant", "true"));
 
     Response response = await dio.post(
@@ -111,7 +113,8 @@ Future<FyndaResponse> updateHostel(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query) async {
+Future<FyndaResponse<List<HostelInfo>>> getAllHostels(
+    Map<String, dynamic> query) async {
   try {
     Response response = await dio.get("/hostel/get-all-hostels",
         options: configuration, queryParameters: query);
@@ -119,18 +122,18 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       List<dynamic> list = response.data as List<dynamic>;
       List<HostelInfo> hostels = [];
-      for(var element in list) {
-        List<String> rules = toStringList(element["rulesAndRegulation"] as List<dynamic>);
-        List<String> facilities = toStringList(element["hostelFacilities"] as List<dynamic>);
-        List<String> media = toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
+      for (var element in list) {
+        List<String> rules =
+            toStringList(element["rulesAndRegulation"] as List<dynamic>);
+        List<String> facilities =
+            toStringList(element["hostelFacilities"] as List<dynamic>);
+        List<String> media =
+            toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
 
         element["rulesAndRegulation"] = rules;
         element["hostelFacilities"] = facilities;
         element["media"] = media;
 
-        List<RoomInfo> rooms =  _parseRoomData(element["rooms"] ?? []);
-        element["rooms"] = rooms;
-        
         HostelInfo info = HostelInfo.fromJson(element as Map<String, dynamic>);
         hostels.add(info);
       }
@@ -140,7 +143,6 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
         payload: hostels,
         success: true,
       );
-
     }
   } catch (e) {
     log("Get Hostels Error: $e");
@@ -153,7 +155,7 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(Map<String, dynamic> query
   );
 }
 
-Future<FyndaResponse> getHostel(String id) async {
+Future<FyndaResponse<Map<String, dynamic>?>> getHostel(String id) async {
   try {
     Response response = await dio.get("/hostel/get-hostel-by-id",
         options: configuration,
@@ -162,7 +164,19 @@ Future<FyndaResponse> getHostel(String id) async {
         });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      Map<String, dynamic> map = response.data["data"];
+
+      List<RoomInfo> rooms = parseRoomData(map["rooms"] as List<dynamic>);
+      map["rooms"] = rooms;
+
+      Landowner owner = parseLandlordData(map, fromHostel: true);
+      map["owner"] = owner;
+
+      return FyndaResponse(
+        message: "Success",
+        payload: map,
+        success: true,
+      );
     }
   } catch (e) {
     log("Get Hostel By ID Error: $e");
@@ -175,8 +189,11 @@ Future<FyndaResponse> getHostel(String id) async {
   );
 }
 
-Future<FyndaResponse> createRoomForHostel(
-    {required String userID, required String hostelID, required Map<String, dynamic> map}) async {
+Future<FyndaResponse> createRoomForHostel({
+  required String userID,
+  required String hostelID,
+  required Map<String, dynamic> map,
+}) async {
   FormData formData = FormData();
   formData.fields.add(MapEntry("UserId", userID));
   formData.fields.add(MapEntry("HostelId", hostelID));
@@ -189,11 +206,9 @@ Future<FyndaResponse> createRoomForHostel(
   formData.fields.add(const MapEntry("isRented", "true"));
   List<SingleFileResponse> medias = map["medias"];
   for (SingleFileResponse response in medias) {
-    formData.files.addAll([
-      MapEntry("Files", await MultipartFile.fromFile(response.path))
-    ]);
+    formData.files.addAll(
+        [MapEntry("Files", await MultipartFile.fromFile(response.path))]);
   }
-
 
   try {
     Response response = await dio.post(
@@ -309,10 +324,9 @@ Future<FyndaResponse> likeHostel(Map<String, dynamic> map) async {
   );
 }
 
-
-List<RoomInfo> _parseRoomData(List<dynamic> data) {
+List<RoomInfo> parseRoomData(List<dynamic> data) {
   List<RoomInfo> rooms = [];
-  for(var element in data) {
+  for (var element in data) {
     RoomInfo info = RoomInfo.fromJson(element as Map<String, dynamic>);
     rooms.add(info);
   }

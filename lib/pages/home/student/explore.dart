@@ -55,8 +55,10 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
   void onFilter(String text) {
     text = text.trim();
 
-    List<HostelInfo> filteredHostels = ref.watch(filteredExploreHostelsProvider);
-    List<Student> filteredRoommates = ref.watch(filteredExploreRoommatesProvider);
+    List<HostelInfo> filteredHostels =
+        ref.watch(filteredExploreHostelsProvider);
+    List<Student> filteredRoommates =
+        ref.watch(filteredExploreRoommatesProvider);
 
     filteredHostels.clear();
     filteredRoommates.clear();
@@ -79,9 +81,9 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
       }
     }
 
-    setState(() => hasFilter = filteredHostels.isNotEmpty || filteredRoommates.isNotEmpty);
+    setState(() =>
+        hasFilter = filteredHostels.isNotEmpty || filteredRoommates.isNotEmpty);
   }
-
 
   void refresh() {
     refreshHostel();
@@ -106,7 +108,10 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
         showError(resp.message);
       } else {
         ref.watch(availableRoommatesProvider.notifier).state.clear();
-        ref.watch(availableRoommatesProvider.notifier).state.addAll(resp.payload);
+        ref
+            .watch(availableRoommatesProvider.notifier)
+            .state
+            .addAll(resp.payload);
       }
       setState(() => loadingRoommates = false);
     });
@@ -114,78 +119,81 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<HostelInfo> hostels = hasFilter ? ref.watch(filteredExploreHostelsProvider) : ref.watch(availableHostelsProvider);
-    List<Student> roommates = hasFilter ? ref.watch(filteredExploreRoommatesProvider) :ref.watch(availableRoommatesProvider);
+    List<HostelInfo> hostels = hasFilter
+        ? ref.watch(filteredExploreHostelsProvider)
+        : ref.watch(availableHostelsProvider);
+    List<Student> roommates = hasFilter
+        ? ref.watch(filteredExploreRoommatesProvider)
+        : ref.watch(availableRoommatesProvider);
 
     return NestedScrollView(
-      headerSliverBuilder: (context, boolValue) => [
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 25.h),
-                Text("Explore",
-                    style: context.textTheme.headlineSmall!
-                        .copyWith(fontWeight: FontWeight.w600)),
-                SizedBox(height: 8.h),
-                Text(
-                    "Explore the variety of options provided to select your choice.",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75, fontWeight: FontWeight.w500)),
-                SizedBox(height: 12.h),
-              ],
-            ),
-          ),
-        ),
-        SliverPersistentHeader(delegate: WidgetHeaderDelegate(
-          widget: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Column(
-              children: [
-                SizedBox(height: 10.h),
-                SpecialForm(
-                  controller: controller,
-                  height: 50.h,
-                  width: 414.w,
-                  hint: "Search here...",
-                  onChange: onFilter,
-                  prefix:
-                  const Icon(Icons.search_rounded, color: weirdBlack25),
-                  borderColor: Colors.transparent,
-                  fillColor: Colors.white,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FBFF),
-                    borderRadius: BorderRadius.circular(4.r),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFFE0E5EC),
-                        blurRadius: 6.0,
-                        spreadRadius: 1.0,
-                      )
+        headerSliverBuilder: (context, boolValue) => [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                sliver: SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 25.h),
+                      Text("Explore",
+                          style: context.textTheme.headlineSmall!
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      SizedBox(height: 8.h),
+                      Text(
+                          "Explore the variety of options provided to select your choice.",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500)),
+                      SizedBox(height: 12.h),
                     ],
                   ),
                 ),
-              ]
-            ),
-          ),
-          height: 60.h,
-          color: const Color(0xFFFBFDFF),
-        ),
-          pinned: true,
-        )
-      ],
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {
-            loadingHostel = loadingRoommates = true;
-            hasFilter = false;
-          });
-          refresh();
-        },
-        child: CustomScrollView(
-          slivers: [
+              ),
+              SliverPersistentHeader(
+                delegate: WidgetHeaderDelegate(
+                  widget: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(children: [
+                      SizedBox(height: 10.h),
+                      SpecialForm(
+                        controller: controller,
+                        height: 50.h,
+                        width: 414.w,
+                        hint: "Search here...",
+                        onChange: onFilter,
+                        prefix: const Icon(Icons.search_rounded,
+                            color: weirdBlack25),
+                        borderColor: Colors.transparent,
+                        fillColor: Colors.white,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FBFF),
+                          borderRadius: BorderRadius.circular(4.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE0E5EC),
+                              blurRadius: 6.0,
+                              spreadRadius: 1.0,
+                            )
+                          ],
+                        ),
+                      ),
+                    ]),
+                  ),
+                  height: 60.h,
+                  color: const Color(0xFFFBFDFF),
+                ),
+                pinned: true,
+              )
+            ],
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              loadingHostel = loadingRoommates = true;
+              hasFilter = false;
+            });
+            refresh();
+          },
+          child: CustomScrollView(slivers: [
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverToBoxAdapter(
@@ -198,7 +206,8 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                       children: [
                         Hero(
                           tag: "All Room Categories",
-                          child: Text("Categories",
+                          child: Text(
+                            "Categories",
                             style: context.textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w600,
                               color: weirdBlack,
@@ -251,34 +260,59 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                       height: 270.h,
                       width: 414.w,
                       child: loadingHostel
-                          ?
-                      Skeletonizer(
-                        enabled: true,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: dummyHostels.length,
-                          itemBuilder: (_, index) =>
-                              HostelExploreCard(info: dummyHostels[index]),
-                          separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                        ),
-                      )
-                          : ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (_, index) => AnimationConfiguration.staggeredList(
-                          position: index,
-                          duration: const Duration(milliseconds: 750),
-                          child: SlideAnimation(
-                            horizontalOffset: 25.w,
-                            child: FadeInAnimation(
-                              child:
-                              HostelExploreCard(info: hostels[index]),
-                            ),
-                          ),
-                        ),
-                        separatorBuilder: (_, __) => SizedBox(width: 20.w),
-                        itemCount: hostels.length < 4 ? hostels.length : 4,
-                      ),
+                          ? Skeletonizer(
+                              enabled: true,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: dummyHostels.length,
+                                itemBuilder: (_, index) => HostelExploreCard(
+                                    info: dummyHostels[index]),
+                                separatorBuilder: (_, __) =>
+                                    SizedBox(width: 20.w),
+                              ),
+                            )
+                          : (hasFilter && hostels.isEmpty)
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/No Data.png",
+                                      width: 150.r,
+                                      height: 150.r,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      "There are no hostels that fit your search parameters",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                        color: weirdBlack75,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : ListView.separated(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (_, index) =>
+                                      AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 750),
+                                    child: SlideAnimation(
+                                      horizontalOffset: 25.w,
+                                      child: FadeInAnimation(
+                                        child: HostelExploreCard(
+                                            info: hostels[index]),
+                                      ),
+                                    ),
+                                  ),
+                                  separatorBuilder: (_, __) =>
+                                      SizedBox(width: 20.w),
+                                  itemCount:
+                                      hostels.length < 4 ? hostels.length : 4,
+                                ),
                     ),
                     SizedBox(height: 20.h),
                     Row(
@@ -322,10 +356,8 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                 itemCount: roommates.length < 4 ? roommates.length : 4,
               ),
             )
-          ]
-        ),
-      )
-    );
+          ]),
+        ));
   }
 }
 
