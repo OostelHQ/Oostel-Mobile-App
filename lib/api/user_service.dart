@@ -385,7 +385,7 @@ Future<FyndaResponse<User?>> refreshUser(UserType type,
   );
 }
 
-Future<FyndaResponse> createAgentProfile(Map<String, dynamic> map) async {
+Future<FyndaResponse> _createAgentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.post(
       "/user-profile/create-agent-profile",
@@ -407,7 +407,18 @@ Future<FyndaResponse> createAgentProfile(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> updateAgentProfile(Map<String, dynamic> map) async {
+Future<FyndaResponse> agentProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = "", required int completionLevel}) async {
+  if (completionLevel <= 20) {
+    return _createAgentProfile(map,
+        profilePictureFilePath: profilePictureFilePath);
+  } else {
+    return _updateAgentProfile(map,
+        profilePictureFilePath: profilePictureFilePath);
+  }
+}
+
+Future<FyndaResponse> _updateAgentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.post(
       "/user-profile/update-agent-profile",

@@ -1,13 +1,14 @@
 import 'package:my_hostel/components/user.dart';
 
 class Agent extends User {
-  final bool verified;
-  final String address;
-  final double ratings;
-  final int totalRated;
   final DateTime dob;
-  final List<String> affiliatedLandlords;
+  final String address;
 
+  // "userId": "06be5a24-5cdb-4676-96b8-db9220d8e0f0",
+  "state": "string",
+  "country": "string",
+  "street": "string",
+  
   const Agent({
     String id = "",
     String image = "",
