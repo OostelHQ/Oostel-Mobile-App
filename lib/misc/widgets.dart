@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -217,7 +219,11 @@ class SpecialForm extends StatelessWidget {
           keyboardType: type,
           textInputAction: action,
           readOnly: readOnly,
-          onEditingComplete: () => onActionPressed!(controller.text),
+          onEditingComplete: () {
+            if(onActionPressed != null) {
+              onActionPressed!(controller.text);
+            }
+          },
           cursorColor: appBlue,
           decoration: InputDecoration(
             errorMaxLines: 1,
@@ -1722,9 +1728,11 @@ class AvailableRoomCard extends StatefulWidget {
   final bool available;
   final VoidCallback? onTap;
   final DateTime? expiry;
+  final bool fromStudent;
 
   const AvailableRoomCard({
     super.key,
+    this.fromStudent = false,
     this.available = false,
     this.info,
     this.infoData,
@@ -1753,35 +1761,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
       return;
     }
 
-    // TODO: Properly test this deadline logic
-
-    DateTime expiry = DateTime(2024, 10, 25);
-    DateTime current = DateTime.now();
-
-    int delta = expiry.millisecondsSinceEpoch - current.millisecondsSinceEpoch;
-    if (delta < 0) {
-      timeUp = true;
-      return;
-    }
-
-    DateTime difference = DateTime.fromMillisecondsSinceEpoch(delta);
-    if (difference.year >= 1) {
-      deadline = "${difference.year} years left";
-      backgroundColor = infoRoomsLeftBackground;
-      textColor = infoRoomsLeft;
-    } else if (difference.year < 1 && (difference.month) > 4) {
-      deadline = "${difference.month} months left";
-      backgroundColor = infoRoomsLeftBackground;
-      textColor = infoRoomsLeft;
-    } else if (difference.month <= 4 && difference.month > 1) {
-      deadline = "${difference.month} months left";
-      backgroundColor = yellowDeadlineBackground;
-      textColor = pendingColor;
-    } else {
-      deadline = "${difference.day} days left";
-      backgroundColor = redDeadlineBackground;
-      textColor = failColor;
-    }
+    timeUp = widget.fromStudent;
   }
 
   @override
@@ -1951,7 +1931,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                                         ),
                                       ),
                                   child: CachedNetworkImage(
-                                    imageUrl: widget.info!.media.first,
+                                    imageUrl: widget.info!.media[index],
                                     errorWidget: (context, url, error) =>
                                         Container(
                                           width: 110.r,
@@ -2054,7 +2034,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                 ),
                 SizedBox(height: 8.h),
                 Padding(
-                  padding: EdgeInsets.only(left: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -2063,7 +2043,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: timeUp ? 170.w : 90.w,
+                            width: timeUp ? 150.w : 70.w,
                             child: Text(
                               widget.info!.name,
                               overflow: TextOverflow.ellipsis,
@@ -2074,7 +2054,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           ),
                           if (!timeUp)
                             Container(
-                              width: 60.w,
+                              width: 80.w,
                               height: 25.h,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(

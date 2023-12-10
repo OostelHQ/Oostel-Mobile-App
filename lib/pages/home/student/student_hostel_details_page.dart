@@ -6,18 +6,15 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:my_hostel/api/user_service.dart';
+import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/components/comment.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
-
-import 'dart:developer';
 
 class HostelInformationPage extends ConsumerStatefulWidget {
   final HostelInfo info;
@@ -51,24 +48,31 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
           (_) => setState(() => tabIndex = tabController.index));
     });
 
+    fetching = true;
+    getDetails();
+  }
+
+  void calculateProps() {
     List<int> props = calculate(widget.info.rooms);
     bathroom = props[0];
     bedrooms = widget.info.rooms.length;
-
-    fetching = true;
-    getOwner();
   }
 
-  void getOwner() {
-    getLandlordById(widget.info.owner).then((resp) {
+  void getDetails() {
+    getHostel(widget.info.id).then((resp) {
       if (!resp.success) {
+        setState(() => fetching = false);
         showError(resp.message);
+        return;
       }
 
-      setState(() {
-        fetching = false;
-        owner = resp.payload as Landowner?;
-      });
+      widget.info.rooms.clear();
+      widget.info.rooms.addAll(resp.payload!['rooms']);
+
+      calculateProps();
+
+      owner = resp.payload!["owner"];
+      setState(() => fetching = false);
     });
   }
 
@@ -628,7 +632,6 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                         const _CommentSection(),
                       ],
                     ),
-
                   ),
                 ),
       bottomNavigationBar: fetching
@@ -675,7 +678,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                             GestureDetector(
                               onTap: () {
                                 setState(() => fetching = true);
-                                getOwner();
+                                getDetails();
                               },
                               child: Container(
                                 width: 170.w,
@@ -793,8 +796,6 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
   }
 }
 
-
-
 class _CommentSection extends StatefulWidget {
   const _CommentSection();
 
@@ -808,40 +809,7 @@ class _CommentSectionState extends State<_CommentSection> {
   @override
   void initState() {
     super.initState();
-    Student student = Student(
-      firstName: "Elizabeth",
-      lastName: "Enitan",
-      image: "assets/images/watch man.jpg",
-      dateJoined: DateTime.now(),
-    );
-
-    DateTime now = DateTime.now();
-    comments = [
-      Comment(
-        header: "Nice Hostel",
-        subtitle: "I like this hostel a lot...",
-        postedBy: student,
-        postTime: now,
-      ),
-      Comment(
-        header: "Wow",
-        subtitle: "Hmmn...",
-        postedBy: student,
-        postTime: now,
-      ),
-      Comment(
-        header: "Nice",
-        subtitle: "",
-        postedBy: student,
-        postTime: now,
-      ),
-      Comment(
-        header: "Bala Blu",
-        subtitle: "I like this hostel a lot...",
-        postedBy: student,
-        postTime: now,
-      ),
-    ];
+    comments = [];
   }
 
   @override
@@ -995,8 +963,10 @@ class _RoomSection extends StatelessWidget {
               mainAxisExtent: 205.h,
             ),
             itemCount: info.rooms.length,
-            itemBuilder: (_, index) =>
-                AvailableRoomCard(info: info.rooms[index]),
+            itemBuilder: (_, index) => AvailableRoomCard(
+              info: info.rooms[index],
+              fromStudent: true,
+            ),
           ),
         ),
         SliverPadding(
@@ -1205,7 +1175,10 @@ class _WriteCommentState extends State<_WriteComment> {
                         width: 390.w,
                         height: 100.h,
                         maxLines: 6,
-                        onChange: (val) => setState(() {}),
+                        onChange: (val) => textChecker(
+                          text: val,
+                          onAction: () => setState(() {}),
+                        ),
                       ),
                     if (index == 1)
                       RatingStars(
