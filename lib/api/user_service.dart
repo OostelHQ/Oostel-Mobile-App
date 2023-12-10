@@ -75,9 +75,7 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
     {bool fromHostel = false}) {
   Map<String, dynamic>? profile = userData["landlordProfile"];
 
-
   if (fromHostel && profile != null) {
-
     String id = profile["landlordId"];
     DateTime created = DateTime.parse(profile["registerdOn"]);
     String name = profile["fullName"];
@@ -100,8 +98,6 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
       address: location,
     );
   }
-
-
 
   String email = userData["userDto"]["userName"];
   String id = userData["userDto"]["userId"];
@@ -139,8 +135,6 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
     );
   }
 
-
-
   return Landowner(
     email: email,
     id: id,
@@ -152,9 +146,7 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
 
 Student _parseStudentData(Map<String, dynamic> userData,
     {String email = "", String fullName = ""}) {
-
   log(userData.toString());
-
 
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
@@ -387,7 +379,8 @@ Future<FyndaResponse<User?>> refreshUser(UserType type,
   );
 }
 
-Future<FyndaResponse> _createAgentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
+Future<FyndaResponse> _createAgentProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.post(
       "/user-profile/create-agent-profile",
@@ -397,6 +390,21 @@ Future<FyndaResponse> _createAgentProfile(Map<String, dynamic> map, {String prof
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
+
+      if (profilePictureFilePath.isNotEmpty) {
+        FyndaResponse resp = await updateProfilePicture(
+          id: map["userId"],
+          filePath: profilePictureFilePath,
+        );
+        return resp;
+      } else {
+        return const FyndaResponse(
+          message: "Profile Created",
+          payload: null,
+          success: true,
+        );
+      }
+
     }
   } catch (e) {
     log("Create Agent Profile Error: $e");
@@ -420,7 +428,8 @@ Future<FyndaResponse> agentProfile(Map<String, dynamic> map,
   }
 }
 
-Future<FyndaResponse> _updateAgentProfile(Map<String, dynamic> map, {String profilePictureFilePath = ""}) async {
+Future<FyndaResponse> _updateAgentProfile(Map<String, dynamic> map,
+    {String profilePictureFilePath = ""}) async {
   try {
     Response response = await dio.post(
       "/user-profile/update-agent-profile",
@@ -430,6 +439,20 @@ Future<FyndaResponse> _updateAgentProfile(Map<String, dynamic> map, {String prof
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       log(response.data.toString());
+
+      if (profilePictureFilePath.isNotEmpty) {
+        FyndaResponse resp = await updateProfilePicture(
+          id: map["userId"],
+          filePath: profilePictureFilePath,
+        );
+        return resp;
+      } else {
+        return const FyndaResponse(
+          message: "Profile Updated",
+          payload: null,
+          success: true,
+        );
+      }
     }
   } catch (e) {
     log("Update Agent Profile Error: $e");
@@ -444,7 +467,6 @@ Future<FyndaResponse> _updateAgentProfile(Map<String, dynamic> map, {String prof
 
 Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
     {String profilePictureFilePath = ""}) async {
-
   log(map.toString());
 
   try {
@@ -455,11 +477,19 @@ Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      return const FyndaResponse(
-        message: "Success",
-        payload: null,
-        success: true,
-      );
+      if (profilePictureFilePath.isNotEmpty) {
+        FyndaResponse resp = await updateProfilePicture(
+          id: map["userId"],
+          filePath: profilePictureFilePath,
+        );
+        return resp;
+      } else {
+        return const FyndaResponse(
+          message: "Success",
+          payload: null,
+          success: true,
+        );
+      }
     }
   } catch (e) {
     log("Create Student Profile Error: $e");
@@ -493,11 +523,19 @@ Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map,
     );
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      return const FyndaResponse(
-        message: "Success",
-        payload: null,
-        success: true,
-      );
+      if (profilePictureFilePath.isNotEmpty) {
+        FyndaResponse resp = await updateProfilePicture(
+          id: map["userId"],
+          filePath: profilePictureFilePath,
+        );
+        return resp;
+      } else {
+        return const FyndaResponse(
+          message: "Success",
+          payload: null,
+          success: true,
+        );
+      }
     }
   } catch (e) {
     log("Update Student Profile Error: $e");

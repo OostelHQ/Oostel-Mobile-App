@@ -281,7 +281,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         controller: number,
                         width: 414.w,
                         height: 50.h,
-                        hint: "080 1234 5678",
+                        hint: "80 1234 5678",
                         prefix: SizedBox(
                           height: 50.h,
                           width: 30.w,

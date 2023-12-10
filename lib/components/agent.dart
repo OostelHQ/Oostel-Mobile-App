@@ -4,66 +4,47 @@ class Agent extends User {
   final DateTime dob;
   final String address;
 
-  // "userId": "06be5a24-5cdb-4676-96b8-db9220d8e0f0",
-  "state": "string",
-  "country": "string",
-  "street": "string",
   
   const Agent({
-    String id = "",
-    String image = "",
-    String firstName = "",
-    String lastName = "",
-    String gender = "",
-    String email = "",
-    String contact = "",
-    String religion = "",
-    String denomination = "",
-    int profileViews = 0,
-    int searchAppearances = 0,
-    required DateTime dateJoined,
-    this.verified = false,
-    this.ratings = 0.0,
-    this.totalRated = 0,
+    super.id,
+    super.image,
+    super.firstName,
+    super.lastName,
+    super.gender,
+    super.email,
+    super.contact,
+    super.religion,
+    super.denomination,
+    super.profileViews,
+    super.searchAppearances,
+    required super.dateJoined,
+
     this.address = "",
-    this.affiliatedLandlords = const [],
     required this.dob,
   }) : super(
-    id: id,
-    email: email,
-    firstName: firstName,
-    lastName: lastName,
-    image: image,
-    contact: contact,
-    religion: religion,
-    gender: gender,
     type: UserType.agent,
-    dateJoined: dateJoined,
-    profileViews: profileViews,
-    searchAppearances: searchAppearances,
-    denomination: denomination,
   );
 
   @override
   List<Object?> get props => [id];
 
-  factory Agent.fromJson(Map<String, dynamic> map) => Agent(
-    id: map["_id"],
-    image: map["image"],
-    firstName: map["firstName"],
-    lastName: map["lastName"],
-    verified: map["verified"],
-    ratings: map["ratings"],
-    email: map["email"],
-    gender: map["gender"],
-    totalRated: map["totalRated"],
-    contact: map["contact"],
-    address: map["address"],
-    religion: map["religion"],
-    denomination: map["denomination"],
-    profileViews: map["profileViews"],
-    searchAppearances: map["searchAppearances"],
-    dateJoined: DateTime.parse(map["createdAt"]),
-    dob: DateTime.parse(map["dob"]),
-  );
+  factory Agent.fromJson(Map<String, dynamic> map) {
+    String address = "${map["street"] ?? ""}#${map["state"] ?? ""}#${map["country"] ?? ""}";
+    return Agent(
+      id: map["_id"],
+      image: map["image"],
+      firstName: map["firstName"],
+      lastName: map["lastName"],
+      email: map["email"],
+      gender: map["gender"],
+      contact: map["phoneNumber"],
+      address: address,
+      religion: map["religion"],
+      // denomination: map["denomination"],
+      // profileViews: map["profileViews"],
+      // searchAppearances: map["searchAppearances"],
+      dateJoined: DateTime.parse(map["createdAt"]),
+      dob: DateTime.parse(map["dateOfBirth"]),
+    );
+  }
 }

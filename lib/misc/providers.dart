@@ -5,7 +5,6 @@ import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/notification.dart';
 import 'package:my_hostel/components/receipt_info.dart';
-import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/components/user.dart';
@@ -63,8 +62,7 @@ final Agent defaultAgent = Agent(
   religion: "Islam",
   profileViews: 48,
   searchAppearances: 19,
-  address: "Abeokuta, Ogun State",
-  verified: true,
+  address: "Accord Junction#Abeokuta#Ogun State",
 );
 
 final StateProvider<bool> hasInitializedProvider =

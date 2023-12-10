@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:my_hostel/api/file_manager.dart';
+import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/agent.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -23,7 +26,7 @@ class EditAgentProfilePage extends ConsumerStatefulWidget {
 }
 
 class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
-  String? profileImage;
+  late String profileImage;
   String? origin;
   String? gender;
   String? level;
@@ -39,33 +42,44 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
 
   late TextEditingController street, region, country;
 
+  late Map<String, dynamic> details;
+
+  final GlobalKey<FormState> formKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
 
-    Agent student = ref.read(currentUserProvider) as Agent;
+    Agent agent = ref.read(currentUserProvider) as Agent;
 
-    email = TextEditingController(text: student.email);
-    fullName = TextEditingController(text: student.mergedNames);
-    number = TextEditingController(text: student.contact);
-    denomination = TextEditingController(text: student.denomination);
+    email = TextEditingController(text: agent.email);
+    fullName = TextEditingController(text: agent.mergedNames);
+    number = TextEditingController(text: agent.contact);
+    denomination = TextEditingController(text: agent.denomination);
 
-    profileImage = student.image;
+    profileImage = agent.image;
 
-    religion = student.religion;
-    gender = student.gender;
+    religion = agent.religion;
+    gender = agent.gender;
 
     street = TextEditingController();
     region = TextEditingController();
     country = TextEditingController();
 
-    pickedDate = student.dob;
+    pickedDate = agent.dob;
     hobby = TextEditingController(
       text: pickedDate == null
           ? ""
           : formatDate(DateFormat("dd/MM/yyyy").format(pickedDate!),
           shorten: true),
     );
+
+
+    details = {
+      "userId": agent.id,
+      "country": "Nigeria",
+      "denomination": "",
+    };
   }
 
   @override
@@ -79,6 +93,44 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
     hobby.dispose();
     email.dispose();
     super.dispose();
+  }
+
+
+  void navigate() {
+    refreshUser(UserType.agent).then((val) {
+      if(!val.success) {
+        showError(val.message);
+        return;
+      }
+      ref.watch(currentUserProvider.notifier).state = val.payload!;
+      context.router.pop();
+    });
+  }
+
+
+  Future<void> update() async {
+    agentProfile(details,
+      profilePictureFilePath: profileImage.startsWith("https:") ? "" : profileImage,
+      completionLevel: ref.read(currentUserProvider).hasCompletedProfile,
+    ).then((resp) {
+      if(!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        navigate();
+      }
+    });
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
   }
 
   @override
@@ -107,9 +159,36 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
             children: [
               SizedBox(height: 50.h),
               Center(
-                child: profileImage != null
-                    ? CircleAvatar(
-                  backgroundImage: FileImage(File(profileImage!)),
+                child: profileImage.isNotEmpty
+                    ? profileImage.startsWith("https:")
+                    ? CachedNetworkImage(
+                  imageUrl: profileImage,
+                  errorWidget: (context, url, error) => CircleAvatar(
+                    backgroundColor: weirdBlack20,
+                    radius: 75.r,
+                    child: Center(
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        color: appBlue,
+                        size: 42.r,
+                      ),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, download) {
+                    return CircleAvatar(
+                      radius: 75.r,
+                      backgroundColor: weirdBlack50,
+                    );
+                  },
+                  imageBuilder: (context, provider) {
+                    return CircleAvatar(
+                      backgroundImage: provider,
+                      radius: 75.r,
+                    );
+                  },
+                )
+                    : CircleAvatar(
+                  backgroundImage: FileImage(File(profileImage)),
                   radius: 75.r,
                 )
                     : Image.asset(
@@ -122,7 +201,10 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
               Center(
                 child: GestureDetector(
                   onTap: () => FileManager.single(type: FileType.image).then(
-                        (value) => setState(() => profileImage = value?.path),
+                        (value) {
+                      if(value == null) return;
+                      setState(() => profileImage = value.path);
+                    },
                   ),
                   child: Container(
                     width: 135.w,
@@ -153,241 +235,277 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
               SizedBox(height: 40.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Name",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      controller: fullName,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "Full Name",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Email Address",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      controller: email,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "example@example.com",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Phone Number",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      controller: number,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "080 1234 5678",
-                      prefix: SizedBox(
-                        height: 50.h,
-                        width: 30.w,
-                        child: Center(
-                          child: Text(
-                            "+234",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: weirdBlack50,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                      type: TextInputType.number,
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Street",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      controller: street,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Behind Abans Factory, Accord Junction",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "State/Region",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      controller: region,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Ogun State",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Country",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      controller: country,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "i.e Nigeria",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Gender",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    ComboBox(
-                      hint: "Select Gender",
-                      value: gender,
-                      dropdownItems: const ["Male", "Female"],
-                      onChanged: (val) => setState(() => gender = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow),
-                      buttonWidth: 414.w,
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Religion",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    ComboBox(
-                      hint: "Choose Religion",
-                      value: religion,
-                      dropdownItems: const ["Christianity", "Islam", "Other"],
-                      onChanged: (val) => setState(() => religion = val),
-                      icon: const Icon(Boxicons.bxs_down_arrow),
-                      buttonWidth: 414.w,
-                    ),
-                    SizedBox(height: 16.h),
-                    if (religion != null && religion == "Christianity")
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        "Denomination",
+                        "Name",
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack75, fontWeight: FontWeight.w500),
                       ),
-                    if (religion != null && religion == "Christianity")
                       SpecialForm(
-                        controller: denomination,
+                        controller: fullName,
                         width: 414.w,
                         height: 50.h,
-                        hint: "What is the name of your church or mosque?",
-                      ),
-                    if (religion != null && religion == "Christianity")
-                      SizedBox(height: 16.h),
-                    Text(
-                      "Date of Birth",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SpecialForm(
-                      prefix: IconButton(
-                        splashRadius: 0.01,
-                        iconSize: 26.r,
-                        icon: const Icon(
-                          Icons.calendar_month_rounded,
-                          color: weirdBlack50,
-                        ),
-                        onPressed: () async {
-                          pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime(2100));
-                          if (pickedDate != null) {
-                            setState(
-                                  () => hobby.text = formatDate(
-                                  DateFormat("dd/MM/yyyy").format(pickedDate!),
-                                  shorten: true),
-                            );
+                        hint: "Full Name",
+                        onValidate: (val) {
+                          val = val?.trim();
+                          if (val == null || val.isEmpty) {
+                            showError("Please enter your full name.");
+                            return '';
                           }
+                          return null;
+                        },
+                        onSave: (val) {
+                          List<String> names = val.split(" ");
+                          details["firstName"] = names[0];
+                          details["lastName"] = names[1];
                         },
                       ),
-                      controller: hobby,
-                      width: 414.w,
-                      hint: "Jan 1, 1960",
-                      height: 50.h,
-                      readOnly: true,
-                    ),
-                    SizedBox(height: 50.h),
-                    GestureDetector(
-                      onTap: () => context.router.pop(),
-                      child: Container(
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Email Address",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: email,
                         width: 414.w,
                         height: 50.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          color: appBlue,
+                        hint: "example@example.com",
+                        onValidate: (val) {
+                          val = val.trim();
+                          if (val == null || !val!.contains("@")) {
+                            showError("Please input a valid email address");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => details["emailAddress"] = val,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Phone Number",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: number,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "80 1234 5678",
+                        onValidate: (val) {
+                          if (val == null || val!.trim().isEmpty ) {
+                            showError("Please input your phone number");
+                            return '';
+                          } else if(val.length != 10) {
+                            showError("Please input a valid phone number");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => details["phoneNumber"] = "+234$val",
+                        prefix: SizedBox(
+                          height: 50.h,
+                          width: 30.w,
+                          child: Center(
+                            child: Text(
+                              "+234",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                  color: weirdBlack50,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ),
-                        child: Text(
-                          "Save Changes",
+                        type: TextInputType.number,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Street",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: street,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "i.e Behind Abans Factory, Accord Junction",
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "State/Region",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: region,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "i.e Ogun State",
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Country",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        controller: country,
+                        width: 414.w,
+                        height: 50.h,
+                        hint: "i.e Nigeria",
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Gender",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      ComboBox(
+                        hint: "Select Gender",
+                        value: gender,
+                        dropdownItems: const ["Male", "Female"],
+                        onChanged: (val) => setState(() => gender = val),
+                        icon: const Icon(Boxicons.bxs_down_arrow),
+                        buttonWidth: 414.w,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Religion",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      ComboBox(
+                        hint: "Choose Religion",
+                        value: religion,
+                        dropdownItems: const ["Christianity", "Islam", "Other"],
+                        onChanged: (val) => setState(() => religion = val),
+                        icon: const Icon(Boxicons.bxs_down_arrow),
+                        buttonWidth: 414.w,
+                      ),
+                      SizedBox(height: 16.h),
+                      if (religion != null && religion == "Christianity")
+                        Text(
+                          "Denomination",
                           style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                      if (religion != null && religion == "Christianity")
+                        SpecialForm(
+                          controller: denomination,
+                          width: 414.w,
+                          height: 50.h,
+                          hint: "What is the name of your church or mosque?",
+                        ),
+                      if (religion != null && religion == "Christianity")
+                        SizedBox(height: 16.h),
+                      Text(
+                        "Date of Birth",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75, fontWeight: FontWeight.w500),
+                      ),
+                      SpecialForm(
+                        prefix: IconButton(
+                          splashRadius: 0.01,
+                          iconSize: 26.r,
+                          icon: const Icon(
+                            Icons.calendar_month_rounded,
+                            color: weirdBlack50,
+                          ),
+                          onPressed: () async {
+                            pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime(2100));
+                            if (pickedDate != null) {
+                              setState(
+                                    () => hobby.text = formatDate(
+                                    DateFormat("dd/MM/yyyy").format(pickedDate!),
+                                    shorten: true),
+                              );
+                            }
+                          },
+                        ),
+                        controller: hobby,
+                        width: 414.w,
+                        hint: "Jan 1, 1960",
+                        height: 50.h,
+                        readOnly: true,
+                      ),
+                      SizedBox(height: 50.h),
+                      GestureDetector(
+                        onTap: () => context.router.pop(),
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: appBlue,
+                          ),
+                          child: Text(
+                            "Save Changes",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 50.h),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 414.w,
-                        minHeight: 1.h,
-                        maxWidth: 414.w,
-                        maxHeight: 1.h,
-                      ),
-                      child: const ColoredBox(color: Colors.black12),
-                    ),
-                    SizedBox(height: 24.h),
-                    Text(
-                      "Delete Account",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600, color: weirdBlack),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      "Ready to say goodbye? Deleting your account is a final step – "
-                          "make sure you've backed up any important data before proceeding.",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 28.h),
-                    GestureDetector(
-                      onTap: () {
-                        unFocus();
-                        delete();
-                      },
-                      child: Container(
-                        width: 414.w,
-                        height: 50.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.r),
-                          color: const Color(0xFFDD0A0A),
+                      SizedBox(height: 50.h),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 414.w,
+                          minHeight: 1.h,
+                          maxWidth: 414.w,
+                          maxHeight: 1.h,
                         ),
-                        child: Text(
-                          "Delete Account",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                        child: const ColoredBox(color: Colors.black12),
+                      ),
+                      SizedBox(height: 24.h),
+                      Text(
+                        "Delete Account",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600, color: weirdBlack),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        "Ready to say goodbye? Deleting your account is a final step – "
+                            "make sure you've backed up any important data before proceeding.",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 28.h),
+                      GestureDetector(
+                        onTap: () {
+                          unFocus();
+                          delete();
+                        },
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.r),
+                            color: const Color(0xFFDD0A0A),
+                          ),
+                          child: Text(
+                            "Delete Account",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 50.h),
-                  ],
+                      SizedBox(height: 50.h),
+                    ],
+                  ),
                 ),
               ),
             ],
