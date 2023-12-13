@@ -372,6 +372,14 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
                         width: 414.w,
                         height: 50.h,
                         hint: "i.e Nigeria",
+                        onValidate: (val) {
+                          if (val == null || val!.trim().isEmpty) {
+                            showError("Please input your country");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => details["country"] = val,
                       ),
                       SizedBox(height: 16.h),
                       Text(
@@ -414,6 +422,16 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
                           width: 414.w,
                           height: 50.h,
                           hint: "What is the name of your church or mosque?",
+                          onValidate: (val) {
+                            if(religion != null && religion != "Christianity") return null;
+
+                            if (val == null || val!.trim().isEmpty) {
+                              showError("Please enter your denomination");
+                              return '';
+                            }
+                            return null;
+                          },
+                          onSave: (val) => details["denomination"] = val,
                         ),
                       if (religion != null && religion == "Christianity")
                         SizedBox(height: 16.h),
@@ -455,6 +473,26 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
                       GestureDetector(
                         onTap: () {
                           if(!validateForm(formKey)) return;
+
+                          if(gender == null) {
+                            showError("Please choose a gender");
+                            return;
+                          }
+
+                          if(religion == null) {
+                            showError("Please choose a religion");
+                            return;
+                          }
+
+                          if(pickedDate == null) {
+                            showError("Please choose your date of birth");
+                            return;
+                          }
+
+                          details["gender"] = gender;
+                          details["dateOfBirth"] = pickedDate!.toIso8601String();
+                          details["religion"] = religion;
+
                           update();
                         },
                         child: Container(

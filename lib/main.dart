@@ -17,6 +17,7 @@ import 'package:my_hostel/pages/chats/inbox.dart';
 import 'package:my_hostel/pages/home/agent/dashboard.dart';
 import 'package:my_hostel/pages/home/landlord/create-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/dashboard.dart';
+import 'package:my_hostel/pages/home/landlord/edit_room.dart';
 import 'package:my_hostel/pages/home/landlord/landlord_hostel_details_page.dart';
 import 'package:my_hostel/pages/home/landlord/view_hostels.dart';
 import 'package:my_hostel/pages/home/notification.dart';
@@ -49,6 +50,7 @@ import 'package:my_hostel/pages/profile/student/settings.dart';
 import 'package:my_hostel/pages/profile/student/wallet.dart';
 import 'package:my_hostel/pages/profile/transaction.dart';
 
+import 'components/room_details.dart';
 import 'misc/notification_controller.dart';
 
 void main() async {
@@ -125,6 +127,11 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.privacyPolicy.path,
           name: Pages.privacyPolicy,
           builder: (_, __) => const PrivacyPolicyPage(),
+        ),
+        GoRoute(
+          path: Pages.editRoom.path,
+          name: Pages.editRoom,
+          builder: (_, state) => EditRoomPage(room: state.extra as RoomInfo),
         ),
         GoRoute(
           path: Pages.hostelSettings.path,

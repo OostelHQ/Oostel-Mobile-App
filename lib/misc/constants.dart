@@ -130,6 +130,8 @@ class Pages
   static const String ownerAgreement = 'owner-agreement';
   static const String tenantAgreement = 'tenant-agreement';
   static const String agreementSettings = 'tenant-agreement-settings';
+
+  static const String editRoom = 'edit-room';
 }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet. "

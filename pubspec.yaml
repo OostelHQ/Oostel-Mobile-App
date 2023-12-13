@@ -50,7 +50,9 @@ dependencies:
   animated_text_kit:
   get_thumbnail_video:
   signalr_flutter:
+  signalr_netcore:
   awesome_notifications:
+  jiffy:
 
 
 

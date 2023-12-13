@@ -191,7 +191,7 @@ class _HomePageState extends ConsumerState<_HomePage>
   void getDetails() {
     getAllHostelsForLandlord(ref.read(currentUserProvider).id).then((resp) {
       if (!mounted) return;
-      if(!resp.success) {
+      if (!resp.success) {
         showError(resp.message);
         print(resp.message);
         return;
@@ -422,17 +422,16 @@ class _HomePageState extends ConsumerState<_HomePage>
                               ),
                             ),
                           )
-                        : SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (_, index) {
-                                if (index == 3) {
-                                  return SizedBox(height: 50.h);
-                                }
+                        : SliverList.separated(
+                            separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                            itemBuilder: (_, index) {
+                              if ((hostels.length < 4 && index == hostels.length) || index == 4) {
+                                return SizedBox(height: 30.h);
+                              }
 
-                                return LandlordHostelCard(info: hostels[index]);
-                              },
-                              childCount: hostels.length < 4 ? hostels.length : 4,
-                            ),
+                              return LandlordHostelCard(info: hostels[index]);
+                            },
+                            itemCount: hostels.length < 4 ? hostels.length + 1 : 5,
                           ),
                   ),
                 ],
