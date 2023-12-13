@@ -144,7 +144,7 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(
   );
 }
 
-HostelInfo _parseHostelData(Map<String, dynamic> element) {
+HostelInfo _parseHostelData(Map<String, dynamic> element, {String userId = ""}) {
   List<String> rules =
   toStringList(element["rulesAndRegulation"] as List<dynamic>);
   List<String> facilities =
@@ -155,6 +155,10 @@ HostelInfo _parseHostelData(Map<String, dynamic> element) {
   element["rulesAndRegulation"] = rules;
   element["hostelFacilities"] = facilities;
   element["media"] = media;
+  element["userId"] = element["userId"] ?? userId;
+
+  List<RoomInfo> rooms = parseRoomData(element["rooms"] as List<dynamic>);
+  element["rooms"] = rooms;
 
   HostelInfo info = HostelInfo.fromJson(element);
   return info;
@@ -203,10 +207,10 @@ Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) asy
         });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      List<dynamic> list = response.data as List<dynamic>;
+      List<dynamic> list = response.data["data"] as List<dynamic>;
       List<HostelInfo> hostels = [];
       for (var element in list) {
-        HostelInfo info = _parseHostelData(element);
+        HostelInfo info = _parseHostelData(element, userId: id);
         hostels.add(info);
       }
 

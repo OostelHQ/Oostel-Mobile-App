@@ -10,12 +10,15 @@ import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
+import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/landlord_widgets.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
 import 'package:my_hostel/pages/chats/chats.dart';
+
+import 'dart:developer';
 
 class LandownerDashboardPage extends ConsumerStatefulWidget {
   const LandownerDashboardPage({super.key});
@@ -157,8 +160,6 @@ class _HomePageState extends ConsumerState<_HomePage>
     with SingleTickerProviderStateMixin {
   final ScrollController controller = ScrollController();
 
-  List<HostelInfo> hostels = [];
-
   bool hostelSelect = true;
 
   late AnimationController animationController;
@@ -169,7 +170,6 @@ class _HomePageState extends ConsumerState<_HomePage>
   @override
   void initState() {
     super.initState();
-    hostels = ref.read(ownerHostelsProvider);
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -191,7 +191,13 @@ class _HomePageState extends ConsumerState<_HomePage>
   void getDetails() {
     getAllHostelsForLandlord(ref.read(currentUserProvider).id).then((resp) {
       if (!mounted) return;
+      if(!resp.success) {
+        showError(resp.message);
+        return;
+      }
 
+      ref.watch(ownerHostelsProvider.notifier).state.clear();
+      ref.watch(ownerHostelsProvider.notifier).state.addAll(resp.payload!);
       setState(() => loadingOwnerHostels = false);
     });
   }
@@ -207,6 +213,7 @@ class _HomePageState extends ConsumerState<_HomePage>
   Widget build(BuildContext context) {
     User user = ref.watch(currentUserProvider);
     bool notifications = ref.watch(newNotificationProvider);
+    List<HostelInfo> hostels = ref.watch(ownerHostelsProvider);
 
     return (loadingOwnerHostels || hasError)
         ? Center(
@@ -423,7 +430,7 @@ class _HomePageState extends ConsumerState<_HomePage>
 
                                 return LandlordHostelCard(info: hostels[index]);
                               },
-                              childCount: 4,
+                              childCount: hostels.length < 4 ? hostels.length : 4,
                             ),
                           ),
                   ),
