@@ -48,7 +48,7 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
         } else if (role == "LandLord") {
           user = parseLandlordData(userData);
         } else if (role == "Agent") {
-          user = null;
+          user = parseAgentData(userData);
         } else {
           user = null;
         }
@@ -202,6 +202,64 @@ Student _parseStudentData(Map<String, dynamic> userData,
     contact: contact,
     email: email,
   );
+}
+
+Agent parseAgentData(Map<String, dynamic> userData) {
+  log(userData.toString());
+
+  String id = userData["userDto"]["userId"];
+  DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
+  String contact = userData["userDto"]["phoneNumber"] ?? "";
+
+  Map<String, dynamic>? profile = userData["agentProfile"];
+
+  if (profile != null) {
+    String fullName = profile['fullName'];
+    String email = profile['email'];
+    String state = profile['stateOfOrigin'] ?? "";
+    bool isAvailable = profile['isAvailable'] as bool;
+    String area = profile['area'] ?? "";
+    double roomBudget = (profile['roomBudgetAmount'] as num).toDouble();
+    String pictureUrl = profile['pictureUrl'] ?? "";
+    int profileViewCount = (profile['profileViewCount'] as num).toInt();
+    String gender = profile['gender'] ?? "";
+    String country = profile['country'];
+    String schoolLevel = profile['schoolLevel'] ?? "";
+    String religion = profile['religion'] ?? "";
+    String denomination = profile['denomination'] ?? "";
+    String age = profile['age'] ?? "";
+    String hobby = profile['hobby'] ?? "";
+    String guardian = profile["guardianPhoneNumber"] ?? "";
+    List<String> names = fullName.split(" ");
+
+    return Agent(
+      dateJoined: created,
+      dob: DateTime(1960),
+      firstName: names[0],
+      lastName: names[1],
+      denomination: denomination,
+      id: id,
+      gender: gender,
+      religion: religion,
+      image: pictureUrl,
+      contact: contact,
+      profileViews: profileViewCount,
+      email: email,
+    );
+  }
+
+  List<String> names = userData["userDto"]["userName"].split(" ");
+  return Agent(
+    firstName: names[0],
+    lastName: names[1],
+    id: id,
+    dob: DateTime(1960),
+    dateJoined: created,
+    contact: contact,
+    email: "",
+  );
+
+
 }
 
 Future<FyndaResponse> verifyEmailOTP(Map<String, dynamic> map) async {
