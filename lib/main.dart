@@ -462,6 +462,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
         ),
         themeMode: ThemeMode.light,
         routerConfig: _router,
+        debugShowCheckedModeBanner: false,
       ),
       useInheritedMediaQuery: true,
       splitScreenMode: true,
