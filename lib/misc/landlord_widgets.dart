@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
-
+import 'package:my_hostel/misc/widgets.dart';
 
 class LandlordHostelCard extends StatelessWidget {
   final HostelInfo info;
@@ -31,19 +32,36 @@ class LandlordHostelCard extends StatelessWidget {
                     blurRadius: 6.0,
                     spreadRadius: 1.0,
                   )
-                ]
-            ),
+                ]),
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.r),
-                  child: Image.asset(
-                    info.media[0],
+                CachedNetworkImage(
+                  imageUrl: info.media.first,
+                  errorWidget: (context, url, error) => Container(
                     width: 414.w,
                     height: 156.h,
-                    fit: BoxFit.cover,
+                    color: weirdBlack50,
+                  ),
+                  progressIndicatorBuilder: (context, url, download) =>
+                      Container(
+                    width: 414.w,
+                    height: 156.h,
+                    color: weirdBlack50,
+                    alignment: Alignment.center,
+                    child: loader,
+                  ),
+                  imageBuilder: (context, provider) => Container(
+                    width: 414.w,
+                    height: 156.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.r),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 12.h),
@@ -66,7 +84,7 @@ class LandlordHostelCard extends StatelessWidget {
                     ),
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: infoRoomsLeftBackground,
@@ -85,8 +103,9 @@ class LandlordHostelCard extends StatelessWidget {
                 SizedBox(height: 8.h),
                 Text(
                   joinToAddress(info.address),
-                  style: context.textTheme.bodyMedium!
-                      .copyWith(fontWeight: FontWeight.w500, color: weirdBlack75,
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: weirdBlack75,
                   ),
                 )
               ],

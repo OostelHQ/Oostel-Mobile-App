@@ -73,7 +73,7 @@ class HostelInfo extends Equatable {
     return HostelInfo(
         id: map["hostelId"],
         name: map["hostelName"],
-        area: map["homeSize"],
+        area: (map["homeSize"] as num).toDouble(),
         price: map["price"] ?? 0.0,
         totalRooms: map["totalRoom"] ?? 0,
         address: "$street, $junction, $state, $country",
@@ -86,7 +86,7 @@ class HostelInfo extends Equatable {
         media: map["media"] ?? [],
         owner: map["userId"],
         rooms: map["rooms"] ?? [],
-        vacantRooms: map["isAnyRoomVacant"],
+        vacantRooms: map["isAnyRoomVacant"] ?? false,
     );
   }
 }

@@ -158,9 +158,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                 tag: "Hostel ID: ${widget.info.id} image",
                                 flightShuttleBuilder: flightShuttleBuilder,
                                 child: CachedNetworkImage(
-                                  imageUrl: widget.info.media.isEmpty
-                                      ? ""
-                                      : widget.info.media.first,
+                                  imageUrl: widget.info.media.first,
                                   errorWidget: (context, url, error) =>
                                       Container(
                                     width: 414.w,
