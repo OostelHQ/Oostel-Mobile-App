@@ -203,12 +203,12 @@ Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) asy
         });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      List<dynamic> list = response.data as List<dynamic>;
+      List<dynamic> list = response.data['data'] as List<dynamic>;
       List<HostelInfo> hostels = [];
-      for (var element in list) {
-        HostelInfo info = _parseHostelData(element);
+      // for (var element in list) {
+        HostelInfo info = _parseHostelData(list.first);
         hostels.add(info);
-      }
+      // }
 
       return FyndaResponse(
         message: "Success",
