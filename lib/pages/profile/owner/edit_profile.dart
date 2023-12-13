@@ -66,7 +66,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     region = TextEditingController(text: address[1]);
     country = TextEditingController(text: address[2]);
 
-    pickedDate = (owner.dob == DateTime(1960)) ? null : owner.dob;
+      pickedDate = (owner.dob == DateTime(1960)) ? null : owner.dob;
     hobby = TextEditingController(
       text: pickedDate == null
           ? ""

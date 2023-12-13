@@ -59,14 +59,14 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
 
     profileImage = agent.image;
 
-    religion = agent.religion;
-    gender = agent.gender;
+    religion = agent.religion == "" ? null : agent.religion;
+    gender = agent.gender == "" ? null : agent.gender;
 
     street = TextEditingController();
     region = TextEditingController();
     country = TextEditingController();
 
-    pickedDate = agent.dob;
+    pickedDate = (agent.dob == DateTime(1960)) ? null : agent.dob;
     hobby = TextEditingController(
       text: pickedDate == null
           ? ""
@@ -332,6 +332,14 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
                         width: 414.w,
                         height: 50.h,
                         hint: "i.e Behind Abans Factory, Accord Junction",
+                        onValidate: (val) {
+                          if (val == null || val!.trim().isEmpty) {
+                            showError("Please input your street");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => details["street"] = val,
                       ),
                       SizedBox(height: 16.h),
                       Text(
@@ -344,6 +352,14 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
                         width: 414.w,
                         height: 50.h,
                         hint: "i.e Ogun State",
+                        onValidate: (val) {
+                          if (val == null || val!.trim().isEmpty) {
+                            showError("Please input your state");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => details["state"] = val,
                       ),
                       SizedBox(height: 16.h),
                       Text(
@@ -437,7 +453,10 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
                       ),
                       SizedBox(height: 50.h),
                       GestureDetector(
-                        onTap: () => context.router.pop(),
+                        onTap: () {
+                          if(!validateForm(formKey)) return;
+                          update();
+                        },
                         child: Container(
                           width: 414.w,
                           height: 50.h,
