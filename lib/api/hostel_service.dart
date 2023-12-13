@@ -123,18 +123,7 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(
       List<dynamic> list = response.data as List<dynamic>;
       List<HostelInfo> hostels = [];
       for (var element in list) {
-        List<String> rules =
-            toStringList(element["rulesAndRegulation"] as List<dynamic>);
-        List<String> facilities =
-            toStringList(element["hostelFacilities"] as List<dynamic>);
-        List<String> media =
-            toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
-
-        element["rulesAndRegulation"] = rules;
-        element["hostelFacilities"] = facilities;
-        element["media"] = media;
-
-        HostelInfo info = HostelInfo.fromJson(element as Map<String, dynamic>);
+        HostelInfo info = _parseHostelData(element);
         hostels.add(info);
       }
 
@@ -153,6 +142,22 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(
     payload: [],
     success: false,
   );
+}
+
+HostelInfo _parseHostelData(Map<String, dynamic> element) {
+  List<String> rules =
+  toStringList(element["rulesAndRegulation"] as List<dynamic>);
+  List<String> facilities =
+  toStringList(element["hostelFacilities"] as List<dynamic>);
+  List<String> media =
+  toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
+
+  element["rulesAndRegulation"] = rules;
+  element["hostelFacilities"] = facilities;
+  element["media"] = media;
+
+  HostelInfo info = HostelInfo.fromJson(element);
+  return info;
 }
 
 Future<FyndaResponse<Map<String, dynamic>?>> getHostel(String id) async {
@@ -188,6 +193,40 @@ Future<FyndaResponse<Map<String, dynamic>?>> getHostel(String id) async {
     success: false,
   );
 }
+
+Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) async {
+  try {
+    Response response = await dio.get("/hostel/get-my-hostels",
+        options: configuration,
+        queryParameters: {
+          "landlordId": id,
+        });
+
+    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+      List<dynamic> list = response.data as List<dynamic>;
+      List<HostelInfo> hostels = [];
+      for (var element in list) {
+        HostelInfo info = _parseHostelData(element);
+        hostels.add(info);
+      }
+
+      return FyndaResponse(
+        message: "Success",
+        payload: hostels,
+        success: true,
+      );
+    }
+  } catch (e) {
+    log("Get Hostels For Landlord Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    success: false,
+  );
+}
+
 
 Future<FyndaResponse> createRoomForHostel({
   required String userID,

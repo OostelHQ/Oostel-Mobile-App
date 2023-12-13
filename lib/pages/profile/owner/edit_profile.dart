@@ -53,7 +53,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
 
     email = TextEditingController(text: owner.email);
     fullName = TextEditingController(text: owner.mergedNames);
-    number = TextEditingController(text: owner.contact.substring(4));
+    number = TextEditingController(text: owner.contact.isEmpty ?  "" : owner.contact.substring(1));
     denomination = TextEditingController(text: owner.denomination);
 
     profileImage = owner.image;

@@ -2,9 +2,11 @@ import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
@@ -13,16 +15,18 @@ import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
-import '../../chats/chats.dart';
+import 'package:my_hostel/pages/chats/chats.dart';
 
 class LandownerDashboardPage extends ConsumerStatefulWidget {
   const LandownerDashboardPage({super.key});
 
   @override
-  ConsumerState<LandownerDashboardPage> createState() => _LandownerDashboardPageState();
+  ConsumerState<LandownerDashboardPage> createState() =>
+      _LandownerDashboardPageState();
 }
 
-class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage> {
+class _LandownerDashboardPageState
+    extends ConsumerState<LandownerDashboardPage> {
   late List<Widget> stack;
 
   @override
@@ -66,7 +70,7 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (newIndex) {
-          if(newIndex == 2) {
+          if (newIndex == 2) {
             context.router.pushNamed(Pages.stepOne);
           } else {
             ref.watch(dashboardTabIndexProvider.notifier).state = newIndex;
@@ -104,7 +108,6 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
             ),
             label: "Chats",
           ),
-
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "assets/images/Create Hostel.svg",
@@ -113,7 +116,6 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
             ),
             label: "Create",
           ),
-
           BottomNavigationBarItem(
             icon: AnimatedSwitcherZoom.zoomIn(
               duration: const Duration(milliseconds: 500),
@@ -126,7 +128,6 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
             ),
             label: "Wallet",
           ),
-
           BottomNavigationBarItem(
             icon: AnimatedSwitcherZoom.zoomIn(
               duration: const Duration(milliseconds: 500),
@@ -145,8 +146,6 @@ class _LandownerDashboardPageState extends ConsumerState<LandownerDashboardPage>
   }
 }
 
-
-
 class _HomePage extends ConsumerStatefulWidget {
   const _HomePage();
 
@@ -154,7 +153,8 @@ class _HomePage extends ConsumerStatefulWidget {
   ConsumerState<_HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<_HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends ConsumerState<_HomePage>
+    with SingleTickerProviderStateMixin {
   final ScrollController controller = ScrollController();
 
   List<HostelInfo> hostels = [];
@@ -163,6 +163,8 @@ class _HomePageState extends ConsumerState<_HomePage> with SingleTickerProviderS
 
   late AnimationController animationController;
   late Animation<double> animation;
+
+  bool loadingOwnerHostels = true, hasError = false;
 
   @override
   void initState() {
@@ -179,9 +181,19 @@ class _HomePageState extends ConsumerState<_HomePage> with SingleTickerProviderS
       ),
     );
     if (ref.read(currentUserProvider).hasCompletedProfile < 100) {
-      Future.delayed(const Duration(seconds: 3),
-              () => animationController.forward());
+      Future.delayed(
+          const Duration(seconds: 3), () => animationController.forward());
     }
+
+    getDetails();
+  }
+
+  void getDetails() {
+    getAllHostelsForLandlord(ref.read(currentUserProvider).id).then((resp) {
+      if (!mounted) return;
+
+      setState(() => loadingOwnerHostels = false);
+    });
   }
 
   @override
@@ -196,171 +208,238 @@ class _HomePageState extends ConsumerState<_HomePage> with SingleTickerProviderS
     User user = ref.watch(currentUserProvider);
     bool notifications = ref.watch(newNotificationProvider);
 
-    return Stack(
-      children: [
-        CustomScrollView(
-          controller: controller,
-          slivers: [
-            SliverAppBar(
-              automaticallyImplyLeading: false,
-              systemOverlayStyle: SystemUiOverlayStyle.dark,
-              elevation: 0.0,
-              pinned: true,
-              centerTitle: true,
-              title: GestureDetector(
-                onTap: () => context.router.pushNamed(Pages.ownerProfile),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    user.image == ""
-                        ? CircleAvatar(
-                      radius: 15.r,
-                      backgroundColor: appBlue,
-                      child: Text(
-                        user.firstName.substring(0, 1),
-                        style: context.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white),
+    return (loadingOwnerHostels || hasError)
+        ? Center(
+            child: loadingOwnerHostels
+                ? blueLoader
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/images/Error.svg"),
+                      SizedBox(height: 20.h),
+                      Text(
+                        "An error occurred while getting your hostels. Please try again",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    )
-                        : CachedNetworkImage(
-                      imageUrl: user.image,
-                      errorWidget: (context, url, error) => CircleAvatar(
-                        backgroundColor: weirdBlack20,
-                        radius: 15.r,
-                        child: Center(
-                          child: Icon(
-                            Icons.person_outline_rounded,
-                            color: appBlue,
-                            size: 20.r,
+                      SizedBox(height: 20.h),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            loadingOwnerHostels = true;
+                            hasError = false;
+                          });
+                          getDetails();
+                        },
+                        child: Container(
+                          width: 160.w,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.r),
+                            color: paleBlue,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Boxicons.bx_redo,
+                                color: appBlue,
+                                size: 16,
+                              ),
+                              SizedBox(width: 10.w),
+                              Text(
+                                "Retry",
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: appBlue,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                      progressIndicatorBuilder: (context, url, download) {
-                        return CircleAvatar(
-                          radius: 15.r,
-                          backgroundColor: weirdBlack50,
-                        );
-                      },
-                      imageBuilder: (context, provider) {
-                        return CircleAvatar(
-                          backgroundImage: provider,
-                          radius: 15.r,
-                        );
-                      },
-                    ),
-                    SizedBox(width: 10.w),
-                    Text(
-                      "Hello, ${user.lastName} ",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      user.gender == "Female"
-                          ? "🧑"
-                          : user.gender == "Male"
-                          ? "🧒"
-                          : "",
-                      style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(right: 22.w),
-                  child: GestureDetector(
-                    onTap: () => context.router.pushNamed(Pages.notification),
-                    child: AnimatedSwitcherTranslation.right(
-                      duration: const Duration(milliseconds: 500),
-                      child: SvgPicture.asset(
-                        "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
-                        height: 25.h,
-                        key: ValueKey<bool>(notifications),
-                      ),
-                    ),
+                    ],
                   ),
-                )
-              ],
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const WalletSlider(),
-                    SizedBox(height: 35.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Hero(
-                          tag: "My Hostels Header",
-                          child: Text(
-                            "My Hostels",
-                            style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600, color: weirdBlack),
-                          ),
-                        ),
-                        if (hostels.length > 3)
-                          GestureDetector(
-                            onTap: () => context.router.pushNamed(Pages.viewHostels),
-                            child: Text(
-                              "See All",
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                  color: appBlue, fontWeight: FontWeight.w500),
+          )
+        : Stack(
+            children: [
+              CustomScrollView(
+                controller: controller,
+                slivers: [
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    systemOverlayStyle: SystemUiOverlayStyle.dark,
+                    elevation: 0.0,
+                    pinned: true,
+                    centerTitle: true,
+                    title: GestureDetector(
+                      onTap: () => context.router.pushNamed(Pages.ownerProfile),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          user.image == ""
+                              ? CircleAvatar(
+                                  radius: 15.r,
+                                  backgroundColor: appBlue,
+                                  child: Text(
+                                    user.firstName.substring(0, 1),
+                                    style: context.textTheme.bodyLarge!
+                                        .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white),
+                                  ),
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: user.image,
+                                  errorWidget: (context, url, error) =>
+                                      CircleAvatar(
+                                    backgroundColor: weirdBlack20,
+                                    radius: 15.r,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.person_outline_rounded,
+                                        color: appBlue,
+                                        size: 20.r,
+                                      ),
+                                    ),
+                                  ),
+                                  progressIndicatorBuilder:
+                                      (context, url, download) {
+                                    return CircleAvatar(
+                                      radius: 15.r,
+                                      backgroundColor: weirdBlack50,
+                                    );
+                                  },
+                                  imageBuilder: (context, provider) {
+                                    return CircleAvatar(
+                                      backgroundImage: provider,
+                                      radius: 15.r,
+                                    );
+                                  },
+                                ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            "Hello, ${user.lastName} ",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                      ],
+                          Text(
+                            user.gender == "Female"
+                                ? "🧑"
+                                : user.gender == "Male"
+                                    ? "🧒"
+                                    : "",
+                            style: context.textTheme.bodyLarge!
+                                .copyWith(fontSize: 22.sp),
+                          ),
+                        ],
+                      ),
                     ),
-
-                    SizedBox(height: 20.h),
-                  ],
-                ),
-              ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w),
-              sliver: hostels.isEmpty
-                  ? SliverFillRemaining(
-                child: Center(
-                  child: Text(
-                    "You have no hostels yet! Advertise your hostel without stress!",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack50,
+                    actions: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 22.w),
+                        child: GestureDetector(
+                          onTap: () =>
+                              context.router.pushNamed(Pages.notification),
+                          child: AnimatedSwitcherTranslation.right(
+                            duration: const Duration(milliseconds: 500),
+                            child: SvgPicture.asset(
+                              "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
+                              height: 25.h,
+                              key: ValueKey<bool>(notifications),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 22.w),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          const WalletSlider(),
+                          SizedBox(height: 35.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Hero(
+                                tag: "My Hostels Header",
+                                child: Text(
+                                  "My Hostels",
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: weirdBlack),
+                                ),
+                              ),
+                              if (hostels.length > 3)
+                                GestureDetector(
+                                  onTap: () => context.router
+                                      .pushNamed(Pages.viewHostels),
+                                  child: Text(
+                                    "See All",
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
+                                            color: appBlue,
+                                            fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
-                  : SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (_, index) {
-                    if (index == 3) {
-                      return SizedBox(height: 50.h);
-                    }
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 22.w),
+                    sliver: hostels.isEmpty
+                        ? SliverFillRemaining(
+                            child: Center(
+                              child: Text(
+                                "You have no hostels yet! Advertise your hostel without stress!",
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: weirdBlack50,
+                                ),
+                              ),
+                            ),
+                          )
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (_, index) {
+                                if (index == 3) {
+                                  return SizedBox(height: 50.h);
+                                }
 
-                    return LandlordHostelCard(info: hostels[index]);
-                  },
-                  childCount: 4,
+                                return LandlordHostelCard(info: hostels[index]);
+                              },
+                              childCount: 4,
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  child: ProfileNotification(
+                      onCancel: () => animationController.reverse()),
                 ),
               ),
-            ),
-          ],
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: SizeTransition(
-            sizeFactor: animation,
-            child: ProfileNotification(onCancel: () => animationController.reverse()),
-          ),
-        ),
-      ],
-    );
+            ],
+          );
   }
 }

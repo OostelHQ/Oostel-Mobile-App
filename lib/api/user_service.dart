@@ -146,8 +146,6 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
 
 Student _parseStudentData(Map<String, dynamic> userData,
     {String email = "", String fullName = ""}) {
-  log(userData.toString());
-
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
@@ -404,7 +402,6 @@ Future<FyndaResponse> _createAgentProfile(Map<String, dynamic> map,
           success: true,
         );
       }
-
     }
   } catch (e) {
     log("Create Agent Profile Error: $e");
@@ -609,7 +606,11 @@ Future<FyndaResponse> getStudentById(String id) async {
         });
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
-      log(response.data.toString());
+      return FyndaResponse(
+        message: "Success",
+        payload: response.data["data"],
+        success: true,
+      );
     }
   } catch (e) {
     log("Get Student By id Error: $e");

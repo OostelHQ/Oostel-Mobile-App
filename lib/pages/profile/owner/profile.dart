@@ -663,16 +663,31 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
 //                       ),
 //                     ),
 
-class AgentInvite extends StatefulWidget {
+class AgentInvite extends ConsumerStatefulWidget {
   const AgentInvite({super.key});
 
   @override
-  State<AgentInvite> createState() => _AgentInviteState();
+  ConsumerState<AgentInvite> createState() => _AgentInviteState();
 }
 
-class _AgentInviteState extends State<AgentInvite> {
+class _AgentInviteState extends ConsumerState<AgentInvite> {
   final TextEditingController email = TextEditingController(),
       note = TextEditingController();
+
+  late Map<String, dynamic> authDetails;
+  bool sent = false;
+
+  final GlobalKey<FormState> formKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    authDetails = {
+      "landLordId": ref.read(currentUserProvider).id,
+      "agentEmail": "",
+      "shortNote": ""
+    };
+  }
 
   @override
   void dispose() {
@@ -681,7 +696,30 @@ class _AgentInviteState extends State<AgentInvite> {
     super.dispose();
   }
 
-  bool sent = false;
+  Future<void> invite() async {
+    inviteAgent(authDetails).then((resp) {
+      if (!mounted) return;
+      if (!resp.success) {
+        showError(resp.message);
+        Navigator.of(context).pop();
+      } else {
+        setState(() => sent = true);
+      }
+    });
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
+  }
+
+  bool get isFilled =>
+      email.text.trim().isNotEmpty && note.text.trim().isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -696,110 +734,146 @@ class _AgentInviteState extends State<AgentInvite> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 10.h),
-                    SvgPicture.asset("assets/images/Modal Line.svg"),
-                    SizedBox(height: sent ? 55.h : 25.h),
-                    if (sent)
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15.r),
-                            topRight: Radius.circular(15.r),
-                          ),
-                          child: Image.asset(
-                            "assets/images/Agent Invite.png",
-                            width: 135.r,
-                            height: 135.h,
-                            fit: BoxFit.cover,
+                child: Form(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10.h),
+                      SvgPicture.asset("assets/images/Modal Line.svg"),
+                      SizedBox(height: sent ? 55.h : 25.h),
+                      if (sent)
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.r),
+                              topRight: Radius.circular(15.r),
+                            ),
+                            child: Image.asset(
+                              "assets/images/Agent Invite.png",
+                              width: 135.r,
+                              height: 135.h,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+                      if (sent) SizedBox(height: 16.h),
+                      Text(
+                        !sent ? "Invite an Agent" : "Invite Sent",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack,
+                        ),
                       ),
-                    if (sent) SizedBox(height: 16.h),
-                    Text(
-                      !sent ? "Invite an Agent" : "Invite Sent",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: weirdBlack,
+                      SizedBox(height: 12.h),
+                      Text(
+                        !sent
+                            ? "Invite your own co-worker to help you manage and market your hostel to the students."
+                            : "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: weirdBlack75,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Text(
-                      !sent
-                          ? "Invite your own co-worker to help you manage and market your hostel to the students."
-                          : "Lorem ipsum dolor sit amet, consectetur. Nam ut cursus ipsum dolor sit amet.",
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75,
-                        fontWeight: FontWeight.w500,
+                      if (sent) SizedBox(height: 60.h),
+                      SizedBox(height: 32.h),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Email",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
                       ),
-                    ),
-                    if (sent) SizedBox(height: 60.h),
-                    SizedBox(height: 32.h),
-                    Text(
-                      "Email",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(height: 8.h),
-                    SpecialForm(
-                      controller: email,
-                      width: 414.w,
-                      height: 50.h,
-                      hint: "example@example.com",
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Short note",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(height: 8.h),
-                    SpecialForm(
-                      controller: note,
-                      width: 414.w,
-                      height: 150.h,
-                      maxLines: 6,
-                      hint:
-                          "Hello, \n\nI'm hereby inviting you to this platform as an Agent to manage my apartment.\n\nThanks.",
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        if (!sent) {
-                          setState(() => sent = true);
-                          return;
-                        }
-                        context.router.pop();
-                      },
-                      child: Container(
+                      SizedBox(height: 8.h),
+                      SpecialForm(
+                        controller: email,
                         width: 414.w,
                         height: 50.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: appBlue,
-                          borderRadius: BorderRadius.circular(5.r),
+                        hint: "example@example.com",
+                        onChange: (val) => textChecker(
+                          text: val,
+                          onAction: () => setState(() {}),
                         ),
+                        onSave: (val) =>
+                            setState(() => authDetails["agentEmail"] = val!),
+                        onValidate: (value) {
+                          if (value!.trim().isEmpty || !value.contains("@")) {
+                            showError("Invalid Email Address");
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16.h),
+                      Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
-                          !sent ? "Send Invite" : "Ok, thanks",
+                          "Short note",
                           style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                              color: weirdBlack75, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      SpecialForm(
+                        controller: note,
+                        width: 414.w,
+                        height: 150.h,
+                        maxLines: 6,
+                        onChange: (val) => textChecker(
+                          text: val,
+                          onAction: () => setState(() {}),
+                        ),
+                        onValidate: (val) {
+                          if (val == null || val!.trim().isEmpty) {
+                            showError(
+                                "Please input a short invite for your agent");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) => authDetails["shortNote"] = val,
+                        hint:
+                            "Hello, \n\nI'm hereby inviting you to this platform as an Agent to manage my apartment.\n\nThanks.",
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (!sent) {
+                            if (!validateForm(formKey)) return;
+                            invite();
+                          } else {
+                            context.router.pop();
+                          }
+                        },
+                        child: Container(
+                          width: 414.w,
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color:
+                                isFilled ? appBlue : appBlue.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(5.r),
+                          ),
+                          child: Text(
+                            !sent ? "Send Invite" : "Ok, thanks",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Note that: Your co-workers do not have access to withdraw any received payments from students and change the settings made by you.",
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodySmall!.copyWith(
-                        color: weirdBlack50,
-                        fontWeight: FontWeight.w500,
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Note that: Your co-workers do not have access to withdraw any received payments from students and change the settings made by you.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: weirdBlack50,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

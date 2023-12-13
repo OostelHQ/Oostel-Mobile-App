@@ -153,10 +153,11 @@ class _SettingsPageState extends ConsumerState<OwnerSettingsPage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              resetProviders(ref);
                               FileManager.saveAuthDetails(null);
                               FileManager.saveBool("registeredFynda", false);
                               FileManager.saveBool("autoLogin", false);
+                              resetProviders(ref);
+
                               context.router.goNamed(Pages.splash);
                             },
                             child: Container(

@@ -66,76 +66,74 @@ class _SplashPageState extends ConsumerState<SplashPage>
       ),
     );
 
-    Future.delayed(
-      const Duration(seconds: 1),
-      () => controller.forward().then(
-        (_) async {
-          int? registerStep = await FileManager.loadInt("registerStep");
-          bool? autoLogin = await FileManager.loadBool("autoLogin");
-          String? registeredEmail = await FileManager.load("registrationEmail");
-
-          Map<String, String>? auth = await FileManager.loadAuthDetails();
-
-          if (registerStep != null && registerStep != 0) {
-            ref.watch(registrationProcessProvider.notifier).state =
-                registerStep;
-            process(
-                registerStep: registerStep, registeredEmail: registeredEmail);
-          } else if (auth != null && autoLogin != null && autoLogin) {
-            loaderController.forward();
-            loginUser(auth).then((response) {
-              showError(response.message,
-                  background: Colors.white, text: weirdBlack);
-              loaderController.reverse().then((_) {
-                if (response.success) {
-                  FileManager.save("registrationEmail", "");
-                  FileManager.saveInt("registerStep", 0);
-                  ref.invalidate(registrationProcessProvider);
-                  ref.watch(hasInitializedProvider.notifier).state = true;
-                  ref.watch(currentUserProvider.notifier).state =
-                      response.payload!;
-                }
-
-                process(loginSuccess: response.success);
-              });
-            });
-          } else {
-            process();
-          }
-        },
-      ),
-    );
+    evaluate();
   }
 
-  void process(
-          {int? registerStep, String? registeredEmail, bool? loginSuccess}) =>
-      controller.reverse().then(
-        (_) {
-          String destination = Pages.login;
-          if (loginSuccess != null && loginSuccess) {
-            if(ref.read(isLandlord)) {
-              int value = ref.read(currentUserProvider).hasCompletedProfile;
-              if (value <= 20) {
-                destination = Pages.createStepOne;
-              } else {
-                destination = Pages.ownerDashboard;
-              }
-            } else if(ref.read(isAgent)) {
-              destination = Pages.agentDashboard;
-            } else {
-              destination = Pages.studentDashboard;
-            }
-          } else if (registeredEmail != null && registeredEmail.isNotEmpty && registerStep != null) {
-            destination = Pages.register;
-            ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
-          } else if (registerStep == null && registeredEmail == null) {
-            destination = Pages.registrationType;
+  Future<void> evaluate() async {
+    await Future.delayed(const Duration(seconds: 1));
+    await controller.forward();
+
+    int? registerStep = await FileManager.loadInt("registerStep");
+    bool? autoLogin = await FileManager.loadBool("autoLogin");
+    String? registeredEmail = await FileManager.load("registrationEmail");
+
+    Map<String, String>? auth = await FileManager.loadAuthDetails();
+
+    if (registerStep != null && registerStep != 0) {
+      ref.watch(registrationProcessProvider.notifier).state = registerStep;
+      process(registerStep: registerStep, registeredEmail: registeredEmail);
+    } else if (auth != null && autoLogin != null && autoLogin) {
+      loaderController.forward();
+      loginUser(auth).then((response) {
+        showError(response.message, background: Colors.white, text: weirdBlack);
+        loaderController.reverse().then((_) {
+          if (response.success) {
+            FileManager.save("registrationEmail", "");
+            FileManager.saveInt("registerStep", 0);
+            ref.invalidate(registrationProcessProvider);
+            ref.watch(hasInitializedProvider.notifier).state = true;
+            ref.watch(currentUserProvider.notifier).state = response.payload!;
           }
 
-          context.router
-              .pushReplacementNamed(destination, extra: registeredEmail);
-        },
-      );
+          process(loginSuccess: response.success);
+        });
+      });
+    } else {
+      process();
+    }
+  }
+
+  Future<void> process(
+      {int? registerStep, String? registeredEmail, bool? loginSuccess}) async {
+    await controller.reverse();
+    String destination = Pages.login;
+    if (loginSuccess != null && loginSuccess) {
+      if (ref.read(isLandlord)) {
+        int value = ref.read(currentUserProvider).hasCompletedProfile;
+        if (value <= 20) {
+          destination = Pages.createStepOne;
+        } else {
+          destination = Pages.ownerDashboard;
+        }
+      } else if (ref.read(isAgent)) {
+        destination = Pages.agentDashboard;
+      } else {
+        destination = Pages.studentDashboard;
+      }
+    } else if (registeredEmail != null &&
+        registeredEmail.isNotEmpty &&
+        registerStep != null) {
+      destination = Pages.register;
+      ref.watch(otpOriginProvider.notifier).state = OtpOrigin.register;
+    } else if (registerStep == null && registeredEmail == null) {
+      destination = Pages.registrationType;
+    }
+
+    navigate(destination, registeredEmail);
+  }
+
+  void navigate(String destination, String? registeredEmail) =>
+      context.router.pushReplacementNamed(destination, extra: registeredEmail);
 
   @override
   void dispose() {

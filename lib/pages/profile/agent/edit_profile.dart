@@ -54,7 +54,7 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
 
     email = TextEditingController(text: agent.email);
     fullName = TextEditingController(text: agent.mergedNames);
-    number = TextEditingController(text: agent.contact);
+    number = TextEditingController(text: agent.contact.isEmpty ? "" : agent.contact.substring(1));
     denomination = TextEditingController(text: agent.denomination);
 
     profileImage = agent.image;

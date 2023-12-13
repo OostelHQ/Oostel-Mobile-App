@@ -90,6 +90,8 @@ final StateProvider<bool> newNotificationProvider =
 final StateProvider<bool> showCompleteProfileProvider =
     StateProvider((ref) => false);
 
+final StateProvider<bool> shouldResetProvider = StateProvider((ref) => false);
+
 void resetProviders(WidgetRef ref) {
   ref.invalidate(filteredExploreRoommatesProvider);
   ref.invalidate(filteredExploreHostelsProvider);
@@ -103,6 +105,7 @@ void resetProviders(WidgetRef ref) {
   ref.invalidate(otpOriginProvider);
   ref.invalidate(hasMessagesProvider);
   ref.invalidate(ownerHostelsProvider);
+  ref.invalidate(shouldResetProvider);
 }
 
 final StateProvider<List<HostelInfo>> filteredExploreHostelsProvider =
