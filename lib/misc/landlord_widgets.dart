@@ -32,7 +32,8 @@ class LandlordHostelCard extends StatelessWidget {
                     blurRadius: 6.0,
                     spreadRadius: 1.0,
                   )
-                ]),
+                ],
+            ),
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
