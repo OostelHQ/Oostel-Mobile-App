@@ -57,7 +57,7 @@ class HostelInfo extends Equatable {
   bool isAvailableIndex(int index) => roomsLeft.contains(rooms[index].id);
 
   int indexAt(int index) {
-    String id = roomsLeft[index];
+    String id = rooms[index].id;
     for (int i = 0; i < rooms.length; ++i) {
       if (rooms[i].id == id) return i;
     }

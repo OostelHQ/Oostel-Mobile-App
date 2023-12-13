@@ -958,7 +958,7 @@ class _RoomSection extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 15.r,
               mainAxisSpacing: 15.r,
-              mainAxisExtent: 205.h,
+              mainAxisExtent: 215.h,
             ),
             itemCount: info.rooms.length,
             itemBuilder: (_, index) => AvailableRoomCard(
@@ -1038,7 +1038,8 @@ class _RoomSection extends StatelessWidget {
                 crossAxisCount: 3,
                 crossAxisSpacing: 10.r,
                 mainAxisSpacing: 10.r,
-                mainAxisExtent: 110.r),
+                mainAxisExtent: 110.r,
+            ),
             itemCount: info.media.length,
             itemBuilder: (_, index) => GestureDetector(
               onTap: () => context.router.pushNamed(

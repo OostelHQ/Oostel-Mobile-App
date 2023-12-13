@@ -43,7 +43,6 @@ class _LandlordHostelInformationPageState
           (_) => setState(() => tabIndex = tabController.index));
     });
 
-
     List<int> props = calculate(widget.info.rooms);
     bathroom = props[0];
     bedrooms = widget.info.rooms.length;
@@ -513,27 +512,44 @@ class _AboutSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           sliver: SliverGrid.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10.r,
-                mainAxisSpacing: 10.r,
-                mainAxisExtent: 110.r),
+              crossAxisCount: 3,
+              crossAxisSpacing: 10.r,
+              mainAxisSpacing: 10.r,
+              mainAxisExtent: 110.r,
+            ),
             itemCount: info.media.length,
             itemBuilder: (_, index) => GestureDetector(
               onTap: () => context.router.pushNamed(
                 Pages.viewMedia,
                 extra: ViewInfo(
-                  type: DisplayType.asset,
+                  type: DisplayType.network,
                   paths: info.media,
                   current: index,
                 ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.r),
-                child: Image.asset(
-                  info.media[index],
+              child: CachedNetworkImage(
+                imageUrl: info.media[index],
+                errorWidget: (context, url, error) => Container(
                   width: 110.r,
                   height: 110.r,
-                  fit: BoxFit.cover,
+                  color: weirdBlack50,
+                ),
+                progressIndicatorBuilder: (context, url, download) => Container(
+                  width: 110.r,
+                  height: 110.r,
+                  color: weirdBlack50,
+                  alignment: Alignment.center,
+                  child: loader,
+                ),
+                imageBuilder: (context, provider) => Container(
+                  width: 110.r,
+                  height: 110.r,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: provider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -716,7 +732,7 @@ class _RoomSectionState extends State<_RoomSection> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 15.r,
                       mainAxisSpacing: 15.r,
-                      mainAxisExtent: 205.h,
+                      mainAxisExtent: 215.h,
                     ),
                     itemCount: rented.length,
                     itemBuilder: (_, index) => AvailableRoomCard(
@@ -937,13 +953,30 @@ class _ShowRoomCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10.r),
-                child: Image.asset(
-                  room.media[0],
+              CachedNetworkImage(
+                imageUrl: room.media.first,
+                errorWidget: (context, url, error) => Container(
                   width: 414.w,
                   height: 170.h,
-                  fit: BoxFit.cover,
+                  color: weirdBlack50,
+                  alignment: Alignment.center,
+                  child: loader,
+                ),
+                progressIndicatorBuilder: (context, url, download) => Container(
+                  width: 414.w,
+                  height: 170.h,
+                  color: weirdBlack50,
+                ),
+                imageBuilder: (context, provider) => Container(
+                  width: 414.w,
+                  height: 170.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    image: DecorationImage(
+                      image: provider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               if (isAvailable)
@@ -974,13 +1007,28 @@ class _ShowRoomCard extends StatelessWidget {
           SizedBox(
             height: 45.r,
             child: ListView.separated(
-              itemBuilder: (_, index) => ClipRRect(
-                borderRadius: BorderRadius.circular(5.r),
-                child: Image.asset(
-                  room.media[index],
+              itemBuilder: (_, index) => CachedNetworkImage(
+                imageUrl: room.media[index],
+                errorWidget: (context, url, error) => Container(
                   width: 60.r,
                   height: 45.r,
-                  fit: BoxFit.cover,
+                  color: weirdBlack50,
+                ),
+                progressIndicatorBuilder: (context, url, download) => Container(
+                  width: 60.r,
+                  height: 45.r,
+                  color: weirdBlack50,
+                ),
+                imageBuilder: (context, provider) => Container(
+                  width: 60.r,
+                  height: 45.r,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.r),
+                    image: DecorationImage(
+                      image: provider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               separatorBuilder: (_, __) => SizedBox(width: 10.w),
@@ -1045,7 +1093,7 @@ class _ShowRoomCard extends StatelessWidget {
           ),
           SizedBox(height: 32.h),
           GestureDetector(
-            onTap: () => showActivationProcess(context),
+            onTap: () => context.router.pushNamed(Pages.editRoom, extra: room),
             child: Container(
               width: 414.w,
               height: 50.h,
