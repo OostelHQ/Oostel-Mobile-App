@@ -12,7 +12,7 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
         "/authenticateuser/register-${agent ? "agent" : "user"}",
         data: formData);
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return FyndaResponse(
           message: response.data["message"], payload: null, success: true);
     }
@@ -28,11 +28,13 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
 }
 
 Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
+  log("map $map");
   try {
     Response response =
         await dio.post("/authenticateuser/login-user", data: map);
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
       token = data["data"]["token"];
       Map<String, dynamic>? userData = await _getCurrentUser();
@@ -272,7 +274,7 @@ Future<FyndaResponse> verifyEmailOTP(Map<String, dynamic> map) async {
       ),
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
           message: "Email Verified Successfully", payload: null, success: true);
     }
@@ -297,7 +299,7 @@ Future<FyndaResponse> generateOTP(String email) async {
       ),
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
           message: "OTP Sent Successfully", payload: null, success: true);
     }
@@ -319,7 +321,7 @@ Future<FyndaResponse> resetPassword(Map<String, dynamic> map) async {
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
           message: "Password Reset Successfully", payload: null, success: true);
     }
@@ -341,7 +343,7 @@ Future<Map<String, dynamic>?> _getCurrentUser() async {
       options: configuration,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return response.data["data"];
     }
   } catch (e) {
@@ -359,7 +361,7 @@ Future<FyndaResponse> createLandlordProfile(Map<String, dynamic> map) async {
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
         message: "Profile Created Successfully",
         payload: null,
@@ -386,7 +388,7 @@ Future<FyndaResponse> updateLandlordProfile(Map<String, dynamic> map,
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       if (profilePictureFilePath.isNotEmpty) {
         FyndaResponse resp = await updateProfilePicture(
             id: map["userId"], filePath: profilePictureFilePath);
@@ -444,7 +446,7 @@ Future<FyndaResponse> _createAgentProfile(Map<String, dynamic> map,
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
 
       if (profilePictureFilePath.isNotEmpty) {
@@ -492,7 +494,7 @@ Future<FyndaResponse> _updateAgentProfile(Map<String, dynamic> map,
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
 
       if (profilePictureFilePath.isNotEmpty) {
@@ -531,7 +533,7 @@ Future<FyndaResponse> _createStudentProfile(Map<String, dynamic> map,
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       if (profilePictureFilePath.isNotEmpty) {
         FyndaResponse resp = await updateProfilePicture(
           id: map["userId"],
@@ -577,7 +579,7 @@ Future<FyndaResponse> _updateStudentProfile(Map<String, dynamic> map,
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       if (profilePictureFilePath.isNotEmpty) {
         FyndaResponse resp = await updateProfilePicture(
           id: map["userId"],
@@ -613,7 +615,7 @@ Future<FyndaResponse<User?>> getLandlordById(String id) async {
       },
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       Landowner owner =
           parseLandlordData(response.data["data"] as Map<String, dynamic>);
       return FyndaResponse(
@@ -641,7 +643,7 @@ Future<FyndaResponse> getAgentById(String id) async {
           "agentId": id,
         });
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -663,7 +665,7 @@ Future<FyndaResponse> getStudentById(String id) async {
           "studentId": id,
         });
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return FyndaResponse(
         message: "Success",
         payload: response.data["data"],
@@ -689,7 +691,7 @@ Future<FyndaResponse> inviteAgent(Map<String, dynamic> map) async {
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -711,7 +713,7 @@ Future<FyndaResponse> acceptInvite(Map<String, dynamic> map) async {
       queryParameters: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -739,7 +741,7 @@ Future<FyndaResponse> updateProfilePicture(
       data: formData,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
         message: "Profile Picture Updated",
         payload: null,
@@ -765,7 +767,7 @@ Future<FyndaResponse> openToRoommate(Map<String, dynamic> map) async {
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -787,7 +789,7 @@ Future<FyndaResponse> profileViewCounts(String id) async {
       queryParameters: {"userId": id},
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -809,7 +811,7 @@ Future<FyndaResponse> likeStudentProfile(Map<String, dynamic> map) async {
       data: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
