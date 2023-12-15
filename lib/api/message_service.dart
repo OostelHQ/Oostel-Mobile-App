@@ -47,7 +47,7 @@ Future<FyndaResponse> getMessages() async {
     // Response response = await dio.get("/message/get-user-message",
     //     queryParameters: map, options: configuration);
     //
-    // if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    // if (response.statusCode! >= 200 && response.statusCode! <= 201) {
     //   return FyndaResponse(
     //       message: response.data["message"], payload: null, success: true);
     // }
@@ -67,7 +67,7 @@ Future<FyndaResponse> deleteMessage(String ID) async {
     Response response = await dio.delete("/message/delete-message",
         queryParameters: {"messageId": ID}, options: configuration);
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return FyndaResponse(
           message: response.data["message"], payload: null, success: true);
     }

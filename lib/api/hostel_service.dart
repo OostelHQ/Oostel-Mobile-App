@@ -72,7 +72,7 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
       options: configuration,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
         message: "Hostel Created",
         payload: null,
@@ -99,7 +99,7 @@ Future<FyndaResponse> updateHostel(Map<String, dynamic> map) async {
       options: configuration,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -119,7 +119,7 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(
     Response response = await dio.get("/hostel/get-all-hostels",
         options: configuration, queryParameters: query);
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       List<dynamic> list = response.data as List<dynamic>;
       List<HostelInfo> hostels = [];
       for (var element in list) {
@@ -168,7 +168,7 @@ Future<FyndaResponse<Map<String, dynamic>?>> getHostel(String id) async {
           "hostelId": id,
         });
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       Map<String, dynamic> map = response.data["data"];
 
       List<RoomInfo> rooms = parseRoomData(map["rooms"] as List<dynamic>);
@@ -202,7 +202,7 @@ Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) asy
           "landlordId": id,
         });
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       List<dynamic> list = response.data['data'] as List<dynamic>;
       List<HostelInfo> hostels = [];
       // for (var element in list) {
@@ -256,7 +256,7 @@ Future<FyndaResponse> createRoomForHostel({
       options: configuration,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return const FyndaResponse(
         message: "Success",
         payload: null,
@@ -283,7 +283,7 @@ Future<FyndaResponse> updateRoomForHostel(Map<String, dynamic> map) async {
       options: configuration,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -305,7 +305,7 @@ Future<FyndaResponse> getRoomFromHostel(Map<String, dynamic> map) async {
       queryParameters: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -327,7 +327,7 @@ Future<FyndaResponse> getAllRoomsFromHostel(Map<String, dynamic> map) async {
       queryParameters: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
@@ -349,7 +349,7 @@ Future<FyndaResponse> likeHostel(Map<String, dynamic> map) async {
       queryParameters: map,
     );
 
-    if (response.statusCode! >= 200 && response.statusCode! < 400) {
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
   } catch (e) {
