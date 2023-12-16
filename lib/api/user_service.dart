@@ -28,9 +28,17 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
 }
 
 Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
+  dio.options.followRedirects = true;
   try {
     Response response =
         await dio.post("/authenticateuser/login-user", data: map);
+    if (response.statusCode == 307) {
+      String? location = response.headers.value('location');
+      log("Location: $location");
+      if (location != null) {
+        response = await dio.get(location);
+      }
+    }
 
     if (response.statusCode! >= 200 && response.statusCode! < 400) {
       Map<String, dynamic> data = response.data as Map<String, dynamic>;

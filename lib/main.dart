@@ -49,7 +49,6 @@ import 'package:my_hostel/pages/profile/student/profile.dart';
 import 'package:my_hostel/pages/profile/student/settings.dart';
 import 'package:my_hostel/pages/profile/student/wallet.dart';
 import 'package:my_hostel/pages/profile/transaction.dart';
-
 import 'components/room_details.dart';
 import 'misc/notification_controller.dart';
 
@@ -64,6 +63,7 @@ void main() async {
           channelDescription: 'Notification channel for basic tests',
           defaultColor: const Color.fromRGBO(6, 73, 151, 1.0),
           ledColor: Colors.white,
+          importance: NotificationImportance.Max,
       )
     ],
     channelGroups: [

@@ -5,11 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 class RegistrationTypePage extends ConsumerStatefulWidget {
   const RegistrationTypePage({super.key});
 
   @override
-  ConsumerState<RegistrationTypePage> createState() => _RegistrationTypePageState();
+  ConsumerState<RegistrationTypePage> createState() =>
+      _RegistrationTypePageState();
 }
 
 class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
@@ -40,7 +43,8 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               child: Text(
                 "Select your preferred category",
                 textAlign: TextAlign.center,
-                style: context.textTheme.bodyMedium!.copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+                style: context.textTheme.bodyMedium!
+                    .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(height: 32.h),
@@ -48,7 +52,8 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: GestureDetector(
                 onTap: () {
-                  ref.watch(currentUserProvider.notifier).state = defaultStudent;
+                  ref.watch(currentUserProvider.notifier).state =
+                      defaultStudent;
                   context.router.pushReplacementNamed(Pages.register);
                 },
                 child: Container(
@@ -62,8 +67,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                           blurRadius: 6.0,
                           spreadRadius: 1.0,
                         )
-                      ]
-                  ),
+                      ]),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(
@@ -76,8 +80,8 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                         ),
                         Text(
                           "I am a Student",
-                          style: context.textTheme.bodyLarge!
-                              .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              color: weirdBlack, fontWeight: FontWeight.w500),
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
@@ -108,8 +112,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                           blurRadius: 6.0,
                           spreadRadius: 1.0,
                         )
-                      ]
-                  ),
+                      ]),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(
@@ -122,8 +125,8 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                         ),
                         Text(
                           "I am an Agent",
-                          style: context.textTheme.bodyLarge!
-                              .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              color: weirdBlack, fontWeight: FontWeight.w500),
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
@@ -154,8 +157,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                           blurRadius: 6.0,
                           spreadRadius: 1.0,
                         )
-                      ]
-                  ),
+                      ]),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(
@@ -168,8 +170,8 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                         ),
                         Text(
                           "I am a Landlord",
-                          style: context.textTheme.bodyLarge!
-                              .copyWith(color: weirdBlack, fontWeight: FontWeight.w500),
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              color: weirdBlack, fontWeight: FontWeight.w500),
                         ),
                         Icon(
                           Icons.chevron_right_rounded,

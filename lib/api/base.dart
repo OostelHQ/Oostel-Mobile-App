@@ -3,6 +3,7 @@ export 'package:dio/dio.dart';
 
 import 'package:signalr_flutter/signalr_flutter.dart';
 
+import 'dart:developer' show log;
 export 'dart:developer' show log;
 
 const String baseUrl = "http://fyndaapp-001-site1.htempurl.com/api";
@@ -16,13 +17,28 @@ final Dio dio = Dio(
   ),
 );
 
+void initBase() {
+  dio.interceptors.add(InterceptorsWrapper(onRequest:
+      (RequestOptions options, RequestInterceptorHandler handler) async {
+    log("Request: ${options.method} ${options.path}");
+    handler.next(options);
+  }, onResponse: (Response response, ResponseInterceptorHandler handler) async {
+    log("Response: ${response.statusCode} ${response.data}");
+    handler.next(response);
+  }, onError: (DioException e, ErrorInterceptorHandler handler) async {
+    log("Error: ${e.message}");
+    handler.next(e);
+  }));
+}
+
 String token = "";
 
 Options get configuration => Options(headers: {
-  "Content-Type": "application/json",
-  "Accept": "application/json",
-  "Authorization": "Bearer $token"
-});
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": "Bearer $token"
+    },
+);
 
 class FyndaResponse<T> {
   final String message;
