@@ -28,13 +28,18 @@ Future<FyndaResponse> registerUser(Map<String, dynamic> map,
 }
 
 Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
-  log("map $map");
   try {
     Response response =
         await dio.post("/authenticateuser/login-user", data: map);
+    if (response.statusCode == 307) {
+      String? location = response.headers.value('location');
+      log("Location: $location");
+      if (location != null) {
+        response = await dio.get(location);
+      }
+    }
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-      log(response.data.toString());
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
       token = data["data"]["token"];
       Map<String, dynamic>? userData = await _getCurrentUser();
@@ -146,8 +151,7 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
   );
 }
 
-Student _parseStudentData(Map<String, dynamic> userData,
-    {String email = "", String fullName = ""}) {
+Student _parseStudentData(Map<String, dynamic> userData, {String email = "", String fullName = ""}) {
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
