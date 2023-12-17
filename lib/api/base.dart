@@ -5,7 +5,7 @@ import 'package:signalr_flutter/signalr_flutter.dart';
 
 export 'dart:developer' show log;
 
-const String baseUrl = "http://fyndaapp-001-site1.htempurl.com/api";
+const String baseUrl = "https://fyndaapp-001-site1.htempurl.com/api";
 
 final Dio dio = Dio(
   BaseOptions(
