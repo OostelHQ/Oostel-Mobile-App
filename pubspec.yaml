@@ -49,10 +49,12 @@ dependencies:
   photo_view:
   animated_text_kit:
   get_thumbnail_video:
-  signalr_flutter:
-  signalr_netcore:
+  web_socket_channel:
   awesome_notifications:
   jiffy:
+  rxdart:
+  signalr_flutter:
+  signalr_core: 
 
 
 

@@ -94,7 +94,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
             automaticallyImplyLeading: false,
             pinned: true,
             floating: true,
-            expandedHeight: 150.h,
+            expandedHeight: 160.h,
             flexibleSpace: FlexibleSpaceBar(
               background: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -115,6 +115,8 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                       fillColor: Colors.white,
                       hint: "Search name",
                       prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
+                      action: TextInputAction.send,
+                      onActionPressed: (text) => ref.watch(messageSocketProvider).sendMessage(text),
                       borderColor: Colors.transparent,
                       decoration: BoxDecoration(
                           color: const Color(0xFFF8FBFF),
@@ -128,6 +130,9 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                           ]
                       ),
                     ),
+                    StreamBuilder(stream: ref.watch(messageSocketProvider).stream, builder: (context, snapshot) {
+                      return Text(snapshot.hasData ? "${snapshot.data}" : "Nothing yet");
+                    }),
                     SizedBox(height: 20.h),
                   ],
                 ),

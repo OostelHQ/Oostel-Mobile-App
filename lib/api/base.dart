@@ -1,12 +1,10 @@
 import 'package:dio/dio.dart';
 export 'package:dio/dio.dart';
 
-import 'package:signalr_flutter/signalr_flutter.dart';
-
 import 'dart:developer' show log;
 export 'dart:developer' show log;
 
-const String baseUrl = "http://fyndaapp-001-site1.htempurl.com/api";
+const String baseUrl = "https://fyndaapp-001-site1.htempurl.com/api";
 
 final Dio dio = Dio(
   BaseOptions(
@@ -40,14 +38,14 @@ Options get configuration => Options(headers: {
     },
 );
 
-class FyndaResponse<T> {
-  final String message;
-  final T payload;
-  final bool success;
+  class FyndaResponse<T> {
+    final String message;
+    final T payload;
+    final bool success;
 
-  const FyndaResponse({
-    required this.message,
-    required this.payload,
-    required this.success,
-  });
-}
+    const FyndaResponse({
+      required this.message,
+      required this.payload,
+      required this.success,
+    });
+  }
