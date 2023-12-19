@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chatview/chatview.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:signalr_core/signalr_core.dart' as sc;
 
 class Inbox extends ConsumerStatefulWidget {
   final String otherID;
@@ -24,6 +27,8 @@ class _InboxState extends ConsumerState<Inbox> {
   late List<ChatUser> users;
 
   late String currentUserID;
+
+  late sc.HubConnection connection;
 
   @override
   void initState() {
@@ -56,6 +61,32 @@ class _InboxState extends ConsumerState<Inbox> {
       scrollController: ScrollController(),
       chatUsers: users,
     );
+
+    connection = sc.HubConnectionBuilder()
+        .withUrl(
+            'https://fyndaapp-001-site1.htempurl.com/hubs/message',
+            sc.HttpConnectionOptions(
+              logging: (level, message) => log(message),
+              transport: sc.HttpTransportType.webSockets,
+            ))
+        .build();
+    openSignalRConnection();
+  }
+
+  //connect to signalR
+  Future<void> openSignalRConnection() async {
+
+    await connection.start();
+    connection.on('ReceiveMessage', (message) {
+      _handleIncomingDriverLocation(message);
+    });
+
+    //await connection.invoke('JoinUSer', args: [widget.userName, currentUserId]);
+  }
+
+//get messages
+  Future<void> _handleIncomingDriverLocation(List<dynamic>? args) async {
+    if (args != null) {}
   }
 
   @override
@@ -64,7 +95,21 @@ class _InboxState extends ConsumerState<Inbox> {
     super.dispose();
   }
 
-  void onSendTap(String rawMessage, ReplyMessage replyMessage, MessageType messageType) {
+  // submitMessageFunction() async {
+  //   var messageText = removeMessageExtraChar(messageTextController.text);
+  //   await connection.invoke('SendMessage',
+  //       args: [widget.userName, currentUserId, messageText]);
+  //   messageTextController.text = "";
+  //
+  //   Future.delayed(const Duration(milliseconds: 500), () {
+  //     chatListScrollController.animateTo(
+  //       chatListScrollController.position.maxScrollExtent,
+  //       duration: Duration(milliseconds: 500),
+  //       curve: Curves.ease,
+  //     );
+  //   });
+
+  void onSendTap(String rawMessage, ReplyMessage replyMessage, MessageType messageType) async {
     final message = Message(
       id: '3',
       message: rawMessage,
@@ -73,6 +118,8 @@ class _InboxState extends ConsumerState<Inbox> {
       replyMessage: replyMessage,
       messageType: messageType,
     );
+
+    //await connection.invoke('SendMessage', args: [widget.userName, currentUserId, messageText]);
     chatController.addMessage(message);
   }
 
@@ -137,24 +184,24 @@ class _InboxState extends ConsumerState<Inbox> {
               // Your code goes here
             },
             outgoingChatBubbleConfig: ChatBubble(
-                color: appBlue,
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(12),
-                  topLeft: Radius.circular(12),
-                  bottomLeft: Radius.circular(12),
-                ),
-                textStyle: context.textTheme.bodyMedium!.copyWith(
-                    color: Colors.white, fontWeight: FontWeight.w500),
+              color: appBlue,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+              ),
+              textStyle: context.textTheme.bodyMedium!
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             inComingChatBubbleConfig: ChatBubble(
-                color: faintBlue,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-                textStyle: context.textTheme.bodyMedium!.copyWith(
-                    color: weirdBlack75, fontWeight: FontWeight.w500),
+              color: faintBlue,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+              textStyle: context.textTheme.bodyMedium!
+                  .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
             ),
           ),
           loadingWidget: loader,

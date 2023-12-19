@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,7 @@ import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:signalr_core/signalr_core.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:badges/badges.dart' as bg;
 
@@ -39,38 +42,14 @@ class ChatsPage extends ConsumerStatefulWidget {
 class _ChatsPageState extends ConsumerState<ChatsPage> {
   final TextEditingController controller = TextEditingController();
   final List<Detail> details = [];
-
   bool loaded = false;
+
+  late HubConnection connection;
 
   @override
   void initState() {
     super.initState();
-
-    List<Conversation> conversations = ref.read(conversationsProvider);
-    getDetails(conversations);
-
     getMessages();
-  }
-
-  Future<void> getDetails(List<Conversation> conversations) async {
-    bool isStudent = ref.read(isAStudent);
-
-    for (Conversation conversation in conversations) {
-      // User? user = await getUser(conversation.otherUser);
-      User? user;
-      user ??= isStudent ? defaultOwner : defaultStudent;
-      details.add(Detail(
-        name: user.mergedNames,
-        image: user.image,
-        content: conversation.lastMessage,
-        time: conversation.timeStamp,
-        unread: conversation.unreadMessages,
-        otherID: conversation.otherUser,
-      ));
-    }
-
-    await Future.delayed(const Duration(milliseconds: 2000));
-    setState(() => loaded = true);
   }
 
   @override
@@ -94,7 +73,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
             automaticallyImplyLeading: false,
             pinned: true,
             floating: true,
-            expandedHeight: 160.h,
+            expandedHeight: 150.h,
             flexibleSpace: FlexibleSpaceBar(
               background: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -116,7 +95,6 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                       hint: "Search name",
                       prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
                       action: TextInputAction.send,
-                      onActionPressed: (text) => ref.watch(messageSocketProvider).sendMessage(text),
                       borderColor: Colors.transparent,
                       decoration: BoxDecoration(
                           color: const Color(0xFFF8FBFF),
@@ -130,9 +108,6 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                           ]
                       ),
                     ),
-                    StreamBuilder(stream: ref.watch(messageSocketProvider).stream, builder: (context, snapshot) {
-                      return Text(snapshot.hasData ? "${snapshot.data}" : "Nothing yet");
-                    }),
                     SizedBox(height: 20.h),
                   ],
                 ),
@@ -245,3 +220,7 @@ class ChatTile extends StatelessWidget {
     );
   }
 }
+
+
+
+

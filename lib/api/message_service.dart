@@ -6,13 +6,18 @@ import 'base.dart';
 
 Future<FyndaResponse> getMessages() async {
 
+  try {
+    Response response = await dio.get("/message/get-user-messages");
+    if(response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
 
 
-  // try {
-  //
-  // } catch (e) {
-  //   log("Get Messages Error: $e");
-  // }
+    }
+
+
+  } catch (e) {
+    log("Get Messages Error: $e");
+  }
 
   return const FyndaResponse(
     message: "An error occurred. Please try again.",

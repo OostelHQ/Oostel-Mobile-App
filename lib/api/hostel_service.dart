@@ -35,16 +35,13 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
 
     List<String> facilities = map["FacilityName"],
         rules = map["RuleAndRegulation"];
-    List<RoomInfo> rooms = _toRoomList(map["rooms"]);
     for (String facility in facilities) {
       formData.fields.addAll([MapEntry("FacilityName", facility)]);
     }
     for (String rule in rules) {
       formData.fields.addAll([MapEntry("RuleAndRegulation", rule)]);
     }
-    //for(RoomInfo info in rooms) {
     formData.fields.addAll(const [MapEntry("rooms", "{}")]);
-    //}
 
     String budget = "${map["minPrice"]} - ${map["maxPrice"]}";
 
@@ -64,7 +61,7 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
     formData.fields.add(MapEntry("totalRoom", map["totalRoom"].toString()));
     formData.fields
         .add(MapEntry("isAnyRoomVacant", map["isAnyRoomVacant"].toString()));
-    // formData.fields.add(MapEntry("isAnyRoomVacant", "true"));
+
 
     Response response = await dio.post(
       "/hostel/create-hostel",
@@ -145,7 +142,6 @@ Future<FyndaResponse<List<HostelInfo>>> getAllHostels(
 }
 
 HostelInfo _parseHostelData(Map<String, dynamic> element, {String? id }) {
-  log(element.toString());
   List<String> rules =
   toStringList(element["rulesAndRegulation"] as List<dynamic>);
   List<String> facilities =
@@ -209,10 +205,10 @@ Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) asy
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       List<dynamic> list = response.data['data'] as List<dynamic>;
       List<HostelInfo> hostels = [];
-      // for (var element in list) {
-        HostelInfo info = _parseHostelData(list.first, id: id);
+      for (var element in list) {
+        HostelInfo info = _parseHostelData(element, id: id);
         hostels.add(info);
-      // }
+      }
 
       return FyndaResponse(
         message: "Success",

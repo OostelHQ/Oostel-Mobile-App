@@ -276,36 +276,44 @@ class _HomePageState extends ConsumerState<_HomePage>
           )
         : Stack(
             children: [
-              CustomScrollView(
-                controller: controller,
-                slivers: [
-                  SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    systemOverlayStyle: SystemUiOverlayStyle.dark,
-                    elevation: 0.0,
-                    pinned: true,
-                    centerTitle: true,
-                    title: GestureDetector(
-                      onTap: () => context.router.pushNamed(Pages.ownerProfile),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          user.image == ""
-                              ? CircleAvatar(
-                                  radius: 15.r,
-                                  backgroundColor: appBlue,
-                                  child: Text(
-                                    user.firstName.substring(0, 1),
-                                    style: context.textTheme.bodyLarge!
-                                        .copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white),
-                                  ),
-                                )
-                              : CachedNetworkImage(
-                                  imageUrl: user.image,
-                                  errorWidget: (context, url, error) =>
-                                      CircleAvatar(
+              RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {
+                    loadingOwnerHostels = true;
+                    hasError = false;
+                  });
+                  getDetails();
+                },
+                child: CustomScrollView(
+                  controller: controller,
+                  slivers: [
+                    SliverAppBar(
+                      automaticallyImplyLeading: false,
+                      systemOverlayStyle: SystemUiOverlayStyle.dark,
+                      elevation: 0.0,
+                      pinned: true,
+                      centerTitle: true,
+                      title: GestureDetector(
+                        onTap: () => context.router.pushNamed(Pages.ownerProfile),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            user.image == ""
+                                ? CircleAvatar(
+                              radius: 15.r,
+                              backgroundColor: appBlue,
+                              child: Text(
+                                user.firstName.substring(0, 1),
+                                style: context.textTheme.bodyLarge!
+                                    .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              ),
+                            )
+                                : CachedNetworkImage(
+                              imageUrl: user.image,
+                              errorWidget: (context, url, error) =>
+                                  CircleAvatar(
                                     backgroundColor: weirdBlack20,
                                     radius: 15.r,
                                     child: Center(
@@ -316,125 +324,126 @@ class _HomePageState extends ConsumerState<_HomePage>
                                       ),
                                     ),
                                   ),
-                                  progressIndicatorBuilder:
-                                      (context, url, download) {
-                                    return CircleAvatar(
-                                      radius: 15.r,
-                                      backgroundColor: weirdBlack50,
-                                    );
-                                  },
-                                  imageBuilder: (context, provider) {
-                                    return CircleAvatar(
-                                      backgroundImage: provider,
-                                      radius: 15.r,
-                                    );
-                                  },
-                                ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            "Hello, ${user.lastName} ",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: weirdBlack75,
-                              fontWeight: FontWeight.w500,
+                              progressIndicatorBuilder:
+                                  (context, url, download) {
+                                return CircleAvatar(
+                                  radius: 15.r,
+                                  backgroundColor: weirdBlack50,
+                                );
+                              },
+                              imageBuilder: (context, provider) {
+                                return CircleAvatar(
+                                  backgroundImage: provider,
+                                  radius: 15.r,
+                                );
+                              },
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              "Hello, ${user.lastName} ",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: weirdBlack75,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              user.gender == "Female"
+                                  ? "🧑"
+                                  : user.gender == "Male"
+                                  ? "🧒"
+                                  : "",
+                              style: context.textTheme.bodyLarge!
+                                  .copyWith(fontSize: 22.sp),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 22.w),
+                          child: GestureDetector(
+                            onTap: () =>
+                                context.router.pushNamed(Pages.notification),
+                            child: AnimatedSwitcherTranslation.right(
+                              duration: const Duration(milliseconds: 500),
+                              child: SvgPicture.asset(
+                                "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
+                                height: 25.h,
+                                key: ValueKey<bool>(notifications),
+                              ),
                             ),
                           ),
-                          Text(
-                            user.gender == "Female"
-                                ? "🧑"
-                                : user.gender == "Male"
-                                    ? "🧒"
-                                    : "",
-                            style: context.textTheme.bodyLarge!
-                                .copyWith(fontSize: 22.sp),
-                          ),
-                        ],
+                        )
+                      ],
+                    ),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 22.w),
+                      sliver: SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            const WalletSlider(),
+                            SizedBox(height: 35.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Hero(
+                                  tag: "My Hostels Header",
+                                  child: Text(
+                                    "My Hostels",
+                                    style: context.textTheme.bodyLarge!.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: weirdBlack),
+                                  ),
+                                ),
+                                if (hostels.length > 3)
+                                  GestureDetector(
+                                    onTap: () => context.router
+                                        .pushNamed(Pages.viewHostels),
+                                    child: Text(
+                                      "See All",
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                          color: appBlue,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            SizedBox(height: 20.h),
+                          ],
+                        ),
                       ),
                     ),
-                    actions: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 22.w),
-                        child: GestureDetector(
-                          onTap: () =>
-                              context.router.pushNamed(Pages.notification),
-                          child: AnimatedSwitcherTranslation.right(
-                            duration: const Duration(milliseconds: 500),
-                            child: SvgPicture.asset(
-                              "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
-                              height: 25.h,
-                              key: ValueKey<bool>(notifications),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 22.w),
+                      sliver: hostels.isEmpty
+                          ? SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            "You have no hostels yet! Advertise your hostel without stress!",
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.bodySmall!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: weirdBlack50,
                             ),
                           ),
                         ),
                       )
-                    ],
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 22.w),
-                    sliver: SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const WalletSlider(),
-                          SizedBox(height: 35.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Hero(
-                                tag: "My Hostels Header",
-                                child: Text(
-                                  "My Hostels",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: weirdBlack),
-                                ),
-                              ),
-                              if (hostels.length > 3)
-                                GestureDetector(
-                                  onTap: () => context.router
-                                      .pushNamed(Pages.viewHostels),
-                                  child: Text(
-                                    "See All",
-                                    style: context.textTheme.bodyMedium!
-                                        .copyWith(
-                                            color: appBlue,
-                                            fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                        ],
+                          : SliverList.separated(
+                        separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                        itemBuilder: (_, index) {
+                          if ((hostels.length < 4 && index == hostels.length) || index == 4) {
+                            return SizedBox(height: 30.h);
+                          }
+
+                          return LandlordHostelCard(info: hostels[index]);
+                        },
+                        itemCount: hostels.length < 4 ? hostels.length + 1 : 5,
                       ),
                     ),
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 22.w),
-                    sliver: hostels.isEmpty
-                        ? SliverFillRemaining(
-                            child: Center(
-                              child: Text(
-                                "You have no hostels yet! Advertise your hostel without stress!",
-                                textAlign: TextAlign.center,
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: weirdBlack50,
-                                ),
-                              ),
-                            ),
-                          )
-                        : SliverList.separated(
-                            separatorBuilder: (_, __) => SizedBox(height: 20.h),
-                            itemBuilder: (_, index) {
-                              if ((hostels.length < 4 && index == hostels.length) || index == 4) {
-                                return SizedBox(height: 30.h);
-                              }
-
-                              return LandlordHostelCard(info: hostels[index]);
-                            },
-                            itemCount: hostels.length < 4 ? hostels.length + 1 : 5,
-                          ),
-                  ),
-                ],
+                  ],
+                )
               ),
               Positioned(
                 top: 0,
