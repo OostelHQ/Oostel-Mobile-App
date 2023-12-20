@@ -31,13 +31,6 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
   try {
     Response response =
         await dio.post("/authenticateuser/login-user", data: map);
-    if (response.statusCode == 307) {
-      String? location = response.headers.value('location');
-      log("Location: $location");
-      if (location != null) {
-        response = await dio.get(location);
-      }
-    }
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       Map<String, dynamic> data = response.data as Map<String, dynamic>;

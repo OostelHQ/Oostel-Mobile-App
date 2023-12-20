@@ -37,8 +37,8 @@ class _InboxState extends ConsumerState<Inbox> {
     currentUserID = ref.read(currentUserProvider).id;
 
     users = [
-      ChatUser(id: currentUserID, name: 'Me'),
-      ChatUser(id: widget.otherID, name: 'Other'),
+      ChatUser(id: currentUserID, name: 'Me', ),
+      ChatUser(id: widget.otherID, name: 'Other',),
     ];
 
     messageList = [
@@ -64,18 +64,17 @@ class _InboxState extends ConsumerState<Inbox> {
 
     connection = sc.HubConnectionBuilder()
         .withUrl(
-            'https://fyndaapp-001-site1.htempurl.com/hubs/message',
-            sc.HttpConnectionOptions(
-              logging: (level, message) => log(message),
-              transport: sc.HttpTransportType.webSockets,
-            ))
+          'https://fyndaapp-001-site1.htempurl.com/hubs/message',
+          sc.HttpConnectionOptions(
+            logging: (level, message) => log(message),
+            transport: sc.HttpTransportType.webSockets,
+          ),
+        )
         .build();
     openSignalRConnection();
   }
 
-  //connect to signalR
   Future<void> openSignalRConnection() async {
-
     await connection.start();
     connection.on('ReceiveMessage', (message) {
       _handleIncomingDriverLocation(message);
@@ -84,7 +83,7 @@ class _InboxState extends ConsumerState<Inbox> {
     //await connection.invoke('JoinUSer', args: [widget.userName, currentUserId]);
   }
 
-//get messages
+
   Future<void> _handleIncomingDriverLocation(List<dynamic>? args) async {
     if (args != null) {}
   }
@@ -109,7 +108,8 @@ class _InboxState extends ConsumerState<Inbox> {
   //     );
   //   });
 
-  void onSendTap(String rawMessage, ReplyMessage replyMessage, MessageType messageType) async {
+  void onSendTap(String rawMessage, ReplyMessage replyMessage,
+      MessageType messageType) async {
     final message = Message(
       id: '3',
       message: rawMessage,
@@ -204,7 +204,7 @@ class _InboxState extends ConsumerState<Inbox> {
                   .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
             ),
           ),
-          loadingWidget: loader,
+          loadingWidget: blueLoader,
         ),
       ),
     );
