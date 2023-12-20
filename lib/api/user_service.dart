@@ -213,12 +213,13 @@ Agent parseAgentData(Map<String, dynamic> userData) {
   Map<String, dynamic>? profile = userData["agentProfile"];
 
   if (profile != null) {
-    String fullName = profile['fullName'];
+    String firstName = profile['firstName'];
+    String lastName = profile['lastName'];
     String email = profile['email'];
     String state = profile['stateOfOrigin'] ?? "";
-    bool isAvailable = profile['isAvailable'] as bool;
+    // bool isAvailable = profile['isAvailable'] as bool ?? false;
     String area = profile['area'] ?? "";
-    double roomBudget = (profile['roomBudgetAmount'] as num).toDouble();
+    // double roomBudget = (profile['roomBudgetAmount'] as num).toDouble();
     String pictureUrl = profile['pictureUrl'] ?? "";
     int profileViewCount = (profile['profileViewCount'] as num).toInt();
     String gender = profile['gender'] ?? "";
@@ -229,13 +230,13 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     String age = profile['age'] ?? "";
     String hobby = profile['hobby'] ?? "";
     String guardian = profile["guardianPhoneNumber"] ?? "";
-    List<String> names = fullName.split(" ");
+    // List<String> names = fullName.split(" ");
 
     return Agent(
       dateJoined: created,
       dob: DateTime(1960),
-      firstName: names[0],
-      lastName: names[1],
+      firstName: firstName,
+      lastName: lastName,
       denomination: denomination,
       id: id,
       gender: gender,
