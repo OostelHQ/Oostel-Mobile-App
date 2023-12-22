@@ -4,17 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chatview/chatview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_hostel/api/user_service.dart';
+import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:signalr_core/signalr_core.dart' as sc;
 
+class InboxInfo {
+  final String id;
+  final String role;
+
+  const InboxInfo({required this.id, required this.role,});
+}
+
+
 class Inbox extends ConsumerStatefulWidget {
-  final String otherID;
+  final InboxInfo info;
 
   const Inbox({
     super.key,
-    required this.otherID,
+    required this.info,
   });
 
   @override
@@ -26,41 +36,14 @@ class _InboxState extends ConsumerState<Inbox> {
   late List<Message> messageList;
   late List<ChatUser> users;
 
-  late String currentUserID;
-
+  late String currentUserID, otherUserID, currentUserEmail, otherUserEmail;
   late sc.HubConnection connection;
+
+  bool loading = true, hasError = false;
 
   @override
   void initState() {
     super.initState();
-
-    currentUserID = ref.read(currentUserProvider).id;
-
-    users = [
-      ChatUser(id: currentUserID, name: 'Me', ),
-      ChatUser(id: widget.otherID, name: 'Other',),
-    ];
-
-    messageList = [
-      Message(
-        id: '1',
-        message: "Hi",
-        createdAt: DateTime.now(),
-        sendBy: users[0].id,
-      ),
-      Message(
-        id: '2',
-        message: "Hello",
-        createdAt: DateTime.now(),
-        sendBy: users[1].id,
-      ),
-    ];
-
-    chatController = ChatController(
-      initialMessageList: messageList,
-      scrollController: ScrollController(),
-      chatUsers: users,
-    );
 
     connection = sc.HubConnectionBuilder()
         .withUrl(
@@ -71,7 +54,57 @@ class _InboxState extends ConsumerState<Inbox> {
           ),
         )
         .build();
-    openSignalRConnection();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    late User? otherUser;
+    if(widget.info.role == "Student") {
+      otherUser = (await getStudentById(widget.info.id)).payload;
+    } else if(widget.info.role == "Landlord") {
+      otherUser = (await getLandlordById(widget.info.id)).payload;
+    } else {
+      otherUser = (await getAgentById(widget.info.id)).payload;
+    }
+
+    if(otherUser == null) {
+      setState(() {
+        loading = false;
+        hasError = true;
+      });
+      return;
+    }
+
+    User currentUser = ref.read(currentUserProvider);
+    currentUserID = currentUser.id;
+    currentUserEmail = currentUser.email;
+    otherUserID = otherUser.id;
+    otherUserEmail = otherUser.email;
+
+    users = [
+      ChatUser(
+        id: currentUserID,
+        name: currentUser.mergedNames,
+        profilePhoto: currentUser.image,
+      ),
+      ChatUser(
+        id: otherUserID,
+        name: otherUser.mergedNames,
+        profilePhoto: otherUser.image,
+      ),
+    ];
+
+    messageList = [];
+
+    chatController = ChatController(
+      initialMessageList: messageList,
+      scrollController: ScrollController(),
+      chatUsers: users,
+    );
+
+    await openSignalRConnection();
+
+    setState(() {});
   }
 
   Future<void> openSignalRConnection() async {
@@ -83,9 +116,10 @@ class _InboxState extends ConsumerState<Inbox> {
     //await connection.invoke('JoinUSer', args: [widget.userName, currentUserId]);
   }
 
-
   Future<void> _handleIncomingDriverLocation(List<dynamic>? args) async {
-    if (args != null) {}
+    if (args != null) {
+
+    }
   }
 
   @override
@@ -119,14 +153,21 @@ class _InboxState extends ConsumerState<Inbox> {
       messageType: messageType,
     );
 
-    //await connection.invoke('SendMessage', args: [widget.userName, currentUserId, messageText]);
+    await connection.invoke('SendMessage', args: [
+      ref.read(currentUserProvider).id,
+      users[1].id,
+      ref.read(currentUserProvider).email,
+      "student@gmail.com",
+      rawMessage
+    ]);
+
     chatController.addMessage(message);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: loading ? const Center(child: blueLoader) : SafeArea(
         child: ChatView(
           currentUser: users[0],
           chatController: chatController,
@@ -153,10 +194,14 @@ class _InboxState extends ConsumerState<Inbox> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.more_vert),
-                onPressed: () {},
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (_) => const _InboxMenu(),
+                  isScrollControlled: true,
+                ),
                 iconSize: 26.r,
                 splashRadius: 20.r,
-              )
+              ),
             ],
           ),
           onSendTap: onSendTap,
@@ -207,6 +252,24 @@ class _InboxState extends ConsumerState<Inbox> {
           loadingWidget: blueLoader,
         ),
       ),
+    );
+  }
+}
+
+class _InboxMenu extends StatefulWidget {
+  const _InboxMenu({super.key});
+
+  @override
+  State<_InboxMenu> createState() => _InboxMenuState();
+}
+
+class _InboxMenuState extends State<_InboxMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 450.h,
+      width: 414.w,
+
     );
   }
 }

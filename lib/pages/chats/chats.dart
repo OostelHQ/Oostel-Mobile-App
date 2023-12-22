@@ -49,7 +49,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
   @override
   void initState() {
     super.initState();
-    getMessages();
+    getMessages(ref.read(currentUserProvider).email).then((resp) => setState(() => loaded = true));
   }
 
   @override
@@ -63,7 +63,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
     return RefreshIndicator(
       onRefresh: () async {
         setState(() => loaded = false);
-        getMessages().then((resp) => setState(() => loaded = true));
+        getMessages(ref.watch(currentUserProvider).email).then((resp) => setState(() => loaded = true));
       },
       child: !loaded ? const Center(child: blueLoader) : CustomScrollView(
         slivers: [
@@ -81,10 +81,13 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 25.h),
-                    Text(
-                      "Chats",
-                      style: context.textTheme.headlineSmall!
-                          .copyWith(fontWeight: FontWeight.w600),
+                    GestureDetector(
+                      onTap: () => context.router.pushNamed(Pages.inbox, extra: "c59e6aaf-4ef5-4d4a-b4c5-cdc41f10bded"),
+                      child: Text(
+                        "Chats",
+                        style: context.textTheme.headlineSmall!
+                            .copyWith(fontWeight: FontWeight.w600),
+                      ),
                     ),
                     SizedBox(height: 12.h),
                     SpecialForm(

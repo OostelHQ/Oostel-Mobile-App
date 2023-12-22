@@ -61,7 +61,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     religion = owner.religion.isEmpty ? null : owner.religion;
     gender = owner.gender.isEmpty ? null : owner.gender;
 
-    List<String> address = owner.address.split(" ");
+    List<String> address = owner.address.split("#");
     street = TextEditingController(text: address[0]);
     region = TextEditingController(text: address[1]);
     country = TextEditingController(text: address[2]);
@@ -102,6 +102,34 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
       context.router.pop();
     });
   }
+
+  void refresh() {
+    resetProviders(ref);
+    context.router.goNamed(Pages.splash);
+  }
+
+  Future<void> delete() async {
+    deleteAccount(ref.watch(currentUserProvider).id).then((resp) {
+      if(!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        refresh();
+      }
+    });
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
+  }
+
 
 
   Future<void> update() async {
@@ -532,7 +560,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                       GestureDetector(
                         onTap: () {
                           unFocus();
-                          delete();
+                          showDeleteSheet();
                         },
                         child: Container(
                           width: 414.w,
@@ -563,7 +591,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
     );
   }
 
-  void delete() => showModalBottomSheet(
+  void showDeleteSheet() => showModalBottomSheet(
         context: context,
         builder: (_) => SizedBox(
           height: 450.h,
@@ -633,10 +661,7 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              resetProviders(ref);
-                              context.router.goNamed(Pages.splash);
-                            },
+                            onTap: delete,
                             child: Container(
                               width: 180.w,
                               height: 50.h,

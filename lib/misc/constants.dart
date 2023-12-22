@@ -63,6 +63,7 @@ class Pages
   static const String studentProfile = 'student-profile';
   static const String ownerProfile = 'owner-profile';
   static const String otherStudent = 'other-student';
+  static const String otherOwner = 'other-owner';
 
   static const String studentDashboard = 'student-dashboard';
   static const String ownerDashboard = 'owner-dashboard';

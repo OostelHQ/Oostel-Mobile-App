@@ -363,6 +363,51 @@ Future<FyndaResponse> likeHostel(Map<String, dynamic> map) async {
   );
 }
 
+Future<FyndaResponse<List<String>>> getStudentLikedHostels(String studentId) async {
+  try {
+    Response response = await dio.get(
+      "/hostel/get-my-liked-hostels",
+      options: configuration,
+      queryParameters: {"userId": studentId},
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
+    }
+  } catch(e) {
+    log("Get Student Liked Hostels Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: [],
+    success: false,
+  );
+}
+
+
+Future<FyndaResponse> getHostelLikedUsers(String hostelId) async {
+  try {
+    Response response = await dio.get(
+      "/hostel/hostel-liked-users",
+      options: configuration,
+      queryParameters: {"hostelId": hostelId},
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
+    }
+  } catch(e) {
+    log("Get Hostel Liked Users Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: [],
+    success: false,
+  );
+}
+
 List<RoomInfo> parseRoomData(List<dynamic> data) {
   List<RoomInfo> rooms = [];
   for (var element in data) {

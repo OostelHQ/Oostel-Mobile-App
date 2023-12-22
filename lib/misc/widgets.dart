@@ -14,6 +14,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/components/comment.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/receipt_info.dart';
@@ -567,13 +568,14 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> likes = ref.watch(studentLikedHostelsProvider);
+    String id = ref.watch(currentUserProvider).id;
+
     return GestureDetector(
-      onTap: () => context.router
-          .pushNamed(
-            Pages.hostelInfo,
-            extra: widget.info,
-          )
-          .then((val) => setState(() {})),
+      onTap: () => context.router.pushNamed(
+        Pages.hostelInfo,
+        extra: widget.info,
+      ),
       child: SizedBox(
         height: 135.h,
         child: Center(
@@ -659,31 +661,24 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                 tag: "Hostel ID: ${widget.info.id} Liked",
                                 child: GestureDetector(
                                   onTap: () {
-                                    String id =
-                                        ref.read(currentUserProvider).id;
-                                    // if (widget.info.likes.contains(id)) {
-                                    //   widget.info.likes.remove(id);
-                                    // } else {
-                                    //   widget.info.likes.add(id);
-                                    // }
+                                    if (likes.contains(id)) {
+                                      likes.remove(id);
+                                    } else {
+                                      likes.add(id);
+                                    }
                                     setState(() {});
                                   },
                                   child: AnimatedSwitcherTranslation.right(
                                     duration: const Duration(milliseconds: 500),
                                     child: Icon(
                                       Icons.favorite_rounded,
-                                      // color: widget.info.likes.contains(
-                                      //     ref
-                                      //         .read(currentUserProvider)
-                                      //         .id)
-                                      //     ? Colors.red
-                                      //     : weirdBlack20,
+                                      color: likes.contains(id)
+                                          ? Colors.red
+                                          : weirdBlack20,
                                       size: 18,
-                                      // key: ValueKey<bool>(widget.info.likes
-                                      //     .contains(ref
-                                      //     .read(currentUserProvider)
-                                      //     .id),
-                                      // ),
+                                      key: ValueKey<bool>(
+                                        likes.contains(id),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -802,7 +797,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
   }
 }
 
-class StudentCard extends StatefulWidget {
+class StudentCard extends ConsumerStatefulWidget {
   final Student info;
 
   const StudentCard({
@@ -811,14 +806,17 @@ class StudentCard extends StatefulWidget {
   });
 
   @override
-  State<StudentCard> createState() => _StudentCardState();
+  ConsumerState<StudentCard> createState() => _StudentCardState();
 }
 
-class _StudentCardState extends State<StudentCard> {
-  bool liked = false;
+class _StudentCardState extends ConsumerState<StudentCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> likes = ref.watch(studentLikedRoommatesProvider);
+    String id = ref.watch(currentUserProvider).id;
+
+
     return GestureDetector(
       onTap: () => context.router.pushNamed(
         Pages.otherStudent,
@@ -863,14 +861,20 @@ class _StudentCardState extends State<StudentCard> {
                                 fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
                           GestureDetector(
-                            onTap: () => setState(() => liked = !liked),
+                            onTap: () {
+                              if(likes.contains(id)) {
+                                likes.remove(id);
+                              } else {
+                                likes.add(id);
+                              }
+                            },
                             child: AnimatedSwitcherTranslation.right(
                               duration: const Duration(milliseconds: 500),
                               child: Icon(
                                 Icons.favorite_rounded,
-                                color: liked ? Colors.red : weirdBlack25,
+                                color: likes.contains(id) ? Colors.red : weirdBlack25,
                                 size: 18,
-                                key: ValueKey<bool>(liked),
+                                key: ValueKey<bool>(likes.contains(id)),
                               ),
                             ),
                           )
@@ -1012,13 +1016,13 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> likes = ref.watch(studentLikedHostelsProvider);
+    String id = ref.watch(currentUserProvider).id;
     return GestureDetector(
-      onTap: () => context.router
-          .pushNamed(
-            Pages.hostelInfo,
-            extra: widget.info,
-          )
-          .then((val) => setState(() {})),
+      onTap: () => context.router.pushNamed(
+        Pages.hostelInfo,
+        extra: widget.info,
+      ),
       child: SizedBox(
         height: 270.h,
         child: Center(
@@ -1089,30 +1093,29 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        String id = ref.read(currentUserProvider).id;
-                        // if (widget.info.likes.contains(id)) {
-                        //   widget.info.likes.remove(id);
-                        // } else {
-                        //   widget.info.likes.add(id);
-                        // }
+                        likeHostel({
+
+                        });
+
+                        if (likes.contains(id)) {
+                          likes.remove(id);
+                        } else {
+                          likes.add(id);
+                        }
                         setState(() {});
                       },
                       child: AnimatedSwitcherTranslation.right(
                         duration: const Duration(milliseconds: 500),
                         child: Icon(
                           Icons.favorite_rounded,
-
-                          // color: widget.info.likes
-                          //     .contains(ref
-                          //     .read(currentUserProvider)
-                          //     .id)
-                          //     ? Colors.red
-                          //     : weirdBlack25,
+                          color:
+                              likes.contains(ref.read(currentUserProvider).id)
+                                  ? Colors.red
+                                  : weirdBlack25,
                           size: 18,
-                          // key: ValueKey<bool>(widget.info.likes
-                          //     .contains(ref
-                          //     .read(currentUserProvider)
-                          //     .id)),
+                          key: ValueKey<bool>(
+                            likes.contains(id),
+                          ),
                         ),
                       ),
                     )
