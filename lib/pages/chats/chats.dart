@@ -1,18 +1,17 @@
-import 'dart:developer';
-
+import 'package:badges/badges.dart' as bg;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_hostel/api/message_service.dart';
-import 'package:my_hostel/components/conversation.dart';
-import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:badges/badges.dart' as bg;
+
+import 'inbox.dart';
+
 
 class Detail {
   final String name;
@@ -49,7 +48,8 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
   @override
   void initState() {
     super.initState();
-    getMessages(ref.read(currentUserProvider).email).then((resp) => setState(() => loaded = true));
+    getMessages(ref.read(currentUserProvider).email)
+        .then((resp) => setState(() => loaded = true));
   }
 
   @override
@@ -63,86 +63,96 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
     return RefreshIndicator(
       onRefresh: () async {
         setState(() => loaded = false);
-        getMessages(ref.watch(currentUserProvider).email).then((resp) => setState(() => loaded = true));
+        getMessages(ref.watch(currentUserProvider).email)
+            .then((resp) => setState(() => loaded = true));
       },
-      child: !loaded ? const Center(child: blueLoader) : CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            systemOverlayStyle: SystemUiOverlayStyle.dark,
-            elevation: 0.0,
-            automaticallyImplyLeading: false,
-            pinned: true,
-            floating: true,
-            expandedHeight: 150.h,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 25.h),
-                    GestureDetector(
-                      onTap: () => context.router.pushNamed(Pages.inbox, extra: "c59e6aaf-4ef5-4d4a-b4c5-cdc41f10bded"),
-                      child: Text(
-                        "Chats",
-                        style: context.textTheme.headlineSmall!
-                            .copyWith(fontWeight: FontWeight.w600),
+      child: !loaded
+          ? const Center(child: blueLoader)
+          : CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  systemOverlayStyle: SystemUiOverlayStyle.dark,
+                  elevation: 0.0,
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                  floating: true,
+                  expandedHeight: 150.h,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 25.h),
+                          GestureDetector(
+                            onTap: () => context.router.pushNamed(
+                              Pages.inbox,
+                              extra: const InboxInfo(
+                                id: "c59e6aaf-4ef5-4d4a-b4c5-cdc41f10bded",
+                                role: "Student",
+                              ),
+                            ),
+                            child: Text(
+                              "Chats",
+                              style: context.textTheme.headlineSmall!
+                                  .copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          SpecialForm(
+                            controller: controller,
+                            width: 414.w,
+                            height: 50.h,
+                            fillColor: Colors.white,
+                            hint: "Search name",
+                            prefix: const Icon(Icons.search_rounded,
+                                color: weirdBlack25),
+                            action: TextInputAction.send,
+                            borderColor: Colors.transparent,
+                            decoration: BoxDecoration(
+                                color: const Color(0xFFF8FBFF),
+                                borderRadius: BorderRadius.circular(4.r),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0xFFE0E5EC),
+                                    blurRadius: 6.0,
+                                    spreadRadius: 1.0,
+                                  )
+                                ],
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 12.h),
-                    SpecialForm(
-                      controller: controller,
-                      width: 414.w,
-                      height: 50.h,
-                      fillColor: Colors.white,
-                      hint: "Search name",
-                      prefix: const Icon(Icons.search_rounded, color: weirdBlack25),
-                      action: TextInputAction.send,
-                      borderColor: Colors.transparent,
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFF8FBFF),
-                          borderRadius: BorderRadius.circular(4.r),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xFFE0E5EC),
-                              blurRadius: 6.0,
-                              spreadRadius: 1.0,
-                            )
-                          ]
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                  ],
+                  ),
                 ),
-              ),
+                !loaded
+                    ? SliverFillRemaining(
+                        child: Skeletonizer(
+                          enabled: true,
+                          child: ListView.separated(
+                            itemCount: 20,
+                            itemBuilder: (_, index) => ChatTile(
+                              detail: Detail(time: DateTime.now()),
+                            ),
+                            separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                          ),
+                        ),
+                      )
+                    : SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (_, index) => ChatTile(
+                              detail: details[index],
+                            ),
+                            childCount: details.length,
+                          ),
+                        ),
+                      )
+              ],
             ),
-          ),
-          !loaded
-              ? SliverFillRemaining(
-                  child: Skeletonizer(
-                    enabled: true,
-                    child: ListView.separated(
-                      itemCount: 20,
-                      itemBuilder: (_, index) => ChatTile(
-                        detail: Detail(time: DateTime.now()),
-                      ),
-                      separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                    ),
-                  ),
-                )
-              : SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (_, index) => ChatTile(
-                        detail: details[index],
-                      ),
-                      childCount: details.length,
-                    ),
-                  ),
-                )
-        ],
-      ),
     );
   }
 }
@@ -164,7 +174,8 @@ class ChatTile extends StatelessWidget {
         width: 60.r,
         height: 60.r,
         child: CircleAvatar(
-          backgroundImage: detail.image.isEmpty ? null : AssetImage(detail.image),
+          backgroundImage:
+              detail.image.isEmpty ? null : AssetImage(detail.image),
           backgroundColor: weirdBlack20,
           radius: 48.r,
         ),
@@ -223,7 +234,3 @@ class ChatTile extends StatelessWidget {
     );
   }
 }
-
-
-
-

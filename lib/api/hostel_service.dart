@@ -70,6 +70,8 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
     );
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+
+      log(response.data.toString());
       return const FyndaResponse(
         message: "Hostel Created",
         payload: null,

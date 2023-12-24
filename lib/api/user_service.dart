@@ -683,7 +683,7 @@ Future<FyndaResponse> getStudentById(String id) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return FyndaResponse(
         message: "Success",
-        payload: response.data["data"],
+        payload: _parseStudentData(response.data["data"]),
         success: true,
       );
     }

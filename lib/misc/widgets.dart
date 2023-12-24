@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:jiffy/jiffy.dart';
@@ -1752,208 +1753,210 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
     }
   }
 
+  void showRoomInfoSheet() {
+    showModalBottomSheet(
+      context: context,
+      elevation: 1.0,
+      builder: (_) => SizedBox(
+        width: 414.w,
+        child: Padding(
+          padding:
+          EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    Center(
+                      child: SvgPicture.asset(
+                          "assets/images/Modal Line.svg"),
+                    ),
+                    SizedBox(height: 25.h),
+                    Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.r),
+                          topRight: Radius.circular(15.r),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.info!.media.first,
+                          errorWidget: (context, url, error) =>
+                              Container(
+                                width: 414.w,
+                                height: 175.h,
+                                color: weirdBlack50,
+                                alignment: Alignment.center,
+                                child: loader,
+                              ),
+                          progressIndicatorBuilder:
+                              (context, url, download) => Container(
+                            width: 414.w,
+                            height: 175.h,
+                            color: weirdBlack50,
+                          ),
+                          imageBuilder: (context, provider) =>
+                              Container(
+                                width: 414.w,
+                                height: 175.h,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: provider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      isData
+                          ? widget.infoData!["name"]
+                          : widget.info!.name,
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22.sp,
+                        color: weirdBlack,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: currency(),
+                            style:
+                            context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: formatAmountInDouble(isData
+                                ? widget.infoData!["price"]
+                                : widget.info!.price),
+                            style:
+                            context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "/year",
+                            style:
+                            context.textTheme.bodySmall!.copyWith(
+                              color: appBlue,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Rooms Facilities",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack),
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
+                ),
+              ),
+              SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 5.r,
+                  mainAxisSpacing: 15.r,
+                  mainAxisExtent: 105.r,
+                ),
+                itemBuilder: (_, index) => FacilityContainer(
+                    text: widget.info!.facilities[index]),
+                itemCount: widget.info!.facilities.length,
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Gallery",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack),
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
+                ),
+              ),
+              SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.r,
+                    mainAxisSpacing: 10.r,
+                    mainAxisExtent: 110.r),
+                itemCount: widget.info!.media.length,
+                itemBuilder: (_, index) => GestureDetector(
+                  onTap: () => context.router.pushNamed(
+                    Pages.viewMedia,
+                    extra: ViewInfo(
+                      type: DisplayType.network,
+                      paths: widget.info!.media,
+                      current: index,
+                    ),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.info!.media[index],
+                    errorWidget: (context, url, error) => Container(
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: weirdBlack50,
+                      ),
+                      alignment: Alignment.center,
+                      child: loader,
+                    ),
+                    progressIndicatorBuilder:
+                        (context, url, download) => Container(
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: weirdBlack50,
+                      ),
+                    ),
+                    imageBuilder: (context, provider) => Container(
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        image: DecorationImage(
+                          image: provider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap ??
-          () {
-            showModalBottomSheet(
-              context: context,
-              elevation: 1.0,
-              builder: (_) => SizedBox(
-                width: 414.w,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 10.h),
-                            Center(
-                              child: SvgPicture.asset(
-                                  "assets/images/Modal Line.svg"),
-                            ),
-                            SizedBox(height: 25.h),
-                            Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15.r),
-                                  topRight: Radius.circular(15.r),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.info!.media.first,
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 414.w,
-                                    height: 175.h,
-                                    color: weirdBlack50,
-                                    alignment: Alignment.center,
-                                    child: loader,
-                                  ),
-                                  progressIndicatorBuilder:
-                                      (context, url, download) => Container(
-                                    width: 414.w,
-                                    height: 175.h,
-                                    color: weirdBlack50,
-                                  ),
-                                  imageBuilder: (context, provider) =>
-                                      Container(
-                                    width: 414.w,
-                                    height: 175.h,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: provider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              isData
-                                  ? widget.infoData!["name"]
-                                  : widget.info!.name,
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 22.sp,
-                                color: weirdBlack,
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: currency(),
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: formatAmountInDouble(isData
-                                        ? widget.infoData!["price"]
-                                        : widget.info!.price),
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: "/year",
-                                    style:
-                                        context.textTheme.bodySmall!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Rooms Facilities",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                          ],
-                        ),
-                      ),
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 5.r,
-                          mainAxisSpacing: 15.r,
-                          mainAxisExtent: 105.r,
-                        ),
-                        itemBuilder: (_, index) => FacilityContainer(
-                            text: widget.info!.facilities[index]),
-                        itemCount: widget.info!.facilities.length,
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Gallery",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                          ],
-                        ),
-                      ),
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10.r,
-                            mainAxisSpacing: 10.r,
-                            mainAxisExtent: 110.r),
-                        itemCount: widget.info!.media.length,
-                        itemBuilder: (_, index) => GestureDetector(
-                          onTap: () => context.router.pushNamed(
-                            Pages.viewMedia,
-                            extra: ViewInfo(
-                              type: DisplayType.network,
-                              paths: widget.info!.media,
-                              current: index,
-                            ),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: widget.info!.media[index],
-                            errorWidget: (context, url, error) => Container(
-                              width: 110.r,
-                              height: 110.r,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                color: weirdBlack50,
-                              ),
-                              alignment: Alignment.center,
-                              child: loader,
-                            ),
-                            progressIndicatorBuilder:
-                                (context, url, download) => Container(
-                              width: 110.r,
-                              height: 110.r,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                color: weirdBlack50,
-                              ),
-                            ),
-                            imageBuilder: (context, provider) => Container(
-                              width: 110.r,
-                              height: 110.r,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                image: DecorationImage(
-                                  image: provider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+          showRoomInfoSheet,
       child: Container(
         width: 185.w,
         height: 215.h,
@@ -1967,6 +1970,20 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                widget.info == null ? Container(
+                  width: 185.w,
+                  height: 140.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.r),
+                      topRight: Radius.circular(10.r),
+                    ),
+                    image: DecorationImage(
+                      image: FileImage(File(widget.infoData!["media"].first.path)),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ) :
                 CachedNetworkImage(
                   imageUrl: widget.info!.media.first,
                   errorWidget: (context, url, error) => Container(
@@ -2020,14 +2037,14 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           SizedBox(
                             width: timeUp ? 150.w : 80.w,
                             child: Text(
-                              widget.info!.name,
+                              widget.info == null ? widget.infoData!["name"] : widget.info!.name,
                               overflow: TextOverflow.ellipsis,
                               style: context.textTheme.bodyMedium!.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: weirdBlack),
                             ),
                           ),
-                          if (!timeUp)
+                          if (!timeUp && !isData)
                             Container(
                               width: 70.w,
                               height: 25.h,
@@ -2060,7 +2077,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                               ),
                             ),
                             TextSpan(
-                              text: formatAmountInDouble(widget.info!.price),
+                              text: formatAmountInDouble(widget.info == null ? widget.infoData!["price"] :  widget.info!.price),
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: appBlue,
                                 fontFamily: "Inter",
