@@ -54,7 +54,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                 onTap: () {
                   ref.watch(currentUserProvider.notifier).state =
                       defaultStudent;
-                  context.router.pushReplacementNamed(Pages.register);
+                  context.router.pushNamed(Pages.register);
                 },
                 child: Container(
                   width: 400.w,
@@ -99,7 +99,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               child: GestureDetector(
                 onTap: () {
                   ref.watch(currentUserProvider.notifier).state = defaultAgent;
-                  context.router.pushReplacementNamed(Pages.register);
+                  context.router.pushNamed(Pages.register);
                 },
                 child: Container(
                   width: 400.w,
@@ -144,7 +144,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
               child: GestureDetector(
                 onTap: () {
                   ref.watch(currentUserProvider.notifier).state = defaultOwner;
-                  context.router.pushReplacementNamed(Pages.register);
+                  context.router.pushNamed(Pages.register);
                 },
                 child: Container(
                   width: 400.w,

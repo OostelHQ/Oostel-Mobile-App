@@ -108,6 +108,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        )
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -301,7 +309,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "I agree to Oostel's",
+                                    text: "I agree to",
                                     style: context.textTheme.bodySmall!
                                         .copyWith(
                                             color: weirdBlack75,
@@ -372,7 +380,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               ),
                               GestureDetector(
                                 onTap: () => context.router
-                                    .pushReplacementNamed(Pages.login),
+                                    .pushNamed(Pages.login),
                                 child: Text(
                                   " Login",
                                   style: context.textTheme.bodyMedium!.copyWith(
