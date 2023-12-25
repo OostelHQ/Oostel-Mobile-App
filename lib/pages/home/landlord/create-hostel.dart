@@ -4424,8 +4424,12 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         showError(resp.message);
         Navigator.of(context).pop();
       } else {
-        setState(() => createdHostel = true);
-        if (total == 1) {
+        setState(() {
+          createdHostel = true;
+          progress = 1;
+        });
+
+        if (progress == total) {
           exit();
           return;
         } else {
@@ -4438,7 +4442,9 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   void exit() => context.router.pop(true);
 
   void uploadRooms() async {
-    for (int i = progress; i < rooms.length; ++i) {
+    for (int i = progress - 1; i < rooms.length; ++i) {
+      setState(() => message = "Uploading ${rooms[i]["name"]}");
+
       FyndaResponse response = await createRoomForHostel(
         userID: widget.info["landlordId"],
         hostelID: "",
