@@ -93,6 +93,33 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     });
   }
 
+  void refresh() {
+    resetProviders(ref);
+    context.router.goNamed(Pages.splash);
+  }
+
+  Future<void> delete() async {
+    deleteAccount(ref.watch(currentUserProvider).id).then((resp) {
+      if(!mounted) return;
+      showError(resp.message);
+      if (!resp.success) {
+        Navigator.of(context).pop();
+      } else {
+        refresh();
+      }
+    });
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: loader,
+      ),
+    );
+  }
+
 
   Future<void> update() async {
     studentProfile(details,
@@ -557,7 +584,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       GestureDetector(
                         onTap: () {
                           unFocus();
-                          delete();
+                          showDeleteSheet();
                         },
                         child: Container(
                           width: 414.w,
@@ -586,7 +613,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     );
   }
 
-  void delete() => showModalBottomSheet(
+  void showDeleteSheet() => showModalBottomSheet(
         context: context,
         builder: (_) => SizedBox(
           height: 450.h,
@@ -656,10 +683,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              resetProviders(ref);
-                              context.router.goNamed(Pages.splash);
-                            },
+                            onTap: delete,
                             child: Container(
                               width: 180.w,
                               height: 50.h,

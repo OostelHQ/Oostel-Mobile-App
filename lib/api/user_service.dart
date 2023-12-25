@@ -31,13 +31,6 @@ Future<FyndaResponse<User?>> loginUser(Map<String, dynamic> map) async {
   try {
     Response response =
         await dio.post("/authenticateuser/login-user", data: map);
-    if (response.statusCode == 307) {
-      String? location = response.headers.value('location');
-      log("Location: $location");
-      if (location != null) {
-        response = await dio.get(location);
-      }
-    }
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       Map<String, dynamic> data = response.data as Map<String, dynamic>;
@@ -211,8 +204,6 @@ Student _parseStudentData(Map<String, dynamic> userData, {String email = "", Str
 }
 
 Agent parseAgentData(Map<String, dynamic> userData) {
-  log(userData.toString());
-
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
@@ -224,20 +215,13 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     String lastName = profile['lastName'];
     String email = profile['email'];
     String state = profile['stateOfOrigin'] ?? "";
-    // bool isAvailable = profile['isAvailable'] as bool ?? false;
     String area = profile['area'] ?? "";
-    // double roomBudget = (profile['roomBudgetAmount'] as num).toDouble();
     String pictureUrl = profile['pictureUrl'] ?? "";
     int profileViewCount = (profile['profileViewCount'] as num).toInt();
     String gender = profile['gender'] ?? "";
     String country = profile['country'];
-    String schoolLevel = profile['schoolLevel'] ?? "";
     String religion = profile['religion'] ?? "";
     String denomination = profile['denomination'] ?? "";
-    String age = profile['age'] ?? "";
-    String hobby = profile['hobby'] ?? "";
-    String guardian = profile["guardianPhoneNumber"] ?? "";
-    // List<String> names = fullName.split(" ");
 
     return Agent(
       dateJoined: created,
@@ -246,6 +230,7 @@ Agent parseAgentData(Map<String, dynamic> userData) {
       lastName: lastName,
       denomination: denomination,
       id: id,
+      address: "$area, $state, $country",
       gender: gender,
       religion: religion,
       image: pictureUrl,
@@ -265,7 +250,6 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     contact: contact,
     email: "",
   );
-
 
 }
 
@@ -332,6 +316,32 @@ Future<FyndaResponse> resetPassword(Map<String, dynamic> map) async {
     }
   } catch (e) {
     log("Reset Password Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    success: false,
+  );
+}
+
+Future<FyndaResponse> deleteAccount(String id) async {
+  try {
+    Response response = await dio.delete(
+      "/user-delete/delete-user-account",
+      queryParameters: {"userId" : id},
+      options: configuration,
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      return const FyndaResponse(
+        message: "Success",
+        payload: null,
+        success: true,
+      );
+    }
+  } catch (e) {
+    log("Delete User Error: $e");
   }
 
   return const FyndaResponse(
@@ -673,7 +683,7 @@ Future<FyndaResponse> getStudentById(String id) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return FyndaResponse(
         message: "Success",
-        payload: response.data["data"],
+        payload: _parseStudentData(response.data["data"]),
         success: true,
       );
     }
@@ -826,6 +836,52 @@ Future<FyndaResponse> likeStudentProfile(Map<String, dynamic> map) async {
   return const FyndaResponse(
     message: "An error occurred. Please try again.",
     payload: null,
+    success: false,
+  );
+}
+
+
+Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
+  try {
+    Response response = await dio.get(
+      "/user-profile/get-my-liked-students",
+      options: configuration,
+      queryParameters: {"userId": studentId},
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
+    }
+  } catch(e) {
+    log("Get Liked Students Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: [],
+    success: false,
+  );
+}
+
+
+Future<FyndaResponse> getStudentLikedUsers(String studentId) async {
+  try {
+    Response response = await dio.get(
+      "/user-profile/get-a-student-liked-users",
+      options: configuration,
+      queryParameters: {"studentId": studentId},
+    );
+
+    if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
+    }
+  } catch(e) {
+    log("Get Student Liked Users Error: $e");
+  }
+
+  return const FyndaResponse(
+    message: "An error occurred. Please try again.",
+    payload: [],
     success: false,
   );
 }

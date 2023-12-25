@@ -93,6 +93,9 @@ final StateProvider<bool> showCompleteProfileProvider =
 final StateProvider<bool> shouldResetProvider = StateProvider((ref) => false);
 
 void resetProviders(WidgetRef ref) {
+  ref.invalidate(notificationsProvider);
+  ref.invalidate(studentLikedRoommatesProvider);
+  ref.invalidate(studentLikedHostelsProvider);
   ref.invalidate(filteredExploreRoommatesProvider);
   ref.invalidate(filteredExploreHostelsProvider);
   ref.invalidate(acquiredHostelsProvider);
@@ -500,3 +503,7 @@ final StateProvider<OtpOrigin> otpOriginProvider =
     StateProvider((ref) => OtpOrigin.none);
 final StateProvider<int> registrationProcessProvider =
     StateProvider((ref) => 0);
+
+
+final StateProvider<List<String>> studentLikedHostelsProvider = StateProvider((ref) => []);
+final StateProvider<List<String>> studentLikedRoommatesProvider = StateProvider((ref) => []);

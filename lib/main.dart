@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/misc/constants.dart';
@@ -39,6 +40,7 @@ import 'package:my_hostel/pages/profile/owner/agents.dart';
 import 'package:my_hostel/pages/profile/owner/create_profile.dart';
 import 'package:my_hostel/pages/profile/owner/edit_profile.dart';
 import 'package:my_hostel/pages/profile/owner/hostel_settings.dart';
+import 'package:my_hostel/pages/profile/owner/other_owner_profile.dart';
 import 'package:my_hostel/pages/profile/owner/profile.dart';
 import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
@@ -271,7 +273,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
         GoRoute(
           path: Pages.inbox.path,
           name: Pages.inbox,
-          builder: (_, state) => Inbox(otherID: state.extra as String),
+          builder: (_, state) => Inbox(info: state.extra as InboxInfo),
         ),
         GoRoute(
           path: Pages.notification.path,
@@ -391,6 +393,12 @@ class _MyHostelAppState extends State<MyHostelApp> {
           name: Pages.otherStudent,
           builder: (_, state) =>
               OtherStudentProfilePage(info: state.extra as Student),
+        ),
+        GoRoute(
+          path: Pages.otherOwner.path,
+          name: Pages.otherOwner,
+          builder: (_, state) =>
+              OtherOwnerProfilePage(info: state.extra as Landowner),
         ),
         GoRoute(
           path: Pages.hostelInfo.path,

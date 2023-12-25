@@ -3163,12 +3163,10 @@ class _CreateRoomCard extends StatelessWidget {
 
 class StepNine extends StatefulWidget {
   final Map<String, dynamic> info;
-  final int? index;
 
   const StepNine({
     super.key,
     required this.info,
-    this.index,
   });
 
   @override
@@ -3211,13 +3209,14 @@ class _StepNineState extends State<StepNine> {
   @override
   void initState() {
     super.initState();
-
     Map<String, dynamic>? room;
+    int? roomIndex = widget.info["roomPropertyIndex"];
 
-    if (widget.index != null) {
+    if (roomIndex != null) {
       List<Map<String, dynamic>> rooms = toRoomList(widget.info["rooms"]);
       widget.info["rooms"] = rooms;
-      room = rooms[widget.index!];
+      room = rooms[roomIndex];
+      duration = room["duration"];
       facilities = room["facilities"];
       media = room["media"];
     } else {
@@ -4408,7 +4407,7 @@ class UploadHostelPage extends StatefulWidget {
 }
 
 class _UploadHostelPageState extends State<UploadHostelPage> {
-  bool hasError = false;
+  bool hasError = false, createdHostel = false;
   int progress = 0, total = 0;
   String message = "";
 
@@ -4436,6 +4435,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         showError(resp.message);
         Navigator.of(context).pop();
       } else {
+        setState(() => createdHostel = true);
         if (total == 1) {
           exit();
           return;
@@ -4564,7 +4564,13 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      if(!createdHostel) {
+                        upload();
+                      } else {
+                        uploadRooms();
+                      }
+                    },
                     child: Container(
                       width: 170.w,
                       height: 50.h,

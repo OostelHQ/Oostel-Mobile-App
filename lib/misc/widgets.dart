@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:jiffy/jiffy.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/components/comment.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/receipt_info.dart';
@@ -567,13 +569,14 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> likes = ref.watch(studentLikedHostelsProvider);
+    String id = ref.watch(currentUserProvider).id;
+
     return GestureDetector(
-      onTap: () => context.router
-          .pushNamed(
-            Pages.hostelInfo,
-            extra: widget.info,
-          )
-          .then((val) => setState(() {})),
+      onTap: () => context.router.pushNamed(
+        Pages.hostelInfo,
+        extra: widget.info,
+      ),
       child: SizedBox(
         height: 135.h,
         child: Center(
@@ -659,31 +662,24 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                 tag: "Hostel ID: ${widget.info.id} Liked",
                                 child: GestureDetector(
                                   onTap: () {
-                                    String id =
-                                        ref.read(currentUserProvider).id;
-                                    // if (widget.info.likes.contains(id)) {
-                                    //   widget.info.likes.remove(id);
-                                    // } else {
-                                    //   widget.info.likes.add(id);
-                                    // }
+                                    if (likes.contains(id)) {
+                                      likes.remove(id);
+                                    } else {
+                                      likes.add(id);
+                                    }
                                     setState(() {});
                                   },
                                   child: AnimatedSwitcherTranslation.right(
                                     duration: const Duration(milliseconds: 500),
                                     child: Icon(
                                       Icons.favorite_rounded,
-                                      // color: widget.info.likes.contains(
-                                      //     ref
-                                      //         .read(currentUserProvider)
-                                      //         .id)
-                                      //     ? Colors.red
-                                      //     : weirdBlack20,
+                                      color: likes.contains(id)
+                                          ? Colors.red
+                                          : weirdBlack20,
                                       size: 18,
-                                      // key: ValueKey<bool>(widget.info.likes
-                                      //     .contains(ref
-                                      //     .read(currentUserProvider)
-                                      //     .id),
-                                      // ),
+                                      key: ValueKey<bool>(
+                                        likes.contains(id),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -802,7 +798,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
   }
 }
 
-class StudentCard extends StatefulWidget {
+class StudentCard extends ConsumerStatefulWidget {
   final Student info;
 
   const StudentCard({
@@ -811,14 +807,17 @@ class StudentCard extends StatefulWidget {
   });
 
   @override
-  State<StudentCard> createState() => _StudentCardState();
+  ConsumerState<StudentCard> createState() => _StudentCardState();
 }
 
-class _StudentCardState extends State<StudentCard> {
-  bool liked = false;
+class _StudentCardState extends ConsumerState<StudentCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> likes = ref.watch(studentLikedRoommatesProvider);
+    String id = ref.watch(currentUserProvider).id;
+
+
     return GestureDetector(
       onTap: () => context.router.pushNamed(
         Pages.otherStudent,
@@ -863,14 +862,20 @@ class _StudentCardState extends State<StudentCard> {
                                 fontWeight: FontWeight.w600, color: weirdBlack),
                           ),
                           GestureDetector(
-                            onTap: () => setState(() => liked = !liked),
+                            onTap: () {
+                              if(likes.contains(id)) {
+                                likes.remove(id);
+                              } else {
+                                likes.add(id);
+                              }
+                            },
                             child: AnimatedSwitcherTranslation.right(
                               duration: const Duration(milliseconds: 500),
                               child: Icon(
                                 Icons.favorite_rounded,
-                                color: liked ? Colors.red : weirdBlack25,
+                                color: likes.contains(id) ? Colors.red : weirdBlack25,
                                 size: 18,
-                                key: ValueKey<bool>(liked),
+                                key: ValueKey<bool>(likes.contains(id)),
                               ),
                             ),
                           )
@@ -1012,13 +1017,13 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> likes = ref.watch(studentLikedHostelsProvider);
+    String id = ref.watch(currentUserProvider).id;
     return GestureDetector(
-      onTap: () => context.router
-          .pushNamed(
-            Pages.hostelInfo,
-            extra: widget.info,
-          )
-          .then((val) => setState(() {})),
+      onTap: () => context.router.pushNamed(
+        Pages.hostelInfo,
+        extra: widget.info,
+      ),
       child: SizedBox(
         height: 270.h,
         child: Center(
@@ -1089,30 +1094,29 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        String id = ref.read(currentUserProvider).id;
-                        // if (widget.info.likes.contains(id)) {
-                        //   widget.info.likes.remove(id);
-                        // } else {
-                        //   widget.info.likes.add(id);
-                        // }
+                        likeHostel({
+
+                        });
+
+                        if (likes.contains(id)) {
+                          likes.remove(id);
+                        } else {
+                          likes.add(id);
+                        }
                         setState(() {});
                       },
                       child: AnimatedSwitcherTranslation.right(
                         duration: const Duration(milliseconds: 500),
                         child: Icon(
                           Icons.favorite_rounded,
-
-                          // color: widget.info.likes
-                          //     .contains(ref
-                          //     .read(currentUserProvider)
-                          //     .id)
-                          //     ? Colors.red
-                          //     : weirdBlack25,
+                          color:
+                              likes.contains(ref.read(currentUserProvider).id)
+                                  ? Colors.red
+                                  : weirdBlack25,
                           size: 18,
-                          // key: ValueKey<bool>(widget.info.likes
-                          //     .contains(ref
-                          //     .read(currentUserProvider)
-                          //     .id)),
+                          key: ValueKey<bool>(
+                            likes.contains(id),
+                          ),
                         ),
                       ),
                     )
@@ -1749,208 +1753,210 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
     }
   }
 
+  void showRoomInfoSheet() {
+    showModalBottomSheet(
+      context: context,
+      elevation: 1.0,
+      builder: (_) => SizedBox(
+        width: 414.w,
+        child: Padding(
+          padding:
+          EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    Center(
+                      child: SvgPicture.asset(
+                          "assets/images/Modal Line.svg"),
+                    ),
+                    SizedBox(height: 25.h),
+                    Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.r),
+                          topRight: Radius.circular(15.r),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.info!.media.first,
+                          errorWidget: (context, url, error) =>
+                              Container(
+                                width: 414.w,
+                                height: 175.h,
+                                color: weirdBlack50,
+                                alignment: Alignment.center,
+                                child: loader,
+                              ),
+                          progressIndicatorBuilder:
+                              (context, url, download) => Container(
+                            width: 414.w,
+                            height: 175.h,
+                            color: weirdBlack50,
+                          ),
+                          imageBuilder: (context, provider) =>
+                              Container(
+                                width: 414.w,
+                                height: 175.h,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: provider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      isData
+                          ? widget.infoData!["name"]
+                          : widget.info!.name,
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22.sp,
+                        color: weirdBlack,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: currency(),
+                            style:
+                            context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: formatAmountInDouble(isData
+                                ? widget.infoData!["price"]
+                                : widget.info!.price),
+                            style:
+                            context.textTheme.bodyMedium!.copyWith(
+                              color: appBlue,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "/year",
+                            style:
+                            context.textTheme.bodySmall!.copyWith(
+                              color: appBlue,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Rooms Facilities",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack),
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
+                ),
+              ),
+              SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 5.r,
+                  mainAxisSpacing: 15.r,
+                  mainAxisExtent: 105.r,
+                ),
+                itemBuilder: (_, index) => FacilityContainer(
+                    text: widget.info!.facilities[index]),
+                itemCount: widget.info!.facilities.length,
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Gallery",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: weirdBlack),
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
+                ),
+              ),
+              SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.r,
+                    mainAxisSpacing: 10.r,
+                    mainAxisExtent: 110.r),
+                itemCount: widget.info!.media.length,
+                itemBuilder: (_, index) => GestureDetector(
+                  onTap: () => context.router.pushNamed(
+                    Pages.viewMedia,
+                    extra: ViewInfo(
+                      type: DisplayType.network,
+                      paths: widget.info!.media,
+                      current: index,
+                    ),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.info!.media[index],
+                    errorWidget: (context, url, error) => Container(
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: weirdBlack50,
+                      ),
+                      alignment: Alignment.center,
+                      child: loader,
+                    ),
+                    progressIndicatorBuilder:
+                        (context, url, download) => Container(
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: weirdBlack50,
+                      ),
+                    ),
+                    imageBuilder: (context, provider) => Container(
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        image: DecorationImage(
+                          image: provider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap ??
-          () {
-            showModalBottomSheet(
-              context: context,
-              elevation: 1.0,
-              builder: (_) => SizedBox(
-                width: 414.w,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 10.h),
-                            Center(
-                              child: SvgPicture.asset(
-                                  "assets/images/Modal Line.svg"),
-                            ),
-                            SizedBox(height: 25.h),
-                            Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15.r),
-                                  topRight: Radius.circular(15.r),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.info!.media.first,
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 414.w,
-                                    height: 175.h,
-                                    color: weirdBlack50,
-                                    alignment: Alignment.center,
-                                    child: loader,
-                                  ),
-                                  progressIndicatorBuilder:
-                                      (context, url, download) => Container(
-                                    width: 414.w,
-                                    height: 175.h,
-                                    color: weirdBlack50,
-                                  ),
-                                  imageBuilder: (context, provider) =>
-                                      Container(
-                                    width: 414.w,
-                                    height: 175.h,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: provider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              isData
-                                  ? widget.infoData!["name"]
-                                  : widget.info!.name,
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 22.sp,
-                                color: weirdBlack,
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: currency(),
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: formatAmountInDouble(isData
-                                        ? widget.infoData!["price"]
-                                        : widget.info!.price),
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: "/year",
-                                    style:
-                                        context.textTheme.bodySmall!.copyWith(
-                                      color: appBlue,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Rooms Facilities",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                          ],
-                        ),
-                      ),
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 5.r,
-                          mainAxisSpacing: 15.r,
-                          mainAxisExtent: 105.r,
-                        ),
-                        itemBuilder: (_, index) => FacilityContainer(
-                            text: widget.info!.facilities[index]),
-                        itemCount: widget.info!.facilities.length,
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Gallery",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: weirdBlack),
-                            ),
-                            SizedBox(height: 8.h),
-                          ],
-                        ),
-                      ),
-                      SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10.r,
-                            mainAxisSpacing: 10.r,
-                            mainAxisExtent: 110.r),
-                        itemCount: widget.info!.media.length,
-                        itemBuilder: (_, index) => GestureDetector(
-                          onTap: () => context.router.pushNamed(
-                            Pages.viewMedia,
-                            extra: ViewInfo(
-                              type: DisplayType.network,
-                              paths: widget.info!.media,
-                              current: index,
-                            ),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: widget.info!.media[index],
-                            errorWidget: (context, url, error) => Container(
-                              width: 110.r,
-                              height: 110.r,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                color: weirdBlack50,
-                              ),
-                              alignment: Alignment.center,
-                              child: loader,
-                            ),
-                            progressIndicatorBuilder:
-                                (context, url, download) => Container(
-                              width: 110.r,
-                              height: 110.r,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                color: weirdBlack50,
-                              ),
-                            ),
-                            imageBuilder: (context, provider) => Container(
-                              width: 110.r,
-                              height: 110.r,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                image: DecorationImage(
-                                  image: provider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+          showRoomInfoSheet,
       child: Container(
         width: 185.w,
         height: 215.h,
@@ -1964,6 +1970,20 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                widget.info == null ? Container(
+                  width: 185.w,
+                  height: 140.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.r),
+                      topRight: Radius.circular(10.r),
+                    ),
+                    image: DecorationImage(
+                      image: FileImage(File(widget.infoData!["media"].first.path)),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ) :
                 CachedNetworkImage(
                   imageUrl: widget.info!.media.first,
                   errorWidget: (context, url, error) => Container(
@@ -2017,14 +2037,14 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           SizedBox(
                             width: timeUp ? 150.w : 80.w,
                             child: Text(
-                              widget.info!.name,
+                              widget.info == null ? widget.infoData!["name"] : widget.info!.name,
                               overflow: TextOverflow.ellipsis,
                               style: context.textTheme.bodyMedium!.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: weirdBlack),
                             ),
                           ),
-                          if (!timeUp)
+                          if (!timeUp && !isData)
                             Container(
                               width: 70.w,
                               height: 25.h,
@@ -2057,7 +2077,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                               ),
                             ),
                             TextSpan(
-                              text: formatAmountInDouble(widget.info!.price),
+                              text: formatAmountInDouble(widget.info == null ? widget.infoData!["price"] :  widget.info!.price),
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: appBlue,
                                 fontFamily: "Inter",
