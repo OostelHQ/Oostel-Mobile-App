@@ -59,6 +59,12 @@ class _StepOneState extends ConsumerState<StepOne> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
         elevation: 0.0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
@@ -637,6 +643,7 @@ class _StepTwoState extends State<StepTwo> {
                     height: 100.h,
                     maxLines: 5,
                     hint: "Describe your hostel...",
+                    padding: EdgeInsets.fromLTRB(10, 25.0, 0, 0),
                     onValidate: (val) {
                       if (val == null || val!.trim().isEmpty) {
                         showError("Please give a description for your hostel.");
@@ -1396,13 +1403,17 @@ class _StepFourState extends State<StepFour> {
                   child: GestureDetector(
                     onTap: () =>
                         context.router.pushNamed(Pages.tenantAgreement),
-                    child: Text(
+                    child : Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
                       "Tenant Agreement",
                       style: context.textTheme.bodyMedium!.copyWith(
                         color: appBlue,
                         fontWeight: FontWeight.w600,
+                        
                       ),
                     ),
+                    )
                   ),
                 ),
                 SizedBox(height: 60.h),
