@@ -110,11 +110,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        )
+          iconSize: 26.r,
+          splashRadius: 0.01,
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => context.router.pop(),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

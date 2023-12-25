@@ -59,15 +59,16 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                 child: Container(
                   width: 400.w,
                   decoration: BoxDecoration(
-                      color: const Color(0xFFF8FBFF),
-                      borderRadius: BorderRadius.circular(4.r),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xFFE0E5EC),
-                          blurRadius: 6.0,
-                          spreadRadius: 1.0,
-                        )
-                      ]),
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(4.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 6.0,
+                        spreadRadius: 1.0,
+                      )
+                    ],
+                  ),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(
@@ -104,15 +105,16 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                 child: Container(
                   width: 400.w,
                   decoration: BoxDecoration(
-                      color: const Color(0xFFF8FBFF),
-                      borderRadius: BorderRadius.circular(4.r),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xFFE0E5EC),
-                          blurRadius: 6.0,
-                          spreadRadius: 1.0,
-                        )
-                      ]),
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(4.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 6.0,
+                        spreadRadius: 1.0,
+                      )
+                    ],
+                  ),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(
@@ -149,15 +151,16 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                 child: Container(
                   width: 400.w,
                   decoration: BoxDecoration(
-                      color: const Color(0xFFF8FBFF),
-                      borderRadius: BorderRadius.circular(4.r),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xFFE0E5EC),
-                          blurRadius: 6.0,
-                          spreadRadius: 1.0,
-                        )
-                      ]),
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(4.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFE0E5EC),
+                        blurRadius: 6.0,
+                        spreadRadius: 1.0,
+                      )
+                    ],
+                  ),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(
