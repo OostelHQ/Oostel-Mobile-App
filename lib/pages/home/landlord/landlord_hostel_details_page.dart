@@ -169,7 +169,7 @@ class _LandlordHostelInformationPageState
                         ],
                         onSelected: (result) => context.router.pushNamed(
                           Pages.editStepOne,
-                          extra: widget.info,
+                          extra: widget.info.data,
                         ),
                       ),
                     ),

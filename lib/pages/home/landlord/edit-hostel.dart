@@ -64,12 +64,7 @@ class _EditStepOneState extends ConsumerState<EditStepOne> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 0.01,
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => context.router.pop(),
-        ),
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Column(
@@ -1839,7 +1834,7 @@ class _EditStepSixState extends State<EditStepSix> {
                           setState(() => widget.info.media.add(response));
                         });
                       },
-                      child: !widget.info.isLocal(0)
+                      child: widget.info.isLocal(0)
                           ? CachedNetworkImage(
                               imageUrl: widget.info.media.first,
                               errorWidget: (context, url, error) => Container(
@@ -2018,7 +2013,7 @@ class _EditStepSixHalfState extends State<EditStepSixHalf> {
     );
   }
 
-  bool isLocal(int index) => widget.info.media[index]! is String;
+  bool isLocal(int index) => widget.info.media[index] !is String;
 
   @override
   Widget build(BuildContext context) {
@@ -2292,9 +2287,9 @@ class _EditStepSixHalfState extends State<EditStepSixHalf> {
                 int total = widget.info.media.length;
                 int videos = 0;
                 for (int i = 0; i < total; ++i) {
-                  if (isLocal(i) && widget.info.media[i].extension == "mp4") {
+                  if (!isLocal(i) && widget.info.media[i].extension == "mp4") {
                     ++videos;
-                  } else if (!isLocal(i) &&
+                  } else if (isLocal(i) &&
                       widget.info.media[i].endsWith("mp4")) {
                     ++videos;
                   }
@@ -2347,7 +2342,7 @@ class _EditStepSixHalfState extends State<EditStepSixHalf> {
 }
 
 class _SpecialContainer extends StatelessWidget {
-  final SingleFileResponse file;
+  final dynamic file;
   final Uint8List? data;
   final VoidCallback onDelete;
 
@@ -2367,7 +2362,7 @@ class _SpecialContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return file is SingleFileResponse ?  Container(
       width: 390.w,
       height: 270.h,
       decoration: BoxDecoration(
@@ -2406,6 +2401,32 @@ class _SpecialContainer extends StatelessWidget {
             ),
           )
         ],
+      ),
+    ) : CachedNetworkImage(
+      imageUrl: file,
+      errorWidget: (context, url, error) => Container(
+        width: 390.w,
+        height: 270.h,
+        color: weirdBlack50,
+        alignment: Alignment.center,
+        child: loader,
+      ),
+      progressIndicatorBuilder: (context, url, download) =>
+          Container(
+            width: 390.w,
+            height: 270.h,
+            color: weirdBlack50,
+          ),
+      imageBuilder: (context, provider) => Container(
+        width: 390.w,
+        height: 270.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.r),
+          image: DecorationImage(
+            image: provider,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
@@ -2519,7 +2540,7 @@ class _EditStepSevenState extends State<EditStepSeven> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        !widget.info.isLocal(0)
+                        widget.info.isLocal(0)
                             ? CachedNetworkImage(
                                 imageUrl: widget.info.media.first,
                                 errorWidget: (context, url, error) => Container(
@@ -2616,7 +2637,7 @@ class _EditStepSevenState extends State<EditStepSeven> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        !widget.info.isLocal(0)
+                        widget.info.isLocal(0)
                             ? CachedNetworkImage(
                                 imageUrl: widget.info.media.first,
                                 errorWidget: (context, url, error) => Container(

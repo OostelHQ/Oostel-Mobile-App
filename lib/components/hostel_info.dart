@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/api/file_manager.dart' show SingleFileResponse;
 
+import 'dart:developer' show log;
+
 class HostelInfo extends Equatable {
   final String id;
   final String name;
