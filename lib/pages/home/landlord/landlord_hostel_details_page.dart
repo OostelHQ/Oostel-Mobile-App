@@ -167,9 +167,10 @@ class _LandlordHostelInformationPageState
                             ),
                           )
                         ],
-                        onSelected: (result) {
-                          // Navigate to edit hostel
-                        },
+                        onSelected: (result) => context.router.pushNamed(
+                          Pages.editStepOne,
+                          extra: widget.info,
+                        ),
                       ),
                     ),
                   ],

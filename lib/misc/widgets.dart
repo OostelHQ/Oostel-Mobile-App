@@ -1690,7 +1690,8 @@ class RoomTypeCard extends ConsumerWidget {
 
 class AvailableRoomCard extends StatefulWidget {
   final RoomInfo? info;
-  final Map<String, dynamic>? infoData;
+  final RoomInfoData? infoData;
+  final Map<String, dynamic>? infoMap;
   final bool available;
   final VoidCallback? onTap;
   final DateTime? expiry;
@@ -1702,6 +1703,7 @@ class AvailableRoomCard extends StatefulWidget {
     this.available = false,
     this.info,
     this.infoData,
+    this.infoMap,
     this.expiry,
     this.onTap,
   });
@@ -1722,7 +1724,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
   void initState() {
     super.initState();
 
-    if (widget.info == null && widget.infoData != null) {
+    if (widget.info == null && (widget.infoMap != null || widget.infoData != null)) {
       isData = true;
       return;
     }
@@ -1813,7 +1815,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                     SizedBox(height: 16.h),
                     Text(
                       isData
-                          ? widget.infoData!["name"]
+                          ? widget.infoMap!["name"]
                           : widget.info!.name,
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
@@ -1836,7 +1838,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           ),
                           TextSpan(
                             text: formatAmountInDouble(isData
-                                ? widget.infoData!["price"]
+                                ? widget.infoMap!["price"]
                                 : widget.info!.price),
                             style:
                             context.textTheme.bodyMedium!.copyWith(
@@ -1952,6 +1954,27 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
     );
   }
 
+  bool get isLocalFirst {
+    if(widget.info != null) return false;
+    if(widget.infoMap != null) return true;
+    return widget.infoData!.media.first !is String;
+  }
+
+  String get name {
+    if(widget.info != null) return widget.info!.name;
+    if(widget.infoMap != null) return widget.infoMap!["name"];
+    return widget.infoData!.name;
+  }
+
+  double get price {
+    if(widget.info != null) return widget.info!.price;
+    if(widget.infoMap != null) return widget.infoMap!["price"];
+    return widget.infoData!.price;
+  }
+
+  File get localFile => File(widget.infoMap != null ? widget.infoMap!["media"].first.path : widget.infoData!.media.first.path);
+  String get onlineUrl => widget.info != null ? widget.info!.media.first : widget.infoData!.media.first;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -1970,7 +1993,8 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widget.info == null ? Container(
+                !isLocalFirst ?
+                Container(
                   width: 185.w,
                   height: 140.h,
                   decoration: BoxDecoration(
@@ -1979,13 +2003,13 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                       topRight: Radius.circular(10.r),
                     ),
                     image: DecorationImage(
-                      image: FileImage(File(widget.infoData!["media"].first.path)),
+                      image: FileImage(localFile),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ) :
                 CachedNetworkImage(
-                  imageUrl: widget.info!.media.first,
+                  imageUrl: onlineUrl,
                   errorWidget: (context, url, error) => Container(
                     width: 185.w,
                     height: 140.h,
@@ -2037,7 +2061,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           SizedBox(
                             width: timeUp ? 150.w : 80.w,
                             child: Text(
-                              widget.info == null ? widget.infoData!["name"] : widget.info!.name,
+                              name,
                               overflow: TextOverflow.ellipsis,
                               style: context.textTheme.bodyMedium!.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -2077,7 +2101,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                               ),
                             ),
                             TextSpan(
-                              text: formatAmountInDouble(widget.info == null ? widget.infoData!["price"] :  widget.info!.price),
+                              text: formatAmountInDouble(price),
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: appBlue,
                                 fontFamily: "Inter",

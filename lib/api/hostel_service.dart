@@ -16,7 +16,7 @@ List<RoomInfo> _toRoomList(List<dynamic> list) {
   return result;
 }
 
-Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
+Future<FyndaResponse<String?>> createHostel(Map<String, dynamic> map) async {
   try {
     FormData formData = FormData();
     List<SingleFileResponse> medias = map["medias"];
@@ -72,9 +72,9 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
 
       log(response.data.toString());
-      return const FyndaResponse(
+      return FyndaResponse(
         message: "Hostel Created",
-        payload: null,
+        payload: response.data["data"],
         success: true,
       );
     }
@@ -89,9 +89,9 @@ Future<FyndaResponse> createHostel(Map<String, dynamic> map) async {
   );
 }
 
-Future<FyndaResponse> updateHostel(Map<String, dynamic> map) async {
+Future<FyndaResponse> updateHostel(HostelInfoData data) async {
   try {
-    FormData formData = FormData.fromMap(map);
+    FormData formData = FormData.fromMap({});
     Response response = await dio.post(
       "/hostel/update-hostel",
       data: formData,
@@ -245,7 +245,7 @@ Future<FyndaResponse> createRoomForHostel({
     formData.fields.addAll([MapEntry("RoomFacilities", facility)]);
   }
   formData.fields.add(const MapEntry("isRented", "true"));
-  List<SingleFileResponse> medias = map["medias"];
+  List<SingleFileResponse> medias = map["media"];
   for (SingleFileResponse response in medias) {
     formData.files.addAll(
         [MapEntry("Files", await MultipartFile.fromFile(response.path))]);
@@ -259,6 +259,7 @@ Future<FyndaResponse> createRoomForHostel({
     );
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+      log(response.data.toString());
       return const FyndaResponse(
         message: "Success",
         payload: null,

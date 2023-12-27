@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:flutter/material.dart';
@@ -11,50 +12,54 @@ import 'package:flutter_svg/svg.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/api/hostel_service.dart';
+import 'package:my_hostel/components/hostel_info.dart';
+import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-const int totalPages = 11;
+import 'create-hostel.dart';
 
-class StepOne extends ConsumerStatefulWidget {
-  const StepOne({super.key,});
+void saveAndExit(
+    {required HostelInfoData info,
+    required BuildContext context,
+    GlobalKey<FormState>? formKey}) {
+  if (formKey != null && !validateForm(formKey)) return;
 
-  @override
-  ConsumerState<StepOne> createState() => _StepOneState();
+  updateHostel(info).then((resp) {
+    if (!resp.success) {
+      showError(resp.message);
+      Navigator.of(context).pop();
+      return;
+    }
+    context.router.pop();
+  });
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: loader,
+    ),
+  );
 }
 
-class _StepOneState extends ConsumerState<StepOne> {
-  late Map<String, dynamic> info;
+class EditStepOne extends ConsumerStatefulWidget {
+  final HostelInfoData info;
+
+  const EditStepOne({
+    super.key,
+    required this.info,
+  });
 
   @override
-  void initState() {
-    super.initState();
+  ConsumerState<EditStepOne> createState() => _EditStepOneState();
+}
 
-    info = {
-      "landlordId": ref.read(currentUserProvider).id,
-      "hostelDescription": "",
-      "hostelName": "",
-      "street": "",
-      "junction": "",
-      "state": "",
-      "country": "",
-      "RuleAndRegulation": [],
-      "priceBudgetRange": "",
-      "homeSize": 0.0,
-      "hostelCategory": 0,
-      "totalRoom": 0,
-      "rooms": [],
-      "FacilityName": [],
-      "medias": [],
-      "minPrice": 0.0,
-      "maxPrice": 0.0,
-      "isAnyRoomVacant": null,
-      "roomPropertyIndex": null,
-    };
-  }
-
+class _EditStepOneState extends ConsumerState<EditStepOne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,18 +86,17 @@ class _StepOneState extends ConsumerState<StepOne> {
             Align(
               alignment: Alignment.centerRight,
               child: PopupMenuButton<String>(
-                itemBuilder: (context) => [
-                  PopupMenuItem<String>(
-                    value: "Reset",
-                    child: Text(
-                      "Reset",
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  )
-                ],
-                onSelected: (result) =>
-                    setState(() => info["hostelCategory"] = 0),
-              ),
+                  itemBuilder: (context) => [
+                        PopupMenuItem<String>(
+                          value: "Reset",
+                          child: Text(
+                            "Save and Exit",
+                            style: context.textTheme.bodyMedium,
+                          ),
+                        )
+                      ],
+                  onSelected: (result) =>
+                      saveAndExit(info: widget.info, context: context)),
             ),
             SizedBox(height: 18.h),
           ],
@@ -133,7 +137,7 @@ class _StepOneState extends ConsumerState<StepOne> {
                 ),
                 SizedBox(height: 44.h),
                 GestureDetector(
-                  onTap: () => setState(() => info["hostelCategory"] = 1),
+                  onTap: () => setState(() => widget.info.category = 1),
                   child: Container(
                     width: 390.w,
                     decoration: BoxDecoration(
@@ -181,10 +185,10 @@ class _StepOneState extends ConsumerState<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["hostelCategory"],
+                                      value: widget.info.category,
                                       groupValue: 1,
                                       onChanged: (value) => setState(
-                                          () => info["hostelCategory"] = 1),
+                                          () => widget.info.category = 1),
                                     )
                                   ],
                                 ),
@@ -205,7 +209,7 @@ class _StepOneState extends ConsumerState<StepOne> {
                 ),
                 SizedBox(height: 16.h),
                 GestureDetector(
-                  onTap: () => setState(() => info["hostelCategory"] = 2),
+                  onTap: () => setState(() => widget.info.category = 2),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FBFF),
@@ -252,10 +256,10 @@ class _StepOneState extends ConsumerState<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["hostelCategory"],
+                                      value: widget.info.category,
                                       groupValue: 2,
                                       onChanged: (value) => setState(
-                                          () => info["hostelCategory"] = 2),
+                                          () => widget.info.category = 2),
                                     )
                                   ],
                                 ),
@@ -276,7 +280,7 @@ class _StepOneState extends ConsumerState<StepOne> {
                 ),
                 SizedBox(height: 16.h),
                 GestureDetector(
-                  onTap: () => setState(() => info["hostelCategory"] = 3),
+                  onTap: () => setState(() => widget.info.category = 3),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FBFF),
@@ -323,10 +327,10 @@ class _StepOneState extends ConsumerState<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["hostelCategory"],
+                                      value: widget.info.category,
                                       groupValue: 3,
                                       onChanged: (value) => setState(
-                                          () => info["hostelCategory"] = 3),
+                                          () => widget.info.category = 3),
                                     )
                                   ],
                                 ),
@@ -347,7 +351,7 @@ class _StepOneState extends ConsumerState<StepOne> {
                 ),
                 SizedBox(height: 16.h),
                 GestureDetector(
-                  onTap: () => setState(() => info["hostelCategory"] = 4),
+                  onTap: () => setState(() => widget.info.category = 4),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FBFF),
@@ -394,10 +398,10 @@ class _StepOneState extends ConsumerState<StepOne> {
                                       ),
                                     ),
                                     Radio(
-                                      value: info["hostelCategory"],
+                                      value: widget.info.category,
                                       groupValue: 4,
                                       onChanged: (value) => setState(
-                                          () => info["hostelCategory"] = 4),
+                                          () => widget.info.category = 4),
                                     )
                                   ],
                                 ),
@@ -430,8 +434,8 @@ class _StepOneState extends ConsumerState<StepOne> {
         child: Center(
           child: GestureDetector(
             onTap: () {
-              if (info["hostelCategory"] == 0) return;
-              context.router.pushNamed(Pages.stepTwo, extra: info);
+              if (widget.info.category == 0) return;
+              context.router.pushNamed(Pages.editStepTwo, extra: widget.info);
             },
             child: Container(
               width: 414.w,
@@ -439,7 +443,7 @@ class _StepOneState extends ConsumerState<StepOne> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.r),
-                color: info["hostelCategory"] == 0
+                color: widget.info.category == 0
                     ? appBlue.withOpacity(0.4)
                     : appBlue,
               ),
@@ -467,19 +471,19 @@ class _StepOneState extends ConsumerState<StepOne> {
   }
 }
 
-class StepTwo extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepTwo extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepTwo({
+  const EditStepTwo({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepTwo> createState() => _StepTwoState();
+  State<EditStepTwo> createState() => _EditStepTwoState();
 }
 
-class _StepTwoState extends State<StepTwo> {
+class _EditStepTwoState extends State<EditStepTwo> {
   late TextEditingController name;
   late TextEditingController description;
   late TextEditingController rooms;
@@ -489,14 +493,13 @@ class _StepTwoState extends State<StepTwo> {
   @override
   void initState() {
     super.initState();
-    name = TextEditingController(text: widget.info["hostelName"]);
-    description = TextEditingController(text: widget.info["hostelDescription"]);
+    name = TextEditingController(text: widget.info.name);
+    description = TextEditingController(text: widget.info.description);
     rooms = TextEditingController(
-        text:
-            "${widget.info["totalRoom"] == 0 ? "" : widget.info["totalRoom"]}");
+        text: "${widget.info.totalRooms == 0 ? "" : widget.info.totalRooms}");
     area = TextEditingController(
         text:
-            "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
+            widget.info.area == 0.0 ? "" : widget.info.area.toStringAsFixed(2));
   }
 
   @override
@@ -540,22 +543,13 @@ class _StepTwoState extends State<StepTwo> {
                   PopupMenuItem<String>(
                     value: "Reset",
                     child: Text(
-                      "Reset",
+                      "Save and Exit",
                       style: context.textTheme.bodyMedium,
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() {
-                  name.clear();
-                  description.clear();
-                  rooms.clear();
-                  area.clear();
-
-                  widget.info["name"] = "";
-                  widget.info["description"] = "";
-                  widget.info["area"] = "";
-                  widget.info["totalRooms"] = "";
-                }),
+                onSelected: (result) => saveAndExit(
+                    info: widget.info, context: context, formKey: formKey),
               ),
             ),
             SizedBox(height: 18.h),
@@ -623,7 +617,7 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["hostelName"] = val!,
+                    onSave: (val) => widget.info.name = val!,
                     onChange: (val) => textChecker(
                       text: val,
                       onAction: () => setState(() {}),
@@ -643,6 +637,7 @@ class _StepTwoState extends State<StepTwo> {
                     height: 100.h,
                     maxLines: 5,
                     hint: "Describe your hostel...",
+                    //padding: const EdgeInsets.fromLTRB(10, 25.0, 0, 0),
                     onValidate: (val) {
                       if (val == null || val!.trim().isEmpty) {
                         showError("Please give a description for your hostel.");
@@ -650,7 +645,7 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["hostelDescription"] = val!,
+                    onSave: (val) => widget.info.description = val!,
                     onChange: (val) => textChecker(
                       text: val,
                       onAction: () => setState(() {}),
@@ -680,7 +675,7 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["totalRoom"] = int.parse(val!),
+                    onSave: (val) => widget.info.totalRooms = int.parse(val!),
                     onChange: (val) => textChecker(
                       text: val,
                       onAction: () => setState(() {}),
@@ -710,8 +705,7 @@ class _StepTwoState extends State<StepTwo> {
                       }
                       return null;
                     },
-                    onSave: (val) =>
-                        widget.info["homeSize"] = double.parse(val!),
+                    onSave: (val) => widget.info.area = double.parse(val!),
                     onChange: (val) => textChecker(
                       text: val,
                       onAction: () => setState(() {}),
@@ -764,7 +758,8 @@ class _StepTwoState extends State<StepTwo> {
             GestureDetector(
               onTap: () {
                 if (!validateForm(formKey)) return;
-                context.router.pushNamed(Pages.stepThree, extra: widget.info);
+                context.router
+                    .pushNamed(Pages.editStepThree, extra: widget.info);
               },
               child: Container(
                 width: 170.w,
@@ -799,19 +794,19 @@ class _StepTwoState extends State<StepTwo> {
   }
 }
 
-class StepThree extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepThree extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepThree({
+  const EditStepThree({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepThree> createState() => _StepThreeState();
+  State<EditStepThree> createState() => _EditStepThreeState();
 }
 
-class _StepThreeState extends State<StepThree>
+class _EditStepThreeState extends State<EditStepThree>
     with SingleTickerProviderStateMixin {
   bool share = false;
 
@@ -829,10 +824,11 @@ class _StepThreeState extends State<StepThree>
   void initState() {
     super.initState();
 
-    street = TextEditingController(text: widget.info["street"]);
-    junction = TextEditingController(text: widget.info["junction"]);
-    state = TextEditingController(text: widget.info["state"]);
-    country = TextEditingController(text: widget.info["country"]);
+    List<String> address = widget.info.address.split("#");
+    street = TextEditingController(text: address[0]);
+    junction = TextEditingController(text: address[1]);
+    state = TextEditingController(text: address[2]);
+    country = TextEditingController(text: address[3]);
 
     controller = AnimationController(
       vsync: this,
@@ -889,22 +885,13 @@ class _StepThreeState extends State<StepThree>
                   PopupMenuItem<String>(
                     value: "Reset",
                     child: Text(
-                      "Reset",
+                      "Save and Exit",
                       style: context.textTheme.bodyMedium,
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() {
-                  street.clear();
-                  junction.clear();
-                  state.clear();
-                  country.clear();
-
-                  widget.info["state"] = "";
-                  widget.info["street"] = "";
-                  widget.info["junction"] = "";
-                  widget.info["country"] = "";
-                }),
+                onSelected: (result) => saveAndExit(
+                    info: widget.info, context: context, formKey: formKey),
               ),
             ),
             SizedBox(height: 18.h),
@@ -976,7 +963,6 @@ class _StepThreeState extends State<StepThree>
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["street"] = val,
                   ),
                   SizedBox(height: 16.h),
                   Text(
@@ -1002,7 +988,6 @@ class _StepThreeState extends State<StepThree>
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["junction"] = val,
                   ),
                   SizedBox(height: 16.h),
                   Text(
@@ -1028,7 +1013,6 @@ class _StepThreeState extends State<StepThree>
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["state"] = val,
                   ),
                   SizedBox(height: 16.h),
                   Text(
@@ -1054,7 +1038,8 @@ class _StepThreeState extends State<StepThree>
                       }
                       return null;
                     },
-                    onSave: (val) => widget.info["country"] = val,
+                    onSave: (val) => widget.info.address =
+                        "${street.text.trim()}#${junction.text.trim()}#${street.text.trim()}#${country.text.trim()}",
                   ),
                   SizedBox(height: 16.h),
                   // Row(
@@ -1178,7 +1163,8 @@ class _StepThreeState extends State<StepThree>
               onTap: () {
                 if (!isFilled) return;
                 if (!validateForm(formKey)) return;
-                context.router.pushNamed(Pages.stepFour, extra: widget.info);
+                context.router
+                    .pushNamed(Pages.editStepFour, extra: widget.info);
               },
               child: Container(
                 width: 170.w,
@@ -1213,29 +1199,20 @@ class _StepThreeState extends State<StepThree>
   }
 }
 
-class StepFour extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepFour extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepFour({
+  const EditStepFour({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepFour> createState() => _StepFourState();
+  State<EditStepFour> createState() => _EditStepFourState();
 }
 
-class _StepFourState extends State<StepFour> {
+class _EditStepFourState extends State<EditStepFour> {
   final TextEditingController rule = TextEditingController();
-
-  late List<String> rules;
-
-  @override
-  void initState() {
-    super.initState();
-    rules = toStringList(widget.info["RuleAndRegulation"]);
-    widget.info["RuleAndRegulation"] = rules;
-  }
 
   @override
   void dispose() {
@@ -1267,12 +1244,13 @@ class _StepFourState extends State<StepFour> {
                   PopupMenuItem<String>(
                     value: "Reset",
                     child: Text(
-                      "Reset",
+                      "Save and Exit",
                       style: context.textTheme.bodyMedium,
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() => rules.clear()),
+                onSelected: (result) =>
+                    saveAndExit(info: widget.info, context: context),
               ),
             ),
             SizedBox(height: 18.h),
@@ -1335,7 +1313,7 @@ class _StepFourState extends State<StepFour> {
                     onTap: () {
                       String text = rule.text.trim();
                       if (text.isNotEmpty) {
-                        rules.add(text);
+                        widget.info.rules.add(text);
                         rule.clear();
                         setState(() {});
                       }
@@ -1368,7 +1346,7 @@ class _StepFourState extends State<StepFour> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(
-                    rules.length,
+                    widget.info.rules.length,
                     (index) => Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1376,7 +1354,7 @@ class _StepFourState extends State<StepFour> {
                         SizedBox(
                           width: 300.w,
                           child: Text(
-                            "${index + 1}. ${rules[index]}",
+                            "${index + 1}. ${widget.info.rules[index]}",
                             style: context.textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.w500,
                               color: weirdBlack75,
@@ -1389,7 +1367,7 @@ class _StepFourState extends State<StepFour> {
                           splashRadius: 15.r,
                           visualDensity: VisualDensity.compact,
                           onPressed: () {
-                            rules.removeAt(index);
+                            widget.info.rules.removeAt(index);
                             setState(() {});
                           },
                         )
@@ -1456,13 +1434,12 @@ class _StepFourState extends State<StepFour> {
             GestureDetector(
               onTap: () {
                 unFocus();
-
-                if (rules.length < 2) {
+                if (widget.info.rules.length < 2) {
                   showError("Please add at least two rules for your hostel");
                   return;
                 }
-
-                context.router.pushNamed(Pages.stepFive, extra: widget.info);
+                context.router
+                    .pushNamed(Pages.editStepFive, extra: widget.info);
               },
               child: Container(
                 width: 170.w,
@@ -1497,19 +1474,19 @@ class _StepFourState extends State<StepFour> {
   }
 }
 
-class StepFive extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepFive extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepFive({
+  const EditStepFive({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepFive> createState() => _StepFiveState();
+  State<EditStepFive> createState() => _EditStepFiveState();
 }
 
-class _StepFiveState extends State<StepFive> {
+class _EditStepFiveState extends State<EditStepFive> {
   final List<String> images = [
     "assets/images/Light-Off.svg",
     "assets/images/Tap.svg",
@@ -1524,15 +1501,6 @@ class _StepFiveState extends State<StepFive> {
   ];
 
   final List<String> names = ["Light", "Tap", "Well", "Pool", "Security"];
-
-  late List<String> facilities;
-
-  @override
-  void initState() {
-    super.initState();
-    facilities = toStringList(widget.info["FacilityName"]);
-    widget.info["FacilityName"] = facilities;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1558,12 +1526,13 @@ class _StepFiveState extends State<StepFive> {
                   PopupMenuItem<String>(
                     value: "Reset",
                     child: Text(
-                      "Reset",
+                      "Save and Exit",
                       style: context.textTheme.bodyMedium,
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() => facilities.clear()),
+                onSelected: (result) =>
+                    saveAndExit(info: widget.info, context: context),
               ),
             ),
             SizedBox(height: 18.h),
@@ -1603,92 +1572,96 @@ class _StepFiveState extends State<StepFive> {
               ),
               SizedBox(height: 44.h),
               Expanded(
-                  child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20.w,
-                  mainAxisSpacing: 20.w,
-                  mainAxisExtent: 90.h,
-                ),
-                itemBuilder: (_, index) {
-                  bool present = facilities.contains(names[index]);
-                  return GestureDetector(
-                    onTap: () => setState(() {
-                      if (present) {
-                        facilities.remove(names[index]);
-                      } else {
-                        facilities.add(names[index]);
-                      }
-                    }),
-                    child: Container(
-                      width: 170.w,
-                      height: 90.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.r),
-                        border: Border.all(
-                          color: present ? appBlue : fadedBorder,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 20.w,
+                    mainAxisSpacing: 20.w,
+                    mainAxisExtent: 90.h,
+                  ),
+                  itemBuilder: (_, index) {
+                    bool present =
+                        widget.info.hostelFacilities.contains(names[index]);
+                    return GestureDetector(
+                      onTap: () => setState(() {
+                        if (present) {
+                          widget.info.hostelFacilities.remove(names[index]);
+                        } else {
+                          widget.info.hostelFacilities.add(names[index]);
+                        }
+                      }),
+                      child: Container(
+                        width: 170.w,
+                        height: 90.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.r),
+                          border: Border.all(
+                            color: present ? appBlue : fadedBorder,
+                          ),
+                          color: widget.info.hostelFacilities
+                                  .contains(names[index])
+                              ? paleBlue
+                              : null,
                         ),
-                        color:
-                            facilities.contains(names[index]) ? paleBlue : null,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 10.h,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              height: 90.h,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                      images[present ? index + 5 : index]),
-                                  Text(
-                                    names[index],
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: present ? appBlue : weirdBlack50,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            AnimatedSwitcherTranslation.right(
-                              duration: const Duration(milliseconds: 250),
-                              child: Container(
-                                height: 15.r,
-                                width: 15.r,
-                                alignment: Alignment.center,
-                                key: ValueKey<bool>(present),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: fadedBorder),
-                                  borderRadius: BorderRadius.circular(3.r),
-                                  color: present ? appBlue : null,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 10.h,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: 90.h,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                        images[present ? index + 5 : index]),
+                                    Text(
+                                      names[index],
+                                      style: context.textTheme.bodyMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: present ? appBlue : weirdBlack50,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                child: present
-                                    ? const Icon(
-                                        Icons.done_rounded,
-                                        color: Colors.white,
-                                        size: 10,
-                                      )
-                                    : null,
                               ),
-                            ),
-                          ],
+                              AnimatedSwitcherTranslation.right(
+                                duration: const Duration(milliseconds: 250),
+                                child: Container(
+                                  height: 15.r,
+                                  width: 15.r,
+                                  alignment: Alignment.center,
+                                  key: ValueKey<bool>(present),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: fadedBorder),
+                                    borderRadius: BorderRadius.circular(3.r),
+                                    color: present ? appBlue : null,
+                                  ),
+                                  child: present
+                                      ? const Icon(
+                                          Icons.done_rounded,
+                                          color: Colors.white,
+                                          size: 10,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                itemCount: names.length,
-              )),
+                    );
+                  },
+                  itemCount: names.length,
+                ),
+              ),
             ],
           ),
         ),
@@ -1732,11 +1705,11 @@ class _StepFiveState extends State<StepFive> {
             ),
             GestureDetector(
               onTap: () {
-                if (facilities.isEmpty) {
-                  facilities.add("None");
+                if (widget.info.hostelFacilities.isEmpty) {
+                  widget.info.hostelFacilities.add("None");
                 }
 
-                context.router.pushNamed(Pages.stepSix, extra: widget.info);
+                context.router.pushNamed(Pages.editStepSix, extra: widget.info);
               },
               child: Container(
                 width: 170.w,
@@ -1771,29 +1744,19 @@ class _StepFiveState extends State<StepFive> {
   }
 }
 
-class StepSix extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepSix extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepSix({
+  const EditStepSix({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepSix> createState() => _StepSixState();
+  State<EditStepSix> createState() => _EditStepSixState();
 }
 
-class _StepSixState extends State<StepSix> {
-  late List<SingleFileResponse> media;
-  bool noFirstValue = true;
-
-  @override
-  void initState() {
-    super.initState();
-    media = toDataList(widget.info["medias"]);
-    widget.info["medias"] = media;
-  }
-
+class _EditStepSixState extends State<EditStepSix> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1822,18 +1785,13 @@ class _StepSixState extends State<StepSix> {
                         PopupMenuItem<String>(
                           value: "Reset",
                           child: Text(
-                            "Reset",
+                            "Save and Exit",
                             style: context.textTheme.bodyMedium,
                           ),
                         )
                       ],
-                      onSelected: (result) => setState(() {
-                        if(!noFirstValue) {
-                          media.removeAt(0);
-                        }
-
-                        noFirstValue = true;
-                      }),
+                      onSelected: (result) =>
+                          saveAndExit(info: widget.info, context: context),
                     ),
                   ),
                   SizedBox(height: 18.h),
@@ -1878,65 +1836,50 @@ class _StepSixState extends State<StepSix> {
                         FileManager.single(type: FileType.image)
                             .then((response) async {
                           if (response == null) return;
-                          setState(() {
-                            if(noFirstValue) {
-                              media.insert(0, response);
-                            } else {
-                              media[0] = response;
-                            }
-
-                            noFirstValue = false;
-                          });
+                          setState(() => widget.info.media.add(response));
                         });
                       },
-                      child: Container(
-                        width: 350.w,
-                        height: 270.h,
-                        padding: EdgeInsets.symmetric(horizontal: 25.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          color: noFirstValue ? paleBlue : null,
-                          image: noFirstValue
-                              ? null
-                              : DecorationImage(
-                                  image: FileImage(File(media.first.path)),
+                      child: !widget.info.isLocal(0)
+                          ? CachedNetworkImage(
+                              imageUrl: widget.info.media.first,
+                              errorWidget: (context, url, error) => Container(
+                                width: 350.w,
+                                height: 270.h,
+                                color: weirdBlack50,
+                              ),
+                              progressIndicatorBuilder:
+                                  (context, url, download) => Container(
+                                width: 350.w,
+                                height: 270.h,
+                                color: weirdBlack50,
+                                alignment: Alignment.center,
+                                child: loader,
+                              ),
+                              imageBuilder: (context, provider) => Container(
+                                width: 350.w,
+                                height: 270.h,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: provider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              width: 350.w,
+                              height: 270.h,
+                              padding: EdgeInsets.symmetric(horizontal: 25.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                image: DecorationImage(
+                                  image: FileImage(
+                                    File(widget.info.media.first.path),
+                                  ),
                                   fit: BoxFit.cover,
                                 ),
-                        ),
-                        child: noFirstValue
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/images/Hostel Image.svg",
-                                    width: 40.r,
-                                    height: 40.r,
-                                  ),
-                                  SizedBox(height: 16.h),
-                                  Text(
-                                    "Upload a front-view picture of your hostel",
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: weirdBlack,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Text(
-                                    "Maximum size allowed is 2MB of png and jpg format",
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: weirdBlack75,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                ],
-                              )
-                            : null,
-                      ),
+                              ),
+                            ),
                     ),
                   ],
                 ),
@@ -1983,14 +1926,8 @@ class _StepSixState extends State<StepSix> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                if (noFirstValue) {
-                  showError(
-                      "Please choose an image for your hostel front view");
-                  return;
-                }
-                context.router.pushNamed(Pages.stepSixHalf, extra: widget.info);
-              },
+              onTap: () => context.router
+                  .pushNamed(Pages.editStepSixHalf, extra: widget.info),
               child: Container(
                 width: 170.w,
                 height: 50.h,
@@ -2024,32 +1961,24 @@ class _StepSixState extends State<StepSix> {
   }
 }
 
-class StepSixHalf extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepSixHalf extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepSixHalf({
+  const EditStepSixHalf({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepSixHalf> createState() => _StepSixHalfState();
+  State<EditStepSixHalf> createState() => _EditStepSixHalfState();
 }
 
-class _StepSixHalfState extends State<StepSixHalf> {
-  late List<SingleFileResponse> media;
+class _EditStepSixHalfState extends State<EditStepSixHalf> {
   late Uint8List? videoData;
   late int? videoDataIndex;
 
-  @override
-  void initState() {
-    super.initState();
-    media = toDataList(widget.info["medias"]);
-    media = media.sublist(1);
-  }
-
   void selectMedia() {
-    if (media.length == 4) {
+    if (widget.info.media.length == 5) {
       showError("You cannot select more than 4 media");
       return;
     }
@@ -2063,8 +1992,8 @@ class _StepSixHalfState extends State<StepSixHalf> {
             videoPath = response[i].path;
           }
 
-          if(media.length < 4) {
-            media.add(response[i]);
+          if (widget.info.media.length < 5) {
+            widget.info.media.add(response[i]);
           }
         }
 
@@ -2077,8 +2006,8 @@ class _StepSixHalfState extends State<StepSixHalf> {
             quality: 75,
           );
 
-          for (int i = 0; i < media.length; ++i) {
-            if (media[i].path == videoPath) {
+          for (int i = 0; i < widget.info.media.length; ++i) {
+            if (isLocal(i) && widget.info.media[i].path == videoPath) {
               videoDataIndex = i;
             }
           }
@@ -2088,6 +2017,8 @@ class _StepSixHalfState extends State<StepSixHalf> {
       },
     );
   }
+
+  bool isLocal(int index) => widget.info.media[index]! is String;
 
   @override
   Widget build(BuildContext context) {
@@ -2117,16 +2048,13 @@ class _StepSixHalfState extends State<StepSixHalf> {
                         PopupMenuItem<String>(
                           value: "Reset",
                           child: Text(
-                            "Reset",
+                            "Save and Exit",
                             style: context.textTheme.bodyMedium,
                           ),
                         )
                       ],
-                      onSelected: (result) => setState(() {
-                        SingleFileResponse first = media.removeAt(0);
-                        media.clear();
-                        media.add(first);
-                      }),
+                      onSelected: (result) =>
+                          saveAndExit(info: widget.info, context: context),
                     ),
                   ),
                   SizedBox(height: 18.h),
@@ -2174,66 +2102,102 @@ class _StepSixHalfState extends State<StepSixHalf> {
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverList.separated(
                 itemBuilder: (_, index) {
-                  if (index == media.length) {
+                  if (index == widget.info.media.length - 1) {
                     return Column(
                       children: [
-                        if (media.isEmpty)
+                        if (widget.info.media.length == 1)
                           GestureDetector(
                             onTap: selectMedia,
-                            child: Container(
-                              width: 350.w,
-                              height: 270.h,
-                              padding: EdgeInsets.symmetric(horizontal: 25.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r),
-                                color: media.isEmpty ? paleBlue : null,
-                                image: media.isEmpty
-                                    ? null
-                                    : DecorationImage(
-                                        image:
-                                            FileImage(File(media.first.path)),
-                                        fit: BoxFit.cover,
+                            child: isLocal(index + 1)
+                                ? CachedNetworkImage(
+                                    imageUrl: widget.info.media.first,
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      width: 350.w,
+                                      height: 270.h,
+                                      color: weirdBlack50,
+                                      alignment: Alignment.center,
+                                      child: loader,
+                                    ),
+                                    progressIndicatorBuilder:
+                                        (context, url, download) => Container(
+                                      width: 350.w,
+                                      height: 270.h,
+                                      color: weirdBlack50,
+                                    ),
+                                    imageBuilder: (context, provider) =>
+                                        Container(
+                                      width: 350.w,
+                                      height: 270.h,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: provider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                              ),
-                              child: media.isEmpty
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/images/Hostel Image.svg",
-                                          width: 40.r,
-                                          height: 40.r,
-                                        ),
-                                        SizedBox(height: 16.h),
-                                        Text(
-                                          "Upload a video (optional) or images of your hostel",
-                                          textAlign: TextAlign.center,
-                                          style: context.textTheme.bodyMedium!
-                                              .copyWith(
-                                            color: weirdBlack,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8.h),
-                                        Text(
-                                          "Maximum size allowed is 2MB for images and 50MB for video",
-                                          textAlign: TextAlign.center,
-                                          style: context.textTheme.bodyMedium!
-                                              .copyWith(
-                                            color: weirdBlack75,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  : null,
-                            ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 350.w,
+                                    height: 270.h,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 25.w),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: widget.info.media.length == 1
+                                          ? paleBlue
+                                          : null,
+                                      image: widget.info.media.length == 1
+                                          ? null
+                                          : DecorationImage(
+                                              image: FileImage(File(widget
+                                                  .info.media.first.path)),
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                    child: widget.info.media.length == 1
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/images/Hostel Image.svg",
+                                                width: 40.r,
+                                                height: 40.r,
+                                              ),
+                                              SizedBox(height: 16.h),
+                                              Text(
+                                                "Upload a video (optional) or images of your hostel",
+                                                textAlign: TextAlign.center,
+                                                style: context
+                                                    .textTheme.bodyMedium!
+                                                    .copyWith(
+                                                  color: weirdBlack,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8.h),
+                                              Text(
+                                                "Maximum size allowed is 2MB for images and 50MB for video",
+                                                textAlign: TextAlign.center,
+                                                style: context
+                                                    .textTheme.bodyMedium!
+                                                    .copyWith(
+                                                  color: weirdBlack75,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : null,
+                                  ),
                           ),
-                        SizedBox(height: media.isEmpty ? 32.h : 20.h),
-                        if (media.isNotEmpty)
+                        SizedBox(
+                            height:
+                                widget.info.media.length == 1 ? 32.h : 20.h),
+                        if (widget.info.media.length > 1)
                           GestureDetector(
                             onTap: selectMedia,
                             child: Container(
@@ -2270,16 +2234,16 @@ class _StepSixHalfState extends State<StepSixHalf> {
 
                   return _SpecialContainer(
                     onDelete: () => setState(() {
-                      media.removeAt(index);
+                      widget.info.media.removeAt(index + 1);
                       if (videoDataIndex != null && index == videoDataIndex) {
                         videoDataIndex = null;
                         videoData = null;
                       }
                     }),
-                    file: media[index],
+                    file: widget.info.media[index],
                   );
                 },
-                itemCount: media.length + 1,
+                itemCount: widget.info.media.length,
                 separatorBuilder: (_, __) => SizedBox(height: 20.h),
               ),
             ),
@@ -2325,15 +2289,18 @@ class _StepSixHalfState extends State<StepSixHalf> {
             ),
             GestureDetector(
               onTap: () {
-                int total = media.length;
+                int total = widget.info.media.length;
                 int videos = 0;
-                for (var resp in media) {
-                  if (resp.extension == "mp4") {
+                for (int i = 0; i < total; ++i) {
+                  if (isLocal(i) && widget.info.media[i].extension == "mp4") {
+                    ++videos;
+                  } else if (!isLocal(i) &&
+                      widget.info.media[i].endsWith("mp4")) {
                     ++videos;
                   }
                 }
 
-                if (total > 4) {
+                if (total > 5) {
                   showError("You need can only upload a maximum of 4 media");
                   return;
                 }
@@ -2343,11 +2310,8 @@ class _StepSixHalfState extends State<StepSixHalf> {
                   return;
                 }
 
-                SingleFileResponse first = widget.info["medias"].first;
-                widget.info["medias"].clear();
-                widget.info["medias"].add(first);
-                widget.info["medias"].addAll(media);
-                context.router.pushNamed(Pages.stepSeven, extra: widget.info);
+                context.router
+                    .pushNamed(Pages.editStepSeven, extra: widget.info);
               },
               child: Container(
                 width: 170.w,
@@ -2447,19 +2411,19 @@ class _SpecialContainer extends StatelessWidget {
   }
 }
 
-class StepSeven extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepSeven extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepSeven({
+  const EditStepSeven({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepSeven> createState() => _StepSevenState();
+  State<EditStepSeven> createState() => _EditStepSevenState();
 }
 
-class _StepSevenState extends State<StepSeven> {
+class _EditStepSevenState extends State<EditStepSeven> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -2484,13 +2448,13 @@ class _StepSevenState extends State<StepSeven> {
                   PopupMenuItem<String>(
                     value: "Reset",
                     child: Text(
-                      "Reset",
+                      "Save and Exit",
                       style: context.textTheme.bodyMedium,
                     ),
                   )
                 ],
                 onSelected: (result) =>
-                    setState(() => widget.info["isAnyRoomVacant"] = null),
+                    saveAndExit(info: widget.info, context: context),
               ),
             ),
             SizedBox(height: 18.h),
@@ -2555,15 +2519,43 @@ class _StepSevenState extends State<StepSeven> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5.r),
-                          child: Image.file(
-                            File(widget.info["medias"].first.path),
-                            width: 114.w,
-                            height: 100.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        !widget.info.isLocal(0)
+                            ? CachedNetworkImage(
+                                imageUrl: widget.info.media.first,
+                                errorWidget: (context, url, error) => Container(
+                                  width: 114.w,
+                                  height: 100.h,
+                                  color: weirdBlack50,
+                                ),
+                                progressIndicatorBuilder:
+                                    (context, url, download) => Container(
+                                  width: 114.w,
+                                  height: 100.h,
+                                  color: weirdBlack50,
+                                  alignment: Alignment.center,
+                                  child: loader,
+                                ),
+                                imageBuilder: (context, provider) => Container(
+                                  width: 114.w,
+                                  height: 100.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    image: DecorationImage(
+                                      image: provider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(5.r),
+                                child: Image.file(
+                                  File(widget.info.media.first.path),
+                                  width: 114.w,
+                                  height: 100.h,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                         SizedBox(
                           width: 220.w,
                           child: Column(
@@ -2583,10 +2575,10 @@ class _StepSevenState extends State<StepSeven> {
                                     ),
                                   ),
                                   Radio(
-                                    value: widget.info["isAnyRoomVacant"],
+                                    value: widget.info.vacantRooms,
                                     groupValue: true,
-                                    onChanged: (value) => setState(() =>
-                                        widget.info["isAnyRoomVacant"] = true),
+                                    onChanged: (value) => setState(
+                                        () => widget.info.vacantRooms = true),
                                   )
                                 ],
                               ),
@@ -2624,15 +2616,43 @@ class _StepSevenState extends State<StepSeven> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5.r),
-                          child: Image.file(
-                            File(widget.info["medias"].first.path),
-                            width: 114.w,
-                            height: 100.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        !widget.info.isLocal(0)
+                            ? CachedNetworkImage(
+                                imageUrl: widget.info.media.first,
+                                errorWidget: (context, url, error) => Container(
+                                  width: 114.w,
+                                  height: 100.h,
+                                  color: weirdBlack50,
+                                ),
+                                progressIndicatorBuilder:
+                                    (context, url, download) => Container(
+                                  width: 114.w,
+                                  height: 100.h,
+                                  color: weirdBlack50,
+                                  alignment: Alignment.center,
+                                  child: loader,
+                                ),
+                                imageBuilder: (context, provider) => Container(
+                                  width: 114.w,
+                                  height: 100.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    image: DecorationImage(
+                                      image: provider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(5.r),
+                                child: Image.file(
+                                  File(widget.info.media.first.path),
+                                  width: 114.w,
+                                  height: 100.h,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                         SizedBox(
                           width: 220.w,
                           child: Column(
@@ -2651,10 +2671,10 @@ class _StepSevenState extends State<StepSeven> {
                                     ),
                                   ),
                                   Radio(
-                                    value: widget.info["isAnyRoomVacant"],
+                                    value: widget.info.vacantRooms,
                                     groupValue: false,
-                                    onChanged: (value) => setState(() =>
-                                        widget.info["isAnyRoomVacant"] = false),
+                                    onChanged: (value) => setState(
+                                        () => widget.info.vacantRooms = false),
                                   )
                                 ],
                               ),
@@ -2716,28 +2736,19 @@ class _StepSevenState extends State<StepSeven> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                if (widget.info["isAnyRoomVacant"] == null) {
-                  showError("Please indicate if your hostel has vacancy");
-                  return;
-                }
-
-                context.router.pushNamed(
-                  !(widget.info["isAnyRoomVacant"] as bool)
-                      ? Pages.stepTen
-                      : Pages.stepEight,
-                  extra: widget.info,
-                );
-              },
+              onTap: () => context.router.pushNamed(
+                !widget.info.vacantRooms
+                    ? Pages.editStepTen
+                    : Pages.editStepEight,
+                extra: widget.info,
+              ),
               child: Container(
                 width: 170.w,
                 height: 50.h,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.r),
-                  color: widget.info["isAnyRoomVacant"] == null
-                      ? appBlue.withOpacity(0.4)
-                      : appBlue,
+                  color: appBlue,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -2764,30 +2775,20 @@ class _StepSevenState extends State<StepSeven> {
   }
 }
 
-class StepEight extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepEight extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepEight({
+  const EditStepEight({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepEight> createState() => _StepEightState();
+  State<EditStepEight> createState() => _EditStepEightState();
 }
 
-class _StepEightState extends State<StepEight> {
-  late List<Map<String, dynamic>> rooms;
-
-  @override
-  void initState() {
-    super.initState();
-    rooms = toRoomList(widget.info["rooms"]);
-    widget.info["rooms"] = rooms;
-  }
-
-  bool exists(int index) => index < rooms.length;
-
+class _EditStepEightState extends State<EditStepEight> {
+  bool exists(int index) => index < widget.info.rooms.length;
   int totalCards = 2;
 
   @override
@@ -2814,12 +2815,13 @@ class _StepEightState extends State<StepEight> {
                   PopupMenuItem<String>(
                     value: "Reset",
                     child: Text(
-                      "Reset",
+                      "Save and Exit",
                       style: context.textTheme.bodyMedium,
                     ),
                   )
                 ],
-                onSelected: (result) => setState(() => rooms.clear()),
+                onSelected: (result) =>
+                    saveAndExit(info: widget.info, context: context),
               ),
             ),
             SizedBox(height: 18.h),
@@ -2912,7 +2914,7 @@ class _StepEightState extends State<StepEight> {
                       return !exists(index)
                           ? GestureDetector(
                               onTap: () {
-                                widget.info["roomPropertyIndex"] = null;
+                                widget.info.roomEditIndex = null;
                                 context.router
                                     .pushNamed(Pages.stepNine,
                                         extra: widget.info)
@@ -2920,8 +2922,8 @@ class _StepEightState extends State<StepEight> {
                                       (value) => setState(
                                         () {
                                           if (value == null) return;
-                                          rooms.add(
-                                              value as Map<String, dynamic>);
+                                          widget.info.rooms
+                                              .add(value as RoomInfoData);
                                         },
                                       ),
                                     );
@@ -2930,13 +2932,14 @@ class _StepEightState extends State<StepEight> {
                             )
                           : GestureDetector(
                               onTap: () {
-                                widget.info["roomPropertyIndex"] = index;
+                                widget.info.roomEditIndex = index;
                                 context.router
                                     .pushNamed(Pages.stepNine,
                                         extra: widget.info)
                                     .then((value) => setState(() {}));
                               },
-                              child: _CreateRoomCard(info: rooms[index]),
+                              child: _CreateRoomCard(
+                                  info: widget.info.rooms[index]),
                             );
                     },
                   ),
@@ -2985,11 +2988,11 @@ class _StepEightState extends State<StepEight> {
             ),
             GestureDetector(
               onTap: () {
-                if (rooms.isEmpty) {
+                if (widget.info.rooms.isEmpty) {
                   showError("Please create at least one room");
                   return;
                 }
-                context.router.pushNamed(Pages.stepTen, extra: widget.info);
+                saveAndExit(info: widget.info, context: context);
               },
               child: Container(
                 width: 170.w,
@@ -2997,7 +3000,9 @@ class _StepEightState extends State<StepEight> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.r),
-                  color: rooms.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
+                  color: widget.info.rooms.isEmpty
+                      ? appBlue.withOpacity(0.4)
+                      : appBlue,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -3067,7 +3072,7 @@ class _NoRoom extends StatelessWidget {
 }
 
 class _CreateRoomCard extends StatelessWidget {
-  final Map<String, dynamic> info;
+  final RoomInfoData info;
 
   const _CreateRoomCard({
     required this.info,
@@ -3095,15 +3100,43 @@ class _CreateRoomCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.r),
-                    child: Image.file(
-                      File(info["media"][0].path),
-                      width: 414.w,
-                      height: 156.h,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  info.isLocal(0)
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Image.file(
+                            File(info.media.first.path),
+                            width: 414.w,
+                            height: 156.h,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: info.media.first,
+                          errorWidget: (context, url, error) => Container(
+                            width: 414.w,
+                            height: 156.h,
+                            color: weirdBlack50,
+                          ),
+                          progressIndicatorBuilder: (context, url, download) =>
+                              Container(
+                            width: 414.w,
+                            height: 156.h,
+                            color: weirdBlack50,
+                            alignment: Alignment.center,
+                            child: loader,
+                          ),
+                          imageBuilder: (context, provider) => Container(
+                            width: 414.w,
+                            height: 156.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.r),
+                              image: DecorationImage(
+                                image: provider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
                   Positioned(
                     top: 15.h,
                     left: 15.w,
@@ -3128,7 +3161,7 @@ class _CreateRoomCard extends StatelessWidget {
               ),
               SizedBox(height: 6.h),
               Text(
-                info["name"],
+                info.name,
                 style: context.textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: weirdBlack,
@@ -3147,8 +3180,7 @@ class _CreateRoomCard extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text:
-                          "${currency()} ${formatAmountInDouble(info["price"])}",
+                      text: "${currency()} ${formatAmountInDouble(info.price)}",
                       style: context.textTheme.bodyLarge!.copyWith(
                         color: appBlue,
                         fontFamily: "Inter",
@@ -3175,19 +3207,19 @@ class _CreateRoomCard extends StatelessWidget {
   }
 }
 
-class StepNine extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepNine extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepNine({
+  const EditStepNine({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepNine> createState() => _StepNineState();
+  State<EditStepNine> createState() => _EditStepNineState();
 }
 
-class _StepNineState extends State<StepNine> {
+class _EditStepNineState extends State<EditStepNine> {
   late TextEditingController name;
   late TextEditingController price;
 
@@ -3216,31 +3248,33 @@ class _StepNineState extends State<StepNine> {
   ];
 
   late List<String> facilities;
-  late List<SingleFileResponse> media;
+  late List<dynamic> media;
 
   final GlobalKey<FormState> formKey = GlobalKey();
+
+  late RoomInfoData? room;
+  late String id;
 
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic>? room;
-    int? roomIndex = widget.info["roomPropertyIndex"];
 
+    int? roomIndex = widget.info.roomEditIndex;
     if (roomIndex != null) {
-      List<Map<String, dynamic>> rooms = toRoomList(widget.info["rooms"]);
-      widget.info["rooms"] = rooms;
-      room = rooms[roomIndex];
-      duration = room["duration"];
-      facilities = room["facilities"];
-      media = room["media"];
+      room = widget.info.rooms[roomIndex];
+      duration = room?.duration;
+      facilities = room?.facilities ?? [];
+      media = room?.media ?? [];
+      id = room?.id ?? "";
     } else {
       facilities = [];
       media = [];
+      id = "";
     }
 
-    name = TextEditingController(text: room?["name"] ?? "");
+    name = TextEditingController(text: room?.name ?? "");
     price = TextEditingController(
-        text: room?["price"] == null ? "" : room?["price"].toStringAsFixed(0));
+        text: room?.price == null ? "" : room?.price.toStringAsFixed(0));
   }
 
   @override
@@ -3249,6 +3283,8 @@ class _StepNineState extends State<StepNine> {
     price.dispose();
     super.dispose();
   }
+
+  bool isLocal(int index) => media[index]! is String;
 
   @override
   Widget build(BuildContext context) {
@@ -3266,21 +3302,6 @@ class _StepNineState extends State<StepNine> {
                 value: 10 / totalPages,
                 color: appBlue,
                 minHeight: 1.5.h,
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: PopupMenuButton<String>(
-                itemBuilder: (context) => [
-                  PopupMenuItem<String>(
-                    value: "Reset",
-                    child: Text(
-                      "Reset",
-                      style: context.textTheme.bodyMedium,
-                    ),
-                  )
-                ],
-                onSelected: (result) => setState(() {}),
               ),
             ),
             SizedBox(height: 18.h),
@@ -3568,15 +3589,46 @@ class _StepNineState extends State<StepNine> {
                         itemCount: media.length,
                         itemBuilder: (_, index) => Stack(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5.r),
-                              child: Image.file(
-                                File(media[index].path),
-                                width: 110.r,
-                                height: 110.r,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            isLocal(index)
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    child: Image.file(
+                                      File(media[index].path),
+                                      width: 110.r,
+                                      height: 110.r,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: media[index],
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      width: 110.r,
+                                      height: 110.r,
+                                      color: weirdBlack50,
+                                    ),
+                                    progressIndicatorBuilder:
+                                        (context, url, download) => Container(
+                                      width: 110.r,
+                                      height: 110.r,
+                                      color: weirdBlack50,
+                                      alignment: Alignment.center,
+                                      child: loader,
+                                    ),
+                                    imageBuilder: (context, provider) =>
+                                        Container(
+                                      width: 110.r,
+                                      height: 110.r,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(5.r),
+                                        image: DecorationImage(
+                                          image: provider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                             Positioned(
                               right: 10.r,
                               top: 5.r,
@@ -3701,15 +3753,19 @@ class _StepNineState extends State<StepNine> {
                   return;
                 }
 
-                Map<String, dynamic> info = {
-                  "name": name.text.trim(),
-                  "price": double.parse(price.text.trim()),
-                  "facilities": facilities,
-                  "media": media,
-                  "duration": duration,
-                };
-
-                context.router.pop(info);
+                if (room == null) {
+                  RoomInfoData data = RoomInfoData(
+                    id: id,
+                    duration: duration!,
+                    name: name.text.trim(),
+                    price: double.parse(price.text.trim()),
+                    facilities: facilities,
+                    media: media,
+                  );
+                  context.router.pop(data);
+                } else {
+                  context.router.pop();
+                }
               },
               child: Container(
                 width: 170.w,
@@ -3744,51 +3800,53 @@ class _StepNineState extends State<StepNine> {
   }
 }
 
-class StepTen extends StatefulWidget {
-  final Map<String, dynamic> info;
+class EditStepTen extends StatefulWidget {
+  final HostelInfoData info;
 
-  const StepTen({
+  const EditStepTen({
     super.key,
     required this.info,
   });
 
   @override
-  State<StepTen> createState() => _StepTenState();
+  State<EditStepTen> createState() => _EditStepTenState();
 }
 
-class _StepTenState extends State<StepTen> {
+class _EditStepTenState extends State<EditStepTen> {
   late List<int> totalProps;
-  late List<SingleFileResponse> media;
+  late List<dynamic> media;
   late List<String> facilities, rules;
-  late List<Map<String, dynamic>> rooms;
+  late List<RoomInfoData> rooms;
   late int availableRooms, totalRooms;
   late bool vacantRooms;
 
-  late String minBudget, maxBudget;
+  String minBudget = '0.0', maxBudget = "0.0", address = "";
 
   @override
   void initState() {
     super.initState();
-    rooms = toRoomList(widget.info["rooms"]);
+    rooms = widget.info.rooms;
     totalProps = calculate(rooms);
 
-    media = toDataList(widget.info["medias"]);
-    facilities = toStringList(widget.info["FacilityName"]);
-    rules = toStringList(widget.info["RuleAndRegulation"]);
+    media = widget.info.media;
+    facilities = widget.info.hostelFacilities;
+    rules = widget.info.rules;
 
     availableRooms = rooms.length;
-    totalRooms = widget.info["totalRoom"];
-    vacantRooms = widget.info["isAnyRoomVacant"];
+    totalRooms = widget.info.totalRooms;
+    vacantRooms = widget.info.vacantRooms;
 
-    minBudget = "";
-    maxBudget = "";
+    List<String> parts = widget.info.address.split("#");
+    address = "${parts[0]}, ${parts[1]}, ${parts[2]}, ${parts[3]}";
   }
 
-  List<int> calculate(List<Map<String, dynamic>> rooms) {
+  List<int> calculate(List<RoomInfoData> rooms) {
     int baths = 0, kitchens = 0, toilets = 0;
 
-    for (Map<String, dynamic> info in rooms) {
-      List<String> facilities = info["facilities"];
+    double minPrice = 0.0, maxPrice = 0.0;
+
+    for (RoomInfoData info in rooms) {
+      List<String> facilities = info.facilities;
       if (facilities.contains("Toilet")) {
         ++toilets;
       }
@@ -3798,7 +3856,18 @@ class _StepTenState extends State<StepTen> {
       if (facilities.contains("Bathroom")) {
         ++baths;
       }
+
+      if (info.price <= minPrice) {
+        minPrice = info.price;
+      }
+
+      if (info.price >= maxPrice) {
+        maxPrice = info.price;
+      }
     }
+
+    maxBudget = maxPrice.toStringAsFixed(0);
+    minBudget = minPrice.toStringAsFixed(0);
 
     return [
       baths,
@@ -3806,6 +3875,8 @@ class _StepTenState extends State<StepTen> {
       kitchens,
     ];
   }
+
+  bool isLocal(int index) => media[index]! is String;
 
   void navigate() => showModalBottomSheet(
         context: context,
@@ -3930,7 +4001,7 @@ class _StepTenState extends State<StepTen> {
                             SizedBox(
                               width: 250.w,
                               child: Text(
-                                widget.info["hostelName"],
+                                widget.info.name,
                                 style: context.textTheme.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: weirdBlack,
@@ -3958,7 +4029,7 @@ class _StepTenState extends State<StepTen> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          "${widget.info["street"].trim()}, ${widget.info["junction"].trim()}, ${widget.info["state"].trim()}, ${widget.info["country"]}",
+                          address,
                           overflow: TextOverflow.ellipsis,
                           style: context.textTheme.bodyMedium!.copyWith(
                               color: weirdBlack75, fontWeight: FontWeight.w500),
@@ -4051,7 +4122,7 @@ class _StepTenState extends State<StepTen> {
                                 ),
                                 SizedBox(width: 5.w),
                                 Text(
-                                  "${(widget.info["homeSize"]).toStringAsFixed(0)} sqft",
+                                  "${(widget.info.area).toStringAsFixed(0)} sqft",
                                   style: context.textTheme.bodySmall!.copyWith(
                                       color: weirdBlack50,
                                       fontWeight: FontWeight.w500),
@@ -4105,7 +4176,7 @@ class _StepTenState extends State<StepTen> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          widget.info["hostelDescription"],
+                          widget.info.description,
                           style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack75,
                             fontWeight: FontWeight.w500,
@@ -4192,7 +4263,7 @@ class _StepTenState extends State<StepTen> {
                       ),
                       itemCount: rooms.length,
                       itemBuilder: (_, index) => AvailableRoomCard(
-                        infoMap: rooms[index],
+                        infoData: rooms[index],
                         onTap: () {},
                       ),
                     ),
@@ -4226,15 +4297,43 @@ class _StepTenState extends State<StepTen> {
                       mainAxisExtent: 110.r,
                     ),
                     itemCount: media.length,
-                    itemBuilder: (_, index) => ClipRRect(
-                      borderRadius: BorderRadius.circular(5.r),
-                      child: Image.file(
-                        File(media[index].path),
-                        width: 110.r,
-                        height: 110.r,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    itemBuilder: (_, index) => isLocal(index)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(5.r),
+                            child: Image.file(
+                              File(media[index].path),
+                              width: 110.r,
+                              height: 110.r,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: media[index],
+                            errorWidget: (context, url, error) => Container(
+                              width: 110.r,
+                              height: 110.r,
+                              color: weirdBlack50,
+                            ),
+                            progressIndicatorBuilder:
+                                (context, url, download) => Container(
+                              width: 110.r,
+                              height: 110.r,
+                              color: weirdBlack50,
+                              alignment: Alignment.center,
+                              child: loader,
+                            ),
+                            imageBuilder: (context, provider) => Container(
+                              width: 110.r,
+                              height: 110.r,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.r),
+                                image: DecorationImage(
+                                  image: provider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
                   ),
                 )
               ],
@@ -4304,835 +4403,3 @@ class _StepTenState extends State<StepTen> {
     );
   }
 }
-
-List<Map<String, dynamic>> toRoomList(List<dynamic> data) {
-  List<Map<String, dynamic>> response = [];
-  for (dynamic element in data) {
-    response.add(element as Map<String, dynamic>);
-  }
-  return response;
-}
-
-List<SingleFileResponse> toDataList(List<dynamic> list) {
-  List<SingleFileResponse> result = [];
-  for (var element in list) {
-    result.add(element as SingleFileResponse);
-  }
-  return result;
-}
-
-class CreateHostelModal extends StatelessWidget {
-  final bool vacancy;
-
-  const CreateHostelModal({required this.vacancy});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 450.h,
-      width: 414.w,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 55.h),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15.r),
-                        topRight: Radius.circular(15.r),
-                      ),
-                      child: Image.asset(
-                        "assets/images/Hostel ${vacancy ? "Launch" : "Created"}.png",
-                        width: 135.r,
-                        height: 135.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Hostel ${vacancy ? "Launched" : "Created"} Successfully",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    vacancy
-                        ? "Congratulations! Your hostel listing is now live and ready "
-                            "for tenant inquiries. Welcome guests to your property."
-                        : "Great news! Your hostel is successfully created. Start attracting tenants by "
-                            "listing the vacancy rooms and managing your property effortlessly.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 42.h),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () => context.router.pop(),
-                      child: Container(
-                        width: 414.w,
-                        height: 50.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: appBlue,
-                          borderRadius: BorderRadius.circular(5.r),
-                        ),
-                        child: Text(
-                          "Ok, thanks",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class UploadHostelPage extends StatefulWidget {
-  final Map<String, dynamic> info;
-
-  const UploadHostelPage({super.key, required this.info});
-
-  @override
-  State<UploadHostelPage> createState() => _UploadHostelPageState();
-}
-
-class _UploadHostelPageState extends State<UploadHostelPage> {
-  bool hasError = false, createdHostel = false;
-  int progress = 0, total = 0;
-  String message = "", hostelId = "";
-
-  late List<dynamic> rooms;
-
-  @override
-  void initState() {
-    super.initState();
-    bool vacantRooms = widget.info["isAnyRoomVacant"];
-    rooms = widget.info["rooms"];
-    message = "Creating your hostel";
-    if (!vacantRooms) {
-      total = 1;
-    } else {
-      total = rooms.length + 1;
-    }
-
-    upload();
-  }
-
-  void upload() async {
-    createHostel(widget.info).then((resp) {
-      if (!mounted) return;
-      if (!resp.success) {
-        showError(resp.message);
-        setState(
-            () => message = "An error occurred while creating your hostel");
-        Navigator.of(context).pop();
-      } else {
-        setState(() {
-          createdHostel = true;
-          hostelId = resp.payload!;
-          progress = 1;
-        });
-
-        if (progress == total) {
-          exit();
-          return;
-        } else {
-          uploadRooms();
-        }
-      }
-    });
-  }
-
-  void exit() => context.router.pop(true);
-
-  void uploadRooms() async {
-    for (int i = progress - 1; i < rooms.length; ++i) {
-      setState(() => message = "Uploading ${rooms[i]["name"]}");
-
-      FyndaResponse response = await createRoomForHostel(
-        userID: widget.info["landlordId"],
-        hostelID: hostelId,
-        map: rooms[i],
-      );
-
-      setState(() {
-        if (!mounted) return;
-        hasError = !response.success;
-        if (hasError) {
-          setState(() => message =
-              "An error occurred while uploading ${rooms[i]["name"]}");
-          return;
-        } else {
-          progress++;
-        }
-      });
-
-      if (progress == total) {
-        exit();
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "${(progress / total) * 100}%",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  color: appBlue,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 5.h),
-              if (!hasError)
-                SizedBox(
-                  width: 250.w,
-                  child: LinearProgressIndicator(
-                    value: progress / total,
-                    color: appBlue,
-                    backgroundColor: paleBlue,
-                    minHeight: 10.h,
-                    borderRadius: BorderRadius.circular(5.h),
-                  ),
-                ),
-              if (hasError)
-                Center(child: SvgPicture.asset("assets/images/Error.svg")),
-              SizedBox(height: 15.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (!hasError)
-                    SizedBox(
-                      width: 20.r,
-                      height: 20.r,
-                      child: const CircularProgressIndicator(
-                          color: appBlue, strokeWidth: 3),
-                    ),
-                  if (!hasError) SizedBox(width: 10.w),
-                  Text(
-                    message,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: hasError ? weirdBlack : appBlue,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: hasError
-          ? Container(
-              width: 414.w,
-              height: 90.h,
-              color: paleBlue,
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => context.router.pop(),
-                    child: Container(
-                      width: 170.w,
-                      height: 50.h,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4.r),
-                        border: Border.all(color: appBlue),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.chevron_left_rounded,
-                              color: appBlue, size: 26.r),
-                          SizedBox(width: 5.w),
-                          Text(
-                            "Go back",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: appBlue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (!createdHostel) {
-                        setState(() => message = "Creating your hostel");
-                        upload();
-                      } else {
-                        uploadRooms();
-                      }
-                    },
-                    child: Container(
-                      width: 170.w,
-                      height: 50.h,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4.r),
-                        color: appBlue,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Retry",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 5.w),
-                          Icon(Boxicons.bx_redo,
-                              color: Colors.white, size: 26.r),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : null,
-    );
-  }
-}
-
-//class StepTen extends StatelessWidget {
-//   final Map<String, dynamic> info;
-//
-//   const StepTen({
-//     super.key,
-//     required this.info,
-//   });
-//
-//   List<int> calculate(List<RoomInfo> rooms) {
-//     int baths = 0, kitchens = 0, toilets = 0;
-//
-//     for (RoomInfo info in rooms) {
-//       List<String> facilities = info.facilities;
-//       if (facilities.contains("Toilet")) {
-//         ++toilets;
-//       }
-//       if (facilities.contains("Kitchen")) {
-//         ++kitchens;
-//       }
-//       if (facilities.contains("Bathroom")) {
-//         ++baths;
-//       }
-//     }
-//
-//     return [
-//       baths,
-//       toilets,
-//       kitchens,
-//     ];
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     List<String> media = toStringList(info["media"]);
-//     List<String> facilities = toStringList(info["hostelFacilities"]);
-//     List<String> rules = toStringList(info["rules"]);
-//     List<RoomInfo> rooms = toRoomList(info["roomsLeft"]);
-//     int availableRooms = rooms.length;
-//     int totalRooms = info["totalRooms"];
-//
-//     List<int> totalProps = calculate(rooms);
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         elevation: 0.0,
-//         backgroundColor: Colors.transparent,
-//         title: Column(
-//           children: [
-//             SizedBox(height: 25.h),
-//             SizedBox(
-//               width: 414.w,
-//               child: LinearProgressIndicator(
-//                 value: 1.0,
-//                 color: appBlue,
-//                 minHeight: 1.5.h,
-//               ),
-//             ),
-//             SizedBox(height: 18.h),
-//           ],
-//         ),
-//         automaticallyImplyLeading: false,
-//       ),
-//       body: SafeArea(
-//         child: Padding(
-//           padding: EdgeInsets.symmetric(horizontal: 20.w),
-//           child: SingleChildScrollView(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Center(
-//                   child: Text(
-//                     "STEP 10",
-//                     style: context.textTheme.bodyMedium!.copyWith(
-//                       fontWeight: FontWeight.w500,
-//                       color: appBlue,
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(height: 12.h),
-//                 Center(
-//                   child: Text(
-//                     "Preview",
-//                     style: context.textTheme.bodyLarge!.copyWith(
-//                       fontWeight: FontWeight.w600,
-//                       color: weirdBlack,
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(height: 12.h),
-//                 Center(
-//                   child: Text(
-//                     "Before going live, get a preview of your hostel details and ensure your "
-//                     "listing is (are) ready to impress potential tenants.",
-//                     textAlign: TextAlign.center,
-//                     style: context.textTheme.bodyMedium!.copyWith(
-//                       fontWeight: FontWeight.w500,
-//                       color: weirdBlack75,
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(height: 44.h),
-//                 Container(
-//                   decoration: BoxDecoration(
-//                     color: const Color(0xFFF8FBFF),
-//                     borderRadius: BorderRadius.circular(10.r),
-//                     boxShadow: const [
-//                       BoxShadow(
-//                         color: Color(0xFFE0E5EC),
-//                         blurRadius: 6.0,
-//                         spreadRadius: 1.0,
-//                       )
-//                     ],
-//                   ),
-//                   padding:
-//                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       ClipRRect(
-//                         borderRadius: BorderRadius.circular(8.r),
-//                         child: Image.memory(
-//                           info["image"],
-//                           width: 414.w,
-//                           height: 156.h,
-//                           fit: BoxFit.cover,
-//                         ),
-//                       ),
-//                       SizedBox(height: 12.h),
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         children: [
-//                           SizedBox(
-//                             width: 250.w,
-//                             child: Text(
-//                               info["name"],
-//                               style: context.textTheme.bodyLarge!.copyWith(
-//                                 fontWeight: FontWeight.w600,
-//                                 color: weirdBlack,
-//                               ),
-//                             ),
-//                           ),
-//                           Container(
-//                             width: 90.w,
-//                             height: 25.h,
-//                             alignment: Alignment.center,
-//                             decoration: BoxDecoration(
-//                               color: infoRoomsLeftBackground,
-//                               borderRadius: BorderRadius.circular(5.r),
-//                             ),
-//                             child: Text(
-//                               "$availableRooms/$totalRooms rooms left",
-//                               style: context.textTheme.bodyMedium!.copyWith(
-//                                 color: infoRoomsLeft,
-//                                 fontWeight: FontWeight.w500,
-//                                 fontSize: 13.sp,
-//                               ),
-//                             ),
-//                           )
-//                         ],
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       Text(
-//                         joinToAddress(info["address"]),
-//                         overflow: TextOverflow.ellipsis,
-//                         style: context.textTheme.bodyMedium!.copyWith(
-//                             color: weirdBlack75, fontWeight: FontWeight.w500),
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         children: [
-//                           Row(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               SvgPicture.asset(
-//                                 "assets/images/Hostel Info Bed.svg",
-//                                 width: 15.r,
-//                                 height: 15.r,
-//                                 color: weirdBlack50,
-//                               ),
-//                               SizedBox(width: 5.w),
-//                               Text(
-//                                 "$availableRooms",
-//                                 style: context.textTheme.bodySmall!.copyWith(
-//                                     color: weirdBlack50,
-//                                     fontWeight: FontWeight.w500),
-//                               ),
-//                             ],
-//                           ),
-//                           Row(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               SvgPicture.asset(
-//                                 "assets/images/Hostel Info Bath.svg",
-//                                 width: 15.r,
-//                                 height: 15.r,
-//                                 color: weirdBlack50,
-//                               ),
-//                               SizedBox(width: 5.w),
-//                               Text(
-//                                 "${totalProps[0]}",
-//                                 style: context.textTheme.bodySmall!.copyWith(
-//                                     color: weirdBlack50,
-//                                     fontWeight: FontWeight.w500),
-//                               ),
-//                             ],
-//                           ),
-//                           Row(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               SvgPicture.asset(
-//                                 "assets/images/Toilet.svg",
-//                                 width: 15.r,
-//                                 height: 15.r,
-//                                 color: weirdBlack50,
-//                               ),
-//                               SizedBox(width: 5.w),
-//                               Text(
-//                                 "${totalProps[1]}",
-//                                 style: context.textTheme.bodySmall!.copyWith(
-//                                     color: weirdBlack50,
-//                                     fontWeight: FontWeight.w500),
-//                               ),
-//                             ],
-//                           ),
-//                           Row(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               SvgPicture.asset(
-//                                 "assets/images/Kitchen.svg",
-//                                 width: 15.r,
-//                                 height: 15.r,
-//                                 color: weirdBlack50,
-//                               ),
-//                               SizedBox(width: 5.w),
-//                               Text(
-//                                 "${totalProps[2]}",
-//                                 style: context.textTheme.bodySmall!.copyWith(
-//                                     color: weirdBlack50,
-//                                     fontWeight: FontWeight.w500),
-//                               ),
-//                             ],
-//                           ),
-//                           Row(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               SvgPicture.asset(
-//                                 "assets/images/Hostel Info Area.svg",
-//                                 width: 15.r,
-//                                 height: 15.r,
-//                                 color: weirdBlack50,
-//                               ),
-//                               SizedBox(width: 5.w),
-//                               Text(
-//                                 "${(info["area"]).toStringAsFixed(0)} sqft",
-//                                 style: context.textTheme.bodySmall!.copyWith(
-//                                     color: weirdBlack50,
-//                                     fontWeight: FontWeight.w500),
-//                               ),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       RichText(
-//                         text: TextSpan(
-//                           children: [
-//                             TextSpan(
-//                               text:
-//                                   "${currency()} ${formatAmountInDouble(info["price"])}",
-//                               style: context.textTheme.bodyLarge!.copyWith(
-//                                 color: appBlue,
-//                                 fontFamily: "Inter",
-//                                 fontWeight: FontWeight.w600,
-//                               ),
-//                             ),
-//                             TextSpan(
-//                               text: "/year",
-//                               style: context.textTheme.bodyMedium!.copyWith(
-//                                 color: appBlue,
-//                                 fontFamily: "Inter",
-//                                 fontWeight: FontWeight.w500,
-//                               ),
-//                             )
-//                           ],
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       ConstrainedBox(
-//                         constraints: BoxConstraints(
-//                           minWidth: 414.w,
-//                           minHeight: 1.h,
-//                           maxWidth: 414.w,
-//                           maxHeight: 1.h,
-//                         ),
-//                         child: const ColoredBox(color: Colors.black12),
-//                       ),
-//                       SizedBox(height: 12.h),
-//                       Text(
-//                         "Description",
-//                         style: context.textTheme.bodyLarge!.copyWith(
-//                           fontWeight: FontWeight.w600,
-//                           color: weirdBlack,
-//                         ),
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       Text(
-//                         info["description"],
-//                         style: context.textTheme.bodyMedium!.copyWith(
-//                           color: weirdBlack75,
-//                           fontWeight: FontWeight.w500,
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       Text(
-//                         "Rules & Regulations",
-//                         style: context.textTheme.bodyLarge!.copyWith(
-//                           fontWeight: FontWeight.w600,
-//                           color: weirdBlack,
-//                         ),
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: List.generate(
-//                           rules.length,
-//                           (index) => Text(
-//                             "${index + 1}. ${rules[index]}",
-//                             style: context.textTheme.bodyMedium!.copyWith(
-//                               color: weirdBlack75,
-//                               fontWeight: FontWeight.w500,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       Text(
-//                         "Hostel Facilities",
-//                         style: context.textTheme.bodyLarge!.copyWith(
-//                           fontWeight: FontWeight.w600,
-//                           color: weirdBlack,
-//                         ),
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       SizedBox(
-//                         height: (facilities.length ~/ 4 +
-//                                 (facilities.length % 4 == 0 ? 0 : 1)) *
-//                             110.r,
-//                         child: GridView.builder(
-//                           gridDelegate:
-//                               SliverGridDelegateWithFixedCrossAxisCount(
-//                                   crossAxisCount: 4,
-//                                   crossAxisSpacing: 5.r,
-//                                   mainAxisSpacing: 5.r,
-//                                   mainAxisExtent: 105.r),
-//                           itemCount: facilities.length,
-//                           itemBuilder: (_, index) => FacilityContainer(
-//                             text: facilities[index],
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       Text(
-//                         "Available Rooms",
-//                         style: context.textTheme.bodyLarge!.copyWith(
-//                           fontWeight: FontWeight.w600,
-//                           color: weirdBlack,
-//                         ),
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       SizedBox(
-//                         height: (rooms.length ~/ 2 +
-//                                 (rooms.length % 2 == 0 ? 0 : 1)) *
-//                             210.h,
-//                         child: GridView.builder(
-//                           gridDelegate:
-//                               SliverGridDelegateWithFixedCrossAxisCount(
-//                             crossAxisCount: 2,
-//                             crossAxisSpacing: 15.r,
-//                             mainAxisSpacing: 15.r,
-//                             mainAxisExtent: 205.h,
-//                           ),
-//                           itemCount: rooms.length,
-//                           itemBuilder: (_, index) => AvailableRoomCard(
-//                             info: rooms[index],
-//                             isAsset: false,
-//                             onTap: () {},
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       Text(
-//                         "Gallery",
-//                         style: context.textTheme.bodyLarge!.copyWith(
-//                           fontWeight: FontWeight.w600,
-//                           color: weirdBlack,
-//                         ),
-//                       ),
-//                       SizedBox(height: 8.h),
-//                       SizedBox(
-//                           height: (media.length ~/ 3 +
-//                                   (media.length % 3 == 0 ? 0 : 1)) *
-//                               110.r,
-//                           child: GridView.builder(
-//                             gridDelegate:
-//                                 SliverGridDelegateWithFixedCrossAxisCount(
-//                               crossAxisCount: 3,
-//                               crossAxisSpacing: 10.r,
-//                               mainAxisSpacing: 10.r,
-//                               mainAxisExtent: 110.r,
-//                             ),
-//                             itemCount: media.length,
-//                             itemBuilder: (_, index) => ClipRRect(
-//                               borderRadius: BorderRadius.circular(5.r),
-//                               child: Image.file(
-//                                 File(media[index]),
-//                                 width: 110.r,
-//                                 height: 110.r,
-//                                 fit: BoxFit.cover,
-//                               ),
-//                             ),
-//                           )),
-//                     ],
-//                   ),
-//                 ),
-//                 SizedBox(height: 80.h),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//       bottomNavigationBar: Container(
-//         width: 414.w,
-//         height: 90.h,
-//         color: paleBlue,
-//         padding: EdgeInsets.symmetric(horizontal: 20.w),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             GestureDetector(
-//               onTap: () => context.router.pop(),
-//               child: Container(
-//                 width: 170.w,
-//                 height: 50.h,
-//                 alignment: Alignment.center,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(4.r),
-//                   border: Border.all(color: appBlue),
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   children: [
-//                     Icon(Icons.chevron_left_rounded,
-//                         color: appBlue, size: 26.r),
-//                     SizedBox(width: 5.w),
-//                     Text(
-//                       "Go back",
-//                       style: context.textTheme.bodyMedium!.copyWith(
-//                         fontWeight: FontWeight.w600,
-//                         color: appBlue,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             GestureDetector(
-//               onTap: () => showModalBottomSheet(
-//                 context: context,
-//                 builder: (context) => const _CreateHostelModal(),
-//                 isDismissible: false,
-//               ).then(
-//                 (resp) {
-//                   if (resp == null || !resp!) return;
-//                   context.router.goNamed(Pages.ownerDashboard);
-//                 },
-//               ),
-//               child: Container(
-//                 width: 170.w,
-//                 height: 50.h,
-//                 alignment: Alignment.center,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(4.r),
-//                   color: rooms.isEmpty ? appBlue.withOpacity(0.4) : appBlue,
-//                 ),
-//                 child: Text(
-//                   "Launch",
-//                   style: context.textTheme.bodyMedium!.copyWith(
-//                     fontWeight: FontWeight.w600,
-//                     color: Colors.white,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

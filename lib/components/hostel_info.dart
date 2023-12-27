@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/room_details.dart';
+import 'package:my_hostel/api/file_manager.dart' show SingleFileResponse;
 
 class HostelInfo extends Equatable {
   final String id;
@@ -42,6 +42,8 @@ class HostelInfo extends Equatable {
   @override
   List<Object?> get props => [id];
 
+  HostelInfoData get data => HostelInfoData.fromInfo(this);
+
   // List<double> get priceRange {
   //   List<String> values = price.split(" ");
   //   return [double.parse(values[0]), double.parse(values[2])];
@@ -71,22 +73,94 @@ class HostelInfo extends Equatable {
         country = map["country"] ?? "";
 
     return HostelInfo(
-        id: map["hostelId"],
-        name: map["hostelName"],
-        area: (map["homeSize"] as num).toDouble(),
-        price: map["price"] ?? 0.0,
-        totalRooms: map["totalRoom"] ?? 0,
-        address: "$street, $junction, $state, $country",
-        category: map["hostelCategory"],
-        roomsLeft: map["roomsLeft"] ?? [],
-        description: map["hostelDescription"],
-        rules: map["rulesAndRegulation"],
-        likes: map["hostelLikesCount"] ?? 0,
-        hostelFacilities: map["hostelFacilities"],
-        media: map["media"] ?? [],
-        owner: map["userId"] ?? "",
-        rooms: map["rooms"] ?? [],
-        vacantRooms: map["isAnyRoomVacant"] ?? false,
+      id: map["hostelId"],
+      name: map["hostelName"],
+      area: (map["homeSize"] as num).toDouble(),
+      price: map["price"] ?? 0.0,
+      totalRooms: map["totalRoom"] ?? 0,
+      address: "$street#$junction#$state#$country",
+      category: map["hostelCategory"],
+      roomsLeft: map["roomsLeft"] ?? [],
+      description: map["hostelDescription"],
+      rules: map["rulesAndRegulation"],
+      likes: map["hostelLikesCount"] ?? 0,
+      hostelFacilities: map["hostelFacilities"],
+      media: map["media"] ?? [],
+      owner: map["userId"] ?? "",
+      rooms: map["rooms"] ?? [],
+      vacantRooms: map["isAnyRoomVacant"] ?? false,
+    );
+  }
+}
+
+class HostelInfoData {
+  final String id;
+  final String owner;
+
+  String name;
+  String address;
+  double area;
+  double price;
+  String description;
+  List<String> rules;
+  List<String> hostelFacilities;
+  List<RoomInfoData> rooms;
+  int totalRooms;
+  List<dynamic> media;
+  int likes;
+  int category;
+  bool vacantRooms;
+
+  int? roomEditIndex;
+
+  HostelInfoData({
+    required this.id,
+    required this.owner,
+    this.name = "",
+    this.category = 0,
+    this.address = "",
+    this.totalRooms = 0,
+    this.area = 0.0,
+    this.price = 0.0,
+    this.vacantRooms = false,
+    this.rooms = const [],
+    this.description = "",
+    this.rules = const [],
+    this.likes = 0,
+    this.hostelFacilities = const [],
+    this.media = const [],
+    this.roomEditIndex,
+  });
+
+  bool isLocal(int index) => media[index] !is String;
+
+  factory HostelInfoData.fromInfo(HostelInfo info) {
+    int category = 0;
+    // switch(info.category) {
+    //
+    // }
+
+    List<RoomInfoData> roomData = [];
+    for(RoomInfo info in info.rooms) {
+      roomData.add(RoomInfoData.fromRoom(info));
+    }
+
+    return HostelInfoData(
+      owner: info.owner,
+      id: info.id,
+      name: info.name,
+      description: info.description,
+      category: category,
+      address: info.address,
+      price: info.price,
+      area: info.area,
+      media: List.from(info.media),
+      hostelFacilities: List.from(info.hostelFacilities),
+      likes: info.likes,
+      rooms: roomData,
+      rules: List.from(info.rules),
+      totalRooms: info.totalRooms,
+      vacantRooms: info.vacantRooms,
     );
   }
 }

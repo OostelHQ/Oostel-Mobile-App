@@ -10,7 +10,7 @@ final Dio dio = Dio(
   BaseOptions(
     baseUrl: baseUrl,
     connectTimeout: const Duration(seconds: 60),
-    sendTimeout: const Duration(seconds: 120),
+    sendTimeout: const Duration(seconds: 180),
     receiveTimeout: const Duration(seconds: 180),
   ),
 );

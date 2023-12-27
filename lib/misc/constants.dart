@@ -118,6 +118,20 @@ class Pages
   static const String stepEight = 'step-eight';
   static const String stepNine = 'step-nine';
   static const String stepTen = 'step-ten';
+
+  static const String editStepOne = 'edit-step-one';
+  static const String editStepTwo = 'edit-step-two';
+  static const String editStepThree = 'edit-step-three';
+  static const String editStepFour = 'edit-step-four';
+  static const String editStepFive = 'edit-step-five';
+  static const String editStepSix = 'edit-step-six';
+  static const String editStepSixHalf = 'edit-step-six-half';
+  static const String editStepSeven = 'edit-step-seven';
+  static const String editStepEight = 'edit-step-eight';
+  static const String editStepNine = 'edit-step-nine';
+  static const String editStepTen = 'edit-step-ten';
+
+
   static const String uploadHostel = 'upload-hostel';
 
   static const String agents = 'agents';

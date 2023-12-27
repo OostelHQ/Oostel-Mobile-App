@@ -160,7 +160,7 @@ class _RegistrationTypePageState extends ConsumerState<RegistrationTypePage> {
                         spreadRadius: 1.0,
                       )
                     ],
-                  ),
+                   ),
                   child: SizedBox(
                     height: 80.h,
                     child: Row(

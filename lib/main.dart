@@ -18,6 +18,7 @@ import 'package:my_hostel/pages/chats/inbox.dart';
 import 'package:my_hostel/pages/home/agent/dashboard.dart';
 import 'package:my_hostel/pages/home/landlord/create-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/dashboard.dart';
+import 'package:my_hostel/pages/home/landlord/edit-hostel.dart';
 import 'package:my_hostel/pages/home/landlord/edit_room.dart';
 import 'package:my_hostel/pages/home/landlord/landlord_hostel_details_page.dart';
 import 'package:my_hostel/pages/home/landlord/view_hostels.dart';
@@ -209,6 +210,71 @@ class _MyHostelAppState extends State<MyHostelApp> {
           path: Pages.uploadHostel.path,
           name: Pages.uploadHostel,
           builder: (_, state) => UploadHostelPage(info: state.extra as Map<String, dynamic>),
+        ),
+        GoRoute(
+          path: Pages.editStepOne.path,
+          name: Pages.editStepOne,
+          builder: (_, state) => EditStepOne(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepTwo.path,
+          name: Pages.editStepTwo,
+          builder: (_, state) =>
+              EditStepTwo(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepThree.path,
+          name: Pages.editStepThree,
+          builder: (_, state) =>
+              EditStepThree(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepFour.path,
+          name: Pages.editStepFour,
+          builder: (_, state) =>
+              EditStepFour(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepFive.path,
+          name: Pages.editStepFive,
+          builder: (_, state) =>
+              EditStepFive(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepSix.path,
+          name: Pages.editStepSix,
+          builder: (_, state) =>
+              EditStepSix(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepSixHalf.path,
+          name: Pages.editStepSixHalf,
+          builder: (_, state) =>
+              EditStepSixHalf(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepSeven.path,
+          name: Pages.editStepSeven,
+          builder: (_, state) =>
+              EditStepSeven(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepEight.path,
+          name: Pages.editStepEight,
+          builder: (_, state) =>
+              EditStepEight(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepNine.path,
+          name: Pages.editStepNine,
+          builder: (_, state) =>
+              EditStepNine(info: state.extra as HostelInfoData),
+        ),
+        GoRoute(
+          path: Pages.editStepTen.path,
+          name: Pages.editStepTen,
+          builder: (_, state) =>
+              EditStepTen(info: state.extra as HostelInfoData),
         ),
         GoRoute(
           path: Pages.studentProfileSettings.path,
