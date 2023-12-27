@@ -6,7 +6,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/widgets.dart';
 
-class LandlordHostelCard extends StatelessWidget {
+class LandlordHostelCard extends StatefulWidget {
   final HostelInfo info;
 
   const LandlordHostelCard({
@@ -15,9 +15,23 @@ class LandlordHostelCard extends StatelessWidget {
   });
 
   @override
+  State<LandlordHostelCard> createState() => _LandlordHostelCardState();
+}
+
+class _LandlordHostelCardState extends State<LandlordHostelCard> {
+  late String address;
+
+  @override
+  void initState() {
+    super.initState();
+    List<String> parts = widget.info.address.split('#');
+    address = "${parts[0]}, ${parts[1]}, ${parts[2]}, ${parts[3]}";
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.pushNamed(Pages.ownerHostelInfo, extra: info),
+      onTap: () => context.router.pushNamed(Pages.ownerHostelInfo, extra: widget.info),
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF8FBFF),
@@ -35,7 +49,7 @@ class LandlordHostelCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CachedNetworkImage(
-              imageUrl: info.media.first,
+              imageUrl: widget.info.media.first,
               errorWidget: (context, url, error) => Container(
                 width: 414.w,
                 height: 156.h,
@@ -69,9 +83,9 @@ class LandlordHostelCard extends StatelessWidget {
                 SizedBox(
                   width: 200.w,
                   child: Hero(
-                    tag: "Hostel ID: ${info.id} Name: ${info.name}",
+                    tag: "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
                     child: Text(
-                      info.name,
+                      widget.info.name,
                       style: context.textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w600,
                         color: weirdBlack,
@@ -88,7 +102,7 @@ class LandlordHostelCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.r),
                   ),
                   child: Text(
-                    "${info.roomsLeft.length}/${info.rooms.length} room${info.roomsLeft.length == 1 ? "" : "s"} left",
+                    "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.rooms.length == 1 ? "" : "s"} left",
                     style: context.textTheme.bodySmall!.copyWith(
                       color: infoRoomsLeft,
                       fontWeight: FontWeight.w500,
@@ -99,7 +113,7 @@ class LandlordHostelCard extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              info.address,
+              address,
               style: context.textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,

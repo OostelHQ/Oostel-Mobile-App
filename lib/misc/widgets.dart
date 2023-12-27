@@ -1993,7 +1993,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                !isLocalFirst ?
+                isLocalFirst ?
                 Container(
                   width: 185.w,
                   height: 140.h,
