@@ -2235,7 +2235,7 @@ class _EditStepSixHalfState extends State<EditStepSixHalf> {
                         videoData = null;
                       }
                     }),
-                    file: widget.info.media[index],
+                    file: widget.info.media[index + 1],
                   );
                 },
                 itemCount: widget.info.media.length,
