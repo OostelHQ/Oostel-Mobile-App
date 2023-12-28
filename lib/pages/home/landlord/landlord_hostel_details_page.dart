@@ -31,6 +31,8 @@ class _LandlordHostelInformationPageState
   bool isCollapsed = false;
   int tabIndex = 0;
 
+  final List<double> priceRanges = [0.0, 0.0];
+
   late int bathroom, bedrooms;
 
   @override
@@ -46,6 +48,10 @@ class _LandlordHostelInformationPageState
     List<int> props = calculate(widget.info.rooms);
     bathroom = props[0];
     bedrooms = widget.info.rooms.length;
+
+    List<double> prices = widget.info.priceRange;
+    priceRanges.clear();
+    priceRanges.addAll(prices);
   }
 
   @override
@@ -53,6 +59,13 @@ class _LandlordHostelInformationPageState
     tabController.dispose();
     scrollController.dispose();
     super.dispose();
+  }
+
+  String get hostelPrice {
+    if (priceRanges[0] == priceRanges[1]) {
+      return "${currency()} ${formatAmountInDouble(priceRanges[0])}";
+    }
+    return "${currency()} ${formatAmountInDouble(priceRanges[0])} - ${formatAmountInDouble(priceRanges[1])}";
   }
 
   @override
@@ -158,6 +171,9 @@ class _LandlordHostelInformationPageState
                       top: 80.h,
                       right: 30.w,
                       child: PopupMenuButton<String>(
+                        color: Colors.white,
+                        iconSize: 26.r,
+                        position: PopupMenuPosition.under,
                         itemBuilder: (context) => [
                           PopupMenuItem<String>(
                             value: "Edit hostel details",
@@ -165,12 +181,12 @@ class _LandlordHostelInformationPageState
                               "Edit hostel details",
                               style: context.textTheme.bodyMedium,
                             ),
+                            onTap: () => context.router.pushNamed(
+                              Pages.editStepOne,
+                              extra: widget.info.data,
+                            ),
                           )
                         ],
-                        onSelected: (result) => context.router.pushNamed(
-                          Pages.editStepOne,
-                          extra: widget.info.data,
-                        ),
                       ),
                     ),
                   ],
@@ -191,7 +207,7 @@ class _LandlordHostelInformationPageState
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 280.w,
+                          width: 250.w,
                           child: Hero(
                             tag:
                                 "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
@@ -206,15 +222,14 @@ class _LandlordHostelInformationPageState
                           ),
                         ),
                         Container(
-                          width: 85.w,
-                          height: 25.h,
+                          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: infoRoomsLeftBackground,
                             borderRadius: BorderRadius.circular(5.r),
                           ),
                           child: Text(
-                            "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                            "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.totalRooms == 1 ? "" : "s"} left",
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: infoRoomsLeft,
                               fontWeight: FontWeight.w500,
@@ -283,8 +298,7 @@ class _LandlordHostelInformationPageState
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text:
-                                    "${currency()} ${formatAmountInDouble(widget.info.price)}",
+                                text: hostelPrice,
                                 style: context.textTheme.bodyMedium!.copyWith(
                                   color: appBlue,
                                   fontFamily: "Inter",
@@ -575,20 +589,56 @@ class _RoomSection extends StatefulWidget {
   State<_RoomSection> createState() => _RoomSectionState();
 }
 
+enum _RoomSelectType { none, rented, vacant }
+
 class _RoomSectionState extends State<_RoomSection> {
   final TextEditingController roomSearch = TextEditingController();
-  final List<RoomInfo> filteredRooms = [];
+  final List<RoomInfo> filteredRooms = [], vacantRooms = [], rentedRooms = [];
 
   int? showRoomIndex;
+  _RoomSelectType selectType = _RoomSelectType.none;
 
-  List<RoomInfo> get rentedRooms {
-    List<RoomInfo> rooms = [];
-    for (RoomInfo info in widget.info.rooms) {
-      if (!widget.info.roomsLeft.contains(info.id)) {
-        rooms.add(info);
+  @override
+  void initState() {
+    super.initState();
+
+    for (RoomInfo room in widget.info.rooms) {
+      if (room.isRented) {
+        rentedRooms.add(room);
+      } else {
+        vacantRooms.add(room);
       }
     }
-    return rooms;
+  }
+
+  void searchAndFilter(String val) {
+    val = val.trim();
+
+    filteredRooms.clear();
+
+    if (val.isNotEmpty) {
+      for (RoomInfo info in widget.info.rooms) {
+        if (info.name.toLowerCase().contains(val.toLowerCase())) {
+          filteredRooms.add(info);
+        }
+      }
+
+      if (filteredRooms.isEmpty) {
+        filteredRooms.add(noRoom);
+      }
+    }
+
+    setState(() {});
+  }
+
+  bool get selectedRoomAvailableStatus {
+    if (showRoomIndex == null) return false;
+    if (selectType == _RoomSelectType.vacant) return true;
+    if (selectType == _RoomSelectType.rented) {
+      return false;
+    } else {
+      return !filteredRooms[showRoomIndex!].isRented;
+    }
   }
 
   @override
@@ -599,8 +649,6 @@ class _RoomSectionState extends State<_RoomSection> {
 
   @override
   Widget build(BuildContext context) {
-    List<RoomInfo> rented = rentedRooms;
-
     return CustomScrollView(
       slivers: showRoomIndex == null
           ? [
@@ -630,24 +678,7 @@ class _RoomSectionState extends State<_RoomSection> {
                             )
                           ],
                         ),
-                        onChange: (val) => setState(
-                          () {
-                            filteredRooms.clear();
-                            if (val.trim().isNotEmpty) {
-                              for (RoomInfo info in widget.info.rooms) {
-                                if (info.name
-                                    .toLowerCase()
-                                    .contains(val.trim().toLowerCase())) {
-                                  filteredRooms.add(info);
-                                }
-                              }
-
-                              if (filteredRooms.isEmpty) {
-                                filteredRooms.add(noRoom);
-                              }
-                            }
-                          },
-                        ),
+                        onChange: searchAndFilter,
                       ),
                       SizedBox(height: 24.h),
                       if (filteredRooms.isEmpty)
@@ -662,7 +693,7 @@ class _RoomSectionState extends State<_RoomSection> {
                                   color: weirdBlack),
                             ),
                             Text(
-                              "${widget.info.roomsLeft.length} rooms",
+                              "${vacantRooms.length} room${vacantRooms.length == 1 ? "" : "s"}",
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: weirdBlack75,
                                 fontWeight: FontWeight.w500,
@@ -685,12 +716,14 @@ class _RoomSectionState extends State<_RoomSection> {
                       mainAxisSpacing: 15.r,
                       mainAxisExtent: 205.h,
                     ),
-                    itemCount: widget.info.roomsLeft.length,
+                    itemCount: vacantRooms.length,
                     itemBuilder: (_, index) => AvailableRoomCard(
-                      info: widget.info.roomAt(index),
+                      info: vacantRooms[index],
                       available: true,
-                      onTap: () => setState(
-                          () => showRoomIndex = widget.info.indexAt(index)),
+                      onTap: () => setState(() {
+                        showRoomIndex = index;
+                        selectType = _RoomSelectType.vacant;
+                      }),
                     ),
                   ),
                 ),
@@ -712,7 +745,7 @@ class _RoomSectionState extends State<_RoomSection> {
                                   color: weirdBlack),
                             ),
                             Text(
-                              "${rented.length} rooms",
+                              "${rentedRooms.length} room${rentedRooms.length == 1 ? "" : "s"}",
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: weirdBlack75,
                                 fontWeight: FontWeight.w500,
@@ -735,11 +768,13 @@ class _RoomSectionState extends State<_RoomSection> {
                       mainAxisSpacing: 15.r,
                       mainAxisExtent: 215.h,
                     ),
-                    itemCount: rented.length,
+                    itemCount: rentedRooms.length,
                     itemBuilder: (_, index) => AvailableRoomCard(
-                      info: rented[index],
-                      onTap: () => setState(
-                          () => showRoomIndex = widget.info.indexAt(index)),
+                      info: rentedRooms[index],
+                      onTap: () => setState(() {
+                        showRoomIndex = index;
+                        selectType = _RoomSelectType.rented;
+                      }),
                     ),
                   ),
                 ),
@@ -770,10 +805,11 @@ class _RoomSectionState extends State<_RoomSection> {
                           itemCount: filteredRooms.length,
                           itemBuilder: (_, index) => AvailableRoomCard(
                             info: filteredRooms[index],
-                            available:
-                                widget.info.isAvailable(filteredRooms[index]),
-                            onTap: () => setState(() =>
-                                showRoomIndex = widget.info.indexAt(index)),
+                            available: !filteredRooms[index].isRented,
+                            onTap: () => setState(() {
+                              showRoomIndex = index;
+                              selectType = _RoomSelectType.none;
+                            }),
                           ),
                         ),
                 ),
@@ -792,12 +828,15 @@ class _RoomSectionState extends State<_RoomSection> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           GestureDetector(
-                            onTap: () => setState(() => showRoomIndex = null),
+                            onTap: () => setState(() {
+                              showRoomIndex = null;
+                              selectType = _RoomSelectType.none;
+                            }),
                             child: Icon(Icons.chevron_left_rounded, size: 26.r),
                           ),
                           SizedBox(width: 20.w),
                           Text(
-                            widget.info.isAvailableIndex(showRoomIndex!)
+                            selectedRoomAvailableStatus
                                 ? "Vacant Room"
                                 : "Rented Room",
                             style: context.textTheme.bodyLarge!.copyWith(
@@ -807,9 +846,12 @@ class _RoomSectionState extends State<_RoomSection> {
                       ),
                       SizedBox(height: 24.h),
                       _ShowRoomCard(
-                        room: widget.info.rooms[showRoomIndex!],
-                        isAvailable:
-                            widget.info.isAvailableIndex(showRoomIndex!),
+                        room: selectType == _RoomSelectType.vacant
+                            ? vacantRooms[showRoomIndex!]
+                            : selectType == _RoomSelectType.rented
+                                ? rentedRooms[showRoomIndex!]
+                                : filteredRooms[showRoomIndex!],
+                        isAvailable: selectedRoomAvailableStatus,
                       )
                     ],
                   ),

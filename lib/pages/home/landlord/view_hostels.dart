@@ -57,7 +57,7 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -91,7 +91,7 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
 
                     return LandlordHostelCard(info: acquireList[index]);
                   },
-                  separatorBuilder: (_, __) => const SizedBox(),
+                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
                   itemCount: acquireList.length + 1,
                 ),
               ),

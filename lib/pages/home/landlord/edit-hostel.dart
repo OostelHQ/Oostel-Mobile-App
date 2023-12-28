@@ -1831,7 +1831,9 @@ class _EditStepSixState extends State<EditStepSix> {
                         FileManager.single(type: FileType.image)
                             .then((response) async {
                           if (response == null) return;
-                          setState(() => widget.info.media.add(response));
+                          widget.info.media.removeAt(0);
+                          widget.info.media.insert(0, response);
+                          setState(() {});
                         });
                       },
                       child: widget.info.isLocal(0)
@@ -2227,15 +2229,26 @@ class _EditStepSixHalfState extends State<EditStepSixHalf> {
                     );
                   }
 
-                  return _SpecialContainer(
-                    onDelete: () => setState(() {
-                      widget.info.media.removeAt(index + 1);
-                      if (videoDataIndex != null && index == videoDataIndex) {
-                        videoDataIndex = null;
-                        videoData = null;
-                      }
-                    }),
-                    file: widget.info.media[index + 1],
+                  return GestureDetector(
+                    onTap: () {
+                      FileManager.single(type: FileType.image)
+                          .then((response) async {
+                        if (response == null) return;
+                        widget.info.media.removeAt(index + 1);
+                        widget.info.media.insert(index + 1, response);
+                        setState(() {});
+                      });
+                    },
+                    child: _SpecialContainer(
+                      onDelete: () => setState(() {
+                        widget.info.media.removeAt(index + 1);
+                        if (videoDataIndex != null && index == videoDataIndex) {
+                          videoDataIndex = null;
+                          videoData = null;
+                        }
+                      }),
+                      file: widget.info.media[index + 1],
+                    ),
                   );
                 },
                 itemCount: widget.info.media.length,
@@ -2372,36 +2385,24 @@ class _SpecialContainer extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: Stack(
-        children: [
-          Container(
-            width: 390.w,
-            height: 270.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.r),
-              color: Colors.black45,
-            ),
-            child: data != null
-                ? Center(
-                    child: Icon(
-                      Icons.play_arrow_rounded,
-                      size: 48.r,
-                      color: Colors.white,
-                    ),
-                  )
-                : null,
+      child: data != null
+          ? Center(
+        child: Container(
+          width: 64.r,
+          height: 64.r,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Colors.black45,
+            shape: BoxShape.circle,
           ),
-          Positioned(
-            top: 5.h,
-            right: 0,
-            child: IconButton(
-              icon: const Icon(Boxicons.bx_x, color: Colors.white),
-              iconSize: 28.r,
-              onPressed: onDelete,
-            ),
-          )
-        ],
-      ),
+          child: Icon(
+            Icons.play_arrow_rounded,
+            size: 48.r,
+            color: Colors.white,
+          ),
+        ),
+      )
+          : null,
     ) : CachedNetworkImage(
       imageUrl: file,
       errorWidget: (context, url, error) => Container(
