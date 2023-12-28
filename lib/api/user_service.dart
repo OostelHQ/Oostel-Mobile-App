@@ -2,6 +2,7 @@ import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/components/agent.dart';
 import 'package:my_hostel/components/landowner.dart';
+import 'package:my_hostel/misc/functions.dart';
 import 'base.dart';
 
 Future<FyndaResponse> registerUser(Map<String, dynamic> map,
@@ -145,6 +146,8 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
 }
 
 Student _parseStudentData(Map<String, dynamic> userData, {String email = "", String fullName = ""}) {
+  log(userData.toString());
+
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
@@ -170,6 +173,9 @@ Student _parseStudentData(Map<String, dynamic> userData, {String email = "", Str
     String guardian = profile["guardianPhoneNumber"] ?? "";
     List<String> names = fullName.split(" ");
 
+    List<String> peopleILike = toStringList(profile['likedStudentIds']);
+    List<String> myLikes = toStringList(profile['studentLikedIds']);
+
     return Student(
       dateJoined: created,
       firstName: names[0],
@@ -183,6 +189,8 @@ Student _parseStudentData(Map<String, dynamic> userData, {String email = "", Str
       image: pictureUrl,
       hobby: hobby,
       level: int.parse(schoolLevel),
+      peopleILike: peopleILike,
+      totalLikes: myLikes.length,
       contact: contact,
       origin: state,
       profileViews: profileViewCount,

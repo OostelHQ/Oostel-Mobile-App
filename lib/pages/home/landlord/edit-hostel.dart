@@ -2460,7 +2460,7 @@ class _EditStepSevenState extends State<EditStepSeven> {
               child: LinearProgressIndicator(
                 value: 8 / totalPages,
                 color: appBlue,
-                minHeight: 1.50.h,
+                minHeight: 1.5.h,
               ),
             ),
             Align(

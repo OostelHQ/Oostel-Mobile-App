@@ -455,7 +455,7 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
                                 ProfileInfoCard(
                                   image:
                                       "assets/images/Profile Blue Location.svg",
-                                  header: owner.address,
+                                  header: joinToAddress(owner.address, ignoreFourth: true),
                                   text: "Personal Address",
                                 ),
                                 SizedBox(height: 16.h),

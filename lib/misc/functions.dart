@@ -149,9 +149,9 @@ String day(String val) {
 }
 
 
-String joinToAddress(String address) {
+String joinToAddress(String address, {bool ignoreFourth = false}) {
   List<String> subs = address.split("#");
-  return "${subs[0]}, ${subs[1]}, ${subs[2]}, ${subs[3]}";
+  return "${subs[0]}, ${subs[1]}, ${subs[2]}${ignoreFourth ? "" : ", ${subs[3]}"}";
 }
 
 
