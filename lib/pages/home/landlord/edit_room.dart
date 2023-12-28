@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
@@ -14,6 +15,7 @@ import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
+import 'package:my_hostel/pages/other/gallery.dart';
 
 
 class EditRoomPage extends ConsumerStatefulWidget {
@@ -52,9 +54,10 @@ class _EditRoomPageState extends ConsumerState<EditRoomPage> {
     "Hanger",
   ];
 
-  late List<String> facilities, media;
+  late List<String> facilities;
   late List<SingleFileResponse> localMedia;
 
+  late List<dynamic> media;
 
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -64,10 +67,11 @@ class _EditRoomPageState extends ConsumerState<EditRoomPage> {
     //duration = widget.room.duration.isEmpty ? null : widget.room.duration;
     name = TextEditingController(text: widget.room.name);
     price = TextEditingController(text: widget.room.price.toStringAsFixed(0));
-    facilities = widget.room.facilities;
-    media = widget.room.media;
+    facilities = List.from(widget.room.facilities);
+    media = List.from(widget.room.media);
   }
 
+  bool isLocal(int index) => media[index] !is String;
 
   @override
   Widget build(BuildContext context) {
@@ -354,6 +358,7 @@ class _EditRoomPageState extends ConsumerState<EditRoomPage> {
                   itemCount: media.length,
                   itemBuilder: (_, index) => Stack(
                     children: [
+                      !isLocal(index) ?
                       ClipRRect(
                         borderRadius: BorderRadius.circular(5.r),
                         child: Image.file(
@@ -361,6 +366,48 @@ class _EditRoomPageState extends ConsumerState<EditRoomPage> {
                           width: 110.r,
                           height: 110.r,
                           fit: BoxFit.cover,
+                        ),
+                      ) : GestureDetector(
+                        onTap: () => context.router.pushNamed(
+                          Pages.viewMedia,
+                          extra: ViewInfo(
+                            type: DisplayType.network,
+                            paths: media[index],
+                            current: index,
+                          ),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: media[index],
+                          errorWidget: (context, url, error) => Container(
+                            width: 110.r,
+                            height: 110.r,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.r),
+                              color: weirdBlack50,
+                            ),
+                            alignment: Alignment.center,
+                            child: loader,
+                          ),
+                          progressIndicatorBuilder: (context, url, download) =>
+                              Container(
+                                width: 110.r,
+                                height: 110.r,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  color: weirdBlack50,
+                                ),
+                              ),
+                          imageBuilder: (context, provider) => Container(
+                            width: 110.r,
+                            height: 110.r,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.r),
+                              image: DecorationImage(
+                                image: provider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       Positioned(
@@ -401,7 +448,7 @@ class _EditRoomPageState extends ConsumerState<EditRoomPage> {
                             onTap: () =>
                                 FileManager.multiple(type: FileType.image)
                                     .then((response) async {
-                                  //media.addAll(response);
+                                  media.addAll(response);
                                   setState(() {});
                                 }),
                             child: Container(

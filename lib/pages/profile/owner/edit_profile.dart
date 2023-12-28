@@ -286,26 +286,6 @@ class _EditOwnerProfilePageState extends ConsumerState<EditOwnerProfilePage> {
                       ),
                       SizedBox(height: 16.h),
                       Text(
-                        "Email Address",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                      SpecialForm(
-                        controller: email,
-                        width: 414.w,
-                        height: 50.h,
-                        hint: "example@example.com",
-                        onValidate: (val) {
-                          if (val == null || !val!.contains("@")) {
-                            showError("Please input a valid email address");
-                            return '';
-                          }
-                          return null;
-                        },
-                        onSave: (val) => details["emailAddress"] = val,
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
                         "Phone Number",
                         style: context.textTheme.bodyMedium!.copyWith(
                             color: weirdBlack75, fontWeight: FontWeight.w500),

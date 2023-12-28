@@ -11,6 +11,9 @@ class Student extends User {
   final String ageRange;
   final bool available;
   final String address;
+  final int totalLikes;
+  final List<String> peopleILike;
+
 
   const Student({
     super.id,
@@ -33,7 +36,9 @@ class Student extends User {
     this.ageRange = "",
     this.hobby = "",
     this.origin = "",
-    this.address = ""
+    this.address = "",
+    this.totalLikes = 0,
+    this.peopleILike = const [],
   }) : super(
     type: UserType.student,
   );
@@ -125,5 +130,7 @@ class Student extends User {
         available: map["available"],
         dateJoined: DateTime.parse(map["createdAt"]),
         level: map["level"],
+        totalLikes: map["totalLikes"],
+        peopleILike: map["peopleILike"],
       );
 }
