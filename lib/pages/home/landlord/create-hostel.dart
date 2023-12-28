@@ -1406,7 +1406,7 @@ class _StepFourState extends State<StepFour> {
                         "Tenant Agreement",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: appBlue,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w400,
                         ),
                       )),
                 ),
@@ -3950,7 +3950,7 @@ class _StepTenState extends State<StepTen> {
                                 style: context.textTheme.bodyMedium!.copyWith(
                                   color: infoRoomsLeft,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 13.sp,
+                                  fontSize: 10.sp,
                                 ),
                               ),
                             )
