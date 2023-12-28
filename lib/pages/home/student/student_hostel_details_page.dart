@@ -31,6 +31,8 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
   final ScrollController scrollController = ScrollController();
   late TabController tabController;
 
+  final List<double> priceRanges = [0.0, 0.0];
+
   bool fetching = false;
   bool isCollapsed = false;
   int tabIndex = 0;
@@ -70,8 +72,12 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
       widget.info.rooms.addAll(resp.payload!['rooms']);
 
       calculateProps();
+      List<double> prices = widget.info.priceRange;
+      priceRanges.clear();
+      priceRanges.addAll(prices);
 
       owner = resp.payload!["owner"];
+
       setState(() => fetching = false);
     });
   }
@@ -83,8 +89,17 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
     super.dispose();
   }
 
+  String get hostelPrice {
+    if(priceRanges[0] == priceRanges[1]) {
+      return "${currency()} ${formatAmountInDouble(priceRanges[0])}";
+    }
+    return "${currency()} ${formatAmountInDouble(priceRanges[0])} - ${formatAmountInDouble(priceRanges[1])}";
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       body: fetching
           ? const Center(child: blueLoader)
@@ -285,7 +300,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                       borderRadius: BorderRadius.circular(5.r),
                                     ),
                                     child: Text(
-                                      "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                                      "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.totalRooms == 1 ? "" : "s"} left",
                                       style: context.textTheme.bodyMedium!
                                           .copyWith(
                                         color: infoRoomsLeft,
@@ -364,8 +379,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
-                                          text:
-                                              "${currency()} ${formatAmountInDouble(widget.info.price)}",
+                                          text: hostelPrice,
                                           style: context.textTheme.bodyMedium!
                                               .copyWith(
                                             color: appBlue,

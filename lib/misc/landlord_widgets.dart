@@ -19,14 +19,6 @@ class LandlordHostelCard extends StatefulWidget {
 }
 
 class _LandlordHostelCardState extends State<LandlordHostelCard> {
-  late String address;
-
-  @override
-  void initState() {
-    super.initState();
-    List<String> parts = widget.info.address.split('#');
-    address = "${parts[0]}, ${parts[1]}, ${parts[2]}, ${parts[3]}";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +94,7 @@ class _LandlordHostelCardState extends State<LandlordHostelCard> {
                     borderRadius: BorderRadius.circular(5.r),
                   ),
                   child: Text(
-                    "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.rooms.length == 1 ? "" : "s"} left",
+                    "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.totalRooms == 1 ? "" : "s"} left",
                     style: context.textTheme.bodySmall!.copyWith(
                       color: infoRoomsLeft,
                       fontWeight: FontWeight.w500,
@@ -113,7 +105,7 @@ class _LandlordHostelCardState extends State<LandlordHostelCard> {
             ),
             SizedBox(height: 8.h),
             Text(
-              address,
+              joinToAddress(widget.info.address),
               style: context.textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,

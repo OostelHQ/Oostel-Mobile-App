@@ -244,7 +244,7 @@ Future<FyndaResponse> createRoomForHostel({
   for (String facility in map["facilities"]) {
     formData.fields.addAll([MapEntry("RoomFacilities", facility)]);
   }
-  formData.fields.add(const MapEntry("isRented", "true"));
+  formData.fields.add(const MapEntry("isRented", "false"));
   List<SingleFileResponse> medias = map["media"];
   for (SingleFileResponse response in medias) {
     formData.files.addAll(

@@ -1534,8 +1534,11 @@ class _StepFiveState extends State<StepFive> {
     widget.info["FacilityName"] = facilities;
   }
 
+
   @override
   Widget build(BuildContext context) {
+    facilities.remove("None");
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -4516,7 +4519,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                 SizedBox(
                   width: 250.w,
                   child: LinearProgressIndicator(
-                    value: progress / total,
+                    value: (progress / total).roundToDouble(),
                     color: appBlue,
                     backgroundColor: paleBlue,
                     minHeight: 10.h,

@@ -775,7 +775,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                   borderRadius: BorderRadius.circular(5.r),
                                 ),
                                 child: Text(
-                                  "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                                  "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.totalRooms == 1 ? "" : "s"} left",
                                   style: context.textTheme.bodyMedium!.copyWith(
                                       color: infoRoomsLeft,
                                       fontSize: 13.sp,
@@ -811,12 +811,10 @@ class StudentCard extends ConsumerStatefulWidget {
 }
 
 class _StudentCardState extends ConsumerState<StudentCard> {
-
   @override
   Widget build(BuildContext context) {
     List<String> likes = ref.watch(studentLikedRoommatesProvider);
     String id = ref.watch(currentUserProvider).id;
-
 
     return GestureDetector(
       onTap: () => context.router.pushNamed(
@@ -863,7 +861,7 @@ class _StudentCardState extends ConsumerState<StudentCard> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              if(likes.contains(id)) {
+                              if (likes.contains(id)) {
                                 likes.remove(id);
                               } else {
                                 likes.add(id);
@@ -873,7 +871,9 @@ class _StudentCardState extends ConsumerState<StudentCard> {
                               duration: const Duration(milliseconds: 500),
                               child: Icon(
                                 Icons.favorite_rounded,
-                                color: likes.contains(id) ? Colors.red : weirdBlack25,
+                                color: likes.contains(id)
+                                    ? Colors.red
+                                    : weirdBlack25,
                                 size: 18,
                                 key: ValueKey<bool>(likes.contains(id)),
                               ),
@@ -1094,9 +1094,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        likeHostel({
-
-                        });
+                        likeHostel({});
 
                         if (likes.contains(id)) {
                           likes.remove(id);
@@ -1215,7 +1213,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                         borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(
-                        "${widget.info.roomsLeft.length} room${widget.info.roomsLeft.length == 1 ? "" : "s"} left",
+                        "${widget.info.rooms.length}/${widget.info.totalRooms} room${widget.info.totalRooms == 1 ? "" : "s"} left",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: infoRoomsLeft,
                           fontWeight: FontWeight.w500,
@@ -1716,17 +1714,23 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
   late Color backgroundColor, textColor;
   late String deadline;
 
-  bool timeUp = false;
-
-  bool isData = false;
+  bool timeUp = false, isData = false, available = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.info == null && (widget.infoMap != null || widget.infoData != null)) {
+    if (widget.info == null &&
+        (widget.infoMap != null || widget.infoData != null)) {
       isData = true;
+      if (widget.infoMap != null) {
+        available = true;
+      } else if (widget.infoData != null) {
+        available = !widget.infoData!.isRented;
+      }
       return;
+    } else {
+      available = !widget.info!.isRented;
     }
 
     timeUp = widget.fromStudent;
@@ -1762,8 +1766,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
       builder: (_) => SizedBox(
         width: 414.w,
         child: Padding(
-          padding:
-          EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -1772,8 +1775,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                   children: [
                     SizedBox(height: 10.h),
                     Center(
-                      child: SvgPicture.asset(
-                          "assets/images/Modal Line.svg"),
+                      child: SvgPicture.asset("assets/images/Modal Line.svg"),
                     ),
                     SizedBox(height: 25.h),
                     Center(
@@ -1784,39 +1786,35 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                         ),
                         child: CachedNetworkImage(
                           imageUrl: widget.info!.media.first,
-                          errorWidget: (context, url, error) =>
+                          errorWidget: (context, url, error) => Container(
+                            width: 414.w,
+                            height: 175.h,
+                            color: weirdBlack50,
+                            alignment: Alignment.center,
+                            child: loader,
+                          ),
+                          progressIndicatorBuilder: (context, url, download) =>
                               Container(
-                                width: 414.w,
-                                height: 175.h,
-                                color: weirdBlack50,
-                                alignment: Alignment.center,
-                                child: loader,
-                              ),
-                          progressIndicatorBuilder:
-                              (context, url, download) => Container(
                             width: 414.w,
                             height: 175.h,
                             color: weirdBlack50,
                           ),
-                          imageBuilder: (context, provider) =>
-                              Container(
-                                width: 414.w,
-                                height: 175.h,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: provider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                          imageBuilder: (context, provider) => Container(
+                            width: 414.w,
+                            height: 175.h,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: provider,
+                                fit: BoxFit.cover,
                               ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 16.h),
                     Text(
-                      isData
-                          ? widget.infoMap!["name"]
-                          : widget.info!.name,
+                      isData ? widget.infoMap!["name"] : widget.info!.name,
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 22.sp,
@@ -1829,8 +1827,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                         children: [
                           TextSpan(
                             text: currency(),
-                            style:
-                            context.textTheme.bodyMedium!.copyWith(
+                            style: context.textTheme.bodyMedium!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
@@ -1840,8 +1837,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                             text: formatAmountInDouble(isData
                                 ? widget.infoMap!["price"]
                                 : widget.info!.price),
-                            style:
-                            context.textTheme.bodyMedium!.copyWith(
+                            style: context.textTheme.bodyMedium!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
@@ -1849,8 +1845,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           ),
                           TextSpan(
                             text: "/year",
-                            style:
-                            context.textTheme.bodySmall!.copyWith(
+                            style: context.textTheme.bodySmall!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w500,
@@ -1863,8 +1858,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                     Text(
                       "Rooms Facilities",
                       style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack),
+                          fontWeight: FontWeight.w600, color: weirdBlack),
                     ),
                     SizedBox(height: 8.h),
                   ],
@@ -1877,8 +1871,8 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                   mainAxisSpacing: 15.r,
                   mainAxisExtent: 105.r,
                 ),
-                itemBuilder: (_, index) => FacilityContainer(
-                    text: widget.info!.facilities[index]),
+                itemBuilder: (_, index) =>
+                    FacilityContainer(text: widget.info!.facilities[index]),
                 itemCount: widget.info!.facilities.length,
               ),
               SliverToBoxAdapter(
@@ -1889,8 +1883,7 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                     Text(
                       "Gallery",
                       style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: weirdBlack),
+                          fontWeight: FontWeight.w600, color: weirdBlack),
                     ),
                     SizedBox(height: 8.h),
                   ],
@@ -1924,8 +1917,8 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                       alignment: Alignment.center,
                       child: loader,
                     ),
-                    progressIndicatorBuilder:
-                        (context, url, download) => Container(
+                    progressIndicatorBuilder: (context, url, download) =>
+                        Container(
                       width: 110.r,
                       height: 110.r,
                       decoration: BoxDecoration(
@@ -1955,31 +1948,35 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
   }
 
   bool get isLocalFirst {
-    if(widget.info != null) return false;
-    if(widget.infoMap != null) return true;
-    return widget.infoData!.media.first !is String;
+    if (widget.info != null) return false;
+    if (widget.infoMap != null) return true;
+    return widget.infoData!.media.first! is String;
   }
 
   String get name {
-    if(widget.info != null) return widget.info!.name;
-    if(widget.infoMap != null) return widget.infoMap!["name"];
+    if (widget.info != null) return widget.info!.name;
+    if (widget.infoMap != null) return widget.infoMap!["name"];
     return widget.infoData!.name;
   }
 
   double get price {
-    if(widget.info != null) return widget.info!.price;
-    if(widget.infoMap != null) return widget.infoMap!["price"];
+    if (widget.info != null) return widget.info!.price;
+    if (widget.infoMap != null) return widget.infoMap!["price"];
     return widget.infoData!.price;
   }
 
-  File get localFile => File(widget.infoMap != null ? widget.infoMap!["media"].first.path : widget.infoData!.media.first.path);
-  String get onlineUrl => widget.info != null ? widget.info!.media.first : widget.infoData!.media.first;
+  File get localFile => File(widget.infoMap != null
+      ? widget.infoMap!["media"].first.path
+      : widget.infoData!.media.first.path);
+
+  String get onlineUrl => widget.info != null
+      ? widget.info!.media.first
+      : widget.infoData!.media.first;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap ??
-          showRoomInfoSheet,
+      onTap: widget.onTap ?? showRoomInfoSheet,
       child: Container(
         width: 185.w,
         height: 215.h,
@@ -1993,61 +1990,61 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                isLocalFirst ?
-                Container(
-                  width: 185.w,
-                  height: 140.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.r),
-                      topRight: Radius.circular(10.r),
-                    ),
-                    image: DecorationImage(
-                      image: FileImage(localFile),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ) :
-                CachedNetworkImage(
-                  imageUrl: onlineUrl,
-                  errorWidget: (context, url, error) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
+                isLocalFirst
+                    ? Container(
+                        width: 185.w,
+                        height: 140.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.r),
+                            topRight: Radius.circular(10.r),
+                          ),
+                          image: DecorationImage(
+                            image: FileImage(localFile),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: onlineUrl,
+                        errorWidget: (context, url, error) => Container(
+                          width: 185.w,
+                          height: 140.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r),
+                            ),
+                            color: weirdBlack25,
+                          ),
+                        ),
+                        progressIndicatorBuilder: (context, url, download) =>
+                            Container(
+                          width: 185.w,
+                          height: 140.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r),
+                            ),
+                            color: weirdBlack25,
+                          ),
+                        ),
+                        imageBuilder: (context, provider) => Container(
+                          width: 185.w,
+                          height: 140.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r),
+                            ),
+                            image: DecorationImage(
+                              image: provider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  progressIndicatorBuilder: (context, url, download) =>
-                      Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
-                      ),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  imageBuilder: (context, provider) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
-                      ),
-                      image: DecorationImage(
-                        image: provider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
                 SizedBox(height: 8.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -2125,27 +2122,28 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                 ),
               ],
             ),
-            Positioned(
-              top: 10.r,
-              left: 10.r,
-              child: Container(
-                width: 60.w,
-                height: 25.h,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: infoRoomsLeftBackground,
-                  borderRadius: BorderRadius.circular(5.r),
-                ),
-                child: Text(
-                  "Available",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    color: infoRoomsLeft,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13.sp,
+            if (available)
+              Positioned(
+                top: 10.r,
+                left: 10.r,
+                child: Container(
+                  width: 60.w,
+                  height: 25.h,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: infoRoomsLeftBackground,
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                  child: Text(
+                    "Available",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: infoRoomsLeft,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13.sp,
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -2175,7 +2173,7 @@ class FacilityContainer extends StatelessWidget {
             color: paleBlue,
           ),
           child: SvgPicture.asset(
-            "assets/images/$text-On.svg",
+            "assets/images/${text == "None" ? "None" : "$text-On"}.svg",
             width: 35.r,
             height: 35.r,
           ),
@@ -2205,6 +2203,8 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
 
   int? selectedRoom;
 
+  late List<RoomInfo> availableRooms;
+
   @override
   void initState() {
     super.initState();
@@ -2225,6 +2225,13 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
       title = "Hostel Pay Failed";
       message = "Your payment was unsuccessful. Please try again.";
       image = "assets/images/Hostel Pay Fail.png";
+    }
+
+    availableRooms = [];
+    for (RoomInfo room in widget.info.rooms) {
+      if (room.isRented) {
+        availableRooms.add(room);
+      }
     }
   }
 
@@ -2423,7 +2430,7 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                           spacing: 10.w,
                           runSpacing: 10.w,
                           children: List.generate(
-                            widget.info.roomsLeft.length,
+                            availableRooms.length,
                             (index) => GestureDetector(
                               onTap: () => setState(() => selectedRoom = index),
                               child: Container(
@@ -2443,7 +2450,7 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
                                         ? paleBlue
                                         : null),
                                 child: Text(
-                                  widget.info.rooms[index].name,
+                                  availableRooms[index].name,
                                   style: context.textTheme.bodyMedium!.copyWith(
                                       color: selectedRoom != null &&
                                               selectedRoom == index

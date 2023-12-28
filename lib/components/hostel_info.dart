@@ -15,7 +15,6 @@ class HostelInfo extends Equatable {
   final List<String> hostelFacilities;
   final List<RoomInfo> rooms;
   final int totalRooms;
-  final List<String> roomsLeft;
   final List<String> media;
   final int likes;
   final String category;
@@ -32,7 +31,6 @@ class HostelInfo extends Equatable {
     this.price = 0.0,
     this.vacantRooms = false,
     this.rooms = const [],
-    this.roomsLeft = const [],
     required this.owner,
     this.description = "",
     this.rules = const [],
@@ -46,27 +44,28 @@ class HostelInfo extends Equatable {
 
   HostelInfoData get data => HostelInfoData.fromInfo(this);
 
-  // List<double> get priceRange {
-  //   List<String> values = price.split(" ");
-  //   return [double.parse(values[0]), double.parse(values[2])];
-  // }
+  List<double> get priceRange {
+    List<double> prices = [0.0, 0.0];
+    for(RoomInfo info in rooms) {
+      if(info.price <= prices[0]) {
+        prices[0] = info.price;
+      }
 
-  RoomInfo roomAt(int index) {
-    String id = roomsLeft[index];
-    return rooms.firstWhere((room) => room.id == id, orElse: () => noRoom);
-  }
-
-  bool isAvailable(RoomInfo info) => roomsLeft.contains(info.id);
-
-  bool isAvailableIndex(int index) => roomsLeft.contains(rooms[index].id);
-
-  int indexAt(int index) {
-    String id = rooms[index].id;
-    for (int i = 0; i < rooms.length; ++i) {
-      if (rooms[i].id == id) return i;
+      if(info.price >= prices[1]) {
+        prices[1] = info.price;
+      }
     }
-    return -1;
+
+    if(prices[0] == 0.0 && prices[1] != 0.0) {
+      prices[0] = prices[1];
+    } else if(prices[0] != 0.0 && prices[1] == 0.0) {
+      prices[1] = prices[0];
+    }
+
+    return prices;
   }
+
+  bool isAvailableIndex(int index) => rooms[index].isRented;
 
   factory HostelInfo.fromJson(Map<String, dynamic> map) {
     String street = map["street"] ?? "",
@@ -82,7 +81,6 @@ class HostelInfo extends Equatable {
       totalRooms: map["totalRoom"] ?? 0,
       address: "$street#$junction#$state#$country",
       category: map["hostelCategory"],
-      roomsLeft: map["roomsLeft"] ?? [],
       description: map["hostelDescription"],
       rules: map["rulesAndRegulation"],
       likes: map["hostelLikesCount"] ?? 0,
