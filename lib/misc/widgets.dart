@@ -197,7 +197,7 @@ class SpecialForm extends StatelessWidget {
     this.suffix,
     this.decoration,
     this.maxLines = 1,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
