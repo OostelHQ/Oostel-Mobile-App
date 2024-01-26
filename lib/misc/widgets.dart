@@ -170,7 +170,7 @@ class SpecialForm extends StatelessWidget {
   final BoxDecoration? decoration;
 
   const SpecialForm({
-    Key? key,
+    super.key,
     required this.controller,
     required this.width,
     required this.height,
@@ -196,7 +196,7 @@ class SpecialForm extends StatelessWidget {
     this.prefix,
     this.suffix,
     this.decoration,
-    this.maxLines = 1, required ,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
