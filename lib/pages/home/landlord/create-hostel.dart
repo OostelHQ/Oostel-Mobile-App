@@ -483,7 +483,7 @@ class _StepTwoState extends State<StepTwo> {
   late TextEditingController name;
   late TextEditingController description;
   late TextEditingController rooms;
-  late TextEditingController area;
+  // late TextEditingController area;
   final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
@@ -494,9 +494,9 @@ class _StepTwoState extends State<StepTwo> {
     rooms = TextEditingController(
         text:
             "${widget.info["totalRoom"] == 0 ? "" : widget.info["totalRoom"]}");
-    area = TextEditingController(
-        text:
-            "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
+    // area = TextEditingController(
+    //     text:
+    //         "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
   }
 
   @override
@@ -504,7 +504,7 @@ class _StepTwoState extends State<StepTwo> {
     name.dispose();
     description.dispose();
     rooms.dispose();
-    area.dispose();
+    // area.dispose();
     super.dispose();
   }
 
@@ -512,7 +512,7 @@ class _StepTwoState extends State<StepTwo> {
     if (name.text.trim().isEmpty) return false;
     if (description.text.trim().isEmpty) return false;
     if (rooms.text.trim().isEmpty) return false;
-    if (area.text.trim().isEmpty) return false;
+    // if (area.text.trim().isEmpty) return false;
     return true;
   }
 
@@ -549,7 +549,7 @@ class _StepTwoState extends State<StepTwo> {
                   name.clear();
                   description.clear();
                   rooms.clear();
-                  area.clear();
+                  // area.clear();
 
                   widget.info["name"] = "";
                   widget.info["description"] = "";
@@ -686,37 +686,37 @@ class _StepTwoState extends State<StepTwo> {
                       onAction: () => setState(() {}),
                     ),
                   ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Room Size",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SpecialForm(
-                    controller: area,
-                    width: 414.w,
-                    height: 50.h,
-                    type: TextInputType.number,
-                    hint: "i.e 2500 sqft",
-                    onValidate: (val) {
-                      if (val == null ||
-                          val!.trim().isEmpty ||
-                          double.tryParse(val!) == null) {
-                        showError(
-                            "Please enter a valid room size for your hostel.");
-                        return '';
-                      }
-                      return null;
-                    },
-                    onSave: (val) =>
-                        widget.info["homeSize"] = double.parse(val!),
-                    onChange: (val) => textChecker(
-                      text: val,
-                      onAction: () => setState(() {}),
-                    ),
-                  ),
+                  // SizedBox(height: 16.h),
+                  // Text(
+                  //   "Room Size",
+                  //   style: context.textTheme.bodyMedium!.copyWith(
+                  //     fontWeight: FontWeight.w500,
+                  //     color: weirdBlack,
+                  //   ),
+                  // ),
+                  // SpecialForm(
+                  //   controller: area,
+                  //   width: 414.w,
+                  //   height: 50.h,
+                  //   type: TextInputType.number,
+                  //   hint: "i.e 2500 sqft",
+                  //   onValidate: (val) {
+                  //     if (val == null ||
+                  //         val!.trim().isEmpty ||
+                  //         double.tryParse(val!) == null) {
+                  //       showError(
+                  //           "Please enter a valid room size for your hostel.");
+                  //       return '';
+                  //     }
+                  //     return null;
+                  //   },
+                  //   onSave: (val) =>
+                  //       widget.info["homeSize"] = double.parse(val!),
+                  //   onChange: (val) => textChecker(
+                  //     text: val,
+                  //     onAction: () => setState(() {}),
+                  //   ),
+                  // ),
                   SizedBox(height: 100.h),
                 ],
               ),
@@ -3193,6 +3193,7 @@ class StepNine extends StatefulWidget {
 class _StepNineState extends State<StepNine> {
   late TextEditingController name;
   late TextEditingController price;
+  late TextEditingController area;
 
   String? duration;
 
@@ -3244,12 +3245,17 @@ class _StepNineState extends State<StepNine> {
     name = TextEditingController(text: room?["name"] ?? "");
     price = TextEditingController(
         text: room?["price"] == null ? "" : room?["price"].toStringAsFixed(0));
+
+    area = TextEditingController(
+        text:
+            "${widget.info["homeSize"] == 0.0 ? "" : widget.info["homeSize"].toStringAsFixed(2)}");
   }
 
   @override
   void dispose() {
     name.dispose();
     price.dispose();
+    area.dispose();
     super.dispose();
   }
 
@@ -3340,6 +3346,7 @@ class _StepNineState extends State<StepNine> {
                           color: weirdBlack,
                         ),
                       ),
+                      
                       SpecialForm(
                         controller: name,
                         width: 414.w,
@@ -3353,6 +3360,40 @@ class _StepNineState extends State<StepNine> {
                           return null;
                         },
                       ),
+
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Room Size",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: weirdBlack,
+                        ),
+                      ),
+                      SpecialForm(
+                        controller: area,
+                        width: 414.w,
+                        height: 50.h,
+                        type: TextInputType.number,
+                        radius: BorderRadius.circular(100),
+                        hint: "i.e 2500 sqft", 
+                        onValidate: (val) {
+                          if (val == null ||
+                              val!.trim().isEmpty ||
+                              double.tryParse(val!) == null) {
+                            showError(
+                                "Please enter a valid room size for your hostel.");
+                            return '';
+                          }
+                          return null;
+                        },
+                        onSave: (val) =>
+                            widget.info["homeSize"] = double.parse(val!),
+                        onChange: (val) => textChecker(
+                          text: val,
+                          onAction: () => setState(() {}),
+                        ),
+                      ),
+                      
                       SizedBox(height: 16.h),
                       Text(
                         "Price",

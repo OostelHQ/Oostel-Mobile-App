@@ -196,7 +196,7 @@ class SpecialForm extends StatelessWidget {
     this.prefix,
     this.suffix,
     this.decoration,
-    this.maxLines = 1,
+    this.maxLines = 1, required ,
   }) : super(key: key);
 
   @override
