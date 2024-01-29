@@ -4,7 +4,7 @@ export 'package:dio/dio.dart';
 import 'dart:developer' show log;
 export 'dart:developer' show log;
 
-const String baseUrl = "https://fyndaapp-001-site1.htempurl.com/api";
+const String baseUrl = "https://fyndaapp-001-site1.atempurl.com/api";
 
 final Dio dio = Dio(
   BaseOptions(
