@@ -727,6 +727,7 @@ class _CreateProfilePageThreeState
     ).then((resp) {
       if (!mounted) return;
       showError(resp.message);
+      print(resp.message);
       if (!resp.success) {
         Navigator.of(context).pop();
       } else {

@@ -142,6 +142,7 @@ class CustomGrouper extends TextInputFormatter {
 }
 
 class SpecialForm extends StatelessWidget {
+  final Key? key;
   final Widget? prefix;
   final Widget? suffix;
   final String? hint;
@@ -170,7 +171,7 @@ class SpecialForm extends StatelessWidget {
   final BoxDecoration? decoration;
 
   const SpecialForm({
-    super.key,
+    this.key,
     required this.controller,
     required this.width,
     required this.height,
