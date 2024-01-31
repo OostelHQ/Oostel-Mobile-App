@@ -41,7 +41,7 @@ Future<FyndaResponse<String?>> createHostel(Map<String, dynamic> map) async {
     for (String rule in rules) {
       formData.fields.addAll([MapEntry("RuleAndRegulation", rule)]);
     }
-    formData.fields.addAll(const [MapEntry("rooms", "{}")]);
+    formData.fields.addAll(const [MapEntry("rooms", "[]")]);
 
     String budget = "${map["minPrice"]} - ${map["maxPrice"]}";
 
@@ -206,6 +206,7 @@ Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) asy
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       List<dynamic> list = response.data['data'] as List<dynamic>;
+      log(list.toString());
       List<HostelInfo> hostels = [];
       for (var element in list) {
         HostelInfo info = _parseHostelData(element, id: id);

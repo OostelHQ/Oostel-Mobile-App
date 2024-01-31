@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_hostel/api/file_manager.dart' show SingleFileResponse;
 import 'package:my_hostel/components/room_details.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
@@ -182,6 +183,22 @@ List<String> toStringList(List<dynamic> data) {
   List<String> result = [];
   for(var element in data) {
     result.add(element as String);
+  }
+  return result;
+}
+
+List<Map<String, dynamic>> toRoomList(List<dynamic> data) {
+  List<Map<String, dynamic>> response = [];
+  for (dynamic element in data) {
+    response.add(element as Map<String, dynamic>);
+  }
+  return response;
+}
+
+List<SingleFileResponse> toDataList(List<dynamic> list) {
+  List<SingleFileResponse> result = [];
+  for (var element in list) {
+    result.add(element as SingleFileResponse);
   }
   return result;
 }

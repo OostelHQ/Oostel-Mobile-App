@@ -57,6 +57,26 @@ class FileManager {
     return instance.getInt(key);
   }
 
+  static Future<void> saveDouble(String key, double value) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    await instance.setDouble(key, value);
+  }
+
+  static Future<double?> loadDouble(String key) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    return instance.getDouble(key);
+  }
+
+  static Future<void> saveStringList(String key, List<String> value) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    await instance.setStringList(key, value);
+  }
+
+  static Future<List<String>?> loadStringList(String key) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    return instance.getStringList(key);
+  }
+
   static Future<List<Uint8List>> loadToBytes(
       {FileType type = FileType.custom}) async {
     FilePickerResult? result =
@@ -131,7 +151,9 @@ class FileManager {
     return response;
   }
 
-  static String convertTo64(Uint8List data) => base64.encode(data);
+
+  static String convertToBase64String(Uint8List data) => base64.encode(data);
+  static Uint8List convertToUint8List(String data) => base64.decode(data);
 
   static Future<SingleFileResponse?> single(
       {List<String> extensions = const [],
@@ -142,7 +164,8 @@ class FileManager {
       allowMultiple: false,
     );
     if (result != null) {
-      return _convert(result.files.single);
+      SingleFileResponse response = await _convert(result.files.single);
+      return response;
     }
     return null;
   }
@@ -157,23 +180,30 @@ class FileManager {
     );
 
     if (result != null) {
-      List<SingleFileResponse> response = [];
+      List<SingleFileResponse> responses = [];
       List<PlatformFile> files = result.files;
       for (PlatformFile file in files) {
-        response.add(_convert(file));
+        SingleFileResponse response = await _convert(file);
+        responses.add(response);
       }
-      return response;
+      return responses;
     }
 
     return [];
   }
 
-  static SingleFileResponse _convert(PlatformFile file) => SingleFileResponse(
-        path: file.path!,
-        extension: file.extension!,
-        filename: file.name,
-        size: file.size,
-      );
+  static Future<SingleFileResponse> _convert(PlatformFile file) async {
+    Uint8List data = await FileManager.convertSingleToData(file.path!);
+
+    return SingleFileResponse(
+      path: file.path!,
+      extension: file.extension!,
+      filename: file.name,
+      data: data,
+      size: data.lengthInBytes,
+    );
+  }
+
 }
 
 class SingleFileResponse {
@@ -182,14 +212,27 @@ class SingleFileResponse {
   String extension;
   int size;
 
+  Uint8List data;
+
   SingleFileResponse({
     this.path = "",
     this.filename = "",
     this.extension = "",
     this.size = 0,
+    required this.data
   });
+
 
   @override
   String toString() =>
       "{name: $filename, path: $path, extension: $extension, size: $size}";
+
+  factory SingleFileResponse.fromBase64String(String base64Data) {
+    Uint8List data = FileManager.convertToUint8List(base64Data);
+    return SingleFileResponse(data: data, size: data.lengthInBytes);
+  }
+
+  String get toBase64String => FileManager.convertToBase64String(data);
+
+
 }
