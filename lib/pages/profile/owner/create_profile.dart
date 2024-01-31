@@ -1136,14 +1136,13 @@ class _CreateProfilePageFourState extends ConsumerState<CreateProfilePageFour> {
     );
   }
 
+  void show() => showModalBottomSheet(
+    context: context,
+    builder: (_) => const _CreateAccountModal(),
+    isDismissible: true,
+  );
+
   void create() {
-
-    void show() => showModalBottomSheet(
-      context: context,
-      builder: (_) => const _CreateAccountModal(),
-      isDismissible: true,
-    );
-
     refreshUser(UserType.landlord).then((val) {
       if(!mounted) return;
 

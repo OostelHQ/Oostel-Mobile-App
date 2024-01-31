@@ -145,7 +145,8 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
   );
 }
 
-Student _parseStudentData(Map<String, dynamic> userData, {String email = "", String fullName = ""}) {
+Student _parseStudentData(Map<String, dynamic> userData,
+    {String email = "", String fullName = ""}) {
   log(userData.toString());
 
   String id = userData["userDto"]["userId"];
@@ -258,7 +259,6 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     contact: contact,
     email: "",
   );
-
 }
 
 Future<FyndaResponse> verifyEmailOTP(Map<String, dynamic> map) async {
@@ -337,7 +337,7 @@ Future<FyndaResponse> deleteAccount(String id) async {
   try {
     Response response = await dio.delete(
       "/user-delete/delete-user-account",
-      queryParameters: {"userId" : id},
+      queryParameters: {"userId": id},
       options: configuration,
     );
 
@@ -445,8 +445,10 @@ Future<FyndaResponse<User?>> refreshUser(UserType type,
   } else {
     if (type == UserType.student) {
       user = _parseStudentData(userData);
-    } else if (type == UserType.agent) {
+    } else if (type == UserType.landlord) {
       user = parseLandlordData(userData);
+    } else if (type == UserType.agent) {
+      user = parseAgentData(userData);
     } else {
       user = null;
     }
@@ -848,7 +850,6 @@ Future<FyndaResponse> likeStudentProfile(Map<String, dynamic> map) async {
   );
 }
 
-
 Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
   try {
     Response response = await dio.get(
@@ -860,7 +861,7 @@ Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
-  } catch(e) {
+  } catch (e) {
     log("Get Liked Students Error: $e");
   }
 
@@ -870,7 +871,6 @@ Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
     success: false,
   );
 }
-
 
 Future<FyndaResponse> getStudentLikedUsers(String studentId) async {
   try {
@@ -883,7 +883,7 @@ Future<FyndaResponse> getStudentLikedUsers(String studentId) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
-  } catch(e) {
+  } catch (e) {
     log("Get Student Liked Users Error: $e");
   }
 

@@ -3374,7 +3374,6 @@ class _StepNineState extends State<StepNine> {
                         width: 414.w,
                         height: 50.h,
                         type: TextInputType.number,
-                        radius: BorderRadius.circular(100),
                         hint: "i.e 2500 sqft", 
                         onValidate: (val) {
                           if (val == null ||
@@ -4549,7 +4548,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "${(progress / total) * 100}%",
+                "${((progress / total) * 100).toStringAsFixed(1)}%",
                 style: context.textTheme.bodyMedium!.copyWith(
                   color: appBlue,
                   fontWeight: FontWeight.w600,

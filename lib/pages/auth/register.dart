@@ -109,17 +109,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 0.01,
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => context.router.pop(),
-        ),
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     iconSize: 26.r,
+      //     splashRadius: 0.01,
+      //     icon: const Icon(Icons.chevron_left),
+      //     onPressed: () => context.router.pop(),
+      //   ),
+      //   elevation: 0.0,
+      //   backgroundColor: Colors.transparent,
+      //   systemOverlayStyle: SystemUiOverlayStyle.dark,
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -172,7 +172,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               .copyWith(color: fadedBorder),
                           hint: "Surname",
                           onSave: (val) =>
-                              setState(() => authDetails["firstName"] = val!),
+                              setState(() => authDetails["firstName"] = val!.trim()),
                           onChange: (val) => textChecker(text: val, onAction: () => setState(() {})),
                           onValidate: (value) {
                             if (value!.trim().isEmpty) {
@@ -204,7 +204,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           },
                           hint: "Other Name",
                           onSave: (val) =>
-                              setState(() => authDetails["lastName"] = val!),
+                              setState(() => authDetails["lastName"] = val!.trim()),
                         ),
                         SizedBox(height: 16.h),
                         Text(
@@ -230,7 +230,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               .copyWith(color: fadedBorder),
                           hint: "example@example.com",
                           onSave: (val) => setState(
-                              () => authDetails["emailAddress"] = val!),
+                              () => authDetails["emailAddress"] = val!.trim()),
                         ),
                         SizedBox(height: 16.h),
                         Text(
@@ -253,7 +253,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                             return null;
                           },
                           onSave: (val) =>
-                              setState(() => authDetails["password"] = val!),
+                              setState(() => authDetails["password"] = val!.trim()),
                           suffix: GestureDetector(
                             onTap: () =>
                                 setState(() => showPassword = !showPassword),
@@ -297,7 +297,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                             onSave: (val) {
                               if (!ref.read(isAgent)) return;
                               setState(
-                                  () => authDetails["referralCode"] = val!);
+                                  () => authDetails["referralCode"] = val!.trim());
                             },
                           ),
                         Row(
