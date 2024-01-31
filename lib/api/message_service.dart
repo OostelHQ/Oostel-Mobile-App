@@ -13,7 +13,7 @@ Future<FyndaResponse<List<Message>>> getMessages(String email) async {
       queryParameters: {"Email": email},
     );
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-      log(response.data.toString());
+      log("Messages: ${response.data}");
       List<dynamic> list = response.data as List<dynamic>;
       List<Message> messages = [];
       for (var element in list) {

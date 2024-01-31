@@ -227,12 +227,14 @@ class SingleFileResponse {
   String toString() =>
       "{name: $filename, path: $path, extension: $extension, size: $size}";
 
-  factory SingleFileResponse.fromBase64String(String base64Data) {
-    Uint8List data = FileManager.convertToUint8List(base64Data);
-    return SingleFileResponse(data: data, size: data.lengthInBytes);
-  }
-
   String get toBase64String => FileManager.convertToBase64String(data);
+
+
+  factory SingleFileResponse.fromBase64String(String base64String) {
+    Uint8List data = FileManager.convertToUint8List(base64String);
+    //File file = File.fromRawPath(data);
+    return SingleFileResponse(data: data);
+  }
 
 
 }

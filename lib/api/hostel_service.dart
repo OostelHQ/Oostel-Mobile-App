@@ -148,8 +148,8 @@ HostelInfo _parseHostelData(Map<String, dynamic> element, {String? id }) {
   toStringList(element["rulesAndRegulation"] as List<dynamic>);
   List<String> facilities =
   toStringList(element["hostelFacilities"] as List<dynamic>);
-  List<String> media =
-  toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
+  //List<String> media = toStringList(element["hostelFrontViewPicture"] as List<dynamic>);
+  List<String> media = _parseMedia(element["hostelFrontViewPicture"] as List<dynamic>);
   List<RoomInfo> rooms = (element['rooms'] == null) ? [] : parseRoomData(element['rooms'] as List<dynamic>);
   element['rooms'] = rooms;
 
@@ -160,6 +160,15 @@ HostelInfo _parseHostelData(Map<String, dynamic> element, {String? id }) {
   element["userId"] = element['userId'] ?? id;
   HostelInfo info = HostelInfo.fromJson(element);
   return info;
+}
+
+List<String> _parseMedia(List<dynamic> data) {
+  List<String> media = [];
+  for(var element in data) {
+    media.add(element["url"] as String);
+  }
+
+  return media;
 }
 
 Future<FyndaResponse<Map<String, dynamic>?>> getHostel(String id) async {
