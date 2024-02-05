@@ -147,7 +147,7 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
 
 Student _parseStudentData(Map<String, dynamic> userData,
     {String email = "", String fullName = ""}) {
-  log(userData.toString());
+  //log(userData.toString());
 
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
@@ -174,8 +174,8 @@ Student _parseStudentData(Map<String, dynamic> userData,
     String guardian = profile["guardianPhoneNumber"] ?? "";
     List<String> names = fullName.split(" ");
 
-    List<String> peopleILike = toStringList(profile['likedStudentIds']);
-    List<String> myLikes = toStringList(profile['studentLikedIds']);
+    //List<String> peopleILike = toStringList(profile['likedStudentIds']);
+    //List<String> myLikes = toStringList(profile['studentLikedIds']);
 
     return Student(
       dateJoined: created,
@@ -190,8 +190,8 @@ Student _parseStudentData(Map<String, dynamic> userData,
       image: pictureUrl,
       hobby: hobby,
       level: int.parse(schoolLevel),
-      peopleILike: peopleILike,
-      totalLikes: myLikes.length,
+      peopleILike: [], //peopleILike,
+      totalLikes: 0, //myLikes.length,
       contact: contact,
       origin: state,
       profileViews: profileViewCount,

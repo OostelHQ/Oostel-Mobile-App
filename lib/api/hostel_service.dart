@@ -70,8 +70,6 @@ Future<FyndaResponse<String?>> createHostel(Map<String, dynamic> map) async {
     );
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-
-      log(response.data.toString());
       return FyndaResponse(
         message: "Hostel Created",
         payload: response.data["data"],
@@ -215,7 +213,6 @@ Future<FyndaResponse<List<HostelInfo>?>> getAllHostelsForLandlord(String id) asy
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       List<dynamic> list = response.data['data'] as List<dynamic>;
-      log(list.toString());
       List<HostelInfo> hostels = [];
       for (var element in list) {
         HostelInfo info = _parseHostelData(element, id: id);

@@ -45,9 +45,14 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
 
   late HubConnection connection;
 
+  final String otherId = "82c902d6-1df6-4638-aabb-17228de5efd4";
+
+  late InboxInfo inboxInfo;
+
   @override
   void initState() {
     super.initState();
+    inboxInfo = InboxInfo(id: otherId, role: "Student");
     getMessages(ref.read(currentUserProvider).email)
         .then((resp) => setState(() => loaded = true));
   }
@@ -87,10 +92,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                           GestureDetector(
                             onTap: () => context.router.pushNamed(
                               Pages.inbox,
-                              extra: const InboxInfo(
-                                id: "c59e6aaf-4ef5-4d4a-b4c5-cdc41f10bded",
-                                role: "Student",
-                              ),
+                              extra: inboxInfo,
                             ),
                             child: Text(
                               "Chats",

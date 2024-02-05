@@ -2,6 +2,7 @@ import 'package:my_hostel/api/socket_service.dart';
 export 'package:my_hostel/api/socket_service.dart';
 
 import 'base.dart';
+export 'base.dart' show baseEndpoint;
 
 import 'package:my_hostel/components/message.dart';
 
