@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chatview/chatview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:my_hostel/api/base.dart';
 import 'package:my_hostel/api/message_service.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/user.dart';
@@ -49,7 +51,6 @@ class _InboxState extends ConsumerState<Inbox> {
 
     currentUserID = ref.read(currentUserProvider).id;
     otherUserID = widget.info.id;
-
     initialize();
   }
 
@@ -59,6 +60,9 @@ class _InboxState extends ConsumerState<Inbox> {
       otherUser = (await getStudentById(otherUserID)).payload;
     } else if (widget.info.role == "Landlord") {
       otherUser = (await getLandlordById(otherUserID)).payload;
+      otherUser = (await getStudentById(widget.info.id)).payload;
+    } else if (widget.info.role == "Landlord") {
+      otherUser = (await getLandlordById(widget.info.id)).payload;
     } else {
       otherUser = (await getAgentById(otherUserID)).payload;
     }
