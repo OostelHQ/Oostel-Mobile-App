@@ -344,6 +344,7 @@ class _LandlordHostelInformationPageState
                   unselectedLabelStyle: context.textTheme.bodyMedium!.copyWith(
                       color: weirdBlack50, fontWeight: FontWeight.w500),
                   isScrollable: true,
+                  // padding: EdgeInsets.only(left:1.0),
                   tabs: const [
                     Tab(text: "Analytics"),
                     Tab(text: "About"),

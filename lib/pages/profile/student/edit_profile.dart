@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -62,6 +63,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     religion = student.religion == "" ? null : student.religion;
     age = student.ageRange == "" ? null : student.ageRange;
     gender = student.gender == "" ? null : student.gender;
+
+    log(religion ?? "Null religion");
 
     details = {
       "userId": student.id,

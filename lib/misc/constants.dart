@@ -35,6 +35,8 @@ const Color incompleteFadedBar = Color(0x50C6960B);
 const Color completeBackground = Color(0xFF8FF1BC);
 const Color completeBar = Color(0xFF169852);
 
+const int totalPages = 11;
+
 extension PathExtension on String {
   String get path => "/$this";
 }

@@ -63,7 +63,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
     }
 
-    context.router.pushReplacementNamed(destination);
+    context.router.pushNamed(destination);
   }
 
   Future<void> login() async {
@@ -92,17 +92,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 0.01,
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => context.router.pop(),
-        ),
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     iconSize: 26.r,
+      //     splashRadius: 0.01,
+      //     icon: const Icon(Icons.chevron_left),
+      //     onPressed: () => context.router.pop(),
+      //   ),
+      //   elevation: 0.0,
+      //   backgroundColor: Colors.transparent,
+      //   systemOverlayStyle: SystemUiOverlayStyle.dark,
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

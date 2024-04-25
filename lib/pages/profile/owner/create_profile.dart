@@ -727,6 +727,7 @@ class _CreateProfilePageThreeState
     ).then((resp) {
       if (!mounted) return;
       showError(resp.message);
+      print(resp.message);
       if (!resp.success) {
         Navigator.of(context).pop();
       } else {
@@ -1135,14 +1136,13 @@ class _CreateProfilePageFourState extends ConsumerState<CreateProfilePageFour> {
     );
   }
 
+  void show() => showModalBottomSheet(
+    context: context,
+    builder: (_) => const _CreateAccountModal(),
+    isDismissible: true,
+  );
+
   void create() {
-
-    void show() => showModalBottomSheet(
-      context: context,
-      builder: (_) => const _CreateAccountModal(),
-      isDismissible: true,
-    );
-
     refreshUser(UserType.landlord).then((val) {
       if(!mounted) return;
 

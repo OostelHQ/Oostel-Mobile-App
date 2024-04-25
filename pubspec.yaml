@@ -54,7 +54,8 @@ dependencies:
   jiffy:
   rxdart:
   signalr_flutter:
-  signalr_core: 
+  signalr_core:
+  device_preview:
 
 
 

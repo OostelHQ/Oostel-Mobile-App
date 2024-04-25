@@ -356,7 +356,7 @@ class _HelpPageState extends ConsumerState<HelpPage>
       controllers.add(
         AnimationController(
           vsync: this,
-          duration: const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 300),
         ),
       );
       animations.add(

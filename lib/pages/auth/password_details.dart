@@ -1,5 +1,4 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,16 +58,16 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        elevation: 0.0,
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 20.r,
-          icon: const Icon(Icons.chevron_left_rounded),
-          onPressed: () => context.router.pop(),
-        ),
-      ),
+      // appBar: AppBar(
+      //   systemOverlayStyle: SystemUiOverlayStyle.dark,
+      //   elevation: 0.0,
+      //   leading: IconButton(
+      //     iconSize: 26.r,
+      //     splashRadius: 20.r,
+      //     icon: const Icon(Icons.chevron_left_rounded),
+      //     onPressed: () => context.router.pop(),
+      //   ),
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -241,16 +240,16 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        elevation: 0.0,
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 20.r,
-          icon: const Icon(Icons.chevron_left_rounded),
-          onPressed: () => context.router.pop(),
-        ),
-      ),
+      // appBar: AppBar(
+      //   systemOverlayStyle: SystemUiOverlayStyle.dark,
+      //   elevation: 0.0,
+      //   leading: IconButton(
+      //     iconSize: 26.r,
+      //     splashRadius: 20.r,
+      //     icon: const Icon(Icons.chevron_left_rounded),
+      //     onPressed: () => context.router.pop(),
+      //   ),
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -443,6 +442,8 @@ class _AccountVerificationPageState
     } else if (ref.watch(otpOriginProvider) == OtpOrigin.forgot) {
       context.router.pushReplacementNamed(Pages.resetPassword,
           extra: [widget.email, otp]);
+    } else {
+      context.router.pushNamed(Pages.login);
     }
   }
 
@@ -491,16 +492,16 @@ class _AccountVerificationPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        elevation: 0.0,
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 20.r,
-          icon: const Icon(Icons.chevron_left_rounded),
-          onPressed: () => context.router.pop(),
-        ),
-      ),
+      // appBar: AppBar(
+      //   systemOverlayStyle: SystemUiOverlayStyle.dark,
+      //   elevation: 0.0,
+      //   leading: IconButton(
+      //     iconSize: 26.r,
+      //     splashRadius: 20.r,
+      //     icon: const Icon(Icons.chevron_left_rounded),
+      //     onPressed: () => context.router.pop(),
+      //   ),
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

@@ -142,6 +142,7 @@ class CustomGrouper extends TextInputFormatter {
 }
 
 class SpecialForm extends StatelessWidget {
+  final Key? key;
   final Widget? prefix;
   final Widget? suffix;
   final String? hint;
@@ -170,7 +171,7 @@ class SpecialForm extends StatelessWidget {
   final BoxDecoration? decoration;
 
   const SpecialForm({
-    super.key,
+    this.key,
     required this.controller,
     required this.width,
     required this.height,
@@ -197,7 +198,7 @@ class SpecialForm extends StatelessWidget {
     this.suffix,
     this.decoration,
     this.maxLines = 1,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -2535,25 +2536,25 @@ class ProfileInfoCard extends StatelessWidget {
               child: SvgPicture.asset(image),
             ),
             SizedBox(width: 15.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 260.w,
-                  child: Text(
+            SizedBox(
+              width: 290.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
                     header,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600, color: weirdBlack),
                   ),
-                ),
-                Text(
-                  text,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50, fontWeight: FontWeight.w500),
-                ),
-              ],
+                  Text(
+                    text,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                        color: weirdBlack50, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             )
           ],
         ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:badges/badges.dart' as bg;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,12 +45,13 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
   final List<Detail> details = [];
   bool loaded = false;
 
-  late HubConnection connection;
+  late InboxInfo inboxInfo;
 
   @override
   void initState() {
     super.initState();
-    getMessages(ref.read(currentUserProvider).email)
+    inboxInfo = const InboxInfo(id: "d9958db3-c3d4-4c35-a962-910e5d79721b", role: "Student");
+    getAllConversations(ref.read(currentUserProvider).id)
         .then((resp) => setState(() => loaded = true));
   }
 
@@ -63,7 +66,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
     return RefreshIndicator(
       onRefresh: () async {
         setState(() => loaded = false);
-        getMessages(ref.watch(currentUserProvider).email)
+        getAllConversations(ref.watch(currentUserProvider).id)
             .then((resp) => setState(() => loaded = true));
       },
       child: !loaded
@@ -87,10 +90,7 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
                           GestureDetector(
                             onTap: () => context.router.pushNamed(
                               Pages.inbox,
-                              extra: const InboxInfo(
-                                id: "c59e6aaf-4ef5-4d4a-b4c5-cdc41f10bded",
-                                role: "Student",
-                              ),
+                              extra: inboxInfo,
                             ),
                             child: Text(
                               "Chats",

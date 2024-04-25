@@ -145,8 +145,8 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
   );
 }
 
-Student _parseStudentData(Map<String, dynamic> userData, {String email = "", String fullName = ""}) {
-  log(userData.toString());
+Student _parseStudentData(Map<String, dynamic> userData,
+    {String email = "", String fullName = ""}) {
 
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
@@ -173,8 +173,8 @@ Student _parseStudentData(Map<String, dynamic> userData, {String email = "", Str
     String guardian = profile["guardianPhoneNumber"] ?? "";
     List<String> names = fullName.split(" ");
 
-    List<String> peopleILike = toStringList(profile['likedStudentIds']);
-    List<String> myLikes = toStringList(profile['studentLikedIds']);
+    //List<String> peopleILike = toStringList(profile['likedStudentIds']);
+    //List<String> myLikes = toStringList(profile['studentLikedIds']);
 
     return Student(
       dateJoined: created,
@@ -188,9 +188,9 @@ Student _parseStudentData(Map<String, dynamic> userData, {String email = "", Str
       religion: religion,
       image: pictureUrl,
       hobby: hobby,
-      level: int.parse(schoolLevel),
-      peopleILike: peopleILike,
-      totalLikes: myLikes.length,
+      level: int.tryParse(schoolLevel) ?? 100,
+      peopleILike: [], //peopleILike,
+      totalLikes: 0, //myLikes.length,
       contact: contact,
       origin: state,
       profileViews: profileViewCount,
@@ -258,7 +258,6 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     contact: contact,
     email: "",
   );
-
 }
 
 Future<FyndaResponse> verifyEmailOTP(Map<String, dynamic> map) async {
@@ -337,7 +336,7 @@ Future<FyndaResponse> deleteAccount(String id) async {
   try {
     Response response = await dio.delete(
       "/user-delete/delete-user-account",
-      queryParameters: {"userId" : id},
+      queryParameters: {"userId": id},
       options: configuration,
     );
 
@@ -445,8 +444,10 @@ Future<FyndaResponse<User?>> refreshUser(UserType type,
   } else {
     if (type == UserType.student) {
       user = _parseStudentData(userData);
-    } else if (type == UserType.agent) {
+    } else if (type == UserType.landlord) {
       user = parseLandlordData(userData);
+    } else if (type == UserType.agent) {
+      user = parseAgentData(userData);
     } else {
       user = null;
     }
@@ -689,6 +690,7 @@ Future<FyndaResponse> getStudentById(String id) async {
         });
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
+
       return FyndaResponse(
         message: "Success",
         payload: _parseStudentData(response.data["data"]),
@@ -848,7 +850,6 @@ Future<FyndaResponse> likeStudentProfile(Map<String, dynamic> map) async {
   );
 }
 
-
 Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
   try {
     Response response = await dio.get(
@@ -860,7 +861,7 @@ Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
-  } catch(e) {
+  } catch (e) {
     log("Get Liked Students Error: $e");
   }
 
@@ -870,7 +871,6 @@ Future<FyndaResponse<List<String>>> getLikedStudents(String studentId) async {
     success: false,
   );
 }
-
 
 Future<FyndaResponse> getStudentLikedUsers(String studentId) async {
   try {
@@ -883,7 +883,7 @@ Future<FyndaResponse> getStudentLikedUsers(String studentId) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log(response.data.toString());
     }
-  } catch(e) {
+  } catch (e) {
     log("Get Student Liked Users Error: $e");
   }
 
