@@ -20,12 +20,12 @@ class Conversation extends Equatable {
 
   factory Conversation.fromJson(Map<String, dynamic> map) {
     return Conversation(
-        id: map["_id"],
-        lastMessage: map["lastMessage"],
-        otherUser: map["otherUser"],
-        unreadMessages: map["unreadMessages"],
-        target: map["target"],
-        timeStamp: DateTime.parse(map["createdAt"]),
+        id: map["id"],
+        lastMessage: map["message"],
+        otherUser: map["otherUser"] ?? "",
+        unreadMessages: map["unreadMessages"] ?? 0,
+        target: map["target"] ?? "",
+        timeStamp: DateTime.parse(map["timestamp"]),
     );
   }
 

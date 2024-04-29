@@ -2520,7 +2520,7 @@ class ProfileInfoCard extends StatelessWidget {
         ],
       ),
       child: SizedBox(
-        height: 70.h,
+        height: 75.h,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

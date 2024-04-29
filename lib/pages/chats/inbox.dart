@@ -51,7 +51,13 @@ class _InboxState extends ConsumerState<Inbox> {
 
     currentUserID = ref.read(currentUserProvider).id;
     otherUserID = widget.info.id;
-    initialize();
+    // initialize();
+
+    sendMessage({
+      "message": "Testing 123 again",
+      "senderId": currentUserID,
+      "receiverId": otherUserID,
+    });
   }
 
   Future<void> initialize() async {

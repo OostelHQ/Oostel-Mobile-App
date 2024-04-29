@@ -96,7 +96,7 @@ Future<FyndaResponse<List<Conversation>>> getAllConversations(String id) async {
     );
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log("Conversations: ${response.data}");
-      List<dynamic> list = response.data as List<dynamic>;
+      List<dynamic> list = response.data["data"] as List<dynamic>;
       List<Conversation> conversations = [];
       for (var element in list) {
         Conversation conversation =

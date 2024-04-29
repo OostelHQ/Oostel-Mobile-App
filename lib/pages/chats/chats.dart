@@ -47,15 +47,14 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
 
   late InboxInfo inboxInfo;
 
-  final String otherId = "82c902d6-1df6-4638-aabb-17228de5efd4";
 
   @override
   void initState() {
     super.initState();
     inboxInfo = const InboxInfo(id: "d9958db3-c3d4-4c35-a962-910e5d79721b", role: "Student");
     getAllConversations(ref.read(currentUserProvider).id)
-
         .then((resp) => setState(() => loaded = true));
+
   }
 
   @override
