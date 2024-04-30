@@ -7,7 +7,8 @@ export 'base.dart' show baseEndpoint;
 
 import 'package:my_hostel/components/message.dart';
 
-Future<FyndaResponse<List<Message>>> getMessages(Map<String, String> query) async {
+Future<FyndaResponse<List<Message>>> getMessages(
+    Map<String, String> query) async {
   try {
     Response response = await dio.get(
       "/message/get-my-chat-with-someone",
@@ -17,14 +18,14 @@ Future<FyndaResponse<List<Message>>> getMessages(Map<String, String> query) asyn
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       log("Messages: ${response.data}");
-      List<dynamic> list = response.data as List<dynamic>;
+      List<dynamic> list = response.data["data"] as List<dynamic>;
       List<Message> messages = [];
       for (var element in list) {
         Message message = Message.fromJson(element as Map<String, dynamic>);
         messages.add(message);
       }
       return FyndaResponse(
-        message: "Success",
+        message: response.data["message"],
         payload: messages,
         success: true,
       );
@@ -69,7 +70,6 @@ Future<FyndaResponse> sendMessage(Map<String, dynamic> details) async {
         data: details, options: configuration);
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-      log(response.data.toString());
       return FyndaResponse(
         message: response.data["message"],
         payload: null,

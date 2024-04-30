@@ -54,7 +54,6 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
     inboxInfo = const InboxInfo(id: "d9958db3-c3d4-4c35-a962-910e5d79721b", role: "Student");
     getAllConversations(ref.read(currentUserProvider).id)
         .then((resp) => setState(() => loaded = true));
-
   }
 
   @override

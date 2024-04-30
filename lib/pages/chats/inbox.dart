@@ -37,7 +37,8 @@ class Inbox extends ConsumerStatefulWidget {
 }
 
 class _InboxState extends ConsumerState<Inbox> {
-  ChatController? chatController;
+  late ChatController chatController;
+
   final List<Message> messageList = [];
   final List<ChatUser> users = [];
 
@@ -51,13 +52,20 @@ class _InboxState extends ConsumerState<Inbox> {
 
     currentUserID = ref.read(currentUserProvider).id;
     otherUserID = widget.info.id;
-    // initialize();
 
-    sendMessage({
-      "message": "Testing 123 again",
-      "senderId": currentUserID,
-      "receiverId": otherUserID,
-    });
+    users.add(ChatUser(
+      id: currentUserID,
+      name: ref.read(currentUserProvider).mergedNames,
+      profilePhoto: ref.read(currentUserProvider).image,
+    ));
+
+    chatController = ChatController(
+      initialMessageList: messageList,
+      chatUsers: users,
+      scrollController: ScrollController(),
+    );
+
+    initialize();
   }
 
   Future<void> initialize() async {
@@ -83,11 +91,6 @@ class _InboxState extends ConsumerState<Inbox> {
     }
 
     users.add(ChatUser(
-      id: currentUserID,
-      name: ref.read(currentUserProvider).mergedNames,
-      profilePhoto: ref.read(currentUserProvider).image,
-    ));
-    users.add(ChatUser(
       id: otherUserID,
       name: otherUser.mergedNames,
       profilePhoto: otherUser.image,
@@ -112,14 +115,8 @@ class _InboxState extends ConsumerState<Inbox> {
           sendBy: element.senderId,
           id: element.id,
         );
-        messageList.add(message);
+        chatController.addMessage(message);
       }
-
-      chatController = ChatController(
-        initialMessageList: messageList,
-        chatUsers: users,
-        scrollController: ScrollController(),
-      );
 
       if (!mounted) return;
       setState(() {
@@ -131,7 +128,7 @@ class _InboxState extends ConsumerState<Inbox> {
 
   @override
   void dispose() {
-    chatController?.dispose();
+    chatController.dispose();
     super.dispose();
   }
 
@@ -146,108 +143,114 @@ class _InboxState extends ConsumerState<Inbox> {
       messageType: messageType,
     );
 
+    chatController.addMessage(message);
+
+    // SAVE TO DATABASE AND UPDATE THE STATUS AS NOT SENT
+
     sendMessage({
       "message": rawMessage,
       "senderId": currentUserID,
       "receiverId": otherUserID,
     }).then((resp) {
-      chatController?.addMessage(message);
+      // UPDATE THE VALUE IN THE DATABASE AS SENT
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: loading
-          ? const Center(child: blueLoader)
-          : hasError
-              ? const Center()
-              : SafeArea(
-                  child: ChatView(
-                    currentUser: users[0],
-                    chatController: chatController!,
-                    appBar: ChatViewAppBar(
-                      elevation: 0.0,
-                      leading: IconButton(
-                        iconSize: 26.r,
-                        splashRadius: 20.r,
-                        icon: const Icon(Icons.chevron_left_rounded),
-                        onPressed: () => context.router.pop(),
-                      ),
-                      profilePicture: "",
-                      chatTitle: "John Doe",
-                      userStatus: "Manchester Hostel",
-                      chatTitleTextStyle: context.textTheme.bodyLarge!.copyWith(
-                        color: weirdBlack,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      userStatusTextStyle:
-                          context.textTheme.bodyMedium!.copyWith(
-                        color: weirdBlack75,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      backGroundColor: paleBlue,
-                      actions: [
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () => showModalBottomSheet(
-                            context: context,
-                            builder: (_) => const _InboxMenu(),
-                            isScrollControlled: true,
-                          ),
-                          iconSize: 26.r,
-                          splashRadius: 20.r,
-                        ),
-                      ],
-                    ),
-                    onSendTap: onSendTap,
-                    chatViewState: ChatViewState.hasMessages,
-                    // Add this state once data is available.
-                    featureActiveConfig: const FeatureActiveConfig(
-                      enableSwipeToReply: true,
-                      enableSwipeToSeeTime: false,
-                      enableDoubleTapToLike: true,
-                    ),
-                    sendMessageConfig: SendMessageConfiguration(
-                      replyMessageColor: weirdBlack75,
-                      replyDialogColor: faintBlue,
-                      replyTitleColor: weirdBlack,
-                      closeIconColor: weirdBlack,
-                      allowRecordingVoice: false,
-                      defaultSendButtonColor: appBlue,
-                      textFieldBackgroundColor: paleBlue,
-                      textFieldConfig: TextFieldConfiguration(
-                        textStyle: context.textTheme.bodyMedium!,
-                      ),
-                    ),
-                    chatBubbleConfig: ChatBubbleConfiguration(
-                      onDoubleTap: (message) {
-                        // Your code goes here
-                      },
-                      outgoingChatBubbleConfig: ChatBubble(
-                        color: appBlue,
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(12),
-                          topLeft: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
-                        ),
-                        textStyle: context.textTheme.bodyMedium!.copyWith(
-                            color: Colors.white, fontWeight: FontWeight.w500),
-                      ),
-                      inComingChatBubbleConfig: ChatBubble(
-                        color: faintBlue,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                          bottomRight: Radius.circular(12),
-                        ),
-                        textStyle: context.textTheme.bodyMedium!.copyWith(
-                            color: weirdBlack75, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    loadingWidget: blueLoader,
-                  ),
+      body: SafeArea(
+        child: ChatView(
+          currentUser: users.first,
+          chatController: chatController,
+          appBar: ChatViewAppBar(
+            elevation: 0.0,
+            leading: IconButton(
+              iconSize: 26.r,
+              splashRadius: 20.r,
+              icon: const Icon(Icons.chevron_left_rounded),
+              onPressed: () => context.router.pop(),
+            ),
+            profilePicture: ref.watch(currentUserProvider).image.isEmpty ? "" : ref.watch(currentUserProvider).image,
+            chatTitle: users.length > 1 ? users[1].name : "",
+            userStatus: "",
+            chatTitleTextStyle: context.textTheme.bodyLarge!.copyWith(
+              color: weirdBlack,
+              fontWeight: FontWeight.w600,
+            ),
+            userStatusTextStyle: context.textTheme.bodyMedium!.copyWith(
+              color: weirdBlack75,
+              fontWeight: FontWeight.w500,
+            ),
+            backGroundColor: paleBlue,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (_) => const _InboxMenu(),
+                  isScrollControlled: true,
                 ),
+                iconSize: 26.r,
+                splashRadius: 20.r,
+              ),
+            ],
+          ),
+          onSendTap: onSendTap,
+          chatViewState: loading
+              ? ChatViewState.loading
+              : messageList.isEmpty
+                  ? ChatViewState.noData
+                  : hasError
+                      ? ChatViewState.error
+                      : ChatViewState.hasMessages,
+          featureActiveConfig: const FeatureActiveConfig(
+            enableSwipeToReply: true,
+            enableSwipeToSeeTime: false,
+            enableDoubleTapToLike: true,
+            enableOtherUserProfileAvatar: true,
+            enableCurrentUserProfileAvatar: true,
+          ),
+          sendMessageConfig: SendMessageConfiguration(
+            replyMessageColor: weirdBlack75,
+            replyDialogColor: faintBlue,
+            replyTitleColor: weirdBlack,
+            closeIconColor: weirdBlack,
+            allowRecordingVoice: false,
+            defaultSendButtonColor: appBlue,
+            textFieldBackgroundColor: paleBlue,
+            textFieldConfig: TextFieldConfiguration(
+              textStyle: context.textTheme.bodyMedium!,
+            ),
+          ),
+          chatBubbleConfig: ChatBubbleConfiguration(
+            onDoubleTap: (message) {
+              // Your code goes here
+            },
+            outgoingChatBubbleConfig: ChatBubble(
+              color: appBlue,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+              ),
+              textStyle: context.textTheme.bodyMedium!
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            inComingChatBubbleConfig: ChatBubble(
+              color: faintBlue,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+              textStyle: context.textTheme.bodyMedium!
+                  .copyWith(color: weirdBlack75, fontWeight: FontWeight.w500),
+            ),
+          ),
+          loadingWidget: blueLoader,
+        ),
+      ),
     );
   }
 }

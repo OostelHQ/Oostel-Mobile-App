@@ -25,7 +25,7 @@ class Message extends Equatable {
         content: map['message'],
         dateSent: map['timestamp'] == null
             ? DateTime(1960)
-            : DateTime.parse(map['messageSent']),
+            : DateTime.parse(map['timestamp']),
       );
 
   @override

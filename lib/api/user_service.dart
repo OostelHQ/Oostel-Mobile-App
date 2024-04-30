@@ -80,7 +80,7 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
     String id = profile["landlordId"];
     DateTime created = DateTime.parse(profile["registerdOn"]);
     String name = profile["fullName"];
-    String image = profile["profilePicture"];
+    String image = profile["profilePicture"] ?? "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x";
     String location = profile["location"];
     bool verified = profile["isVerified"];
     String contact = profile["phoneNumber"] ?? "";
@@ -113,7 +113,7 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
     String state = profile["state"] ?? "";
     String country = profile["country"] ?? "";
     String street = profile["street"] ?? "";
-    String image = profile["pictureUrl"] ?? "";
+    String image = profile["pictureUrl"] ?? "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x";
 
     String gender = profile["gender"] ?? "";
     String denomination = profile["denomination"] ?? "";
@@ -142,12 +142,12 @@ Landowner parseLandlordData(Map<String, dynamic> userData,
     dob: DateTime(1960),
     dateJoined: created,
     contact: contact,
+    image: "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x"
   );
 }
 
 Student _parseStudentData(Map<String, dynamic> userData,
     {String email = "", String fullName = ""}) {
-
   String id = userData["userDto"]["userId"];
   DateTime created = DateTime.parse(userData["userDto"]["joinedDate"]);
   String contact = userData["userDto"]["phoneNumber"] ?? "";
@@ -161,7 +161,7 @@ Student _parseStudentData(Map<String, dynamic> userData,
     bool isAvailable = profile['isAvailable'] as bool;
     String area = profile['area'] ?? "";
     double roomBudget = (profile['roomBudgetAmount'] as num).toDouble();
-    String pictureUrl = profile['pictureUrl'] ?? "";
+    String pictureUrl = profile['pictureUrl'] ?? "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x";
     int profileViewCount = (profile['profileViewCount'] as num).toInt();
     String gender = profile['gender'] ?? "";
     String country = profile['country'];
@@ -172,6 +172,7 @@ Student _parseStudentData(Map<String, dynamic> userData,
     String hobby = profile['hobby'] ?? "";
     String guardian = profile["guardianPhoneNumber"] ?? "";
     List<String> names = fullName.split(" ");
+
 
     //List<String> peopleILike = toStringList(profile['likedStudentIds']);
     //List<String> myLikes = toStringList(profile['studentLikedIds']);
@@ -189,8 +190,10 @@ Student _parseStudentData(Map<String, dynamic> userData,
       image: pictureUrl,
       hobby: hobby,
       level: int.tryParse(schoolLevel) ?? 100,
-      peopleILike: [], //peopleILike,
-      totalLikes: 0, //myLikes.length,
+      peopleILike: [],
+      //peopleILike,
+      totalLikes: 0,
+      //myLikes.length,
       contact: contact,
       origin: state,
       profileViews: profileViewCount,
@@ -208,6 +211,7 @@ Student _parseStudentData(Map<String, dynamic> userData,
     dateJoined: created,
     contact: contact,
     email: email,
+    image: "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x"
   );
 }
 
@@ -224,7 +228,7 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     String email = profile['email'];
     String state = profile['stateOfOrigin'] ?? "";
     String area = profile['area'] ?? "";
-    String pictureUrl = profile['pictureUrl'] ?? "";
+    String pictureUrl = profile['pictureUrl'] ?? "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x";
     int profileViewCount = (profile['profileViewCount'] as num).toInt();
     String gender = profile['gender'] ?? "";
     String country = profile['country'];
@@ -257,6 +261,7 @@ Agent parseAgentData(Map<String, dynamic> userData) {
     dateJoined: created,
     contact: contact,
     email: "",
+    image: "https://gravatar.com/avatar/${id.hashCode.toString()}?s=400&d=robohash&r=x"
   );
 }
 
@@ -690,7 +695,6 @@ Future<FyndaResponse> getStudentById(String id) async {
         });
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-
       return FyndaResponse(
         message: "Success",
         payload: _parseStudentData(response.data["data"]),
