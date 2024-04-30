@@ -54,6 +54,7 @@ import 'package:my_hostel/pages/profile/student/wallet.dart';
 import 'package:my_hostel/pages/profile/transaction.dart';
 import 'components/room_details.dart';
 import 'misc/notification_controller.dart';
+import 'misc/styles.dart';
 
 void main() async {
   await AwesomeNotifications().initialize(
@@ -80,6 +81,8 @@ void main() async {
   if(!isNotificationAllowed) {
     AwesomeNotifications().requestPermissionToSendNotifications();
   }
+
+  await ScreenUtil.ensureScreenSize();
 
   runApp(const ProviderScope(child: MyHostelApp()));
 }
@@ -540,6 +543,7 @@ class _MyHostelAppState extends State<MyHostelApp> {
           scheme: FlexScheme.tealM3,
           scaffoldBackground: const Color(0xFFFBFDFF),
           appBarBackground: const Color(0xFFFBFDFF),
+          textTheme: lightTheme,
         ),
         themeMode: ThemeMode.light,
         routerConfig: _router,
