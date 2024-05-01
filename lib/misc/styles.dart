@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:my_hostel/misc/constants.dart';
 
-TextTheme lightTheme = TextTheme(
+TextTheme get lightTheme => TextTheme(
     bodySmall: TextStyle(
       fontSize: 12.sp,
       leadingDistribution: TextLeadingDistribution.proportional,
