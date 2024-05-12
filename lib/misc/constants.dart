@@ -54,6 +54,8 @@ enum OtpOrigin {
 
 const String defaultAvatar = "https://gravatar.com/avatar/edault-avatar?s=400&d=robohash&r=x";
 
+double statusBarHeight = 0.0;
+
 class Pages
 {
   static const String splash = "splash";

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,15 +5,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_hostel/api/file_manager.dart' show SingleFileResponse;
 import 'package:my_hostel/components/room_details.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:intl/intl.dart';
 import 'constants.dart' show appBlue;
 
-void showError(String message, {Color background = appBlue, Color text = Colors.white}) {
+void showError(String message,
+    {Color background = appBlue, Color text = Colors.white}) {
   HapticFeedback.heavyImpact();
   showToast(message, background: background, text: text);
 }
 
-void showToast(String message, {Color background = appBlue, Color text = Colors.white}) => Fluttertoast.showToast(
+void showToast(String message,
+        {Color background = appBlue, Color text = Colors.white}) =>
+    Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.SNACKBAR,
@@ -27,7 +30,7 @@ void showToast(String message, {Color background = appBlue, Color text = Colors.
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
 
 void textChecker({required String text, required VoidCallback onAction}) {
-  if(text.length == 1 || text.isEmpty) {
+  if (text.length == 1 || text.isEmpty) {
     onAction();
   }
 }
@@ -43,7 +46,6 @@ bool validateForm(GlobalKey<FormState> formKey) {
   }
   return false;
 }
-
 
 String formatAmountInDouble(double price, {int digits = 0}) =>
     formatAmount(price.toStringAsFixed(digits));
@@ -84,10 +86,11 @@ String formatDateRaw(DateTime date, {bool shorten = false}) =>
     formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
 String formatDateWithTime(DateTime date, {bool shorten = false}) =>
-    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten, time: date);
+    formatDate(DateFormat("dd/MM/yyy").format(date),
+        shorten: shorten, time: date);
 
-String formatTime(DateTime time) => "${(time.hour - 12) < 10 ? "0" : ""}${time.hour - 12}:${time.minute} ${time.hour < 12 ? "AM" : "PM"}";
-
+String formatTime(DateTime time) =>
+    "${(time.hour - 12) < 10 ? "0" : ""}${time.hour - 12}:${time.minute} ${time.hour < 12 ? "AM" : "PM"}";
 
 String formatDate(String dateTime, {bool shorten = false, DateTime? time}) {
   int firIndex = dateTime.indexOf("/");
@@ -97,7 +100,7 @@ String formatDate(String dateTime, {bool shorten = false, DateTime? time}) {
   String y = dateTime.substring(secIndex + 1);
 
   String fmtTime = "";
-  if(time != null) {
+  if (time != null) {
     fmtTime = " ${formatTime(time)}";
   }
 
@@ -149,12 +152,10 @@ String day(String val) {
   }
 }
 
-
 String joinToAddress(String address, {bool ignoreFourth = false}) {
   List<String> subs = address.split("#");
   return "${subs[0]}, ${subs[1]}, ${subs[2]}${ignoreFourth ? "" : ", ${subs[3]}"}";
 }
-
 
 List<int> calculate(List<RoomInfo> rooms) {
   int baths = 0, kitchens = 0, toilets = 0;
@@ -181,7 +182,7 @@ List<int> calculate(List<RoomInfo> rooms) {
 
 List<String> toStringList(List<dynamic> data) {
   List<String> result = [];
-  for(var element in data) {
+  for (var element in data) {
     result.add(element as String);
   }
   return result;
@@ -203,21 +204,22 @@ List<SingleFileResponse> toDataList(List<dynamic> list) {
   return result;
 }
 
-
 Future<void> launchSocialMediaUrl(String url) async {
-  if(url.isEmpty) return;
+  if (url.isEmpty) return;
 
   Uri destination = Uri.parse("https://$url");
   await launchUrl(destination, mode: LaunchMode.externalApplication);
 }
 
-Future<void> launchContactUrl(String contact, {String countryCode = "+234"}) async {
-  if(contact.isEmpty) return;
+Future<void> launchContactUrl(String contact,
+    {String countryCode = "+234"}) async {
+  if (contact.isEmpty) return;
   Uri number = Uri.parse("tel:$countryCode${contact.substring(1)}");
   await launchUrl(number);
 }
 
-Future<void> launchEmail(String address, {String emailSubject = "", String emailBody = ""}) async {
+Future<void> launchEmail(String address,
+    {String emailSubject = "", String emailBody = ""}) async {
   String email = Uri.encodeComponent(address);
   String subject = Uri.encodeComponent("Fynda:$emailSubject");
   String body = Uri.encodeComponent(emailBody);
@@ -231,13 +233,14 @@ Future<void> launchWebUrl(String url) async {
   await launchUrl(address, mode: LaunchMode.externalApplication);
 }
 
-String generateWhatsAppLink({String number = "", String code = "+234", String text = ""}) {
+String generateWhatsAppLink(
+    {String number = "", String code = "+234", String text = ""}) {
   String link = "wa.me/$code$number?text=";
   List<String> split = text.split(" ");
-  for(int i = 0; i < split.length; ++i) {
+  for (int i = 0; i < split.length; ++i) {
     String s = split[i];
     link = "$link$s";
-    if(i != split.length - 1) {
+    if (i != split.length - 1) {
       link = "$link%20";
     }
   }

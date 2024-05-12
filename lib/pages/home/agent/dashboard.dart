@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,8 @@ class AgentDashboardPage extends ConsumerStatefulWidget {
 
 class _AgentDashboardPageState extends ConsumerState<AgentDashboardPage> {
   late List<Widget> stack;
+  late AnimatedSnackBar snackBar;
+
 
   @override
   void initState() {
@@ -37,6 +40,25 @@ class _AgentDashboardPageState extends ConsumerState<AgentDashboardPage> {
       AgentWalletPage(),
       AgentSettingsPage(),
     ];
+
+    snackBar = AnimatedSnackBar(
+      builder: (context) =>
+          ProfileNotification(onCancel: () => snackBar.remove()),
+      mobilePositionSettings: MobilePositionSettings(
+        topOnAppearance: statusBarHeight,
+        right: 0.0,
+        left: 0.0,
+      ),
+      mobileSnackBarPosition: MobileSnackBarPosition.top,
+      animationCurve: Curves.ease,
+      snackBarStrategy: RemoveSnackBarStrategy(),
+      duration: const Duration(minutes: 5),
+      animationDuration: const Duration(milliseconds: 350),
+    );
+
+    if (ref.read(currentUserProvider).hasCompletedProfile < 100) {
+      snackBar.show(context);
+    }
   }
 
   @override
@@ -191,174 +213,161 @@ class _HomePageState extends ConsumerState<_HomePage> with SingleTickerProviderS
     User user = ref.watch(currentUserProvider);
     bool notifications = ref.watch(newNotificationProvider);
 
-    return Stack(
-      children: [
-        RefreshIndicator(
-          onRefresh: () async {},
-          child: CustomScrollView(
-            controller: controller,
-            slivers: [
-              SliverAppBar(
-                systemOverlayStyle: SystemUiOverlayStyle.dark,
-                automaticallyImplyLeading: false,
-                elevation: 0.0,
-                pinned: true,
-                centerTitle: true,
-                title: GestureDetector(
-                  onTap: () => context.router.pushNamed(Pages.agentProfile),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      user.image == ""
-                          ? CircleAvatar(
-                        radius: 15.r,
-                        backgroundColor: appBlue,
-                        child: Text(
-                          user.firstName.substring(0, 1),
-                          style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        ),
-                      )
-                          : CachedNetworkImage(
-                        imageUrl: user.image,
-                        errorWidget: (context, url, error) => CircleAvatar(
-                          backgroundColor: weirdBlack20,
-                          radius: 15.r,
-                          child: Center(
-                            child: Icon(
-                              Icons.person_outline_rounded,
-                              color: appBlue,
-                              size: 20.r,
-                            ),
-                          ),
-                        ),
-                        progressIndicatorBuilder: (context, url, download) {
-                          return CircleAvatar(
-                            radius: 15.r,
-                            backgroundColor: weirdBlack50,
-                          );
-                        },
-                        imageBuilder: (context, provider) {
-                          return CircleAvatar(
-                            backgroundImage: provider,
-                            radius: 15.r,
-                          );
-                        },
-                      ),
-                      SizedBox(width: 10.w),
-                      Text(
-                        "Hello, ${user.lastName} ",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        user.gender == "Female"
-                            ? "🧑"
-                            : user.gender == "Male"
-                            ? "🧒"
-                            : "",
-                        style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
-                      ),
-                    ],
-                  ),
-                ),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 22.w),
-                    child: GestureDetector(
-                      onTap: () => context.router.pushNamed(Pages.notification),
-                      child: AnimatedSwitcherTranslation.right(
-                        duration: const Duration(milliseconds: 500),
-                        child: SvgPicture.asset(
-                          "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
-                          height: 25.h,
-                          key: ValueKey<bool>(notifications),
-                        ),
-                      ),
+    return  RefreshIndicator(
+      onRefresh: () async {},
+      child: CustomScrollView(
+        controller: controller,
+        slivers: [
+          SliverAppBar(
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+            automaticallyImplyLeading: false,
+            elevation: 0.0,
+            pinned: true,
+            centerTitle: true,
+            title: GestureDetector(
+              onTap: () => context.router.pushNamed(Pages.agentProfile),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  user.image == ""
+                      ? CircleAvatar(
+                    radius: 15.r,
+                    backgroundColor: appBlue,
+                    child: Text(
+                      user.firstName.substring(0, 1),
+                      style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
                     ),
                   )
-                ],
-              ),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 22.w),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      const _HostelDetailsSlider(),
-                      SizedBox(height: 35.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Hero(
-                            tag: "My Hostels Header",
-                            child: Text(
-                              "My Hostels",
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600, color: weirdBlack),
-                            ),
-                          ),
-                          if (hostels.length > 3)
-                            GestureDetector(
-                              onTap: () =>
-                                  context.router.pushNamed(Pages.viewHostels),
-                              child: Text(
-                                "See All",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                    color: appBlue, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                    ],
-                  ),
-                ),
-              ),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 22.w),
-                sliver: hostels.isEmpty
-                    ? SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      "You have no hostels yet! Advertise your hostel without stress!",
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: weirdBlack50,
+                      : CachedNetworkImage(
+                    imageUrl: user.image,
+                    errorWidget: (context, url, error) => CircleAvatar(
+                      backgroundColor: weirdBlack20,
+                      radius: 15.r,
+                      child: Center(
+                        child: Icon(
+                          Icons.person_outline_rounded,
+                          color: appBlue,
+                          size: 20.r,
+                        ),
                       ),
                     ),
-                  ),
-                )
-                    : SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (_, index) {
-                      if (index == 3) {
-                        return SizedBox(height: 50.h);
-                      }
-
-                      return LandlordHostelCard(info: hostels[index]);
+                    progressIndicatorBuilder: (context, url, download) {
+                      return CircleAvatar(
+                        radius: 15.r,
+                        backgroundColor: weirdBlack50,
+                      );
                     },
-                    childCount: 4,
+                    imageBuilder: (context, provider) {
+                      return CircleAvatar(
+                        backgroundImage: provider,
+                        radius: 15.r,
+                      );
+                    },
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    "Hello, ${user.lastName} ",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: weirdBlack75,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    user.gender == "Female"
+                        ? "🧑"
+                        : user.gender == "Male"
+                        ? "🧒"
+                        : "",
+                    style: context.textTheme.bodyLarge!.copyWith(fontSize: 22.sp),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: 22.w),
+                child: GestureDetector(
+                  onTap: () => context.router.pushNamed(Pages.notification),
+                  child: AnimatedSwitcherTranslation.right(
+                    duration: const Duration(milliseconds: 500),
+                    child: SvgPicture.asset(
+                      "assets/images/Notification ${notifications ? "Active" : "None"}.svg",
+                      height: 25.h,
+                      key: ValueKey<bool>(notifications),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 22.w),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const _HostelDetailsSlider(),
+                  SizedBox(height: 35.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Hero(
+                        tag: "My Hostels Header",
+                        child: Text(
+                          "My Hostels",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600, color: weirdBlack),
+                        ),
+                      ),
+                      if (hostels.length > 3)
+                        GestureDetector(
+                          onTap: () =>
+                              context.router.pushNamed(Pages.viewHostels),
+                          child: Text(
+                            "See All",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                                color: appBlue, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 22.w),
+            sliver: hostels.isEmpty
+                ? SliverFillRemaining(
+              child: Center(
+                child: Text(
+                  "You have no hostels yet! Advertise your hostel without stress!",
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: weirdBlack50,
                   ),
                 ),
               ),
-            ],
+            )
+                : SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (_, index) {
+                  if (index == 3) {
+                    return SizedBox(height: 50.h);
+                  }
+
+                  return LandlordHostelCard(info: hostels[index]);
+                },
+                childCount: 4,
+              ),
+            ),
           ),
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: SizeTransition(
-            sizeFactor: animation,
-            child: ProfileNotification(onCancel: () => animationController.reverse()),
-          ),
-        ),
-      ]
+        ],
+      ),
     );
   }
 }

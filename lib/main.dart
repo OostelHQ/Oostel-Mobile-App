@@ -74,6 +74,13 @@ class _MyHostelAppState extends State<MyHostelApp> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    statusBarHeight = MediaQuery.of(context).viewPadding.top;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       builder: (context, widget) => MaterialApp.router(

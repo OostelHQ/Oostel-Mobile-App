@@ -43,6 +43,7 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
 
     return Container(
       height: 140.h,
+      width: 414.w,
       color: user.hasCompletedProfile < 100
           ? incompleteBackground
           : completeBackground,
