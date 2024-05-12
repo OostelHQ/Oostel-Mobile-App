@@ -1,14 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chatview/chatview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_hostel/api/database_service.dart';
 
-import 'package:my_hostel/api/base.dart';
 import 'package:my_hostel/api/message_service.dart';
 import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/user.dart';
+import 'package:my_hostel/components/message.dart' as m;
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
@@ -38,10 +37,9 @@ class Inbox extends ConsumerStatefulWidget {
 
 class _InboxState extends ConsumerState<Inbox> {
   late ChatController chatController;
-
-  final List<Message> messageList = [];
   final List<ChatUser> users = [];
 
+  User? otherUser;
   late String currentUserID, otherUserID;
 
   bool loading = true, hasError = false;
@@ -60,7 +58,7 @@ class _InboxState extends ConsumerState<Inbox> {
     ));
 
     chatController = ChatController(
-      initialMessageList: messageList,
+      initialMessageList: [],
       chatUsers: users,
       scrollController: ScrollController(),
     );
@@ -69,14 +67,10 @@ class _InboxState extends ConsumerState<Inbox> {
   }
 
   Future<void> initialize() async {
-    late User? otherUser;
     if (widget.info.role == "Student") {
       otherUser = (await getStudentById(otherUserID)).payload;
     } else if (widget.info.role == "Landlord") {
       otherUser = (await getLandlordById(otherUserID)).payload;
-      otherUser = (await getStudentById(widget.info.id)).payload;
-    } else if (widget.info.role == "Landlord") {
-      otherUser = (await getLandlordById(widget.info.id)).payload;
     } else {
       otherUser = (await getAgentById(otherUserID)).payload;
     }
@@ -92,38 +86,71 @@ class _InboxState extends ConsumerState<Inbox> {
 
     users.add(ChatUser(
       id: otherUserID,
-      name: otherUser.mergedNames,
-      profilePhoto: otherUser.image,
+      name: otherUser!.mergedNames,
+      profilePhoto: otherUser!.image,
     ));
 
-    getMessages({"senderId": currentUserID, "receiverId": otherUserID})
-        .then((resp) {
-      if (!resp.success) {
-        showError(resp.message);
-        if (!mounted) return;
-        setState(() {
-          loading = false;
-          hasError = true;
-        });
-        return;
-      }
+    getInitialMessages();
+    getMessagesFromServer();
+  }
 
-      for (var element in resp.payload) {
-        Message message = Message(
-          message: element.content,
-          createdAt: element.dateSent,
-          sendBy: element.senderId,
-          id: element.id,
-        );
-        chatController.addMessage(message);
-      }
+  Future<void> getInitialMessages() async {
+    List<m.Message> messages =
+        await DatabaseManager.getMessagesBetween(currentUserID, otherUserID);
+    assignMessages(messages);
+  }
 
-      if (!mounted) return;
-      setState(() {
+  void assignMessages(List<m.Message> messages,
+      {bool online = false, bool consistent = true}) {
+    List<Message> msgs = messages
+        .map(
+          (msg) => Message(
+            message: msg.content,
+            createdAt: msg.dateSent,
+            sendBy: msg.senderId,
+            id: msg.id,
+          ),
+        )
+        .toList();
+
+    if (online) {
+      chatController.removeAllMessages();
+    }
+
+    chatController.addMessages(msgs);
+    setState(() {
+      if (!online) {
         loading = false;
         hasError = false;
-      });
+      }
     });
+  }
+
+  Future<void> getMessagesFromServer() async {
+    var resp = await getMessages({
+      "senderId": currentUserID,
+      "receiverId": otherUserID,
+    });
+
+    if (!mounted) return;
+
+    if (!resp.success) {
+      showError(resp.message);
+      setState(() {
+        loading = false;
+        hasError = true;
+      });
+      return;
+    }
+
+    bool consistent = true;
+    if (resp.payload.length != chatController.numberOfMessages) {
+      await DatabaseManager.clearAllMessages();
+      await DatabaseManager.addMessages(resp.payload);
+      consistent = false;
+    }
+
+    assignMessages(resp.payload, online: true, consistent: consistent);
   }
 
   @override
@@ -134,10 +161,11 @@ class _InboxState extends ConsumerState<Inbox> {
 
   void onSendTap(String rawMessage, ReplyMessage replyMessage,
       MessageType messageType) async {
+    DateTime time = DateTime.now();
     final message = Message(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: time.millisecondsSinceEpoch.toString(),
       message: rawMessage,
-      createdAt: DateTime.now(),
+      createdAt: time,
       sendBy: currentUserID,
       replyMessage: replyMessage,
       messageType: messageType,
@@ -145,14 +173,17 @@ class _InboxState extends ConsumerState<Inbox> {
 
     chatController.addMessage(message);
 
-    // SAVE TO DATABASE AND UPDATE THE STATUS AS NOT SENT
-
     sendMessage({
       "message": rawMessage,
       "senderId": currentUserID,
       "receiverId": otherUserID,
     }).then((resp) {
-      // UPDATE THE VALUE IN THE DATABASE AS SENT
+      if (!mounted) return;
+      if (!resp.success) {
+        showError(resp.message);
+        return;
+      }
+      DatabaseManager.addMessage(resp.payload!);
     });
   }
 
@@ -171,9 +202,9 @@ class _InboxState extends ConsumerState<Inbox> {
               icon: const Icon(Icons.chevron_left_rounded),
               onPressed: () => context.router.pop(),
             ),
-            profilePicture: ref.watch(currentUserProvider).image.isEmpty ? "" : ref.watch(currentUserProvider).image,
+            profilePicture: ref.watch(currentUserProvider).image,
             chatTitle: users.length > 1 ? users[1].name : "",
-            userStatus: "",
+            userStatus: "Online",
             chatTitleTextStyle: context.textTheme.bodyLarge!.copyWith(
               color: weirdBlack,
               fontWeight: FontWeight.w600,
@@ -182,7 +213,7 @@ class _InboxState extends ConsumerState<Inbox> {
               color: weirdBlack75,
               fontWeight: FontWeight.w500,
             ),
-            backGroundColor: paleBlue,
+            backGroundColor: Colors.white,
             actions: [
               IconButton(
                 icon: const Icon(Icons.more_vert),
@@ -199,7 +230,7 @@ class _InboxState extends ConsumerState<Inbox> {
           onSendTap: onSendTap,
           chatViewState: loading
               ? ChatViewState.loading
-              : messageList.isEmpty
+              : chatController.hasNoMessages
                   ? ChatViewState.noData
                   : hasError
                       ? ChatViewState.error
@@ -249,6 +280,40 @@ class _InboxState extends ConsumerState<Inbox> {
             ),
           ),
           loadingWidget: blueLoader,
+          chatViewStateConfig: ChatViewStateConfiguration(
+            noMessageWidgetConfig: ChatViewStateWidgetConfiguration(
+              title: "Oops! There are no messages here yet.",
+              subTitle: "Send a message to start a conversation",
+              titleTextStyle: context.textTheme.bodyLarge!.copyWith(
+                color: weirdBlack,
+                fontWeight: FontWeight.w600,
+              ),
+              reloadButton: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() => loading = true);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: appBlue,
+                      fixedSize: Size(100.w, 40.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                    child: Text(
+                      "Reload",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -256,7 +321,7 @@ class _InboxState extends ConsumerState<Inbox> {
 }
 
 class _InboxMenu extends StatefulWidget {
-  const _InboxMenu({super.key});
+  const _InboxMenu();
 
   @override
   State<_InboxMenu> createState() => _InboxMenuState();

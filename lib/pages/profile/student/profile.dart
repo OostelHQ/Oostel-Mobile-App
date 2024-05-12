@@ -320,7 +320,7 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
                                       borderRadius: BorderRadius.circular(5.r),
                                     ),
                                     child: Text(
-                                      !student.available!
+                                      !student.available
                                           ? "Open to"
                                           : "Disable",
                                       style: context.textTheme.bodyMedium!

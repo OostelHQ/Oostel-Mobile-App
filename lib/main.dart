@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:my_hostel/api/database_service.dart';
 import 'package:my_hostel/misc/constants.dart';
 
 import 'misc/routes.dart';
@@ -38,6 +39,9 @@ void main() async {
   }
 
   await ScreenUtil.ensureScreenSize();
+  await DatabaseManager.init();
+
+  //await DatabaseManager.clearAllMessages();
 
   runApp(const ProviderScope(child: MyHostelApp()));
 }

@@ -22,7 +22,7 @@ class FilterPage extends StatelessWidget {
 }
 
 class _HostelFilter extends ConsumerStatefulWidget {
-  const _HostelFilter({super.key});
+  const _HostelFilter();
 
   @override
   ConsumerState<_HostelFilter> createState() => _HostelFilterState();
@@ -370,7 +370,7 @@ class _HostelFilterState extends ConsumerState<_HostelFilter>
 }
 
 class _RoommateFilter extends ConsumerStatefulWidget {
-  const _RoommateFilter({super.key});
+  const _RoommateFilter();
 
   @override
   ConsumerState<_RoommateFilter> createState() => _RoommateFilterState();

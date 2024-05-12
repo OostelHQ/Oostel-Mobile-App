@@ -2,7 +2,6 @@ import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/user.dart';
 import 'package:my_hostel/components/agent.dart';
 import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/misc/functions.dart';
 import 'base.dart';
 
 Future<FyndaResponse> registerUser(Map<String, dynamic> map,
@@ -190,7 +189,7 @@ Student _parseStudentData(Map<String, dynamic> userData,
       image: pictureUrl,
       hobby: hobby,
       level: int.tryParse(schoolLevel) ?? 100,
-      peopleILike: [],
+      peopleILike: const [],
       //peopleILike,
       totalLikes: 0,
       //myLikes.length,

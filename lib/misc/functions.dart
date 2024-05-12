@@ -86,7 +86,7 @@ String formatDateRaw(DateTime date, {bool shorten = false}) =>
 String formatDateWithTime(DateTime date, {bool shorten = false}) =>
     formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten, time: date);
 
-
+String formatTime(DateTime time) => "${(time.hour - 12) < 10 ? "0" : ""}${time.hour - 12}:${time.minute} ${time.hour < 12 ? "AM" : "PM"}";
 
 
 String formatDate(String dateTime, {bool shorten = false, DateTime? time}) {
@@ -96,12 +96,12 @@ String formatDate(String dateTime, {bool shorten = false, DateTime? time}) {
   String m = dateTime.substring(firIndex + 1, secIndex);
   String y = dateTime.substring(secIndex + 1);
 
-  String formatTime = "";
+  String fmtTime = "";
   if(time != null) {
-    formatTime = " ${(time.hour - 12) < 10 ? "0" : ""}${time.hour - 12}:${time.minute} ${time.hour < 12 ? "AM" : "PM"}";
+    fmtTime = " ${formatTime(time)}";
   }
 
-  return "${day(d)} ${month(m, shorten)}, $y$formatTime";
+  return "${day(d)} ${month(m, shorten)}, $y$fmtTime";
 }
 
 String month(String val, bool shorten) {

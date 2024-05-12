@@ -39,7 +39,6 @@ dependencies:
   flex_color_scheme:
   flutter_staggered_animations:
   skeletonizer:
-  flutter_lazy_listview:
   fluttertoast:
   flutter_rating_stars:
   url_launcher:
@@ -47,15 +46,13 @@ dependencies:
   dropdown_button2:
   badges:
   photo_view:
-  animated_text_kit:
-  get_thumbnail_video:
-  web_socket_channel:
   awesome_notifications:
   jiffy:
   rxdart:
-  signalr_flutter:
-  signalr_core:
   device_preview:
+  sqflite:
+  get_thumbnail_video:
+  animated_snack_bar:
 
 
 

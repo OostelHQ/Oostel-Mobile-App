@@ -18,11 +18,16 @@ class Conversation extends Equatable {
     required this.timeStamp,
   });
 
+  factory Conversation.dummy() {
+    return Conversation(timeStamp: DateTime.now());
+  }
+
+
   factory Conversation.fromJson(Map<String, dynamic> map) {
     return Conversation(
         id: map["id"],
         lastMessage: map["message"],
-        otherUser: map["otherUser"] ?? "",
+        otherUser: map["receiverId"],
         unreadMessages: map["unreadMessages"] ?? 0,
         target: map["target"] ?? "",
         timeStamp: DateTime.parse(map["timestamp"]),

@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_hostel/components/landowner.dart';
-import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
-import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
 

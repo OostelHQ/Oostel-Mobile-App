@@ -869,7 +869,7 @@ class _ShowRoomCard extends StatelessWidget {
   final int? daysLeft;
 
   const _ShowRoomCard({
-    this.daysLeft = 10,
+    this.daysLeft,
     required this.room,
     required this.isAvailable,
   });

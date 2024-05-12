@@ -18,7 +18,6 @@ import 'package:my_hostel/pages/profile/owner/settings.dart';
 import 'package:my_hostel/pages/profile/owner/wallet.dart';
 import 'package:my_hostel/pages/chats/chats.dart';
 
-import 'dart:developer';
 
 class LandownerDashboardPage extends ConsumerStatefulWidget {
   const LandownerDashboardPage({super.key});

@@ -10,8 +10,6 @@ import 'package:my_hostel/misc/widgets.dart';
 import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/pages/other/gallery.dart';
-import 'package:my_hostel/api/user_service.dart';
-import 'package:my_hostel/components/agent.dart';
 
 class AgentProfilePage extends ConsumerStatefulWidget {
   const AgentProfilePage({super.key});

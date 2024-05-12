@@ -1,6 +1,5 @@
-import 'package:my_hostel/api/socket_service.dart';
 import 'package:my_hostel/components/conversation.dart';
-export 'package:my_hostel/api/socket_service.dart';
+
 
 import 'base.dart';
 export 'base.dart' show baseEndpoint;
@@ -17,13 +16,15 @@ Future<FyndaResponse<List<Message>>> getMessages(
     );
 
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-      log("Messages: ${response.data}");
+      // log("Messages: ${response.data}");
       List<dynamic> list = response.data["data"] as List<dynamic>;
       List<Message> messages = [];
       for (var element in list) {
         Message message = Message.fromJson(element as Map<String, dynamic>);
         messages.add(message);
       }
+
+      messages.sort((a, b) => a.dateSent.compareTo(b.dateSent));
       return FyndaResponse(
         message: response.data["message"],
         payload: messages,
@@ -64,7 +65,7 @@ Future<FyndaResponse> deleteMessage(String id) async {
   );
 }
 
-Future<FyndaResponse> sendMessage(Map<String, dynamic> details) async {
+Future<FyndaResponse<Message?>> sendMessage(Map<String, dynamic> details) async {
   try {
     Response response = await dio.post("/message/send-message",
         data: details, options: configuration);
@@ -72,7 +73,7 @@ Future<FyndaResponse> sendMessage(Map<String, dynamic> details) async {
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
       return FyndaResponse(
         message: response.data["message"],
-        payload: null,
+        payload: Message.fromJson(response.data["data"]),
         success: true,
       );
     }
@@ -90,12 +91,12 @@ Future<FyndaResponse> sendMessage(Map<String, dynamic> details) async {
 Future<FyndaResponse<List<Conversation>>> getAllConversations(String id) async {
   try {
     Response response = await dio.get(
-      "/message/get-all-chat-history",
+      "/message/get-all-receivers-with-lastChat",
       options: configuration,
-      queryParameters: {"senderId": id},
+      queryParameters: {"userId": id},
     );
     if (response.statusCode! >= 200 && response.statusCode! <= 201) {
-      log("Conversations: ${response.data}");
+      // log("Conversations: ${response.data}");
       List<dynamic> list = response.data["data"] as List<dynamic>;
       List<Conversation> conversations = [];
       for (var element in list) {

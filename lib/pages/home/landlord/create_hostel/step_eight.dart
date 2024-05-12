@@ -1,20 +1,10 @@
 import 'dart:io';
-import 'package:get_thumbnail_video/index.dart';
-import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:animated_switcher_plus/animated_switcher_plus.dart';
-import 'package:my_hostel/api/create_hostel_data.dart';
-import 'package:my_hostel/api/file_manager.dart';
-import 'package:my_hostel/api/hostel_service.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
-import 'package:my_hostel/misc/providers.dart';
-import 'package:my_hostel/misc/widgets.dart';
 
 
 

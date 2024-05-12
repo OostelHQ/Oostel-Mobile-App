@@ -28,9 +28,9 @@ class ViewMedia extends StatefulWidget {
   final ViewInfo info;
 
   const ViewMedia({
-    Key? key,
+    super.key,
     required this.info,
-  }) : super(key: key);
+  });
 
   @override
   State<ViewMedia> createState() => _ViewMediaState();
