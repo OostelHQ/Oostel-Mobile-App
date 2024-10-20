@@ -67,25 +67,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Future<void> login() async {
 
-    loginUser(authDetails).then((resp) {
-      if(!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate(resp.payload);
-      }
-    });
+    navigate(defaultStudent);
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Dialog(
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          child: loader,
-        ),
-    );
+    // loginUser(authDetails).then((resp) {
+    //   if(!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate(resp.payload);
+    //   }
+    // });
+    //
+    // showDialog(
+    //     context: context,
+    //     barrierDismissible: false,
+    //     builder: (context) => const Dialog(
+    //       elevation: 0.0,
+    //       backgroundColor: Colors.transparent,
+    //       child: loader,
+    //     ),
+    // );
   }
 
   @override

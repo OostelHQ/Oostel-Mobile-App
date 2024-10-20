@@ -37,7 +37,6 @@ class Inbox extends ConsumerStatefulWidget {
 
 class _InboxState extends ConsumerState<Inbox> {
   late ChatController chatController;
-  final List<ChatUser> users = [];
 
   User? otherUser;
   late String currentUserID, otherUserID;
@@ -51,15 +50,14 @@ class _InboxState extends ConsumerState<Inbox> {
     currentUserID = ref.read(currentUserProvider).id;
     otherUserID = widget.info.id;
 
-    users.add(ChatUser(
-      id: currentUserID,
-      name: ref.read(currentUserProvider).mergedNames,
-      profilePhoto: ref.read(currentUserProvider).image,
-    ));
-
     chatController = ChatController(
       initialMessageList: [],
-      chatUsers: users,
+      currentUser: ChatUser(
+        id: currentUserID,
+        name: ref.read(currentUserProvider).mergedNames,
+        profilePhoto: ref.read(currentUserProvider).image,
+      ),
+      otherUsers: [],
       scrollController: ScrollController(),
     );
 
@@ -84,20 +82,20 @@ class _InboxState extends ConsumerState<Inbox> {
       return;
     }
 
-    users.add(ChatUser(
-      id: otherUserID,
-      name: otherUser!.mergedNames,
-      profilePhoto: otherUser!.image,
-    ));
+    // users.add(ChatUser(
+    //   id: otherUserID,
+    //   name: otherUser!.mergedNames,
+    //   profilePhoto: otherUser!.image,
+    // ));
 
     getInitialMessages();
-    getMessagesFromServer();
   }
 
   Future<void> getInitialMessages() async {
     List<m.Message> messages =
         await DatabaseManager.getMessagesBetween(currentUserID, otherUserID);
     assignMessages(messages);
+    getMessagesFromServer();
   }
 
   void assignMessages(List<m.Message> messages,
@@ -107,17 +105,17 @@ class _InboxState extends ConsumerState<Inbox> {
           (msg) => Message(
             message: msg.content,
             createdAt: msg.dateSent,
-            sendBy: msg.senderId,
+            sentBy: msg.senderId,
             id: msg.id,
           ),
         )
         .toList();
 
     if (online) {
-      chatController.removeAllMessages();
+      // chatController.removeAllMessages();
     }
 
-    chatController.addMessages(msgs);
+    // chatController.addMessages(msgs);
     setState(() {
       if (!online) {
         loading = false;
@@ -144,7 +142,8 @@ class _InboxState extends ConsumerState<Inbox> {
     }
 
     bool consistent = true;
-    if (resp.payload.length != chatController.numberOfMessages) {
+    //resp.payload.length != chatController.numberOfMessages
+    if (resp.payload.length != 0) {
       await DatabaseManager.clearAllMessages();
       await DatabaseManager.addMessages(resp.payload);
       consistent = false;
@@ -166,7 +165,7 @@ class _InboxState extends ConsumerState<Inbox> {
       id: time.millisecondsSinceEpoch.toString(),
       message: rawMessage,
       createdAt: time,
-      sendBy: currentUserID,
+      sentBy: currentUserID,
       replyMessage: replyMessage,
       messageType: messageType,
     );
@@ -192,7 +191,7 @@ class _InboxState extends ConsumerState<Inbox> {
     return Scaffold(
       body: SafeArea(
         child: ChatView(
-          currentUser: users.first,
+          // currentUser: users.first,
           chatController: chatController,
           appBar: ChatViewAppBar(
             elevation: 0.0,
@@ -203,7 +202,7 @@ class _InboxState extends ConsumerState<Inbox> {
               onPressed: () => context.router.pop(),
             ),
             profilePicture: ref.watch(currentUserProvider).image,
-            chatTitle: users.length > 1 ? users[1].name : "",
+            chatTitle:  "",//users.length > 1 ? users[1].name : "",
             userStatus: "Online",
             chatTitleTextStyle: context.textTheme.bodyLarge!.copyWith(
               color: weirdBlack,
@@ -228,13 +227,14 @@ class _InboxState extends ConsumerState<Inbox> {
             ],
           ),
           onSendTap: onSendTap,
-          chatViewState: loading
-              ? ChatViewState.loading
-              : chatController.hasNoMessages
-                  ? ChatViewState.noData
-                  : hasError
-                      ? ChatViewState.error
-                      : ChatViewState.hasMessages,
+          chatViewState: ChatViewState.loading,
+          // chatViewState: loading
+          //     ? ChatViewState.loading
+          //     : chatController.hasNoMessages
+          //         ? ChatViewState.noData
+          //         : hasError
+          //             ? ChatViewState.error
+          //             : ChatViewState.hasMessages,
           featureActiveConfig: const FeatureActiveConfig(
             enableSwipeToReply: true,
             enableSwipeToSeeTime: false,
@@ -317,6 +317,7 @@ class _InboxState extends ConsumerState<Inbox> {
         ),
       ),
     );
+    // return SizedBox();
   }
 }
 

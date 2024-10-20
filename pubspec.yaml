@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
   flutter:
@@ -49,9 +49,7 @@ dependencies:
   awesome_notifications:
   jiffy:
   rxdart:
-  device_preview:
   sqflite:
-  get_thumbnail_video:
   animated_snack_bar:
 
 
@@ -66,17 +64,17 @@ dev_dependencies:
 flutter_native_splash:
   color: "#064997"
   android: true
-  ios: true
+
+  android_12:
+    color: "#064997"
+
 
 flutter_icons:
   image_path_android: "assets/images/oostel.png"
-  image_path_ios: "assets/images/oostel.png"
   android: true
-  ios: true
   adaptive_icon_background: "#064997"
   adaptive_icon_foreground: "assets/images/oostel.png"
   min_sdk_android: 29
-  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true

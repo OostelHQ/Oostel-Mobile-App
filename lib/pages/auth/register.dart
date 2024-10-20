@@ -73,25 +73,26 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   Future<void> register() async {
-    registerUser(authDetails).then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate();
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    navigate();
+    // registerUser(authDetails).then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate();
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
   }
 
   bool get isFilled {

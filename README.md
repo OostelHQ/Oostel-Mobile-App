@@ -1,4 +1,4 @@
-# my_hostel
+# fynda
 
 A new Flutter project.
 

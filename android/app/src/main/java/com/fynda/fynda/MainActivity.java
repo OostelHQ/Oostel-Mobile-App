@@ -1,4 +1,4 @@
-package com.fynda.my_hostel;
+package com.fynda.fynda;
 
 import io.flutter.embedding.android.FlutterActivity;
 

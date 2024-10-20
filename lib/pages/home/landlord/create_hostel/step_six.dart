@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_thumbnail_video/index.dart';
-import 'package:get_thumbnail_video/video_thumbnail.dart';
+// import 'package:get_thumbnail_video/index.dart';
+// import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:my_hostel/api/file_manager.dart';
 import 'package:my_hostel/misc/constants.dart';
 import 'package:my_hostel/misc/functions.dart';
@@ -310,19 +310,19 @@ class _StepSixHalfState extends State<StepSixHalf> {
         }
 
         if (videoPath.isNotEmpty) {
-          videoData = await VideoThumbnail.thumbnailData(
-            video: videoPath,
-            imageFormat: ImageFormat.JPEG,
-            maxWidth: 350,
-            maxHeight: 270,
-            quality: 75,
-          );
-
-          for (int i = 0; i < media.length; ++i) {
-            if (media[i].path == videoPath) {
-              videoDataIndex = i;
-            }
-          }
+          // videoData = await VideoThumbnail.thumbnailData(
+          //   video: videoPath,
+          //   imageFormat: ImageFormat.JPEG,
+          //   maxWidth: 350,
+          //   maxHeight: 270,
+          //   quality: 75,
+          // );
+          //
+          // for (int i = 0; i < media.length; ++i) {
+          //   if (media[i].path == videoPath) {
+          //     videoDataIndex = i;
+          //   }
+          // }
         }
 
         setState(() {});
