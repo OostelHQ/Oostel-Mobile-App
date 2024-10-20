@@ -105,7 +105,7 @@ class _LandlordHostelCardState extends State<LandlordHostelCard> {
             ),
             SizedBox(height: 8.h),
             Text(
-              joinToAddress(widget.info.address),
+              joinToAddress(widget.info.address, ignoreFourth: true),
               style: context.textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: weirdBlack75,

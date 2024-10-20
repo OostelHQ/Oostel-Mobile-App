@@ -337,13 +337,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         SizedBox(height: 70.h),
                         GestureDetector(
                           onTap: () {
-                            if (!readTerms) {
-                              showError(
-                                  "Please read and accept Fynda's Privacy Policy to proceed");
-                              return;
-                            }
+                            // if (!readTerms) {
+                            //   showError(
+                            //       "Please read and accept Fynda's Privacy Policy to proceed");
+                            //   return;
+                            // }
 
-                            if (!validateForm(formKey)) return;
+                            // if (!validateForm(formKey)) return;
 
                             authDetails["roletype"] = (ref.read(isAStudent))
                                 ? "Student"

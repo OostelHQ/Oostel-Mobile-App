@@ -97,14 +97,15 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
 
 
   void navigate() {
-    refreshUser(UserType.agent).then((val) {
-      if(!val.success) {
-        showError(val.message);
-        return;
-      }
-      ref.watch(currentUserProvider.notifier).state = val.payload!;
-      context.router.pop();
-    });
+    // refreshUser(UserType.agent).then((val) {
+    //   if(!val.success) {
+    //     showError(val.message);
+    //     return;
+    //   }
+    //   ref.watch(currentUserProvider.notifier).state = val.payload!;
+    //   context.router.pop();
+    // });
+    context.router.pop();
   }
 
   void refresh() {
@@ -113,51 +114,53 @@ class _EditAgentProfilePageState extends ConsumerState<EditAgentProfilePage> {
   }
 
   Future<void> delete() async {
-    deleteAccount(ref.watch(currentUserProvider).id).then((resp) {
-      if(!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        refresh();
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // deleteAccount(ref.watch(currentUserProvider).id).then((resp) {
+    //   if(!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     refresh();
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    refresh();
   }
 
 
   Future<void> update() async {
-    agentProfile(details,
-      profilePictureFilePath: profileImage.startsWith("https:") ? "" : profileImage,
-      completionLevel: ref.read(currentUserProvider).hasCompletedProfile,
-    ).then((resp) {
-      if(!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate();
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // agentProfile(details,
+    //   profilePictureFilePath: profileImage.startsWith("https:") ? "" : profileImage,
+    //   completionLevel: ref.read(currentUserProvider).hasCompletedProfile,
+    // ).then((resp) {
+    //   if(!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate();
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    navigate();
   }
 
   @override

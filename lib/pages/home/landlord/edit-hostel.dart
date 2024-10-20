@@ -25,22 +25,22 @@ void saveAndExit({
 }) {
   if (formKey != null && !validateForm(formKey)) return;
 
-  updateHostel(info).then((resp) {
-    if (!resp.success) {
-      showError(resp.message);
-      Navigator.of(context).pop();
-      return;
-    }
-    context.router.pop();
-  });
-
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (_) => const Dialog(
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      child: loader,
-    ),
-  );
+  // updateHostel(info).then((resp) {
+  //   if (!resp.success) {
+  //     showError(resp.message);
+  //     Navigator.of(context).pop();
+  //     return;
+  //   }
+  //   context.router.pop();
+  // });
+  //
+  // showDialog(
+  //   context: context,
+  //   barrierDismissible: false,
+  //   builder: (_) => const Dialog(
+  //     elevation: 0.0,
+  //     backgroundColor: Colors.transparent,
+  //     child: loader,
+  //   ),
+  // );
 }

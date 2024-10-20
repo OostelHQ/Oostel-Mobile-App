@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:faker/faker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_hostel/components/agent.dart';
 import 'package:my_hostel/components/conversation.dart';
@@ -5,6 +8,7 @@ import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/landowner.dart';
 import 'package:my_hostel/components/notification.dart';
 import 'package:my_hostel/components/receipt_info.dart';
+import 'package:my_hostel/components/room_details.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/components/transaction.dart';
 import 'package:my_hostel/components/user.dart';
@@ -14,7 +18,7 @@ final Student defaultStudent = Student(
   firstName: "John",
   lastName: "Doe",
   gender: "Male",
-  image: "assets/images/watch man.jpg",
+  image: "https://picsum.photos/280",
   id: "Info 4",
   level: 300,
   email: "johndoe@mail.com",
@@ -38,14 +42,14 @@ final Landowner defaultOwner = Landowner(
   firstName: "Smith",
   lastName: "Woods",
   gender: "Male",
-  image: "assets/images/watch man.jpg",
+  image: "https://picsum.photos/290",
   id: "Landowner",
   email: "landlord@mail.com",
   contact: "09012345678",
   religion: "Islam",
   profileViews: 48,
   searchAppearances: 19,
-  address: "Abeokuta, Ogun State",
+  address: "Accord Junction#Abeokuta#Ogun State",
   verified: true,
 );
 
@@ -55,7 +59,7 @@ final Agent defaultAgent = Agent(
   firstName: "Smith",
   lastName: "Woods",
   gender: "Male",
-  image: "assets/images/watch man.jpg",
+  image: "https://picsum.photos/300",
   id: "Landowner",
   email: "landlord@mail.com",
   contact: "09012345678",
@@ -64,6 +68,118 @@ final Agent defaultAgent = Agent(
   searchAppearances: 19,
   address: "Accord Junction#Abeokuta#Ogun State",
 );
+
+List<HostelInfo> generateHostels(int count) {
+  List<HostelInfo> hostels = [];
+  Random random = Random(DateTime.now().millisecondsSinceEpoch);
+
+  for (int i = 0; i < count; ++i) {
+    int numberOfRooms = random.nextInt(10);
+
+    HostelInfo info = HostelInfo(
+      owner: defaultOwner.id,
+      address: "Accord Junction#Abeokuta#Ogun State",
+      id: "Hostel ID $i",
+      price: random.nextInt(200000) * 1.0,
+      name: faker.company.name(),
+      category: faker.lorem.sentence(),
+      description: faker.lorem.sentence(),
+      area: random.nextInt(200) * 1.0,
+      hostelFacilities: const [
+        "Light",
+        "Tap",
+        "Well",
+        "Pool",
+        "Security",
+      ],
+      likes: random.nextInt(30),
+      media: const [
+        "https://picsum.photos/200",
+        "https://picsum.photos/220",
+        "https://picsum.photos/230",
+        "https://picsum.photos/240",
+        "https://picsum.photos/250"
+      ],
+      rooms: generateRooms(numberOfRooms),
+      rules: [
+        faker.lorem.sentence(),
+        faker.lorem.sentence(),
+        faker.lorem.sentence(),
+        faker.lorem.sentence(),
+      ],
+      totalRooms: numberOfRooms,
+      vacantRooms: random.nextBool(),
+    );
+    hostels.add(info);
+  }
+  return hostels;
+}
+
+List<RoomInfo> generateRooms(int count) {
+  List<RoomInfo> rooms = [];
+  Random random = Random(DateTime.now().millisecondsSinceEpoch);
+
+  for(int i = 0; i < count; ++i) {
+    RoomInfo info = RoomInfo(
+      id: "Room Info $i",
+      media: const [
+        "https://picsum.photos/120",
+        "https://picsum.photos/125",
+        "https://picsum.photos/130",
+        "https://picsum.photos/135",
+      ],
+      name: 'Room ${i + 1}',
+      price: random.nextInt(200000) * 1.0,
+      duration: "Yearly",
+      facilities: const [
+        "Light",
+        "Tap Water",
+        "Bathroom",
+        "Toilet",
+        "Kitchen",
+        "Ceiling Fan",
+      ],
+      isRented: random.nextBool(),
+    );
+    rooms.add(info);
+  }
+  return rooms;
+}
+
+
+List<Student> generateRoommates(int count) {
+  List<Student> roommates = [];
+  Random random = Random(DateTime.now().millisecondsSinceEpoch);
+  for (int i = 0; i < count; ++i) {
+    Student student = Student(
+      dateJoined: DateTime.now(),
+      id: "Student ID $i",
+      address: faker.address.neighborhood(),
+      location: faker.address.neighborhood(),
+      gender: random.nextBool() ? "Male" : "Female",
+      image: "https://picsum.photos/210",
+      lastName: faker.person.lastName(),
+      firstName: faker.person.firstName(),
+      email: "test@mail.com",
+      amount: random.nextInt(120000) * 1.0,
+      ageRange: "25-30",
+      available: random.nextBool(),
+      contact: faker.phoneNumber.us(),
+      denomination: "Some Denomination",
+      guardian: faker.phoneNumber.us(),
+      hobby: faker.lorem.word(),
+      level: 200,
+      origin: faker.lorem.word(),
+      peopleILike: [],
+      profileViews: 20,
+      religion: "Christianity",
+      searchAppearances: 23,
+      totalLikes: 12,
+    );
+    roommates.add(student);
+  }
+  return roommates;
+}
 
 final StateProvider<bool> hasInitializedProvider =
     StateProvider((ref) => false);
@@ -112,24 +228,25 @@ void resetProviders(WidgetRef ref) {
 }
 
 final StateProvider<List<HostelInfo>> filteredExploreHostelsProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateHostels(10));
+
 final StateProvider<List<Student>> filteredExploreRoommatesProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateRoommates(10));
 
 final StateProvider<List<HostelInfo>> acquiredHostelsProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateHostels(10));
 
 final StateProvider<List<Student>> acquiredRoommatesProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateRoommates(10));
 
 final StateProvider<List<HostelInfo>> availableHostelsProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateHostels(10));
 
 final StateProvider<List<HostelInfo>> ownerHostelsProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateHostels(10));
 
 final StateProvider<List<Student>> availableRoommatesProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => generateRoommates(10));
 
 final StateProvider<List<String>> roomTypesProvider = StateProvider((ref) => [
       "Self Contained",
@@ -501,9 +618,12 @@ final StateProvider<List<Conversation>> conversationsProvider = StateProvider(
 
 final StateProvider<OtpOrigin> otpOriginProvider =
     StateProvider((ref) => OtpOrigin.none);
+
 final StateProvider<int> registrationProcessProvider =
     StateProvider((ref) => 0);
 
+final StateProvider<List<String>> studentLikedHostelsProvider =
+    StateProvider((ref) => []);
 
-final StateProvider<List<String>> studentLikedHostelsProvider = StateProvider((ref) => []);
-final StateProvider<List<String>> studentLikedRoommatesProvider = StateProvider((ref) => []);
+final StateProvider<List<String>> studentLikedRoommatesProvider =
+    StateProvider((ref) => []);

@@ -52,6 +52,11 @@ class NotificationPage extends ConsumerWidget {
                 ),
               ],
             ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 10,
+              ),
+            ),
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverList(

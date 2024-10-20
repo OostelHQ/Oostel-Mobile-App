@@ -66,8 +66,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Future<void> login() async {
-
-    navigate(defaultStudent);
+    User user = ref.read(isAStudent)
+        ? defaultStudent
+        : ref.read(isAgent) ? defaultAgent :
+    defaultOwner;
+    navigate(user);
 
     // loginUser(authDetails).then((resp) {
     //   if(!mounted) return;
@@ -248,7 +251,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         SizedBox(height: 140.h),
                         GestureDetector(
                           onTap: () {
-                            if(!validateForm(formKey)) return;
+                            // if(!validateForm(formKey)) return;
                             login();
                           },
                           child: Container(

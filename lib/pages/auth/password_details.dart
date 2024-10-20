@@ -34,25 +34,26 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   }
 
   Future<void> sendOTP() async {
-    generateOTP(emailController.text).then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate();
-      }
-    });
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // generateOTP(emailController.text).then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate();
+    //   }
+    // });
+    //
+    // await showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    navigate();
   }
 
   @override
@@ -209,25 +210,27 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   }
 
   Future<void> reset() async {
-    resetPassword(authDetails).then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate();
-      }
-    });
+    navigate();
 
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // resetPassword(authDetails).then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate();
+    //   }
+    // });
+    //
+    // await showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
   }
 
   @override
@@ -448,45 +451,46 @@ class _AccountVerificationPageState
   }
 
   Future<void> sendOTP() async {
-    generateOTP(widget.email).then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      Navigator.of(context).pop();
-    });
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // generateOTP(widget.email).then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   Navigator.of(context).pop();
+    // });
+    //
+    // await showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
   }
 
   Future<void> verify(String verificationCode) async {
-    verifyEmailOTP({"email": widget.email, "otp": verificationCode})
-        .then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        setState(() => otp = verificationCode);
-        navigate();
-      }
-    });
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // verifyEmailOTP({"email": widget.email, "otp": verificationCode})
+    //     .then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     setState(() => otp = verificationCode);
+    //     navigate();
+    //   }
+    // });
+    //
+    // await showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    navigate();
   }
 
   @override

@@ -31,7 +31,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
   final ScrollController scrollController = ScrollController();
   late TabController tabController;
 
-  final List<double> priceRanges = [0.0, 0.0];
+  late List<double> priceRanges;
 
   bool fetching = false;
   bool isCollapsed = false;
@@ -61,25 +61,29 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
   }
 
   void getDetails() {
-    getHostel(widget.info.id).then((resp) {
-      if (!resp.success) {
-        setState(() => fetching = false);
-        showError(resp.message);
-        return;
-      }
-
-      widget.info.rooms.clear();
-      widget.info.rooms.addAll(resp.payload!['rooms']);
-
-      calculateProps();
-      List<double> prices = widget.info.priceRange;
-      priceRanges.clear();
-      priceRanges.addAll(prices);
-
-      owner = resp.payload!["owner"];
-
-      setState(() => fetching = false);
-    });
+    // getHostel(widget.info.id).then((resp) {
+    //   if (!resp.success) {
+    //     setState(() => fetching = false);
+    //     showError(resp.message);
+    //     return;
+    //   }
+    //
+    //   widget.info.rooms.clear();
+    //   widget.info.rooms.addAll(resp.payload!['rooms']);
+    //
+    //   calculateProps();
+    //   List<double> prices = widget.info.priceRange;
+    //   priceRanges.clear();
+    //   priceRanges.addAll(prices);
+    //
+    //   owner = resp.payload!["owner"];
+    //
+    //   setState(() => fetching = false);
+    // });
+    calculateProps();
+    priceRanges = widget.info.priceRange;
+    owner = defaultOwner;
+    setState(() => fetching = false);
   }
 
   @override
@@ -292,7 +296,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                                     ),
                                   ),
                                   Container(
-                                    width: 85.w,
+                                    width: 90.w,
                                     height: 25.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
@@ -313,7 +317,7 @@ class _HostelInformationPageState extends ConsumerState<HostelInformationPage>
                               ),
                               SizedBox(height: 15.h),
                               Text(
-                                joinToAddress(widget.info.address),
+                                joinToAddress(widget.info.address, ignoreFourth: true),
                                 overflow: TextOverflow.ellipsis,
                                 style: context.textTheme.bodyMedium!.copyWith(
                                     color: weirdBlack75,
@@ -848,30 +852,32 @@ class _CommentSectionState extends State<_CommentSection> {
           ),
         ),
         comments.isEmpty
-            ? SliverFillRemaining(
+            ? SliverToBoxAdapter(
                 child: SizedBox(
                   height: 450.r,
                   width: 414.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 50.r),
-                      Image.asset(
-                        "assets/images/No Data.png",
-                        width: 150.r,
-                        height: 150.r,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(height: 50.r),
-                      Text(
-                        "There are no comments from the students yet.",
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: weirdBlack75,
-                          fontWeight: FontWeight.w500,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 50.r),
+                        Image.asset(
+                          "assets/images/No Data.png",
+                          width: 150.r,
+                          height: 150.r,
+                          fit: BoxFit.cover,
                         ),
-                      )
-                    ],
+                        SizedBox(height: 50.r),
+                        Text(
+                          "There are no comments from the students yet.",
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack75,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )

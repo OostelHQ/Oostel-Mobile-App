@@ -4,12 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_hostel/api/hostel_service.dart';
-import 'package:my_hostel/api/user_service.dart';
 import 'package:my_hostel/components/hostel_info.dart';
 import 'package:my_hostel/components/student.dart';
 import 'package:my_hostel/misc/constants.dart';
-import 'package:my_hostel/misc/functions.dart';
 import 'package:my_hostel/misc/providers.dart';
 import 'package:my_hostel/misc/widgets.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -52,6 +49,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
     super.dispose();
   }
 
+  //TODO: Optimize this
   void onFilter(String text) {
     text = text.trim();
 
@@ -91,30 +89,32 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
   }
 
   void refreshHostel() {
-    getAllHostels({}).then((resp) {
-      if (resp.payload.isEmpty) {
-        showError(resp.message);
-      } else {
-        ref.watch(availableHostelsProvider.notifier).state.clear();
-        ref.watch(availableHostelsProvider.notifier).state.addAll(resp.payload);
-      }
-      setState(() => loadingHostel = false);
-    });
+    // getAllHostels({}).then((resp) {
+    //   if (resp.payload.isEmpty) {
+    //     showError(resp.message);
+    //   } else {
+    //     ref.watch(availableHostelsProvider.notifier).state.clear();
+    //     ref.watch(availableHostelsProvider.notifier).state.addAll(resp.payload);
+    //   }
+    //   setState(() => loadingHostel = false);
+    // });
+    setState(() => loadingHostel = false);
   }
 
   void refreshRoommates() {
-    getAvailableRoommates().then((resp) {
-      if (resp.payload.isEmpty) {
-        showError(resp.message);
-      } else {
-        ref.watch(availableRoommatesProvider.notifier).state.clear();
-        ref
-            .watch(availableRoommatesProvider.notifier)
-            .state
-            .addAll(resp.payload);
-      }
-      setState(() => loadingRoommates = false);
-    });
+    // getAvailableRoommates().then((resp) {
+    //   if (resp.payload.isEmpty) {
+    //     showError(resp.message);
+    //   } else {
+    //     ref.watch(availableRoommatesProvider.notifier).state.clear();
+    //     ref
+    //         .watch(availableRoommatesProvider.notifier)
+    //         .state
+    //         .addAll(resp.payload);
+    //   }
+    //   setState(() => loadingRoommates = false);
+    // });
+    setState(() => loadingRoommates = false);
   }
 
   @override
@@ -310,6 +310,8 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                                   ),
                                   separatorBuilder: (_, __) =>
                                       SizedBox(width: 20.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   itemCount:
                                       hostels.length < 4 ? hostels.length : 4,
                                 ),

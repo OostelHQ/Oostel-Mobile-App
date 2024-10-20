@@ -25,7 +25,8 @@ class ChatsPage extends ConsumerStatefulWidget {
 class _ChatsPageState extends ConsumerState<ChatsPage> {
   final TextEditingController controller = TextEditingController();
   final List<Conversation> conversations = [];
-  bool loaded = false;
+  // bool loaded = false;
+  bool loaded = true;
 
   late InboxInfo inboxInfo;
 
@@ -38,8 +39,8 @@ class _ChatsPageState extends ConsumerState<ChatsPage> {
   }
 
   Future<void> refresh() async {
-    List<Conversation> data =
-        (await getAllConversations(ref.read(currentUserProvider).id)).payload;
+    List<Conversation> data = [];
+        // (await getAllConversations(ref.read(currentUserProvider).id)).payload;
     if (!mounted) return;
 
     if(data.isEmpty) {

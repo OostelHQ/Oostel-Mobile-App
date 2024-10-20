@@ -22,7 +22,9 @@ class StudentProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<StudentProfilePage> {
-  bool loading = true;
+  // bool loading = true;
+  bool loading = false;
+
 
   @override
   void initState() {
@@ -31,13 +33,13 @@ class _ProfilePageState extends ConsumerState<StudentProfilePage> {
   }
 
   void fetch() {
-    getStudentById(ref.read(currentUserProvider).id).then((resp) {
-      if (!mounted) return;
-      setState(() {
-        ref.watch(currentUserProvider.notifier).state = resp.payload!;
-        loading = false;
-      });
-    });
+    // getStudentById(ref.read(currentUserProvider).id).then((resp) {
+    //   if (!mounted) return;
+    //   setState(() {
+    //     ref.watch(currentUserProvider.notifier).state = resp.payload!;
+    //     loading = false;
+    //   });
+    // });
   }
 
   @override
@@ -611,25 +613,26 @@ class _RoommateActivationState extends ConsumerState<_RoommateActivation> {
   }
 
   Future<void> open() async {
-    openToRoommate(authDetails).then((resp) {
-      if (!mounted) return;
-      if (!resp.success) {
-        showError(resp.message);
-        Navigator.of(context).pop();
-      } else {
-        setState(() => activated = true);
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // openToRoommate(authDetails).then((resp) {
+    //   if (!mounted) return;
+    //   if (!resp.success) {
+    //     showError(resp.message);
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     setState(() => activated = true);
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    setState(() => activated = true);
   }
 
   @override

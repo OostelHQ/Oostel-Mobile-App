@@ -51,6 +51,7 @@ dependencies:
   rxdart:
   sqflite:
   animated_snack_bar:
+  faker:
 
 
 

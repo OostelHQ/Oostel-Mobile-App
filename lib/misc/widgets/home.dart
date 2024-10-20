@@ -24,8 +24,6 @@ import 'package:my_hostel/pages/other/gallery.dart';
 
 import 'common.dart';
 
-
-
 class ProfileNotification extends ConsumerStatefulWidget {
   final VoidCallback onCancel;
 
@@ -100,12 +98,12 @@ class _ProfileNotificationState extends ConsumerState<ProfileNotification> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => context.router.pushNamed(
-                            ref.watch(isAStudent)
-                                ? Pages.editProfile
-                                : ref.watch(isLandlord)
-                                ? Pages.editOwnerProfile
-                                : Pages.editAgentProfile,
-                          ),
+                                ref.watch(isAStudent)
+                                    ? Pages.editProfile
+                                    : ref.watch(isLandlord)
+                                        ? Pages.editOwnerProfile
+                                        : Pages.editAgentProfile,
+                              ),
                       )
                     ],
                   ),
@@ -185,7 +183,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                       borderRadius: BorderRadius.circular(10.r),
                       child: Hero(
                         tag:
-                        "Hostel ID: ${widget.info.id} Image: ${widget.info.media.first}",
+                            "Hostel ID: ${widget.info.id} Image: ${widget.info.media.first}",
                         child: CachedNetworkImage(
                           imageUrl: widget.info.media.first,
                           errorWidget: (context, url, error) => Container(
@@ -232,12 +230,18 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                             children: [
                               Hero(
                                 tag:
-                                "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
-                                child: Text(
-                                  widget.info.name,
-                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    "Hostel ID: ${widget.info.id} Name: ${widget.info.name}",
+                                child: SizedBox(
+                                  width: 170.w,
+                                  child: Text(
+                                    widget.info.name,
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.w600,
-                                      color: weirdBlack),
+                                      color: weirdBlack,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                               Hero(
@@ -327,9 +331,9 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                   children: [
                                     TextSpan(
                                       text:
-                                      "${currency()} ${formatAmountInDouble(widget.info.price)}",
+                                          "${currency()} ${formatAmountInDouble(widget.info.price)}",
                                       style:
-                                      context.textTheme.bodySmall!.copyWith(
+                                          context.textTheme.bodySmall!.copyWith(
                                         color: appBlue,
                                         fontFamily: "Inter",
                                         fontWeight: FontWeight.w600,
@@ -338,7 +342,7 @@ class _HostelInfoCardState extends ConsumerState<HostelInfoCard> {
                                     TextSpan(
                                       text: "/year",
                                       style:
-                                      context.textTheme.bodySmall!.copyWith(
+                                          context.textTheme.bodySmall!.copyWith(
                                         color: appBlue,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: "Inter",
@@ -403,169 +407,203 @@ class _StudentCardState extends ConsumerState<StudentCard> {
         Pages.otherStudent,
         extra: widget.info,
       ),
-      child: Container(
-        width: 400.w,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8FBFF),
-          borderRadius: BorderRadius.circular(4.r),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0xFFE0E5EC),
-              blurRadius: 6.0,
-              spreadRadius: 1.0,
-            )
-          ],
-        ),
-        child: SizedBox(
-          height: 120.h,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(widget.info.image),
-                  radius: 35.w,
+      child: SizedBox(
+        height: 135.h,
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FBFF),
+              borderRadius: BorderRadius.circular(4.r),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0xFFE0E5EC),
+                  blurRadius: 6.0,
+                  spreadRadius: 1.0,
+                )
+              ],
+            ),
+            child: SizedBox(
+              height: 120.h,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 10.w,
+                  right: 10.w,
+                  top: 10.h,
+                  bottom: 10.h,
                 ),
-                SizedBox(width: 10.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    SizedBox(
-                      width: 270.w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.info.mergedNames,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600, color: weirdBlack),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (likes.contains(id)) {
-                                likes.remove(id);
-                              } else {
-                                likes.add(id);
-                              }
-                            },
-                            child: AnimatedSwitcherTranslation.right(
-                              duration: const Duration(milliseconds: 500),
-                              child: Icon(
-                                Icons.favorite_rounded,
-                                color: likes.contains(id)
-                                    ? Colors.red
-                                    : weirdBlack25,
-                                size: 18,
-                                key: ValueKey<bool>(likes.contains(id)),
-                              ),
-                            ),
-                          )
-                        ],
+                    CachedNetworkImage(
+                      imageUrl: widget.info.image,
+                      errorWidget: (context, url, error) => CircleAvatar(
+                        backgroundColor: Colors.red,
+                        radius: 35.w,
+                      ),
+                      progressIndicatorBuilder: (context, url, download) =>
+                          CircleAvatar(
+                        backgroundColor: paleBlue,
+                        radius: 35.w,
+                        child: const Center(
+                          child: loader,
+                        ),
+                      ),
+                      imageBuilder: (context, provider) => CircleAvatar(
+                        backgroundImage: provider,
+                        radius: 35.w,
                       ),
                     ),
-                    SizedBox(height: 17.5.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    SizedBox(width: 10.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(
-                          "assets/images/Roomate Info Person.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          widget.info.gender,
-                          style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(width: 12.w),
-                        SvgPicture.asset(
-                          "assets/images/Roomate Info Level.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "${widget.info.level} level",
-                          style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(width: 12.w),
-                        SvgPicture.asset(
-                          "assets/images/Roomate Info Location.svg",
-                          width: 15.r,
-                          height: 15.r,
-                          color: weirdBlack50,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          widget.info.location,
-                          style: context.textTheme.bodySmall!.copyWith(
-                              color: weirdBlack50, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 17.5.h),
-                    SizedBox(
-                      width: 270.w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text:
-                                  "${currency()} ${formatAmountInDouble(widget.info.amount)}",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                    color: appBlue,
-                                    fontFamily: "Inter",
+                        SizedBox(
+                          width: 270.w,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                widget.info.mergedNames,
+                                style: context.textTheme.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.w600,
+                                    color: weirdBlack),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (likes.contains(id)) {
+                                    likes.remove(id);
+                                  } else {
+                                    likes.add(id);
+                                  }
+                                },
+                                child: AnimatedSwitcherTranslation.right(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: likes.contains(id)
+                                        ? Colors.red
+                                        : weirdBlack25,
+                                    size: 18,
+                                    key: ValueKey<bool>(likes.contains(id)),
                                   ),
                                 ),
-                                TextSpan(
-                                  text: "/year",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                    color: appBlue,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: "Inter",
-                                    fontSize: 12.sp,
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
-                          Container(
-                            width: 85.w,
-                            height: 25.h,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 5.w, vertical: 2.h),
-                            decoration: BoxDecoration(
-                              color: infoRoomsLeftBackground,
-                              borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        SizedBox(height: 17.5.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/Roomate Info Person.svg",
+                              width: 15.r,
+                              height: 15.r,
+                              color: weirdBlack50,
                             ),
-                            child: Text(
-                              widget.info.available
-                                  ? "Available"
-                                  : "Unavailable",
+                            SizedBox(width: 5.w),
+                            Text(
+                              widget.info.gender,
                               style: context.textTheme.bodySmall!.copyWith(
-                                  color: infoRoomsLeft,
-                                  fontSize: 13.sp,
+                                  color: weirdBlack50,
                                   fontWeight: FontWeight.w500),
                             ),
-                          )
-                        ],
-                      ),
-                    )
+                            SizedBox(width: 12.w),
+                            SvgPicture.asset(
+                              "assets/images/Roomate Info Level.svg",
+                              width: 15.r,
+                              height: 15.r,
+                              color: weirdBlack50,
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              "${widget.info.level} level",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                  color: weirdBlack50,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            SizedBox(width: 12.w),
+                            SvgPicture.asset(
+                              "assets/images/Roomate Info Location.svg",
+                              width: 15.r,
+                              height: 15.r,
+                              color: weirdBlack50,
+                            ),
+                            SizedBox(width: 5.w),
+                            SizedBox(
+                              width: 100.w,
+                              child: Text(
+                                widget.info.location,
+                                style: context.textTheme.bodySmall!.copyWith(
+                                    color: weirdBlack50,
+                                    fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 17.5.h),
+                        SizedBox(
+                          width: 260.w,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          "${currency()} ${formatAmountInDouble(widget.info.amount)}",
+                                      style:
+                                          context.textTheme.bodySmall!.copyWith(
+                                        color: appBlue,
+                                        fontFamily: "Inter",
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "/year",
+                                      style:
+                                          context.textTheme.bodySmall!.copyWith(
+                                        color: appBlue,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "Inter",
+                                        fontSize: 12.sp,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 85.w,
+                                height: 25.h,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w, vertical: 2.h),
+                                decoration: BoxDecoration(
+                                  color: infoRoomsLeftBackground,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                ),
+                                child: Text(
+                                  widget.info.available
+                                      ? "Available"
+                                      : "Unavailable",
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                      color: infoRoomsLeft,
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -629,7 +667,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
               children: [
                 CachedNetworkImage(
                   imageUrl:
-                  widget.info.media.isEmpty ? "" : widget.info.media.first,
+                      widget.info.media.isEmpty ? "" : widget.info.media.first,
                   errorWidget: (context, url, error) => Container(
                     width: 180.w,
                     height: 125.h,
@@ -676,7 +714,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        likeHostel({});
+                        // likeHostel({});
 
                         if (likes.contains(id)) {
                           likes.remove(id);
@@ -690,9 +728,9 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                         child: Icon(
                           Icons.favorite_rounded,
                           color:
-                          likes.contains(ref.read(currentUserProvider).id)
-                              ? Colors.red
-                              : weirdBlack25,
+                              likes.contains(ref.read(currentUserProvider).id)
+                                  ? Colors.red
+                                  : weirdBlack25,
                           size: 18,
                           key: ValueKey<bool>(
                             likes.contains(id),
@@ -705,7 +743,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                 SizedBox(
                   width: 180.w,
                   child: Text(
-                    joinToAddress(widget.info.address),
+                    joinToAddress(widget.info.address, ignoreFourth: true),
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium!.copyWith(
                         color: weirdBlack75, fontWeight: FontWeight.w500),
@@ -766,7 +804,7 @@ class _HostelExploreCardState extends ConsumerState<HostelExploreCard> {
                         children: [
                           TextSpan(
                             text:
-                            "${currency()} ${formatAmountInDouble(widget.info.price / 1000)}k",
+                                "${currency()} ${formatAmountInDouble(widget.info.price / 1000)}k",
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: appBlue,
                               fontFamily: "Inter",
@@ -925,7 +963,7 @@ class _CommentCardState extends State<CommentCard>
                 SizedBox(height: 8.h),
                 Text(
                     "${formatDate(DateFormat("dd/MM/yyyy").format(widget.comment.postTime), shorten: true)} "
-                        "by ${widget.comment.postedBy.mergedNames}",
+                    "by ${widget.comment.postedBy.mergedNames}",
                     style: context.textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w500,
                         color: weirdBlack.withOpacity(0.4))),
@@ -935,30 +973,33 @@ class _CommentCardState extends State<CommentCard>
           ),
           if (!widget.isStudentSection)
             SizeTransition(
-                sizeFactor: animation,
-                child: ColoredBox(
-                    color: paleBlue,
-                    child: SizedBox(
-                      height: 60.h,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SpecialForm(
-                              controller: commentController,
-                              width: 300.w,
-                              height: 45.h,
-                              hint: "Add your message...",
-                              suffix: const Icon(Icons.emoji_emotions_rounded,
-                                  color: appBlue),
-                              fillColor: Colors.white,
-                              borderColor: Colors.transparent,
-                              radius: BorderRadius.circular(22.5.h),
-                            ),
-                            GestureDetector(
-                                child: Icon(Icons.send_rounded,
-                                    color: appBlue, size: 26.r)),
-                          ],),
-                    ),),),
+              sizeFactor: animation,
+              child: ColoredBox(
+                color: paleBlue,
+                child: SizedBox(
+                  height: 60.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SpecialForm(
+                        controller: commentController,
+                        width: 300.w,
+                        height: 45.h,
+                        hint: "Add your message...",
+                        suffix: const Icon(Icons.emoji_emotions_rounded,
+                            color: appBlue),
+                        fillColor: Colors.white,
+                        borderColor: Colors.transparent,
+                        radius: BorderRadius.circular(22.5.h),
+                      ),
+                      GestureDetector(
+                          child: Icon(Icons.send_rounded,
+                              color: appBlue, size: 26.r)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -995,18 +1036,18 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                   SizedBox(height: 20.h),
                   RichText(
                       text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: "0",
-                              style: context.textTheme.headlineLarge!
-                                  .copyWith(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                            text: "/5",
-                            style: context.textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      )),
+                    children: [
+                      TextSpan(
+                          text: "0",
+                          style: context.textTheme.headlineLarge!
+                              .copyWith(fontWeight: FontWeight.bold)),
+                      TextSpan(
+                        text: "/5",
+                        style: context.textTheme.bodyLarge!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )),
                   SizedBox(height: 15.h),
                   RatingStars(
                     value: 3.2,
@@ -1035,7 +1076,7 @@ class _RatingsOverviewState extends State<RatingsOverview> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: List.generate(
                   5,
-                      (index) => Row(
+                  (index) => Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text("${5 - index}",
@@ -1123,7 +1164,7 @@ class _HomeSwitcherState extends State<HomeSwitcher> {
               key: ValueKey<bool>(type == AcquireType.hostel),
               decoration: BoxDecoration(
                 color:
-                type == AcquireType.hostel ? appBlue : Colors.transparent,
+                    type == AcquireType.hostel ? appBlue : Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5.r),
                   bottomLeft: Radius.circular(5.r),
@@ -1159,7 +1200,7 @@ class _HomeSwitcherState extends State<HomeSwitcher> {
               key: ValueKey<bool>(type == AcquireType.roommate),
               decoration: BoxDecoration(
                 color:
-                type == AcquireType.roommate ? appBlue : Colors.transparent,
+                    type == AcquireType.roommate ? appBlue : Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(5.r),
                   bottomRight: Radius.circular(5.r),
@@ -1350,10 +1391,10 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                           ),
                           progressIndicatorBuilder: (context, url, download) =>
                               Container(
-                                width: 414.w,
-                                height: 175.h,
-                                color: weirdBlack50,
-                              ),
+                            width: 414.w,
+                            height: 175.h,
+                            color: weirdBlack50,
+                          ),
                           imageBuilder: (context, provider) => Container(
                             width: 414.w,
                             height: 175.h,
@@ -1474,13 +1515,13 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                     ),
                     progressIndicatorBuilder: (context, url, download) =>
                         Container(
-                          width: 110.r,
-                          height: 110.r,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.r),
-                            color: weirdBlack50,
-                          ),
-                        ),
+                      width: 110.r,
+                      height: 110.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        color: weirdBlack50,
+                      ),
+                    ),
                     imageBuilder: (context, provider) => Container(
                       width: 110.r,
                       height: 110.r,
@@ -1547,34 +1588,6 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
               children: [
                 isLocalFirst
                     ? Container(
-                  width: 185.w,
-                  height: 140.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.r),
-                      topRight: Radius.circular(10.r),
-                    ),
-                    image: DecorationImage(
-                      image: FileImage(localFile),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
-                    : CachedNetworkImage(
-                  imageUrl: onlineUrl,
-                  errorWidget: (context, url, error) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
-                      ),
-                      color: weirdBlack25,
-                    ),
-                  ),
-                  progressIndicatorBuilder: (context, url, download) =>
-                      Container(
                         width: 185.w,
                         height: 140.h,
                         decoration: BoxDecoration(
@@ -1582,24 +1595,52 @@ class _AvailableRoomCardState extends State<AvailableRoomCard> {
                             topLeft: Radius.circular(10.r),
                             topRight: Radius.circular(10.r),
                           ),
-                          color: weirdBlack25,
+                          image: DecorationImage(
+                            image: FileImage(localFile),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: onlineUrl,
+                        errorWidget: (context, url, error) => Container(
+                          width: 185.w,
+                          height: 140.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r),
+                            ),
+                            color: weirdBlack25,
+                          ),
+                        ),
+                        progressIndicatorBuilder: (context, url, download) =>
+                            Container(
+                          width: 185.w,
+                          height: 140.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r),
+                            ),
+                            color: weirdBlack25,
+                          ),
+                        ),
+                        imageBuilder: (context, provider) => Container(
+                          width: 185.w,
+                          height: 140.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r),
+                            ),
+                            image: DecorationImage(
+                              image: provider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
-                  imageBuilder: (context, provider) => Container(
-                    width: 185.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.r),
-                        topRight: Radius.circular(10.r),
-                      ),
-                      image: DecorationImage(
-                        image: provider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
                 SizedBox(height: 8.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -1788,7 +1829,7 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
     } else if (status) {
       title = "Hostel Pay Successful";
       message =
-      "Congratulations, you have successfully purchased a hostel for yourself.";
+          "Congratulations, you have successfully purchased a hostel for yourself.";
       image = "assets/images/Hostel Pay Success.png";
     } else {
       title = "Hostel Pay Failed";
@@ -1815,245 +1856,245 @@ class _HostelInfoModalState extends ConsumerState<HostelInfoModal> {
           slivers: [
             selected
                 ? SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 55.h),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15.r),
-                        topRight: Radius.circular(15.r),
-                      ),
-                      child: Image.asset(
-                        image,
-                        width: 135.r,
-                        height: 135.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    title,
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    message,
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 42.h),
-                  if (hasEnough && status)
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        width: 414.w,
-                        height: 50.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          color: appBlue,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10.h),
+                        SvgPicture.asset("assets/images/Modal Line.svg"),
+                        SizedBox(height: 55.h),
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.r),
+                              topRight: Radius.circular(15.r),
+                            ),
+                            child: Image.asset(
+                              image,
+                              width: 135.r,
+                              height: 135.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                        child: Text(
-                          "Ok, thanks",
-                          style: context.textTheme.bodyMedium!.copyWith(
+                        SizedBox(height: 16.h),
+                        Text(
+                          title,
+                          style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: weirdBlack,
                           ),
                         ),
-                      ),
-                    ),
-                  if (hasEnough && !status)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Container(
-                            width: 170.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                              border: Border.all(color: appBlue),
-                            ),
-                            child: Text(
-                              "Cancel",
-                              style:
-                              context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
+                        SizedBox(height: 12.h),
+                        Text(
+                          message,
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack50,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 42.h),
+                        if (hasEnough && status)
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              width: 414.w,
+                              height: 50.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.r),
                                 color: appBlue,
                               ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            width: 170.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                              color: appBlue,
-                            ),
-                            child: Text(
-                              "Try again",
-                              style:
-                              context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                              child: Text(
+                                "Ok, thanks",
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        if (hasEnough && !status)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    border: Border.all(color: appBlue),
+                                  ),
+                                  child: Text(
+                                    "Cancel",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: appBlue,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: appBlue,
+                                  ),
+                                  child: Text(
+                                    "Try again",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (!hasEnough)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    border: Border.all(color: appBlue),
+                                  ),
+                                  child: Text(
+                                    "Cancel",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: appBlue,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () =>
+                                    context.router.pushNamed(Pages.topUp),
+                                child: Container(
+                                  width: 170.w,
+                                  height: 50.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: appBlue,
+                                  ),
+                                  child: Text(
+                                    "Top-up",
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
-                  if (!hasEnough)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Container(
-                            width: 170.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                              border: Border.all(color: appBlue),
-                            ),
-                            child: Text(
-                              "Cancel",
-                              style:
-                              context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: appBlue,
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () =>
-                              context.router.pushNamed(Pages.topUp),
-                          child: Container(
-                            width: 170.w,
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                              color: appBlue,
-                            ),
-                            child: Text(
-                              "Top-up",
-                              style:
-                              context.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            )
+                  )
                 : SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  SvgPicture.asset("assets/images/Modal Line.svg"),
-                  SizedBox(height: 25.h),
-                  Text(
-                    "Choose your room",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: weirdBlack,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    "Select the room of your choice from the available rooms below",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: weirdBlack50,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Wrap(
-                    spacing: 10.w,
-                    runSpacing: 10.w,
-                    children: List.generate(
-                      availableRooms.length,
-                          (index) => GestureDetector(
-                        onTap: () => setState(() => selectedRoom = index),
-                        child: Container(
-                          width: 85.w,
-                          height: 40.h,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: selectedRoom != null &&
-                                    selectedRoom == index
-                                    ? appBlue
-                                    : fadedBorder,
-                              ),
-                              borderRadius: BorderRadius.circular(5.r),
-                              color: selectedRoom != null &&
-                                  selectedRoom == index
-                                  ? paleBlue
-                                  : null),
-                          child: Text(
-                            availableRooms[index].name,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                                color: selectedRoom != null &&
-                                    selectedRoom == index
-                                    ? appBlue
-                                    : weirdBlack50,
-                                fontWeight: FontWeight.w500),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10.h),
+                        SvgPicture.asset("assets/images/Modal Line.svg"),
+                        SizedBox(height: 25.h),
+                        Text(
+                          "Choose your room",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: weirdBlack,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 42.h),
-                  GestureDetector(
-                    onTap: () => setState(() => selected = true),
-                    child: Container(
-                      width: 414.w,
-                      height: 50.h,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: appBlue,
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: Text(
-                        "Pay ${currency()}${formatAmountInDouble(widget.info.price)}",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                        SizedBox(height: 12.h),
+                        Text(
+                          "Select the room of your choice from the available rooms below",
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: weirdBlack50,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 12.h),
+                        Wrap(
+                          spacing: 10.w,
+                          runSpacing: 10.w,
+                          children: List.generate(
+                            availableRooms.length,
+                            (index) => GestureDetector(
+                              onTap: () => setState(() => selectedRoom = index),
+                              child: Container(
+                                width: 85.w,
+                                height: 40.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: selectedRoom != null &&
+                                              selectedRoom == index
+                                          ? appBlue
+                                          : fadedBorder,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    color: selectedRoom != null &&
+                                            selectedRoom == index
+                                        ? paleBlue
+                                        : null),
+                                child: Text(
+                                  availableRooms[index].name,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                      color: selectedRoom != null &&
+                                              selectedRoom == index
+                                          ? appBlue
+                                          : weirdBlack50,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 42.h),
+                        GestureDetector(
+                          onTap: () => setState(() => selected = true),
+                          child: Container(
+                            width: 414.w,
+                            height: 50.h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: appBlue,
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              "Pay ${currency()}${formatAmountInDouble(widget.info.price)}",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

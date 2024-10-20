@@ -209,18 +209,20 @@ class _HomePageState extends ConsumerState<_HomePage>
   }
 
   void getDetails() {
-    getAllHostelsForLandlord(ref.read(currentUserProvider).id).then((resp) {
-      if (!mounted) return;
-      if (!resp.success) {
-        showError(resp.message);
-        setState(() => loadingOwnerHostels = false);
-        return;
-      }
+    // getAllHostelsForLandlord(ref.read(currentUserProvider).id).then((resp) {
+    //   if (!mounted) return;
+    //   if (!resp.success) {
+    //     showError(resp.message);
+    //     setState(() => loadingOwnerHostels = false);
+    //     return;
+    //   }
+    //
+    //   ref.watch(ownerHostelsProvider.notifier).state.clear();
+    //   ref.watch(ownerHostelsProvider.notifier).state.addAll(resp.payload!);
+    //   setState(() => loadingOwnerHostels = false);
+    // });
 
-      ref.watch(ownerHostelsProvider.notifier).state.clear();
-      ref.watch(ownerHostelsProvider.notifier).state.addAll(resp.payload!);
-      setState(() => loadingOwnerHostels = false);
-    });
+    setState(() => loadingOwnerHostels = false);
   }
 
   @override

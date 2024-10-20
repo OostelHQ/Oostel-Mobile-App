@@ -41,7 +41,9 @@ class _InboxState extends ConsumerState<Inbox> {
   User? otherUser;
   late String currentUserID, otherUserID;
 
-  bool loading = true, hasError = false;
+  // bool loading = true, hasError = false;
+  bool loading = false, hasError = false;
+
 
   @override
   void initState() {
@@ -65,22 +67,22 @@ class _InboxState extends ConsumerState<Inbox> {
   }
 
   Future<void> initialize() async {
-    if (widget.info.role == "Student") {
-      otherUser = (await getStudentById(otherUserID)).payload;
-    } else if (widget.info.role == "Landlord") {
-      otherUser = (await getLandlordById(otherUserID)).payload;
-    } else {
-      otherUser = (await getAgentById(otherUserID)).payload;
-    }
-
-    if (otherUser == null) {
-      if (!mounted) return;
-      setState(() {
-        loading = false;
-        hasError = true;
-      });
-      return;
-    }
+    // if (widget.info.role == "Student") {
+    //   otherUser = (await getStudentById(otherUserID)).payload;
+    // } else if (widget.info.role == "Landlord") {
+    //   otherUser = (await getLandlordById(otherUserID)).payload;
+    // } else {
+    //   otherUser = (await getAgentById(otherUserID)).payload;
+    // }
+    //
+    // if (otherUser == null) {
+    //   if (!mounted) return;
+    //   setState(() {
+    //     loading = false;
+    //     hasError = true;
+    //   });
+    //   return;
+    // }
 
     // users.add(ChatUser(
     //   id: otherUserID,
@@ -125,31 +127,31 @@ class _InboxState extends ConsumerState<Inbox> {
   }
 
   Future<void> getMessagesFromServer() async {
-    var resp = await getMessages({
-      "senderId": currentUserID,
-      "receiverId": otherUserID,
-    });
-
-    if (!mounted) return;
-
-    if (!resp.success) {
-      showError(resp.message);
-      setState(() {
-        loading = false;
-        hasError = true;
-      });
-      return;
-    }
-
-    bool consistent = true;
-    //resp.payload.length != chatController.numberOfMessages
-    if (resp.payload.length != 0) {
-      await DatabaseManager.clearAllMessages();
-      await DatabaseManager.addMessages(resp.payload);
-      consistent = false;
-    }
-
-    assignMessages(resp.payload, online: true, consistent: consistent);
+    // var resp = await getMessages({
+    //   "senderId": currentUserID,
+    //   "receiverId": otherUserID,
+    // });
+    //
+    // if (!mounted) return;
+    //
+    // if (!resp.success) {
+    //   showError(resp.message);
+    //   setState(() {
+    //     loading = false;
+    //     hasError = true;
+    //   });
+    //   return;
+    // }
+    //
+    // bool consistent = true;
+    // resp.payload.length != chatController.numberOfMessages
+    // if (resp.payload.length != 0) {
+    //   await DatabaseManager.clearAllMessages();
+    //   await DatabaseManager.addMessages(resp.payload);
+    //   consistent = false;
+    // }
+    //
+    // assignMessages(resp.payload, online: true, consistent: consistent);
   }
 
   @override
@@ -172,18 +174,18 @@ class _InboxState extends ConsumerState<Inbox> {
 
     chatController.addMessage(message);
 
-    sendMessage({
-      "message": rawMessage,
-      "senderId": currentUserID,
-      "receiverId": otherUserID,
-    }).then((resp) {
-      if (!mounted) return;
-      if (!resp.success) {
-        showError(resp.message);
-        return;
-      }
-      DatabaseManager.addMessage(resp.payload!);
-    });
+    // sendMessage({
+    //   "message": rawMessage,
+    //   "senderId": currentUserID,
+    //   "receiverId": otherUserID,
+    // }).then((resp) {
+    //   if (!mounted) return;
+    //   if (!resp.success) {
+    //     showError(resp.message);
+    //     return;
+    //   }
+    //   DatabaseManager.addMessage(resp.payload!);
+    // });
   }
 
   @override

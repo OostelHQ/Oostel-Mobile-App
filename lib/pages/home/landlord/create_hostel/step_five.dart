@@ -34,7 +34,7 @@ class _StepFiveState extends State<StepFive> {
     "assets/images/Security-On.svg",
   ];
 
-  final List<String> names = ["Light", "Tap", "Well", "Pool", "Security"];
+  final List<String> names = ["Light", "Tap", "Well", "Pool", "Security",];
 
   late List<String> facilities;
 

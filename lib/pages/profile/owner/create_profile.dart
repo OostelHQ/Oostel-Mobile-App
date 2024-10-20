@@ -83,25 +83,26 @@ class _CreateProfilePageOneState extends ConsumerState<CreateProfilePageOne> {
   }
 
   Future<void> create() async {
-    createLandlordProfile(info).then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate();
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // createLandlordProfile(info).then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate();
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    navigate();
   }
 
   @override
@@ -721,29 +722,30 @@ class _CreateProfilePageThreeState
   }
 
   Future<void> create() async {
-    updateProfilePicture(
-      id: ref.watch(currentUserProvider).id,
-      filePath: image!.path,
-    ).then((resp) {
-      if (!mounted) return;
-      showError(resp.message);
-      print(resp.message);
-      if (!resp.success) {
-        Navigator.of(context).pop();
-      } else {
-        navigate();
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // updateProfilePicture(
+    //   id: ref.watch(currentUserProvider).id,
+    //   filePath: image!.path,
+    // ).then((resp) {
+    //   if (!mounted) return;
+    //   showError(resp.message);
+    //   print(resp.message);
+    //   if (!resp.success) {
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     navigate();
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    navigate();
   }
 
   @override
@@ -1143,28 +1145,29 @@ class _CreateProfilePageFourState extends ConsumerState<CreateProfilePageFour> {
   );
 
   void create() {
-    refreshUser(UserType.landlord).then((val) {
-      if(!mounted) return;
-
-      if(!val.success) {
-        showError(val.message);
-        Navigator.of(context).pop();
-        return;
-      } else {
-        show();
-      }
-    });
-
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // refreshUser(UserType.landlord).then((val) {
+    //   if(!mounted) return;
+    //
+    //   if(!val.success) {
+    //     showError(val.message);
+    //     Navigator.of(context).pop();
+    //     return;
+    //   } else {
+    //     show();
+    //   }
+    // });
+    //
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    show();
   }
 }
 

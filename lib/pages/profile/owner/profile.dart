@@ -46,16 +46,16 @@ class _ProfilePageState extends ConsumerState<OwnerProfilePage> {
             ? const Center(child: blueLoader)
             : RefreshIndicator(
                 onRefresh: () async {
-                  setState(() => refresh = true);
-                  refreshUser(UserType.landlord).then((val) {
-                    if (!val.success) {
-                      showError(val.message);
-                    } else {
-                      ref.watch(currentUserProvider.notifier).state =
-                          val.payload!;
-                    }
-                    setState(() => refresh = false);
-                  });
+                  // setState(() => refresh = true);
+                  // refreshUser(UserType.landlord).then((val) {
+                  //   if (!val.success) {
+                  //     showError(val.message);
+                  //   } else {
+                  //     ref.watch(currentUserProvider.notifier).state =
+                  //         val.payload!;
+                  //   }
+                  //   setState(() => refresh = false);
+                  // });
                 },
                 child: CustomScrollView(
                   slivers: [
@@ -697,25 +697,26 @@ class _AgentInviteState extends ConsumerState<AgentInvite> {
   }
 
   Future<void> invite() async {
-    inviteAgent(authDetails).then((resp) {
-      if (!mounted) return;
-      if (!resp.success) {
-        showError(resp.message);
-        Navigator.of(context).pop();
-      } else {
-        setState(() => sent = true);
-      }
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: loader,
-      ),
-    );
+    // inviteAgent(authDetails).then((resp) {
+    //   if (!mounted) return;
+    //   if (!resp.success) {
+    //     showError(resp.message);
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     setState(() => sent = true);
+    //   }
+    // });
+    //
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Dialog(
+    //     elevation: 0.0,
+    //     backgroundColor: Colors.transparent,
+    //     child: loader,
+    //   ),
+    // );
+    setState(() => sent = true);
   }
 
   bool get isFilled =>

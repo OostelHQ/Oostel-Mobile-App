@@ -61,12 +61,12 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              HomeSwitcher(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: HomeSwitcher(
                 useDefault: true,
                 initialHostel: isHostel,
                 onHostelDisplayed: () => setState(() {
@@ -78,8 +78,11 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
                   isHostel = false;
                 }),
               ),
-              SizedBox(height: 12.h),
-              SpecialForm(
+            ),
+            SizedBox(height: 12.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SpecialForm(
                 controller: controller,
                 width: 414.w,
                 height: 50.h,
@@ -105,29 +108,31 @@ class _ViewAvailablePageState extends ConsumerState<ViewAvailablePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
-              Expanded(
-                child: isHostel
-                    ? GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10.r,
-                          crossAxisSpacing: 15.r,
-                          mainAxisExtent: 260.h,
-                        ),
-                        itemBuilder: (_, index) =>
-                            HostelExploreCard(info: acquireList[index]),
-                        itemCount: acquireList.length,
-                      )
-                    : ListView.separated(
-                        itemBuilder: (_, index) =>
-                            StudentCard(info: acquireList[index]),
-                        separatorBuilder: (_, __) => const SizedBox(),
-                        itemCount: acquireList.length,
+            ),
+            SizedBox(height: 20.h),
+            Expanded(
+              child: isHostel
+                  ? GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10.r,
+                        crossAxisSpacing: 15.r,
+                        mainAxisExtent: 260.h,
                       ),
-              )
-            ],
-          ),
+                      itemBuilder: (_, index) =>
+                          HostelExploreCard(info: acquireList[index]),
+                      itemCount: acquireList.length,
+                      padding: EdgeInsets.symmetric(horizontal: 22.w),
+                    )
+                  : ListView.separated(
+                      itemBuilder: (_, index) =>
+                          StudentCard(info: acquireList[index]),
+                      separatorBuilder: (_, __) => const SizedBox(),
+                      padding: EdgeInsets.symmetric(horizontal: 22.w),
+                      itemCount: acquireList.length,
+                    ),
+            )
+          ],
         ),
       ),
     );

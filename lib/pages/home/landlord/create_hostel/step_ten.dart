@@ -693,58 +693,59 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   }
 
   void upload() async {
-    createHostel(widget.info).then((resp) {
-      if (!mounted) return;
-      if (!resp.success) {
-        showError(resp.message);
-        setState(
-                () => message = "An error occurred while creating your hostel");
-        Navigator.of(context).pop();
-      } else {
-        setState(() {
-          createdHostel = true;
-          hostelId = resp.payload!;
-          progress = 1;
-        });
-
-        if (progress == total) {
-          exit();
-          return;
-        } else {
-          uploadRooms();
-        }
-      }
-    });
+    // createHostel(widget.info).then((resp) {
+    //   if (!mounted) return;
+    //   if (!resp.success) {
+    //     showError(resp.message);
+    //     setState(
+    //             () => message = "An error occurred while creating your hostel");
+    //     Navigator.of(context).pop();
+    //   } else {
+    //     setState(() {
+    //       createdHostel = true;
+    //       hostelId = resp.payload!;
+    //       progress = 1;
+    //     });
+    //
+    //     if (progress == total) {
+    //       exit();
+    //       return;
+    //     } else {
+    //       uploadRooms();
+    //     }
+    //   }
+    // });
+    exit();
   }
 
   void exit() => context.router.pop(true);
 
   void uploadRooms() async {
-    for (int i = progress - 1; i < rooms.length; ++i) {
-      setState(() => message = "Uploading ${rooms[i]["name"]}");
-
-      FyndaResponse response = await createRoomForHostel(
-        userID: widget.info["landlordId"],
-        hostelID: hostelId,
-        map: rooms[i],
-      );
-
-      setState(() {
-        if (!mounted) return;
-        hasError = !response.success;
-        if (hasError) {
-          setState(() => message =
-          "An error occurred while uploading ${rooms[i]["name"]}");
-          return;
-        } else {
-          progress++;
-        }
-      });
-
-      if (progress == total) {
-        exit();
-      }
-    }
+    // for (int i = progress - 1; i < rooms.length; ++i) {
+    //   setState(() => message = "Uploading ${rooms[i]["name"]}");
+    //
+    //   FyndaResponse response = await createRoomForHostel(
+    //     userID: widget.info["landlordId"],
+    //     hostelID: hostelId,
+    //     map: rooms[i],
+    //   );
+    //
+    //   setState(() {
+    //     if (!mounted) return;
+    //     hasError = !response.success;
+    //     if (hasError) {
+    //       setState(() => message =
+    //       "An error occurred while uploading ${rooms[i]["name"]}");
+    //       return;
+    //     } else {
+    //       progress++;
+    //     }
+    //   });
+    //
+    //   if (progress == total) {
+    //     exit();
+    //   }
+    // }
   }
 
   @override

@@ -56,12 +56,12 @@ class _ViewAcquiresPageState extends ConsumerState<ViewAcquiresPage> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22.w),
+              child: Hero(
                 tag: "Home Switcher",
                 flightShuttleBuilder: flightShuttleBuilder,
                 child: HomeSwitcher(
@@ -76,23 +76,24 @@ class _ViewAcquiresPageState extends ConsumerState<ViewAcquiresPage> {
                   }),
                 ),
               ),
-              SizedBox(height: 20.h),
-              Expanded(
-                child: ListView.separated(
-                  itemBuilder: (_, index) {
-                    dynamic element = acquireList[index];
-                    if (element is HostelInfo) {
-                      return HostelInfoCard(info: element);
-                    } else {
-                      return StudentCard(info: element);
-                    }
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(),
-                  itemCount: acquireList.length,
-                ),
-              )
-            ],
-          ),
+            ),
+            SizedBox(height: 20.h),
+            Expanded(
+              child: ListView.separated(
+                itemBuilder: (_, index) {
+                  dynamic element = acquireList[index];
+                  if (element is HostelInfo) {
+                    return HostelInfoCard(info: element);
+                  } else {
+                    return StudentCard(info: element);
+                  }
+                },
+                padding: EdgeInsets.symmetric(horizontal: 22.w),
+                separatorBuilder: (_, __) => const SizedBox(),
+                itemCount: acquireList.length,
+              ),
+            )
+          ],
         ),
       ),
     );

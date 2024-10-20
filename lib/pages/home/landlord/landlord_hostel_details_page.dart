@@ -241,7 +241,7 @@ class _LandlordHostelInformationPageState
                     ),
                     SizedBox(height: 15.h),
                     Text(
-                      joinToAddress(widget.info.address),
+                      joinToAddress(widget.info.address, ignoreFourth: true),
                       style: context.textTheme.bodyMedium!.copyWith(
                           color: weirdBlack75, fontWeight: FontWeight.w500),
                     ),
@@ -344,7 +344,7 @@ class _LandlordHostelInformationPageState
                   unselectedLabelStyle: context.textTheme.bodyMedium!.copyWith(
                       color: weirdBlack50, fontWeight: FontWeight.w500),
                   isScrollable: true,
-                  // padding: EdgeInsets.only(left:1.0),
+                  tabAlignment: TabAlignment.start,
                   tabs: const [
                     Tab(text: "Analytics"),
                     Tab(text: "About"),

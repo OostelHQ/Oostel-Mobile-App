@@ -37,6 +37,7 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.dark,
+        surfaceTintColor: Colors.transparent,
         elevation: 0.0,
         leading: IconButton(
           iconSize: 26.r,
@@ -56,12 +57,12 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SpecialForm(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SpecialForm(
                 controller: controller,
                 height: 50.h,
                 width: 414.w,
@@ -78,25 +79,28 @@ class _ViewHostelsPageState extends ConsumerState<ViewHostelsPage> {
                         blurRadius: 6.0,
                         spreadRadius: 1.0,
                       )
-                    ]
-                ),
+                    ]),
               ),
-              SizedBox(height: 20.h),
-              Expanded(
-                child: ListView.separated(
-                  itemBuilder: (_, index) {
-                    if (index == acquireList.length) {
-                      return SizedBox(height: 48.h);
-                    }
+            ),
+            SizedBox(height: 10.h),
+            Expanded(
+              child: ListView.separated(
+                itemBuilder: (_, index) {
+                  if (index == acquireList.length) {
+                    return SizedBox(height: 38.h);
+                  }
 
-                    return LandlordHostelCard(info: acquireList[index]);
-                  },
-                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
-                  itemCount: acquireList.length + 1,
+                  return LandlordHostelCard(info: acquireList[index]);
+                },
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.w,
+                  vertical: 10.h,
                 ),
+                separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                itemCount: acquireList.length + 1,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

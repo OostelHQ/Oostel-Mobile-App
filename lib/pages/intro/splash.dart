@@ -84,20 +84,20 @@ class _SplashPageState extends ConsumerState<SplashPage>
       process(registerStep: registerStep, registeredEmail: registeredEmail);
     } else if (auth != null && autoLogin != null && autoLogin) {
       loaderController.forward();
-      loginUser(auth).then((response) {
-        showError(response.message, background: Colors.white, text: weirdBlack);
-        loaderController.reverse().then((_) {
-          if (response.success) {
-            FileManager.save("registrationEmail", "");
-            FileManager.saveInt("registerStep", 0);
-            ref.invalidate(registrationProcessProvider);
-            ref.watch(hasInitializedProvider.notifier).state = true;
-            ref.watch(currentUserProvider.notifier).state = response.payload!;
-          }
-
-          process(loginSuccess: response.success);
-        });
-      });
+      // loginUser(auth).then((response) {
+      //   showError(response.message, background: Colors.white, text: weirdBlack);
+      //   loaderController.reverse().then((_) {
+      //     if (response.success) {
+      //       FileManager.save("registrationEmail", "");
+      //       FileManager.saveInt("registerStep", 0);
+      //       ref.invalidate(registrationProcessProvider);
+      //       ref.watch(hasInitializedProvider.notifier).state = true;
+      //       ref.watch(currentUserProvider.notifier).state = response.payload!;
+      //     }
+      //
+      //     process(loginSuccess: response.success);
+      //   });
+      // });
     } else {
       process();
     }
